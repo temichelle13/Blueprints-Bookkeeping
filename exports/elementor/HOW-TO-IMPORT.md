@@ -155,6 +155,15 @@ The footer and home page have placeholders for newsletter signup forms. Replace 
 - **Images**: The original site used placeholder images. Replace the portfolio images with your actual project screenshots
 - **Blog**: Use Elementor Pro's Posts widget or Loop Grid to display your actual WordPress blog posts dynamically
 
+## Excluded Pages
+
+The following pages from the original site were intentionally excluded from this export:
+
+- **Marketing Guide** — This is an internal-only page (marked noindex/nofollow, not linked in public navigation). It serves as a private marketing playbook and is not intended for the public WordPress site.
+- **Unsubscribe** — A simple utility page that should be handled by your email marketing platform (Mailchimp, ConvertKit, etc.) rather than a custom Elementor template.
+
+If you need either of these as Elementor templates, they can be generated on request.
+
 ## Troubleshooting
 
 - **Templates look wrong?** Make sure you've set the page layout to "Elementor Full Width" and added the dark background CSS
