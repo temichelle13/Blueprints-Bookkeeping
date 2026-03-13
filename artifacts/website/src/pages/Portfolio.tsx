@@ -1,7 +1,10 @@
 import { ExternalLink, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
+import { usePageTitle } from "@/hooks/use-page-title";
 
 export default function Portfolio() {
+  usePageTitle("Portfolio");
+
   const projects = [
     {
       id: 1,

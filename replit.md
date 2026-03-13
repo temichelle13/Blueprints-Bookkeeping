@@ -41,26 +41,39 @@ artifacts-monorepo/
 
 Professional website for a remote bookkeeping, business planning, and advisory firm owned by Tea Larson-Hetrick, based in Roseburg, Oregon.
 
-### Brand
+### Brand & Theme
 - **Primary color (deep navy)**: #1B2A5A
-- **Secondary color (periwinkle)**: #5B5EA6
-- **Backgrounds**: white (#FFFFFF) and light-grey (#F8F9FA) alternating sections
+- **Secondary color (periwinkle/accent)**: #5B5EA6
+- **Theme**: Dark — deep navy-black background, glassmorphism cards, gradient text, glow accents
+- **CSS**: Custom `.glass-card` and `.glass-card-hover` in plain CSS (Tailwind v4 compatible). `@layer utilities` for glow-line, glow-dot, text-gradient, accent-bar
+- **Font stack**: Display font (Inter bold), JetBrains Mono for tags
 - **Contact**: tea@blueprintsandbookkeeping.com, 541-319-8654
 
-### Pages (7 total)
-1. **Home** — Hero with tagline, trust indicators, service overview cards, scarcity CTA (20-client cap)
-2. **About** — Tea's bio, credentials, philosophy (cybersecurity + finance intersection)
-3. **Services** — Advanced Bookkeeping, Business Plans, Static Web Design, Advisory, Digital Presence
-4. **Industries** — Cannabis, Crypto/Web3, Agriculture, Timber, Tech Startups, Multi-Entity
-5. **Pricing** — Three-tier flat-fee pricing (Bookkeeping $500+/mo, Business Plans $2.5k–$5k+, Web Design $1.5k–$3.5k+)
+### Pages (9 total)
+1. **Home** — Hero with tagline, trust indicators, 3 pillars, scarcity CTA (20-client cap)
+2. **About** — Tea's bio, credentials, digital badges. NO portrait image. Degrees listed as "coursework"/"studies" (not completed). Certs: CEH v12, QB ProAdvisor Advanced, Crypto Tax Certified, OR Notary RON
+3. **Services** — Advanced Bookkeeping, Business Plans, Digital Handshake (static web), Remote Online Notarization
+4. **Industries** — Agriculture/Timber, Crypto, Gig/E-commerce, Multi-Entity, Tech/Startups
+5. **Pricing** — Three-tier flat-fee (Bookkeeping $500+/mo, Plans $2.5k–$5k+, Web $1.5k–$3.5k+)
 6. **Portfolio** — Demo case study cards (no real client data)
-7. **Contact** — Dual-path: Quick Message + Discovery Intake Form
+7. **Blog** — Blog listing + individual article pages (/blog/:slug). 4 starter articles in `src/data/blog-posts.ts`
+8. **Contact** — Dual-path: Quick Message + Discovery Intake Form
+9. *(Not Found)* — 404 page
+
+### Header
+- Shows ONLY the BB icon (`public/logo-icon.png`) — cropped from full logo. No text beside it
+- Nav: About, Services, Industries, Pricing, Portfolio, Blog + "Get Started" CTA
+
+### SEO
+- `index.html`: meta description, keywords, OG tags, Twitter cards, canonical URL, JSON-LD (ProfessionalService schema)
+- `public/robots.txt` and `public/sitemap.xml` (includes all pages + blog post URLs)
+- Per-page titles via `usePageTitle()` hook (`src/hooks/use-page-title.ts`)
 
 ### Important notes
 - Does NOT offer tax preparation — never include tax prep content
 - Pricing uses "starting at" ranges only
-- HTML/CSS designed to be portable for WordPress/Elementor HTML widgets
 - Firm is capped at 20 active clients — emphasize scarcity/exclusivity
+- About page: degrees are COURSEWORK/STUDIES only (not completed). Professional certs ARE earned
 
 ### Database
 - `contact_inquiries` table stores form submissions (name, email, phone, business name, industry, revenue range, services needed, software used, pain points, goals, message, form type)

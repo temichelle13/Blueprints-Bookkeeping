@@ -1,7 +1,10 @@
 import { Link } from "wouter";
 import { TreePine, Bitcoin, ShoppingBag, Building2, Rocket, ArrowRight } from "lucide-react";
+import { usePageTitle } from "@/hooks/use-page-title";
 
 export default function Industries() {
+  usePageTitle("Industries We Serve");
+
   const industries = [
     {
       icon: <TreePine className="w-5 h-5" />,

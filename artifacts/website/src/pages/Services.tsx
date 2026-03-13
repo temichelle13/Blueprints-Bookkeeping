@@ -1,7 +1,10 @@
 import { Link } from "wouter";
 import { Calculator, BookOpen, MonitorPlay, FileSignature, CheckCircle2, ArrowRight } from "lucide-react";
+import { usePageTitle } from "@/hooks/use-page-title";
 
 export default function Services() {
+  usePageTitle("Services");
+
   const services = [
     {
       id: "bookkeeping",

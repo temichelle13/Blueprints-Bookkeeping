@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
@@ -9,8 +8,11 @@ import {
   type QuickContactValues,
   type DetailedContactValues
 } from "@/hooks/use-contact";
+import { usePageTitle } from "@/hooks/use-page-title";
 
 export default function Contact() {
+  usePageTitle("Contact Us");
+
   return (
     <div className="pt-24 pb-20 min-h-screen">
       <section className="py-16 mb-16 relative">

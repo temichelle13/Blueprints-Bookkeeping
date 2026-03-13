@@ -16,6 +16,8 @@ import Industries from "./pages/Industries";
 import Pricing from "./pages/Pricing";
 import Portfolio from "./pages/Portfolio";
 import Contact from "./pages/Contact";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +43,8 @@ function Router() {
         <Route path="/industries" component={Industries} />
         <Route path="/pricing" component={Pricing} />
         <Route path="/portfolio" component={Portfolio} />
+        <Route path="/blog/:slug" component={BlogPost} />
+        <Route path="/blog" component={Blog} />
         <Route path="/contact" component={Contact} />
         <Route component={NotFound} />
       </Switch>

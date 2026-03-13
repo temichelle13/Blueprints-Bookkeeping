@@ -9,6 +9,7 @@ const NAV_LINKS = [
   { href: "/industries", label: "Industries" },
   { href: "/pricing", label: "Pricing" },
   { href: "/portfolio", label: "Portfolio" },
+  { href: "/blog", label: "Blog" },
 ];
 
 export function Header() {
@@ -39,22 +40,12 @@ export function Header() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-3 group shrink-0">
-            <div className="relative">
-              <img
-                src={`${import.meta.env.BASE_URL}logo.png`}
-                alt="Blueprints & Bookkeeping Logo"
-                className="h-9 w-auto object-contain brightness-0 invert transition-transform group-hover:scale-105"
-              />
-            </div>
-            <div className="hidden sm:flex flex-col leading-none">
-              <span className="font-display font-bold text-[15px] text-white tracking-tight">
-                Blueprints &
-              </span>
-              <span className="font-display font-bold text-[15px] text-accent tracking-tight">
-                Bookkeeping
-              </span>
-            </div>
+          <Link href="/" className="flex items-center group shrink-0">
+            <img
+              src={`${import.meta.env.BASE_URL}logo-icon.png`}
+              alt="Blueprints & Bookkeeping"
+              className="h-9 w-auto object-contain brightness-0 invert transition-transform group-hover:scale-105"
+            />
           </Link>
 
           <nav className="hidden lg:flex items-center gap-1">

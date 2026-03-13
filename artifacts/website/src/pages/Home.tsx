@@ -1,8 +1,11 @@
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { ArrowRight, BookOpen, Globe, Calculator, ShieldCheck, Clock, Users, Sparkles } from "lucide-react";
+import { usePageTitle } from "@/hooks/use-page-title";
 
 export default function Home() {
+  usePageTitle();
+
   return (
     <div>
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">

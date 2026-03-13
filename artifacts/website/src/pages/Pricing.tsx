@@ -1,7 +1,10 @@
 import { Link } from "wouter";
 import { Check, Shield, ArrowRight } from "lucide-react";
+import { usePageTitle } from "@/hooks/use-page-title";
 
 export default function Pricing() {
+  usePageTitle("Pricing");
+
   return (
     <div className="pt-24 pb-20">
       <section className="py-16 mb-16 relative">
