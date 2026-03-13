@@ -16,6 +16,7 @@ import Industries from "./pages/Industries";
 import Pricing from "./pages/Pricing";
 import Portfolio from "./pages/Portfolio";
 import Contact from "./pages/Contact";
+import Results from "./pages/Results";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import MarketingGuide from "./pages/MarketingGuide";
@@ -45,6 +46,7 @@ function Router() {
         <Route path="/industries" component={Industries} />
         <Route path="/pricing" component={Pricing} />
         <Route path="/portfolio" component={Portfolio} />
+        <Route path="/results" component={Results} />
         <Route path="/blog/:slug" component={BlogPost} />
         <Route path="/blog" component={Blog} />
         <Route path="/contact" component={Contact} />

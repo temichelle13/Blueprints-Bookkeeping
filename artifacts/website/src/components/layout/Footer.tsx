@@ -44,6 +44,7 @@ export function Footer() {
                 { label: "Industries", href: "/industries" },
                 { label: "Pricing", href: "/pricing" },
                 { label: "Portfolio", href: "/portfolio" },
+                { label: "Client Results", href: "/results" },
                 { label: "Blog", href: "/blog" },
               ].map((item) => (
                 <li key={item.href}>
