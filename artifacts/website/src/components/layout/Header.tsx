@@ -40,12 +40,16 @@ export function Header() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-          <Link href="/" className="flex items-center group shrink-0">
+          <Link href="/" className="flex items-center gap-3 group shrink-0">
             <img
               src={`${import.meta.env.BASE_URL}logo-icon.png`}
               alt="Blueprints & Bookkeeping"
               className="h-9 w-auto object-contain brightness-0 invert transition-transform group-hover:scale-105"
             />
+            <span className="font-display font-bold text-lg leading-tight tracking-tight">
+              <span className="text-white">Blueprints &</span><br />
+              <span className="text-accent">Bookkeeping</span>
+            </span>
           </Link>
 
           <nav className="hidden lg:flex items-center gap-1">
