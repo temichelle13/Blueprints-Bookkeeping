@@ -1,0 +1,480 @@
+{
+  "content": [
+    {
+      "id": "elem00005i",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "background_background": "gradient",
+        "background_color": "#0E1118",
+        "background_color_b": "#161B2E",
+        "padding": {
+          "unit": "px",
+          "top": 140,
+          "right": 0,
+          "bottom": 80,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem00005h",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "elem00005c",
+              "elType": "widget",
+              "widgetType": "divider",
+              "settings": {
+                "color": "#6366F1",
+                "weight": {
+                  "unit": "px",
+                  "size": 4
+                },
+                "width": {
+                  "unit": "px",
+                  "size": 48
+                },
+                "align": "center",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 2,
+                  "right": 2,
+                  "bottom": 2,
+                  "left": 2
+                }
+              }
+            },
+            {
+              "id": "elem00005d",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 20
+                }
+              }
+            },
+            {
+              "id": "elem00005e",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "The Digital Handshake",
+                "header_size": "h1",
+                "title_color": "#FFFFFF",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "align": "center",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 48
+                }
+              }
+            },
+            {
+              "id": "elem00005f",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 16
+                }
+              }
+            },
+            {
+              "id": "elem00005g",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"text-align:center;color:#8B91A0;font-size:18px;\">Ditch the uninspiring PDF. See how we transform robust financial planning into premium digital assets that command investor respect.</p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem00005l",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "padding": {
+          "unit": "px",
+          "top": 20,
+          "right": 0,
+          "bottom": 20,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem00005k",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "elem00005j",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"text-align:center;color:#8B91A0;font-size:14px;background:#161B2E;padding:8px 16px;border-radius:999px;display:inline-block;\">Examples below are demonstrations to protect client confidentiality.</p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem000061",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "structure": "30",
+        "padding": {
+          "unit": "px",
+          "top": 40,
+          "right": 0,
+          "bottom": 60,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem00005q",
+          "elType": "column",
+          "settings": {
+            "_column_size": 33
+          },
+          "elements": [
+            {
+              "id": "elem00005m",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"font-size:11px;font-weight:600;letter-spacing:2px;color:#6366F1;margin-bottom:8px;\">AGRICULTURE / TECH</p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            },
+            {
+              "id": "elem00005n",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "AgriTech Expansion Strategy",
+                "header_size": "h3",
+                "title_color": "#FFFFFF",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "align": "left",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 20
+                }
+              }
+            },
+            {
+              "id": "elem00005o",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 8
+                }
+              }
+            },
+            {
+              "id": "elem00005p",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"color:#8B91A0;font-size:15px;line-height:1.7;\">Interactive static website built to secure a $2M commercial equipment loan, featuring automated cash flow models and crop yield projections.</p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            }
+          ]
+        },
+        {
+          "id": "elem00005v",
+          "elType": "column",
+          "settings": {
+            "_column_size": 33
+          },
+          "elements": [
+            {
+              "id": "elem00005r",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"font-size:11px;font-weight:600;letter-spacing:2px;color:#6366F1;margin-bottom:8px;\">TECH STARTUP</p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            },
+            {
+              "id": "elem00005s",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "SaaS Series A Pitch Deck",
+                "header_size": "h3",
+                "title_color": "#FFFFFF",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "align": "left",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 20
+                }
+              }
+            },
+            {
+              "id": "elem00005t",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 8
+                }
+              }
+            },
+            {
+              "id": "elem00005u",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"color:#8B91A0;font-size:15px;line-height:1.7;\">A digital handshake replacing a 40-page PDF. Highlighted strict burn rate metrics and user acquisition models in a highly visual, investor-ready format.</p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            }
+          ]
+        },
+        {
+          "id": "elem000060",
+          "elType": "column",
+          "settings": {
+            "_column_size": 33
+          },
+          "elements": [
+            {
+              "id": "elem00005w",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"font-size:11px;font-weight:600;letter-spacing:2px;color:#6366F1;margin-bottom:8px;\">TIMBER & REAL ESTATE</p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            },
+            {
+              "id": "elem00005x",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Multi-Entity Timber Operations",
+                "header_size": "h3",
+                "title_color": "#FFFFFF",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "align": "left",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 20
+                }
+              }
+            },
+            {
+              "id": "elem00005y",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 8
+                }
+              }
+            },
+            {
+              "id": "elem00005z",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"color:#8B91A0;font-size:15px;line-height:1.7;\">Consolidated holding company financials presented securely via a private web portal, utilized for securing a localized credit facility.</p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem000068",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "background_background": "gradient",
+        "background_color": "#0E1120",
+        "background_color_b": "#0E1118",
+        "padding": {
+          "unit": "px",
+          "top": 80,
+          "right": 0,
+          "bottom": 80,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem000067",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "elem000062",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Ready for your own?",
+                "header_size": "h2",
+                "title_color": "#FFFFFF",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "align": "center",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 36
+                }
+              }
+            },
+            {
+              "id": "elem000063",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 16
+                }
+              }
+            },
+            {
+              "id": "elem000064",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"text-align:center;color:#8B91A0;font-size:18px;\">A website isn't just marketing — it's proof of competence. Let's build your operational foundation.</p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            },
+            {
+              "id": "elem000065",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 24
+                }
+              }
+            },
+            {
+              "id": "elem000066",
+              "elType": "widget",
+              "widgetType": "button",
+              "settings": {
+                "text": "Start Your Project",
+                "link": {
+                  "url": "/contact",
+                  "is_external": false,
+                  "nofollow": false
+                },
+                "align": "center",
+                "button_type": "default",
+                "background_color": "#6366F1",
+                "button_text_color": "#FFFFFF",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 12,
+                  "right": 12,
+                  "bottom": 12,
+                  "left": 12
+                },
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "600",
+                "button_padding": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 32,
+                  "bottom": 16,
+                  "left": 32
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "page_settings": {
+    "background_background": "classic",
+    "background_color": "#0E1118"
+  },
+  "version": "0.4",
+  "title": "Portfolio",
+  "type": "page"
+}

@@ -1,0 +1,1337 @@
+{
+  "content": [
+    {
+      "id": "elem000009",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "background_background": "classic",
+        "background_color": "#0E1118",
+        "min_height": {
+          "unit": "vh",
+          "size": 100
+        },
+        "flex_align_items": "center",
+        "padding": {
+          "unit": "px",
+          "top": 120,
+          "right": 0,
+          "bottom": 80,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem000008",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "elem000001",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"text-align:center;\"><span style=\"background:#161B2E;border:1px solid #252B3D;padding:8px 16px;border-radius:999px;color:#6366F1;font-size:14px;font-weight:500;\">Roseburg, OR &mdash; Serving Nationwide</span></p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            },
+            {
+              "id": "elem000002",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 32
+                }
+              }
+            },
+            {
+              "id": "elem000003",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Your Blueprint to <span style=\"color:#6366F1\">Business Success</span>",
+                "header_size": "h1",
+                "title_color": "#FFFFFF",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "align": "center",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 60
+                }
+              }
+            },
+            {
+              "id": "elem000004",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 16
+                }
+              }
+            },
+            {
+              "id": "elem000005",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"text-align:center;color:#8B91A0;font-size:18px;max-width:700px;margin:0 auto;\">We transform financial complexity into scalable growth through advanced bookkeeping, lender-ready business plans, and modern digital presence.</p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            },
+            {
+              "id": "elem000006",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 32
+                }
+              }
+            },
+            {
+              "id": "elem000007",
+              "elType": "widget",
+              "widgetType": "button",
+              "settings": {
+                "text": "Schedule Discovery Call",
+                "link": {
+                  "url": "/contact"
+                },
+                "align": "center",
+                "background_color": "#6366F1",
+                "button_text_color": "#FFFFFF",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 12,
+                  "right": 12,
+                  "bottom": 12,
+                  "left": 12
+                },
+                "typography_typography": "custom",
+                "typography_font_weight": "600",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 18
+                },
+                "button_padding": {
+                  "unit": "px",
+                  "top": 18,
+                  "right": 36,
+                  "bottom": 18,
+                  "left": 36
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem00000m",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "padding": {
+          "unit": "px",
+          "top": 80,
+          "right": 0,
+          "bottom": 20,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem00000l",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "elem00000g",
+              "elType": "widget",
+              "widgetType": "divider",
+              "settings": {
+                "color": "#6366F1",
+                "weight": {
+                  "unit": "px",
+                  "size": 4
+                },
+                "width": {
+                  "unit": "px",
+                  "size": 48
+                },
+                "align": "center",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 2,
+                  "right": 2,
+                  "bottom": 2,
+                  "left": 2
+                }
+              }
+            },
+            {
+              "id": "elem00000h",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 20
+                }
+              }
+            },
+            {
+              "id": "elem00000i",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Three Pillars of Growth",
+                "header_size": "h2",
+                "title_color": "#FFFFFF",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "align": "center"
+              }
+            },
+            {
+              "id": "elem00000j",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 12
+                }
+              }
+            },
+            {
+              "id": "elem00000k",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"text-align:center;color:#8B91A0;font-size:16px;\">Financial infrastructure designed for founders who have outgrown generalist solutions.</p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem00000n",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "structure": "30",
+        "padding": {
+          "unit": "px",
+          "top": 20,
+          "right": 0,
+          "bottom": 80,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem00000b",
+          "elType": "column",
+          "settings": {
+            "_column_size": 33
+          },
+          "elements": [
+            {
+              "id": "elem00000a",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "title_text": "Advanced Bookkeeping",
+                "description_text": "Multi-entity structuring, historical cleanups, and rule-based QBO automation for operations that demand precision.",
+                "selected_icon": {
+                  "value": "fas fa-calculator",
+                  "library": "fa-solid"
+                },
+                "icon_color": "#6366F1",
+                "title_color": "#FFFFFF",
+                "description_color": "#8B91A0",
+                "icon_size": {
+                  "unit": "px",
+                  "size": 28
+                },
+                "title_typography_typography": "custom",
+                "title_typography_font_family": "Outfit",
+                "title_typography_font_weight": "700",
+                "description_typography_typography": "custom",
+                "description_typography_font_family": "Inter",
+                "position": "top",
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 32,
+                  "right": 32,
+                  "bottom": 32,
+                  "left": 32
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "elem00000d",
+          "elType": "column",
+          "settings": {
+            "_column_size": 33
+          },
+          "elements": [
+            {
+              "id": "elem00000c",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "title_text": "Lender-Ready Plans",
+                "description_text": "3-to-5-year financial forecasting built to survive bank underwriting and institutional due diligence.",
+                "selected_icon": {
+                  "value": "fas fa-book-open",
+                  "library": "fa-solid"
+                },
+                "icon_color": "#6366F1",
+                "title_color": "#FFFFFF",
+                "description_color": "#8B91A0",
+                "icon_size": {
+                  "unit": "px",
+                  "size": 28
+                },
+                "title_typography_typography": "custom",
+                "title_typography_font_family": "Outfit",
+                "title_typography_font_weight": "700",
+                "description_typography_typography": "custom",
+                "description_typography_font_family": "Inter",
+                "position": "top",
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 32,
+                  "right": 32,
+                  "bottom": 32,
+                  "left": 32
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "elem00000f",
+          "elType": "column",
+          "settings": {
+            "_column_size": 33
+          },
+          "elements": [
+            {
+              "id": "elem00000e",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "title_text": "The Digital Handshake",
+                "description_text": "Ditch the PDF. Your business plan delivered as a custom, high-performance static website.",
+                "selected_icon": {
+                  "value": "fas fa-globe",
+                  "library": "fa-solid"
+                },
+                "icon_color": "#6366F1",
+                "title_color": "#FFFFFF",
+                "description_color": "#8B91A0",
+                "icon_size": {
+                  "unit": "px",
+                  "size": 28
+                },
+                "title_typography_typography": "custom",
+                "title_typography_font_family": "Outfit",
+                "title_typography_font_weight": "700",
+                "description_typography_typography": "custom",
+                "description_typography_font_family": "Inter",
+                "position": "top",
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 32,
+                  "right": 32,
+                  "bottom": 32,
+                  "left": 32
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem000011",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "padding": {
+          "unit": "px",
+          "top": 80,
+          "right": 0,
+          "bottom": 80,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem00000y",
+          "elType": "column",
+          "settings": {
+            "_column_size": 50
+          },
+          "elements": [
+            {
+              "id": "elem00000o",
+              "elType": "widget",
+              "widgetType": "divider",
+              "settings": {
+                "color": "#6366F1",
+                "weight": {
+                  "unit": "px",
+                  "size": 4
+                },
+                "width": {
+                  "unit": "px",
+                  "size": 48
+                },
+                "align": "center",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 2,
+                  "right": 2,
+                  "bottom": 2,
+                  "left": 2
+                }
+              }
+            },
+            {
+              "id": "elem00000p",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 20
+                }
+              }
+            },
+            {
+              "id": "elem00000q",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Why High-Value Founders Choose Us",
+                "header_size": "h2",
+                "title_color": "#FFFFFF",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "align": "left",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 36
+                }
+              }
+            },
+            {
+              "id": "elem00000r",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 12
+                }
+              }
+            },
+            {
+              "id": "elem00000s",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"color:#8B91A0;font-size:16px;\">Generalist bookkeepers hit a complexity ceiling. Tax practices disappear during Q1. We designed a boutique model that stays available and technically unmatched.</p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            },
+            {
+              "id": "elem00000t",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 20
+                }
+              }
+            },
+            {
+              "id": "elem00000x",
+              "elType": "widget",
+              "widgetType": "icon-list",
+              "settings": {
+                "icon_list": [
+                  {
+                    "text": "12-Month Availability — No tax preparation means no seasonal blind spots.",
+                    "selected_icon": {
+                      "value": "fas fa-check",
+                      "library": "fa-solid"
+                    },
+                    "_id": "elem00000u"
+                  },
+                  {
+                    "text": "No Offshore — Ever — 100% domestic. Your sensitive financial data is handled personally.",
+                    "selected_icon": {
+                      "value": "fas fa-check",
+                      "library": "fa-solid"
+                    },
+                    "_id": "elem00000v"
+                  },
+                  {
+                    "text": "20-Client Maximum — Strictly capped roster for executive-level dedication.",
+                    "selected_icon": {
+                      "value": "fas fa-check",
+                      "library": "fa-solid"
+                    },
+                    "_id": "elem00000w"
+                  }
+                ],
+                "icon_color": "#6366F1",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "space_between": {
+                  "unit": "px",
+                  "size": 12
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "elem000010",
+          "elType": "column",
+          "settings": {
+            "_column_size": 50
+          },
+          "elements": [
+            {
+              "id": "elem00000z",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "title_text": "The Blueprints Difference",
+                "description_text": "<ul style=\"list-style:none;padding:0;margin:0;\">\n<li style=\"color:#4ADE80;margin-bottom:8px;\">✓ Fortune 500 Financial Expertise</li>\n<li style=\"color:#4ADE80;margin-bottom:8px;\">✓ Certified Ethical Hacker (CEH v12)</li>\n<li style=\"color:#4ADE80;margin-bottom:8px;\">✓ QuickBooks ProAdvisor Advanced</li>\n<li style=\"color:#4ADE80;margin-bottom:8px;\">✓ Year-Round Availability</li>\n<li style=\"color:#F87171;margin-bottom:8px;text-decoration:line-through;\">✕ Offshore Labor</li>\n<li style=\"color:#F87171;\">✕ Tax Season Blackouts</li></ul>",
+                "selected_icon": {
+                  "value": "fas fa-star",
+                  "library": "fa-solid"
+                },
+                "icon_color": "#6366F1",
+                "title_color": "#FFFFFF",
+                "description_color": "#D8DCE4",
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 32,
+                  "right": 32,
+                  "bottom": 32,
+                  "left": 32
+                },
+                "position": "top"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem000018",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "padding": {
+          "unit": "px",
+          "top": 80,
+          "right": 0,
+          "bottom": 40,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem000017",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "elem000012",
+              "elType": "widget",
+              "widgetType": "divider",
+              "settings": {
+                "color": "#6366F1",
+                "weight": {
+                  "unit": "px",
+                  "size": 4
+                },
+                "width": {
+                  "unit": "px",
+                  "size": 48
+                },
+                "align": "center",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 2,
+                  "right": 2,
+                  "bottom": 2,
+                  "left": 2
+                }
+              }
+            },
+            {
+              "id": "elem000013",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 20
+                }
+              }
+            },
+            {
+              "id": "elem000014",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "What Clients Say",
+                "header_size": "h2",
+                "title_color": "#FFFFFF",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "align": "center"
+              }
+            },
+            {
+              "id": "elem000015",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 12
+                }
+              }
+            },
+            {
+              "id": "elem000016",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"text-align:center;color:#8B91A0;font-size:16px;\">Real results from real founders — anonymized to protect client confidentiality.</p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem00001h",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "structure": "40",
+        "padding": {
+          "unit": "px",
+          "top": 20,
+          "right": 0,
+          "bottom": 80,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem00001a",
+          "elType": "column",
+          "settings": {
+            "_column_size": 25
+          },
+          "elements": [
+            {
+              "id": "elem000019",
+              "elType": "widget",
+              "widgetType": "testimonial",
+              "settings": {
+                "testimonial_content": "They untangled three years of messy books across four entities in under six weeks. Our lender finally approved the expansion line.",
+                "testimonial_name": "J.M. — AgriTech Founder",
+                "testimonial_job": "",
+                "content_content_color": "#D8DCE4",
+                "name_text_color": "#FFFFFF",
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 24,
+                  "right": 24,
+                  "bottom": 24,
+                  "left": 24
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "elem00001c",
+          "elType": "column",
+          "settings": {
+            "_column_size": 25
+          },
+          "elements": [
+            {
+              "id": "elem00001b",
+              "elType": "widget",
+              "widgetType": "testimonial",
+              "settings": {
+                "testimonial_content": "Funded on the next attempt — $250K SBA loan approved after two prior rejections. The business plan made all the difference.",
+                "testimonial_name": "R.K. — Multi-Location Retail Owner",
+                "testimonial_job": "",
+                "content_content_color": "#D8DCE4",
+                "name_text_color": "#FFFFFF",
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 24,
+                  "right": 24,
+                  "bottom": 24,
+                  "left": 24
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "elem00001e",
+          "elType": "column",
+          "settings": {
+            "_column_size": 25
+          },
+          "elements": [
+            {
+              "id": "elem00001d",
+              "elType": "widget",
+              "widgetType": "testimonial",
+              "settings": {
+                "testimonial_content": "Having a dedicated bookkeeper who actually understands crypto cost-basis tracking saved me from a potential audit nightmare.",
+                "testimonial_name": "D.S. — DeFi Protocol Founder",
+                "testimonial_job": "",
+                "content_content_color": "#D8DCE4",
+                "name_text_color": "#FFFFFF",
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 24,
+                  "right": 24,
+                  "bottom": 24,
+                  "left": 24
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "elem00001g",
+          "elType": "column",
+          "settings": {
+            "_column_size": 25
+          },
+          "elements": [
+            {
+              "id": "elem00001f",
+              "elType": "widget",
+              "widgetType": "testimonial",
+              "settings": {
+                "testimonial_content": "The Digital Handshake concept blew our investors away. Instead of a PDF, they got a live, interactive business plan site.",
+                "testimonial_name": "A.P. — SaaS Startup CEO",
+                "testimonial_job": "",
+                "content_content_color": "#D8DCE4",
+                "name_text_color": "#FFFFFF",
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 24,
+                  "right": 24,
+                  "bottom": 24,
+                  "left": 24
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem00001z",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "padding": {
+          "unit": "px",
+          "top": 80,
+          "right": 0,
+          "bottom": 80,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem00001u",
+          "elType": "column",
+          "settings": {
+            "_column_size": 50
+          },
+          "elements": [
+            {
+              "id": "elem00001i",
+              "elType": "widget",
+              "widgetType": "divider",
+              "settings": {
+                "color": "#6366F1",
+                "weight": {
+                  "unit": "px",
+                  "size": 4
+                },
+                "width": {
+                  "unit": "px",
+                  "size": 48
+                },
+                "align": "center",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 2,
+                  "right": 2,
+                  "bottom": 2,
+                  "left": 2
+                }
+              }
+            },
+            {
+              "id": "elem00001j",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 20
+                }
+              }
+            },
+            {
+              "id": "elem00001k",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Free Download: Financial <span style=\"color:#6366F1\">Readiness Checklist</span>",
+                "header_size": "h2",
+                "title_color": "#FFFFFF",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "align": "left",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 36
+                }
+              }
+            },
+            {
+              "id": "elem00001l",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 12
+                }
+              }
+            },
+            {
+              "id": "elem00001m",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"color:#8B91A0;font-size:16px;\">Are your books lender-ready? Use the same checklist our team applies when onboarding new founder clients — distilled into a one-page actionable guide.</p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            },
+            {
+              "id": "elem00001n",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 16
+                }
+              }
+            },
+            {
+              "id": "elem00001t",
+              "elType": "widget",
+              "widgetType": "icon-list",
+              "settings": {
+                "icon_list": [
+                  {
+                    "text": "Revenue & expense tracking health check",
+                    "selected_icon": {
+                      "value": "fas fa-check",
+                      "library": "fa-solid"
+                    },
+                    "_id": "elem00001o"
+                  },
+                  {
+                    "text": "Key financial ratios every lender looks at",
+                    "selected_icon": {
+                      "value": "fas fa-check",
+                      "library": "fa-solid"
+                    },
+                    "_id": "elem00001p"
+                  },
+                  {
+                    "text": "Common bookkeeping red flags to fix now",
+                    "selected_icon": {
+                      "value": "fas fa-check",
+                      "library": "fa-solid"
+                    },
+                    "_id": "elem00001q"
+                  },
+                  {
+                    "text": "A step-by-step lender-readiness timeline",
+                    "selected_icon": {
+                      "value": "fas fa-check",
+                      "library": "fa-solid"
+                    },
+                    "_id": "elem00001r"
+                  },
+                  {
+                    "text": "Questions to ask before hiring a bookkeeper",
+                    "selected_icon": {
+                      "value": "fas fa-check",
+                      "library": "fa-solid"
+                    },
+                    "_id": "elem00001s"
+                  }
+                ],
+                "icon_color": "#6366F1",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "space_between": {
+                  "unit": "px",
+                  "size": 12
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "elem00001y",
+          "elType": "column",
+          "settings": {
+            "_column_size": 50
+          },
+          "elements": [
+            {
+              "id": "elem00001v",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "title_text": "Get Your Free Checklist",
+                "description_text": "Enter your email to download the Financial Readiness Checklist. No spam — just valuable insights.",
+                "selected_icon": {
+                  "value": "fas fa-file-download",
+                  "library": "fa-solid"
+                },
+                "icon_color": "#6366F1",
+                "title_color": "#FFFFFF",
+                "description_color": "#8B91A0",
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 32,
+                  "right": 32,
+                  "bottom": 32,
+                  "left": 32
+                },
+                "position": "top"
+              }
+            },
+            {
+              "id": "elem00001w",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 16
+                }
+              }
+            },
+            {
+              "id": "elem00001x",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"text-align:center;color:#8B91A0;font-size:13px;\"><em>Note: In WordPress, replace this section with an Elementor Form widget or your email marketing plugin's form shortcode to capture leads.</em></p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem000026",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "background_background": "gradient",
+        "background_color": "#0E1120",
+        "background_color_b": "#0E1118",
+        "padding": {
+          "unit": "px",
+          "top": 80,
+          "right": 0,
+          "bottom": 80,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem000025",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "elem000020",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Stop Guessing. <span style=\"color:#6366F1\">Start Scaling.</span>",
+                "header_size": "h2",
+                "title_color": "#FFFFFF",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "align": "center",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 36
+                }
+              }
+            },
+            {
+              "id": "elem000021",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 16
+                }
+              }
+            },
+            {
+              "id": "elem000022",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"text-align:center;color:#8B91A0;font-size:18px;\">Secure your financial infrastructure and map out a profitable future today.</p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            },
+            {
+              "id": "elem000023",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 24
+                }
+              }
+            },
+            {
+              "id": "elem000024",
+              "elType": "widget",
+              "widgetType": "button",
+              "settings": {
+                "text": "Book Your Consultation",
+                "link": {
+                  "url": "/contact",
+                  "is_external": false,
+                  "nofollow": false
+                },
+                "align": "center",
+                "button_type": "default",
+                "background_color": "#6366F1",
+                "button_text_color": "#FFFFFF",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 12,
+                  "right": 12,
+                  "bottom": 12,
+                  "left": 12
+                },
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "600",
+                "button_padding": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 32,
+                  "bottom": 16,
+                  "left": 32
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "page_settings": {
+    "background_background": "classic",
+    "background_color": "#0E1118"
+  },
+  "version": "0.4",
+  "title": "Home",
+  "type": "page"
+}

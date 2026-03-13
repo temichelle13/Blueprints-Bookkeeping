@@ -1,0 +1,543 @@
+{
+  "content": [
+    {
+      "id": "elem000033",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "background_background": "gradient",
+        "background_color": "#0E1118",
+        "background_color_b": "#161B2E",
+        "padding": {
+          "unit": "px",
+          "top": 140,
+          "right": 0,
+          "bottom": 80,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem000032",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "elem00002x",
+              "elType": "widget",
+              "widgetType": "divider",
+              "settings": {
+                "color": "#6366F1",
+                "weight": {
+                  "unit": "px",
+                  "size": 4
+                },
+                "width": {
+                  "unit": "px",
+                  "size": 48
+                },
+                "align": "center",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 2,
+                  "right": 2,
+                  "bottom": 2,
+                  "left": 2
+                }
+              }
+            },
+            {
+              "id": "elem00002y",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 20
+                }
+              }
+            },
+            {
+              "id": "elem00002z",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Our Services",
+                "header_size": "h1",
+                "title_color": "#FFFFFF",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "align": "center",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 48
+                }
+              }
+            },
+            {
+              "id": "elem000030",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 16
+                }
+              }
+            },
+            {
+              "id": "elem000031",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"text-align:center;color:#8B91A0;font-size:18px;\">Beyond simple data entry — robust, modern financial infrastructure tailored for ambitious founders.</p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem00003c",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "structure": "20",
+        "padding": {
+          "unit": "px",
+          "top": 60,
+          "right": 0,
+          "bottom": 40,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem000037",
+          "elType": "column",
+          "settings": {
+            "_column_size": 50
+          },
+          "elements": [
+            {
+              "id": "elem000034",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "title_text": "Advanced Bookkeeping & Cleanup",
+                "description_text": "<p style=\"color:#8B91A0;margin-bottom:20px;\">For complex operations that have outgrown basic data entry.</p>\n<ul style=\"list-style:none;padding:0;\"><li style=\"margin-bottom:8px;color:#D8DCE4;\">✓ Historical data remediation and cleanup</li><li style=\"margin-bottom:8px;color:#D8DCE4;\">✓ Multi-entity structuring and consolidation</li><li style=\"margin-bottom:8px;color:#D8DCE4;\">✓ Rule-based QBO automation setup</li><li style=\"margin-bottom:8px;color:#D8DCE4;\">✓ Rigorous monthly close procedures</li><li style=\"margin-bottom:8px;color:#D8DCE4;\">✓ Specialized niche reconciliation (crypto, ag, timber)</li></ul>",
+                "selected_icon": {
+                  "value": "fas fa-calculator",
+                  "library": "fa-solid"
+                },
+                "icon_color": "#6366F1",
+                "title_color": "#FFFFFF",
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 32,
+                  "right": 32,
+                  "bottom": 32,
+                  "left": 32
+                },
+                "position": "top"
+              }
+            },
+            {
+              "id": "elem000035",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 16
+                }
+              }
+            },
+            {
+              "id": "elem000036",
+              "elType": "widget",
+              "widgetType": "button",
+              "settings": {
+                "text": "Inquire About This Service",
+                "link": {
+                  "url": "/contact",
+                  "is_external": false,
+                  "nofollow": false
+                },
+                "align": "stretch",
+                "button_type": "default",
+                "background_color": "#6366F1",
+                "button_text_color": "#FFFFFF",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 12,
+                  "right": 12,
+                  "bottom": 12,
+                  "left": 12
+                },
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "600",
+                "button_padding": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 32,
+                  "bottom": 16,
+                  "left": 32
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "elem00003b",
+          "elType": "column",
+          "settings": {
+            "_column_size": 50
+          },
+          "elements": [
+            {
+              "id": "elem000038",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "title_text": "Lender-Ready Business Plans",
+                "description_text": "<p style=\"color:#8B91A0;margin-bottom:20px;\">Bridge the gap between your current operations and future funding.</p>\n<ul style=\"list-style:none;padding:0;\"><li style=\"margin-bottom:8px;color:#D8DCE4;\">✓ Rigorous 3-to-5-year financial forecasting</li><li style=\"margin-bottom:8px;color:#D8DCE4;\">✓ SBA-ready documentation formatting</li><li style=\"margin-bottom:8px;color:#D8DCE4;\">✓ Deep market analysis & competitive positioning</li><li style=\"margin-bottom:8px;color:#D8DCE4;\">✓ Burn rate analysis for startups</li><li style=\"margin-bottom:8px;color:#D8DCE4;\">✓ Strategic narrative development</li></ul>",
+                "selected_icon": {
+                  "value": "fas fa-book-open",
+                  "library": "fa-solid"
+                },
+                "icon_color": "#6366F1",
+                "title_color": "#FFFFFF",
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 32,
+                  "right": 32,
+                  "bottom": 32,
+                  "left": 32
+                },
+                "position": "top"
+              }
+            },
+            {
+              "id": "elem000039",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 16
+                }
+              }
+            },
+            {
+              "id": "elem00003a",
+              "elType": "widget",
+              "widgetType": "button",
+              "settings": {
+                "text": "Inquire About This Service",
+                "link": {
+                  "url": "/contact",
+                  "is_external": false,
+                  "nofollow": false
+                },
+                "align": "stretch",
+                "button_type": "default",
+                "background_color": "#6366F1",
+                "button_text_color": "#FFFFFF",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 12,
+                  "right": 12,
+                  "bottom": 12,
+                  "left": 12
+                },
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "600",
+                "button_padding": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 32,
+                  "bottom": 16,
+                  "left": 32
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem00003l",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "structure": "20",
+        "padding": {
+          "unit": "px",
+          "top": 20,
+          "right": 0,
+          "bottom": 80,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem00003g",
+          "elType": "column",
+          "settings": {
+            "_column_size": 50
+          },
+          "elements": [
+            {
+              "id": "elem00003d",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "title_text": "The Digital Handshake",
+                "description_text": "<p style=\"color:#8B91A0;margin-bottom:20px;\">Transform your business plan into a secure, interactive web presence.</p>\n<ul style=\"list-style:none;padding:0;\"><li style=\"margin-bottom:8px;color:#D8DCE4;\">✓ Business plans delivered as custom static websites</li><li style=\"margin-bottom:8px;color:#D8DCE4;\">✓ Modern alternative to standard PDF pitches</li><li style=\"margin-bottom:8px;color:#D8DCE4;\">✓ High-performance, secure digital hosting</li><li style=\"margin-bottom:8px;color:#D8DCE4;\">✓ Immediate validation of professional worth</li><li style=\"margin-bottom:8px;color:#D8DCE4;\">✓ No complex dynamic maintenance required</li></ul>",
+                "selected_icon": {
+                  "value": "fas fa-desktop",
+                  "library": "fa-solid"
+                },
+                "icon_color": "#6366F1",
+                "title_color": "#FFFFFF",
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 32,
+                  "right": 32,
+                  "bottom": 32,
+                  "left": 32
+                },
+                "position": "top"
+              }
+            },
+            {
+              "id": "elem00003e",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 16
+                }
+              }
+            },
+            {
+              "id": "elem00003f",
+              "elType": "widget",
+              "widgetType": "button",
+              "settings": {
+                "text": "Inquire About This Service",
+                "link": {
+                  "url": "/contact",
+                  "is_external": false,
+                  "nofollow": false
+                },
+                "align": "stretch",
+                "button_type": "default",
+                "background_color": "#6366F1",
+                "button_text_color": "#FFFFFF",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 12,
+                  "right": 12,
+                  "bottom": 12,
+                  "left": 12
+                },
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "600",
+                "button_padding": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 32,
+                  "bottom": 16,
+                  "left": 32
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "elem00003k",
+          "elType": "column",
+          "settings": {
+            "_column_size": 50
+          },
+          "elements": [
+            {
+              "id": "elem00003h",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "title_text": "Remote Online Notarization",
+                "description_text": "<p style=\"color:#8B91A0;margin-bottom:20px;\">Frictionless document execution for your high-stakes agreements.</p>\n<ul style=\"list-style:none;padding:0;\"><li style=\"margin-bottom:8px;color:#D8DCE4;\">✓ Oregon-commissioned active notary</li><li style=\"margin-bottom:8px;color:#D8DCE4;\">✓ Secure video conferencing with KBA protocols</li><li style=\"margin-bottom:8px;color:#D8DCE4;\">✓ Instant execution for business plan docs</li><li style=\"margin-bottom:8px;color:#D8DCE4;\">✓ Corporate entity formation signatures</li><li style=\"margin-bottom:8px;color:#D8DCE4;\">✓ Nationwide remote service availability</li></ul>",
+                "selected_icon": {
+                  "value": "fas fa-file-signature",
+                  "library": "fa-solid"
+                },
+                "icon_color": "#6366F1",
+                "title_color": "#FFFFFF",
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 32,
+                  "right": 32,
+                  "bottom": 32,
+                  "left": 32
+                },
+                "position": "top"
+              }
+            },
+            {
+              "id": "elem00003i",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 16
+                }
+              }
+            },
+            {
+              "id": "elem00003j",
+              "elType": "widget",
+              "widgetType": "button",
+              "settings": {
+                "text": "Inquire About This Service",
+                "link": {
+                  "url": "/contact",
+                  "is_external": false,
+                  "nofollow": false
+                },
+                "align": "stretch",
+                "button_type": "default",
+                "background_color": "#6366F1",
+                "button_text_color": "#FFFFFF",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 12,
+                  "right": 12,
+                  "bottom": 12,
+                  "left": 12
+                },
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "600",
+                "button_padding": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 32,
+                  "bottom": 16,
+                  "left": 32
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "page_settings": {
+    "background_background": "classic",
+    "background_color": "#0E1118"
+  },
+  "version": "0.4",
+  "title": "Services",
+  "type": "page"
+}

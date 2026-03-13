@@ -1,0 +1,965 @@
+{
+  "content": [
+    {
+      "id": "elem000073",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "background_background": "gradient",
+        "background_color": "#0E1118",
+        "background_color_b": "#161B2E",
+        "padding": {
+          "unit": "px",
+          "top": 140,
+          "right": 0,
+          "bottom": 80,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem000072",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "elem00006x",
+              "elType": "widget",
+              "widgetType": "divider",
+              "settings": {
+                "color": "#6366F1",
+                "weight": {
+                  "unit": "px",
+                  "size": 4
+                },
+                "width": {
+                  "unit": "px",
+                  "size": 48
+                },
+                "align": "center",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 2,
+                  "right": 2,
+                  "bottom": 2,
+                  "left": 2
+                }
+              }
+            },
+            {
+              "id": "elem00006y",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 20
+                }
+              }
+            },
+            {
+              "id": "elem00006z",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Client <span style=\"color:#6366F1\">Results</span>",
+                "header_size": "h1",
+                "title_color": "#FFFFFF",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "align": "center",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 48
+                }
+              }
+            },
+            {
+              "id": "elem000070",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 16
+                }
+              }
+            },
+            {
+              "id": "elem000071",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"text-align:center;color:#8B91A0;font-size:18px;\">Real outcomes from real founders. Every engagement is confidential — names and details are anonymized to protect our clients' privacy.</p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem00007a",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "padding": {
+          "unit": "px",
+          "top": 60,
+          "right": 0,
+          "bottom": 20,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem000079",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "elem000074",
+              "elType": "widget",
+              "widgetType": "divider",
+              "settings": {
+                "color": "#6366F1",
+                "weight": {
+                  "unit": "px",
+                  "size": 4
+                },
+                "width": {
+                  "unit": "px",
+                  "size": 48
+                },
+                "align": "center",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 2,
+                  "right": 2,
+                  "bottom": 2,
+                  "left": 2
+                }
+              }
+            },
+            {
+              "id": "elem000075",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 20
+                }
+              }
+            },
+            {
+              "id": "elem000076",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "What Clients Say",
+                "header_size": "h2",
+                "title_color": "#FFFFFF",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "align": "center"
+              }
+            },
+            {
+              "id": "elem000077",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 12
+                }
+              }
+            },
+            {
+              "id": "elem000078",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"text-align:center;color:#8B91A0;font-size:16px;\">Hear directly from founders who transformed their financial operations with us.</p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem00007j",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "structure": "20",
+        "padding": {
+          "unit": "px",
+          "top": 20,
+          "right": 0,
+          "bottom": 60,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem00007c",
+          "elType": "column",
+          "settings": {
+            "_column_size": 50
+          },
+          "elements": [
+            {
+              "id": "elem00007b",
+              "elType": "widget",
+              "widgetType": "testimonial",
+              "settings": {
+                "testimonial_content": "They untangled three years of messy books across four entities in under six weeks. Our lender finally approved the expansion line we'd been chasing for over a year.",
+                "testimonial_name": "J.M. — AgriTech Founder",
+                "testimonial_job": "Agriculture & Timber",
+                "content_content_color": "#D8DCE4",
+                "name_text_color": "#FFFFFF",
+                "job_text_color": "#8B91A0",
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 32,
+                  "right": 32,
+                  "bottom": 32,
+                  "left": 32
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "elem00007e",
+          "elType": "column",
+          "settings": {
+            "_column_size": 50
+          },
+          "elements": [
+            {
+              "id": "elem00007d",
+              "elType": "widget",
+              "widgetType": "testimonial",
+              "settings": {
+                "testimonial_content": "I'd been turned down by two banks before Blueprints rebuilt my financials and business plan from scratch. Funded on the next attempt — $250K SBA loan approved.",
+                "testimonial_name": "R.K. — Multi-Location Retail Owner",
+                "testimonial_job": "Retail / E-commerce",
+                "content_content_color": "#D8DCE4",
+                "name_text_color": "#FFFFFF",
+                "job_text_color": "#8B91A0",
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 32,
+                  "right": 32,
+                  "bottom": 32,
+                  "left": 32
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "elem00007g",
+          "elType": "column",
+          "settings": {
+            "_column_size": 50
+          },
+          "elements": [
+            {
+              "id": "elem00007f",
+              "elType": "widget",
+              "widgetType": "testimonial",
+              "settings": {
+                "testimonial_content": "Having a dedicated bookkeeper who actually understands crypto cost-basis tracking saved me from a potential audit nightmare. Worth every penny.",
+                "testimonial_name": "D.S. — DeFi Protocol Founder",
+                "testimonial_job": "Crypto / Digital Assets",
+                "content_content_color": "#D8DCE4",
+                "name_text_color": "#FFFFFF",
+                "job_text_color": "#8B91A0",
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 32,
+                  "right": 32,
+                  "bottom": 32,
+                  "left": 32
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "elem00007i",
+          "elType": "column",
+          "settings": {
+            "_column_size": 50
+          },
+          "elements": [
+            {
+              "id": "elem00007h",
+              "elType": "widget",
+              "widgetType": "testimonial",
+              "settings": {
+                "testimonial_content": "The Digital Handshake concept blew our investors away. Instead of a PDF, they got a live, interactive business plan site. It changed the conversation entirely.",
+                "testimonial_name": "A.P. — SaaS Startup CEO",
+                "testimonial_job": "Technology / SaaS",
+                "content_content_color": "#D8DCE4",
+                "name_text_color": "#FFFFFF",
+                "job_text_color": "#8B91A0",
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 32,
+                  "right": 32,
+                  "bottom": 32,
+                  "left": 32
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem00007k",
+      "elType": "widget",
+      "widgetType": "divider",
+      "settings": {
+        "color": "#252B3D",
+        "weight": {
+          "unit": "px",
+          "size": 1
+        }
+      }
+    },
+    {
+      "id": "elem00007r",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "padding": {
+          "unit": "px",
+          "top": 60,
+          "right": 0,
+          "bottom": 20,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem00007q",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "elem00007l",
+              "elType": "widget",
+              "widgetType": "divider",
+              "settings": {
+                "color": "#6366F1",
+                "weight": {
+                  "unit": "px",
+                  "size": 4
+                },
+                "width": {
+                  "unit": "px",
+                  "size": 48
+                },
+                "align": "center",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 2,
+                  "right": 2,
+                  "bottom": 2,
+                  "left": 2
+                }
+              }
+            },
+            {
+              "id": "elem00007m",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 20
+                }
+              }
+            },
+            {
+              "id": "elem00007n",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Case Studies",
+                "header_size": "h2",
+                "title_color": "#FFFFFF",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "align": "center"
+              }
+            },
+            {
+              "id": "elem00007o",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 12
+                }
+              }
+            },
+            {
+              "id": "elem00007p",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"text-align:center;color:#8B91A0;font-size:16px;\">Detailed breakdowns of how we helped founders overcome financial complexity and unlock growth.</p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem00007u",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "padding": {
+          "unit": "px",
+          "top": 20,
+          "right": 0,
+          "bottom": 20,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem00007t",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "elem00007s",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "title_text": "From Chaos to SBA Approval in 90 Days",
+                "description_text": "<p style=\"margin-bottom:8px;\"><span style=\"background:#161B2E;color:#6366F1;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:600;letter-spacing:2px;\">AGRICULTURE & TIMBER</span> <span style=\"color:#8B91A0;font-size:13px;margin-left:8px;\">AgriTech Founder — Pacific Northwest</span></p>\n\n<div style=\"display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:24px;\">\n<div>\n<p style=\"color:#8B91A0;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;\">🎯 THE CHALLENGE</p>\n<p style=\"color:#D8DCE4;font-size:15px;line-height:1.7;\">A second-generation timber and agriculture operation had grown from a single LLC into four interrelated entities over five years. The books were a patchwork of spreadsheets, shoe-box receipts, and a neglected QuickBooks file. Two lender applications for a $400K equipment line had been declined due to unreliable financials.</p>\n</div>\n<div>\n<p style=\"color:#8B91A0;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;\">💡 OUR APPROACH</p>\n<p style=\"color:#D8DCE4;font-size:15px;line-height:1.7;\">We performed a full historical cleanup across all four entities, reconciled 36 months of bank and credit card statements, and built a consolidated chart of accounts in QuickBooks Online. Then we developed a lender-ready 5-year business plan with realistic revenue projections backed by historical data.</p>\n</div>\n<div>\n<p style=\"color:#8B91A0;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;\">📈 THE OUTCOMES</p>\n<ul style=\"list-style:none;padding:0;\"><li style=\"margin-bottom:8px;color:#D8DCE4;font-size:15px;\">✓ 36 months of financials reconciled across 4 entities</li><li style=\"margin-bottom:8px;color:#D8DCE4;font-size:15px;\">✓ $400K equipment line of credit approved on first submission</li><li style=\"margin-bottom:8px;color:#D8DCE4;font-size:15px;\">✓ Monthly close time reduced from 3 weeks to 3 days</li><li style=\"margin-bottom:8px;color:#D8DCE4;font-size:15px;\">✓ Ongoing advisory retainer for growth planning</li></ul>\n</div>\n</div>\n\n<div style=\"margin-top:24px;padding-top:20px;border-top:1px solid #252B3D;\">\n<a href=\"/contact\" style=\"color:#6366F1;font-weight:600;font-size:14px;\">Get results like these — Book a discovery call →</a>\n</div>",
+                "selected_icon": {
+                  "value": "fas fa-chart-line",
+                  "library": "fa-solid"
+                },
+                "icon_color": "#6366F1",
+                "title_color": "#FFFFFF",
+                "title_typography_typography": "custom",
+                "title_typography_font_size": {
+                  "unit": "px",
+                  "size": 24
+                },
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 32,
+                  "right": 32,
+                  "bottom": 32,
+                  "left": 32
+                },
+                "position": "top"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem00007x",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "padding": {
+          "unit": "px",
+          "top": 20,
+          "right": 0,
+          "bottom": 20,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem00007w",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "elem00007v",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "title_text": "Crypto Portfolio Compliance & Tax-Ready Books",
+                "description_text": "<p style=\"margin-bottom:8px;\"><span style=\"background:#161B2E;color:#6366F1;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:600;letter-spacing:2px;\">CRYPTO / DIGITAL ASSETS</span> <span style=\"color:#8B91A0;font-size:13px;margin-left:8px;\">DeFi Protocol Founder — Remote (US-based)</span></p>\n\n<div style=\"display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:24px;\">\n<div>\n<p style=\"color:#8B91A0;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;\">🎯 THE CHALLENGE</p>\n<p style=\"color:#D8DCE4;font-size:15px;line-height:1.7;\">A founder running a DeFi protocol and personal crypto portfolio had no formal bookkeeping. Over 2,000 transactions across 8 wallets and 3 exchanges were unreconciled. The founder faced a potential IRS inquiry and needed clean, defensible records before tax season.</p>\n</div>\n<div>\n<p style=\"color:#8B91A0;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;\">💡 OUR APPROACH</p>\n<p style=\"color:#D8DCE4;font-size:15px;line-height:1.7;\">We integrated wallet and exchange data into a unified tracking system, applied FIFO cost-basis methodology across all transactions, and reconciled the full transaction history. We then set up ongoing automated categorization rules in QBO for fiat on/off ramps and staking rewards.</p>\n</div>\n<div>\n<p style=\"color:#8B91A0;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;\">📈 THE OUTCOMES</p>\n<ul style=\"list-style:none;padding:0;\"><li style=\"margin-bottom:8px;color:#D8DCE4;font-size:15px;\">✓ 2,000+ transactions reconciled across 8 wallets</li><li style=\"margin-bottom:8px;color:#D8DCE4;font-size:15px;\">✓ Tax-ready P&L and balance sheet delivered 6 weeks before deadline</li><li style=\"margin-bottom:8px;color:#D8DCE4;font-size:15px;\">✓ Automated monthly categorization saving 10+ hours/month</li><li style=\"margin-bottom:8px;color:#D8DCE4;font-size:15px;\">✓ No IRS issues — clean compliance posture established</li></ul>\n</div>\n</div>\n\n<div style=\"margin-top:24px;padding-top:20px;border-top:1px solid #252B3D;\">\n<a href=\"/contact\" style=\"color:#6366F1;font-weight:600;font-size:14px;\">Get results like these — Book a discovery call →</a>\n</div>",
+                "selected_icon": {
+                  "value": "fas fa-chart-line",
+                  "library": "fa-solid"
+                },
+                "icon_color": "#6366F1",
+                "title_color": "#FFFFFF",
+                "title_typography_typography": "custom",
+                "title_typography_font_size": {
+                  "unit": "px",
+                  "size": 24
+                },
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 32,
+                  "right": 32,
+                  "bottom": 32,
+                  "left": 32
+                },
+                "position": "top"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem000080",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "padding": {
+          "unit": "px",
+          "top": 20,
+          "right": 0,
+          "bottom": 20,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem00007z",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "elem00007y",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "title_text": "Multi-Location Retail: Funded After Two Rejections",
+                "description_text": "<p style=\"margin-bottom:8px;\"><span style=\"background:#161B2E;color:#6366F1;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:600;letter-spacing:2px;\">RETAIL / E-COMMERCE</span> <span style=\"color:#8B91A0;font-size:13px;margin-left:8px;\">Multi-Location Retail Owner — Southern Oregon</span></p>\n\n<div style=\"display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:24px;\">\n<div>\n<p style=\"color:#8B91A0;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;\">🎯 THE CHALLENGE</p>\n<p style=\"color:#D8DCE4;font-size:15px;line-height:1.7;\">A retail business with three storefronts and an e-commerce channel had been declined for an SBA loan twice. The business plan was a generic template, and financials didn't match between the plan, the books, and the tax returns.</p>\n</div>\n<div>\n<p style=\"color:#8B91A0;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;\">💡 OUR APPROACH</p>\n<p style=\"color:#D8DCE4;font-size:15px;line-height:1.7;\">We rebuilt the financial model from the ground up using actual historical performance data, created a 3-year projection with conservative, moderate, and aggressive scenarios, and packaged everything into a lender-ready business plan with a supporting Digital Handshake website.</p>\n</div>\n<div>\n<p style=\"color:#8B91A0;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;\">📈 THE OUTCOMES</p>\n<ul style=\"list-style:none;padding:0;\"><li style=\"margin-bottom:8px;color:#D8DCE4;font-size:15px;\">✓ $250K SBA 7(a) loan approved on next application</li><li style=\"margin-bottom:8px;color:#D8DCE4;font-size:15px;\">✓ Business plan website impressed underwriting team</li><li style=\"margin-bottom:8px;color:#D8DCE4;font-size:15px;\">✓ Revenue projections validated within 5% of actuals in Year 1</li><li style=\"margin-bottom:8px;color:#D8DCE4;font-size:15px;\">✓ Fourth storefront opened ahead of schedule</li></ul>\n</div>\n</div>\n\n<div style=\"margin-top:24px;padding-top:20px;border-top:1px solid #252B3D;\">\n<a href=\"/contact\" style=\"color:#6366F1;font-weight:600;font-size:14px;\">Get results like these — Book a discovery call →</a>\n</div>",
+                "selected_icon": {
+                  "value": "fas fa-chart-line",
+                  "library": "fa-solid"
+                },
+                "icon_color": "#6366F1",
+                "title_color": "#FFFFFF",
+                "title_typography_typography": "custom",
+                "title_typography_font_size": {
+                  "unit": "px",
+                  "size": 24
+                },
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 32,
+                  "right": 32,
+                  "bottom": 32,
+                  "left": 32
+                },
+                "position": "top"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem000083",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "padding": {
+          "unit": "px",
+          "top": 20,
+          "right": 0,
+          "bottom": 20,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem000082",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "elem000081",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "title_text": "SaaS Startup: Investor-Ready in 30 Days",
+                "description_text": "<p style=\"margin-bottom:8px;\"><span style=\"background:#161B2E;color:#6366F1;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:600;letter-spacing:2px;\">TECHNOLOGY / SAAS</span> <span style=\"color:#8B91A0;font-size:13px;margin-left:8px;\">SaaS Startup CEO — Remote (Nationwide)</span></p>\n\n<div style=\"display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:24px;\">\n<div>\n<p style=\"color:#8B91A0;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;\">🎯 THE CHALLENGE</p>\n<p style=\"color:#D8DCE4;font-size:15px;line-height:1.7;\">A pre-Series A SaaS company had strong MRR growth but messy books that couldn't pass investor due diligence. Deferred revenue wasn't being tracked, expenses were miscategorized, and there was no financial model for the pitch deck.</p>\n</div>\n<div>\n<p style=\"color:#8B91A0;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;\">💡 OUR APPROACH</p>\n<p style=\"color:#D8DCE4;font-size:15px;line-height:1.7;\">We performed a rapid financial cleanup focused on SaaS metrics (MRR, churn, LTV, CAC), built a proper deferred revenue schedule, and created a detailed 5-year financial model with unit economics. The Digital Handshake presentation replaced their static pitch deck financials with a live, interactive site.</p>\n</div>\n<div>\n<p style=\"color:#8B91A0;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;\">📈 THE OUTCOMES</p>\n<ul style=\"list-style:none;padding:0;\"><li style=\"margin-bottom:8px;color:#D8DCE4;font-size:15px;\">✓ Books cleaned and investor-ready in 28 days</li><li style=\"margin-bottom:8px;color:#D8DCE4;font-size:15px;\">✓ Deferred revenue properly recognized — $80K reclassified</li><li style=\"margin-bottom:8px;color:#D8DCE4;font-size:15px;\">✓ Interactive financial model site used in investor meetings</li><li style=\"margin-bottom:8px;color:#D8DCE4;font-size:15px;\">✓ Term sheet signed within the 45-day window</li></ul>\n</div>\n</div>\n\n<div style=\"margin-top:24px;padding-top:20px;border-top:1px solid #252B3D;\">\n<a href=\"/contact\" style=\"color:#6366F1;font-weight:600;font-size:14px;\">Get results like these — Book a discovery call →</a>\n</div>",
+                "selected_icon": {
+                  "value": "fas fa-chart-line",
+                  "library": "fa-solid"
+                },
+                "icon_color": "#6366F1",
+                "title_color": "#FFFFFF",
+                "title_typography_typography": "custom",
+                "title_typography_font_size": {
+                  "unit": "px",
+                  "size": 24
+                },
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 32,
+                  "right": 32,
+                  "bottom": 32,
+                  "left": 32
+                },
+                "position": "top"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem00008a",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "background_background": "gradient",
+        "background_color": "#0E1120",
+        "background_color_b": "#0E1118",
+        "padding": {
+          "unit": "px",
+          "top": 80,
+          "right": 0,
+          "bottom": 80,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem000089",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "elem000084",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Ready to Write Your <span style=\"color:#6366F1\">Success Story?</span>",
+                "header_size": "h2",
+                "title_color": "#FFFFFF",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "align": "center",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 36
+                }
+              }
+            },
+            {
+              "id": "elem000085",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 16
+                }
+              }
+            },
+            {
+              "id": "elem000086",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"text-align:center;color:#8B91A0;font-size:18px;\">Join the founders who've transformed their financial infrastructure and unlocked their next stage of growth.</p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            },
+            {
+              "id": "elem000087",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 24
+                }
+              }
+            },
+            {
+              "id": "elem000088",
+              "elType": "widget",
+              "widgetType": "button",
+              "settings": {
+                "text": "Book Your Discovery Call",
+                "link": {
+                  "url": "/contact",
+                  "is_external": false,
+                  "nofollow": false
+                },
+                "align": "center",
+                "button_type": "default",
+                "background_color": "#6366F1",
+                "button_text_color": "#FFFFFF",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 12,
+                  "right": 12,
+                  "bottom": 12,
+                  "left": 12
+                },
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "600",
+                "button_padding": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 32,
+                  "bottom": 16,
+                  "left": 32
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "page_settings": {
+    "background_background": "classic",
+    "background_color": "#0E1118"
+  },
+  "version": "0.4",
+  "title": "Results",
+  "type": "page"
+}

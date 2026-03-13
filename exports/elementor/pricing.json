@@ -1,0 +1,553 @@
+{
+  "content": [
+    {
+      "id": "elem00004o",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "background_background": "gradient",
+        "background_color": "#0E1118",
+        "background_color_b": "#161B2E",
+        "padding": {
+          "unit": "px",
+          "top": 140,
+          "right": 0,
+          "bottom": 80,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem00004n",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "elem00004i",
+              "elType": "widget",
+              "widgetType": "divider",
+              "settings": {
+                "color": "#6366F1",
+                "weight": {
+                  "unit": "px",
+                  "size": 4
+                },
+                "width": {
+                  "unit": "px",
+                  "size": 48
+                },
+                "align": "center",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 2,
+                  "right": 2,
+                  "bottom": 2,
+                  "left": 2
+                }
+              }
+            },
+            {
+              "id": "elem00004j",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 20
+                }
+              }
+            },
+            {
+              "id": "elem00004k",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Value-Based Investment",
+                "header_size": "h1",
+                "title_color": "#FFFFFF",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "align": "center",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 48
+                }
+              }
+            },
+            {
+              "id": "elem00004l",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 16
+                }
+              }
+            },
+            {
+              "id": "elem00004m",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"text-align:center;color:#8B91A0;font-size:18px;\">We reject the hourly billing model. You pay for outcomes, clarity, and executive-level expertise. All pricing is flat-fee for predictable cash flow.</p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem00004r",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "padding": {
+          "unit": "px",
+          "top": 20,
+          "right": 0,
+          "bottom": 20,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem00004q",
+          "elType": "column",
+          "settings": {
+            "_column_size": 100
+          },
+          "elements": [
+            {
+              "id": "elem00004p",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"text-align:center;\"><span style=\"background:#161B2E;border:1px solid #252B3D;padding:8px 16px;border-radius:999px;color:#6366F1;font-size:14px;\">🛡️ Includes mandatory Technology & Security Surcharge</span></p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem000055",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "structure": "30",
+        "padding": {
+          "unit": "px",
+          "top": 40,
+          "right": 0,
+          "bottom": 40,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem00004v",
+          "elType": "column",
+          "settings": {
+            "_column_size": 33
+          },
+          "elements": [
+            {
+              "id": "elem00004s",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "title_text": "Bookkeeping",
+                "description_text": "<p style=\"font-size:11px;font-weight:600;letter-spacing:2px;color:#8B91A0;margin-bottom:12px;\">ONGOING</p>\n<p style=\"font-size:12px;color:#8B91A0;\">Starting at</p>\n<p style=\"font-size:36px;font-weight:800;color:#FFFFFF;margin:4px 0;\">$500<span style=\"font-size:16px;color:#8B91A0;font-weight:400;\">/mo</span></p>\n<p style=\"font-size:14px;color:#8B91A0;margin-top:12px;\">Tailored based on transaction volume, entity count, and niche complexity.</p>\n<hr style=\"border-color:#252B3D;margin:20px 0;\" />\n<ul style=\"list-style:none;padding:0;\"><li style=\"margin-bottom:10px;color:#D8DCE4;font-size:14px;\">✓ Dedicated US-based expert</li><li style=\"margin-bottom:10px;color:#D8DCE4;font-size:14px;\">✓ Rule-based QBO automation</li><li style=\"margin-bottom:10px;color:#D8DCE4;font-size:14px;\">✓ Monthly reconciliation & close</li><li style=\"margin-bottom:10px;color:#D8DCE4;font-size:14px;\">✓ Financial statement delivery</li><li style=\"margin-bottom:10px;color:#D8DCE4;font-size:14px;\">✓ Proactive communication</li></ul>",
+                "selected_icon": {
+                  "value": "fas fa-calculator",
+                  "library": "fa-solid"
+                },
+                "icon_color": "#6366F1",
+                "title_color": "#FFFFFF",
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 32,
+                  "right": 32,
+                  "bottom": 32,
+                  "left": 32
+                },
+                "position": "top"
+              }
+            },
+            {
+              "id": "elem00004t",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 16
+                }
+              }
+            },
+            {
+              "id": "elem00004u",
+              "elType": "widget",
+              "widgetType": "button",
+              "settings": {
+                "text": "Get Custom Quote",
+                "link": {
+                  "url": "/contact",
+                  "is_external": false,
+                  "nofollow": false
+                },
+                "align": "stretch",
+                "button_type": "default",
+                "background_color": "#6366F1",
+                "button_text_color": "#FFFFFF",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 12,
+                  "right": 12,
+                  "bottom": 12,
+                  "left": 12
+                },
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "600",
+                "button_padding": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 32,
+                  "bottom": 16,
+                  "left": 32
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "elem000050",
+          "elType": "column",
+          "settings": {
+            "_column_size": 33
+          },
+          "elements": [
+            {
+              "id": "elem00004w",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<div style=\"text-align:center;margin-bottom:12px;\"><span style=\"background:#6366F1;color:white;padding:6px 16px;border-radius:0 0 8px 8px;font-size:12px;font-weight:700;letter-spacing:1px;\">MOST REQUESTED</span></div>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            },
+            {
+              "id": "elem00004x",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "title_text": "Business Plans",
+                "description_text": "<p style=\"font-size:11px;font-weight:600;letter-spacing:2px;color:#6366F1;margin-bottom:12px;\">PROJECT</p>\n<p style=\"font-size:36px;font-weight:800;color:#FFFFFF;margin:4px 0;\">$2.5k – $5k+</p>\n<p style=\"font-size:14px;color:#8B91A0;margin-top:12px;\">Lender and investor ready planning to secure essential capital.</p>\n<hr style=\"border-color:#252B3D;margin:20px 0;\" />\n<ul style=\"list-style:none;padding:0;\"><li style=\"margin-bottom:10px;color:#D8DCE4;font-size:14px;\">✓ 3-5 Year rigorous forecasting</li><li style=\"margin-bottom:10px;color:#D8DCE4;font-size:14px;\">✓ SBA formatting standards</li><li style=\"margin-bottom:10px;color:#D8DCE4;font-size:14px;\">✓ Deep market research</li><li style=\"margin-bottom:10px;color:#D8DCE4;font-size:14px;\">✓ Competitor analysis</li><li style=\"margin-bottom:10px;color:#D8DCE4;font-size:14px;\">✓ Executive summary & narrative</li></ul>",
+                "selected_icon": {
+                  "value": "fas fa-book-open",
+                  "library": "fa-solid"
+                },
+                "icon_color": "#6366F1",
+                "title_color": "#FFFFFF",
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#6366F1",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 32,
+                  "right": 32,
+                  "bottom": 32,
+                  "left": 32
+                },
+                "position": "top"
+              }
+            },
+            {
+              "id": "elem00004y",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 16
+                }
+              }
+            },
+            {
+              "id": "elem00004z",
+              "elType": "widget",
+              "widgetType": "button",
+              "settings": {
+                "text": "Start Your Blueprint →",
+                "link": {
+                  "url": "/contact"
+                },
+                "align": "stretch",
+                "background_color": "#6366F1",
+                "button_text_color": "#FFFFFF",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 12,
+                  "right": 12,
+                  "bottom": 12,
+                  "left": 12
+                },
+                "typography_typography": "custom",
+                "typography_font_weight": "600",
+                "button_padding": {
+                  "unit": "px",
+                  "top": 14,
+                  "right": 24,
+                  "bottom": 14,
+                  "left": 24
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "elem000054",
+          "elType": "column",
+          "settings": {
+            "_column_size": 33
+          },
+          "elements": [
+            {
+              "id": "elem000051",
+              "elType": "widget",
+              "widgetType": "icon-box",
+              "settings": {
+                "title_text": "Static Web Design",
+                "description_text": "<p style=\"font-size:11px;font-weight:600;letter-spacing:2px;color:#8B91A0;margin-bottom:12px;\">INNOVATION</p>\n<p style=\"font-size:36px;font-weight:800;color:#FFFFFF;margin:4px 0;\">$1.5k – $3.5k+</p>\n<p style=\"font-size:14px;color:#8B91A0;margin-top:12px;\">Turn your business plan into an interactive digital handshake.</p>\n<hr style=\"border-color:#252B3D;margin:20px 0;\" />\n<ul style=\"list-style:none;padding:0;\"><li style=\"margin-bottom:10px;color:#D8DCE4;font-size:14px;\">✓ Custom coded static architecture</li><li style=\"margin-bottom:10px;color:#D8DCE4;font-size:14px;\">✓ Blazing fast load times</li><li style=\"margin-bottom:10px;color:#D8DCE4;font-size:14px;\">✓ Zero database maintenance</li><li style=\"margin-bottom:10px;color:#D8DCE4;font-size:14px;\">✓ Interactive financial displays</li><li style=\"margin-bottom:10px;color:#D8DCE4;font-size:14px;\">✓ High-end professional polish</li></ul>",
+                "selected_icon": {
+                  "value": "fas fa-desktop",
+                  "library": "fa-solid"
+                },
+                "icon_color": "#6366F1",
+                "title_color": "#FFFFFF",
+                "background_background": "classic",
+                "background_color": "#161B2E",
+                "border_border": "solid",
+                "border_width": {
+                  "unit": "px",
+                  "top": 1,
+                  "right": 1,
+                  "bottom": 1,
+                  "left": 1
+                },
+                "border_color": "#252B3D",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 16,
+                  "bottom": 16,
+                  "left": 16
+                },
+                "box_padding": {
+                  "unit": "px",
+                  "top": 32,
+                  "right": 32,
+                  "bottom": 32,
+                  "left": 32
+                },
+                "position": "top"
+              }
+            },
+            {
+              "id": "elem000052",
+              "elType": "widget",
+              "widgetType": "spacer",
+              "settings": {
+                "space": {
+                  "unit": "px",
+                  "size": 16
+                }
+              }
+            },
+            {
+              "id": "elem000053",
+              "elType": "widget",
+              "widgetType": "button",
+              "settings": {
+                "text": "Explore Digital Build",
+                "link": {
+                  "url": "/contact",
+                  "is_external": false,
+                  "nofollow": false
+                },
+                "align": "stretch",
+                "button_type": "default",
+                "background_color": "#6366F1",
+                "button_text_color": "#FFFFFF",
+                "border_radius": {
+                  "unit": "px",
+                  "top": 12,
+                  "right": 12,
+                  "bottom": 12,
+                  "left": 12
+                },
+                "typography_typography": "custom",
+                "typography_font_family": "Inter",
+                "typography_font_weight": "600",
+                "button_padding": {
+                  "unit": "px",
+                  "top": 16,
+                  "right": 32,
+                  "bottom": 16,
+                  "left": 32
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elem00005b",
+      "elType": "section",
+      "settings": {
+        "layout": "full_width",
+        "content_width": {
+          "unit": "px",
+          "size": 1200
+        },
+        "gap": "default",
+        "padding": {
+          "unit": "px",
+          "top": 40,
+          "right": 0,
+          "bottom": 80,
+          "left": 0
+        }
+      },
+      "elements": [
+        {
+          "id": "elem000058",
+          "elType": "column",
+          "settings": {
+            "_column_size": 60
+          },
+          "elements": [
+            {
+              "id": "elem000056",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Need Remote Notarization?",
+                "header_size": "h4",
+                "title_color": "#FFFFFF",
+                "typography_typography": "custom",
+                "typography_font_family": "Outfit",
+                "typography_font_weight": "700",
+                "align": "left",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 18
+                }
+              }
+            },
+            {
+              "id": "elem000057",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"color:#8B91A0;font-size:14px;\">Available as a standalone service or integrated seamlessly into your planning project.</p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            }
+          ]
+        },
+        {
+          "id": "elem00005a",
+          "elType": "column",
+          "settings": {
+            "_column_size": 40
+          },
+          "elements": [
+            {
+              "id": "elem000059",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"text-align:right;color:#D8DCE4;font-size:14px;font-weight:600;\">Per-session pricing available</p>\n<p style=\"text-align:right;\"><a href=\"/contact\" style=\"color:#6366F1;font-size:14px;font-weight:500;\">Contact to schedule →</a></p>",
+                "text_color": "#D8DCE4",
+                "typography_typography": "custom",
+                "typography_font_family": "Inter"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "page_settings": {
+    "background_background": "classic",
+    "background_color": "#0E1118"
+  },
+  "version": "0.4",
+  "title": "Pricing",
+  "type": "page"
+}
