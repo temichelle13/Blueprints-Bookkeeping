@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Mail, Phone, MapPin } from "lucide-react";
-import { 
-  useContactMutation, 
-  quickContactSchema, 
+import { Mail, Phone, MapPin, Send } from "lucide-react";
+import {
+  useContactMutation,
+  quickContactSchema,
   detailedContactSchema,
   type QuickContactValues,
   type DetailedContactValues
@@ -12,67 +12,65 @@ import {
 
 export default function Contact() {
   return (
-    <div className="pt-24 pb-20 bg-muted/20 min-h-screen">
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center">
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-primary mb-6">Let's Talk Strategy</h1>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Choose the path that fits your timeline. Send a quick note or give us the details for a tailored discovery call.
-        </p>
+    <div className="pt-24 pb-20 min-h-screen">
+      <section className="py-16 mb-16 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="accent-bar mx-auto mb-6" />
+          <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-6">Let's Talk Strategy</h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Choose the path that fits your timeline. Send a quick note or give us the details for a tailored discovery call.
+          </p>
+        </div>
       </section>
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          
-          {/* Quick Contact Form - Left Column */}
-          <div className="lg:col-span-4 space-y-8">
-            <div className="bg-card premium-shadow rounded-2xl p-8 border border-border">
-              <h2 className="text-2xl font-bold text-foreground mb-2">Quick Message</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="lg:col-span-4 space-y-6">
+            <div className="glass-card rounded-2xl p-8">
+              <h2 className="text-xl font-bold text-white mb-1">Quick Message</h2>
               <p className="text-muted-foreground text-sm mb-6">Just have a question? Drop it here.</p>
               <QuickContactForm />
             </div>
 
-            <div className="bg-primary text-white rounded-2xl p-8 premium-shadow">
-              <h3 className="font-bold text-lg mb-6">Direct Channels</h3>
-              <div className="space-y-6">
+            <div className="glass-card rounded-2xl p-8">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-6">Direct Channels</h3>
+              <div className="space-y-5">
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-white/10 rounded-full"><Mail size={20} /></div>
+                  <div className="p-2.5 bg-accent/10 rounded-lg text-accent"><Mail size={18} /></div>
                   <div>
-                    <p className="text-xs text-primary-foreground/70 uppercase tracking-wider">Email</p>
-                    <a href="mailto:tea@blueprintsandbookkeeping.com" className="font-medium hover:text-accent transition-colors">tea@blueprintsandbookkeeping.com</a>
+                    <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-mono">Email</p>
+                    <a href="mailto:tea@blueprintsandbookkeeping.com" className="font-medium text-foreground hover:text-accent transition-colors text-sm">tea@blueprintsandbookkeeping.com</a>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-white/10 rounded-full"><Phone size={20} /></div>
+                  <div className="p-2.5 bg-accent/10 rounded-lg text-accent"><Phone size={18} /></div>
                   <div>
-                    <p className="text-xs text-primary-foreground/70 uppercase tracking-wider">Phone</p>
-                    <a href="tel:+15413198654" className="font-medium hover:text-accent transition-colors">(541) 319-8654</a>
+                    <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-mono">Phone</p>
+                    <a href="tel:+15413198654" className="font-medium text-foreground hover:text-accent transition-colors text-sm">(541) 319-8654</a>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-white/10 rounded-full"><MapPin size={20} /></div>
+                  <div className="p-2.5 bg-accent/10 rounded-lg text-accent"><MapPin size={18} /></div>
                   <div>
-                    <p className="text-xs text-primary-foreground/70 uppercase tracking-wider">Location</p>
-                    <p className="font-medium">Roseburg, Oregon (Remote US)</p>
+                    <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-mono">Location</p>
+                    <p className="font-medium text-foreground text-sm">Roseburg, Oregon (Remote US)</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Detailed Intake Form - Right Column */}
-          <div className="lg:col-span-8 bg-card premium-shadow rounded-2xl p-8 md:p-10 border border-border">
-            <h2 className="text-3xl font-display font-bold text-primary mb-2">Discovery Intake Form</h2>
-            <p className="text-muted-foreground mb-8">Ready to dive in? Provide context about your operations so we can hit the ground running on our first call.</p>
+          <div className="lg:col-span-8 glass-card rounded-2xl p-8 md:p-10">
+            <h2 className="text-2xl font-display font-bold text-white mb-2">Discovery Intake Form</h2>
+            <p className="text-muted-foreground mb-8 text-[15px]">Ready to dive in? Provide context about your operations so we can hit the ground running on our first call.</p>
             <DetailedIntakeForm />
           </div>
-
         </div>
       </section>
     </div>
   );
 }
-
-// --- FORM COMPONENTS ---
 
 function QuickContactForm() {
   const { submit, isPending } = useContactMutation();
@@ -86,39 +84,28 @@ function QuickContactForm() {
     reset();
   };
 
+  const inputClass = "w-full px-4 py-3 rounded-lg bg-surface border border-white/[0.06] text-foreground placeholder:text-muted-foreground focus:border-accent/50 focus:ring-2 focus:ring-accent/10 outline-none transition-all";
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
-        <input 
-          {...register("name")} 
-          placeholder="Name" 
-          className="w-full px-4 py-3 rounded-lg bg-background border border-border focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all"
-        />
+        <input {...register("name")} placeholder="Name" className={inputClass} />
         {errors.name && <span className="text-destructive text-xs mt-1">{errors.name.message}</span>}
       </div>
       <div>
-        <input 
-          {...register("email")} 
-          placeholder="Email Address" 
-          type="email"
-          className="w-full px-4 py-3 rounded-lg bg-background border border-border focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all"
-        />
+        <input {...register("email")} placeholder="Email Address" type="email" className={inputClass} />
         {errors.email && <span className="text-destructive text-xs mt-1">{errors.email.message}</span>}
       </div>
       <div>
-        <textarea 
-          {...register("message")} 
-          placeholder="How can we help?" 
-          rows={4}
-          className="w-full px-4 py-3 rounded-lg bg-background border border-border focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all resize-none"
-        />
+        <textarea {...register("message")} placeholder="How can we help?" rows={4} className={`${inputClass} resize-none`} />
         {errors.message && <span className="text-destructive text-xs mt-1">{errors.message.message}</span>}
       </div>
-      <button 
-        type="submit" 
+      <button
+        type="submit"
         disabled={isPending}
-        className="w-full py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full py-3 bg-accent text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-accent/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
+        <Send size={16} />
         {isPending ? "Sending..." : "Send Message"}
       </button>
     </form>
@@ -137,54 +124,40 @@ function DetailedIntakeForm() {
     reset();
   };
 
+  const inputClass = "w-full px-4 py-3 rounded-lg bg-surface border border-white/[0.06] text-foreground placeholder:text-muted-foreground focus:border-accent/50 focus:ring-2 focus:ring-accent/10 outline-none transition-all";
+  const labelClass = "block text-sm font-medium text-foreground mb-1.5";
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-foreground mb-1">Your Name *</label>
-          <input 
-            {...register("name")} 
-            className="w-full px-4 py-3 rounded-lg bg-background border border-border focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all"
-          />
+          <label className={labelClass}>Your Name *</label>
+          <input {...register("name")} className={inputClass} />
           {errors.name && <span className="text-destructive text-xs mt-1">{errors.name.message}</span>}
         </div>
         <div>
-          <label className="block text-sm font-medium text-foreground mb-1">Business Name *</label>
-          <input 
-            {...register("businessName")} 
-            className="w-full px-4 py-3 rounded-lg bg-background border border-border focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all"
-          />
+          <label className={labelClass}>Business Name *</label>
+          <input {...register("businessName")} className={inputClass} />
           {errors.businessName && <span className="text-destructive text-xs mt-1">{errors.businessName.message}</span>}
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-foreground mb-1">Email Address *</label>
-          <input 
-            {...register("email")} 
-            type="email"
-            className="w-full px-4 py-3 rounded-lg bg-background border border-border focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all"
-          />
+          <label className={labelClass}>Email Address *</label>
+          <input {...register("email")} type="email" className={inputClass} />
           {errors.email && <span className="text-destructive text-xs mt-1">{errors.email.message}</span>}
         </div>
         <div>
-          <label className="block text-sm font-medium text-foreground mb-1">Phone Number</label>
-          <input 
-            {...register("phone")} 
-            type="tel"
-            className="w-full px-4 py-3 rounded-lg bg-background border border-border focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all"
-          />
+          <label className={labelClass}>Phone Number</label>
+          <input {...register("phone")} type="tel" className={inputClass} />
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-foreground mb-1">Industry *</label>
-          <select 
-            {...register("industry")}
-            className="w-full px-4 py-3 rounded-lg bg-background border border-border focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all"
-          >
+          <label className={labelClass}>Industry *</label>
+          <select {...register("industry")} className={inputClass}>
             <option value="">Select an industry...</option>
             <option value="Agriculture & Timber">Agriculture & Timber</option>
             <option value="Crypto/Digital Assets">Crypto / Digital Assets</option>
@@ -196,11 +169,8 @@ function DetailedIntakeForm() {
           {errors.industry && <span className="text-destructive text-xs mt-1">{errors.industry.message}</span>}
         </div>
         <div>
-          <label className="block text-sm font-medium text-foreground mb-1">Avg. Monthly Revenue</label>
-          <select 
-            {...register("monthlyRevenueRange")}
-            className="w-full px-4 py-3 rounded-lg bg-background border border-border focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all"
-          >
+          <label className={labelClass}>Avg. Monthly Revenue</label>
+          <select {...register("monthlyRevenueRange")} className={inputClass}>
             <option value="">Select range...</option>
             <option value="Pre-revenue">Pre-revenue</option>
             <option value="$1k - $10k">$1k - $10k</option>
@@ -211,22 +181,22 @@ function DetailedIntakeForm() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-foreground mb-3">Services Interested In *</label>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <label className={labelClass}>Services Interested In *</label>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
           {[
             "Advanced Bookkeeping / Cleanup",
             "Business Planning (Lender-Ready)",
             "Digital Handshake (Web Design)",
             "Remote Online Notarization"
           ].map((svc) => (
-            <label key={svc} className="flex items-center gap-3 p-3 border border-border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
-              <input 
-                type="checkbox" 
-                value={svc} 
+            <label key={svc} className="flex items-center gap-3 p-3 border border-white/[0.06] rounded-lg cursor-pointer hover:bg-surface transition-colors bg-surface/50">
+              <input
+                type="checkbox"
+                value={svc}
                 {...register("servicesInterested")}
-                className="w-5 h-5 text-accent rounded border-border focus:ring-accent"
+                className="w-4 h-4 accent-accent rounded border-white/10"
               />
-              <span className="text-sm font-medium">{svc}</span>
+              <span className="text-sm text-foreground">{svc}</span>
             </label>
           ))}
         </div>
@@ -234,20 +204,17 @@ function DetailedIntakeForm() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-foreground mb-1">What is your biggest operational challenge right now? *</label>
-        <textarea 
-          {...register("biggestChallenge")} 
-          rows={4}
-          className="w-full px-4 py-3 rounded-lg bg-background border border-border focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all resize-none"
-        />
+        <label className={labelClass}>What is your biggest operational challenge right now? *</label>
+        <textarea {...register("biggestChallenge")} rows={4} className={`${inputClass} resize-none`} />
         {errors.biggestChallenge && <span className="text-destructive text-xs mt-1">{errors.biggestChallenge.message}</span>}
       </div>
 
-      <button 
-        type="submit" 
+      <button
+        type="submit"
         disabled={isPending}
-        className="px-8 py-4 bg-accent text-white font-bold text-lg rounded-xl hover:bg-accent/90 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+        className="px-8 py-4 bg-accent text-white font-bold text-lg rounded-xl hover:shadow-xl hover:shadow-accent/20 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center gap-2"
       >
+        <Send size={18} />
         {isPending ? "Submitting Application..." : "Submit Discovery Application"}
       </button>
     </form>

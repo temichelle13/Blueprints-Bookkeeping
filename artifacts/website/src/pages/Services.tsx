@@ -1,13 +1,14 @@
 import { Link } from "wouter";
-import { Calculator, BookOpen, MonitorPlay, FileSignature, CheckCircle2 } from "lucide-react";
+import { Calculator, BookOpen, MonitorPlay, FileSignature, CheckCircle2, ArrowRight } from "lucide-react";
 
 export default function Services() {
   const services = [
     {
       id: "bookkeeping",
-      icon: <Calculator className="w-10 h-10 text-white" />,
+      icon: <Calculator className="w-5 h-5" />,
       title: "Advanced Bookkeeping & Cleanup",
       desc: "For complex operations that have outgrown basic data entry.",
+      tag: "ONGOING",
       features: [
         "Historical data remediation and cleanup",
         "Multi-entity structuring and consolidation",
@@ -18,9 +19,10 @@ export default function Services() {
     },
     {
       id: "planning",
-      icon: <BookOpen className="w-10 h-10 text-white" />,
+      icon: <BookOpen className="w-5 h-5" />,
       title: "Lender-Ready Business Plans",
       desc: "Bridge the gap between your current operations and future funding.",
+      tag: "PROJECT",
       features: [
         "Rigorous 3-to-5-year financial forecasting",
         "SBA-ready documentation formatting",
@@ -31,9 +33,10 @@ export default function Services() {
     },
     {
       id: "digital",
-      icon: <MonitorPlay className="w-10 h-10 text-white" />,
+      icon: <MonitorPlay className="w-5 h-5" />,
       title: "The Digital Handshake",
       desc: "Transform your business plan into a secure, interactive web presence.",
+      tag: "INNOVATION",
       features: [
         "Business plans delivered as custom static websites",
         "Modern alternative to standard PDF pitches",
@@ -44,9 +47,10 @@ export default function Services() {
     },
     {
       id: "notary",
-      icon: <FileSignature className="w-10 h-10 text-white" />,
+      icon: <FileSignature className="w-5 h-5" />,
       title: "Remote Online Notarization",
       desc: "Frictionless document execution for your high-stakes agreements.",
+      tag: "ADD-ON",
       features: [
         "Oregon-commissioned active notary",
         "Secure video conferencing with KBA protocols",
@@ -58,45 +62,48 @@ export default function Services() {
   ];
 
   return (
-    <div className="pt-24 pb-20 bg-muted/30">
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center">
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-primary mb-6">Our Services</h1>
-        <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-          We move beyond simple data entry to provide a robust, modern financial infrastructure tailored for ambitious founders.
-        </p>
+    <div className="pt-24 pb-20">
+      <section className="py-16 mb-16 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="accent-bar mx-auto mb-6" />
+          <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-6">Our Services</h1>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            Beyond simple data entry&mdash;robust, modern financial infrastructure tailored for ambitious founders.
+          </p>
+        </div>
       </section>
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {services.map((svc) => (
-            <div key={svc.id} className="bg-card premium-shadow rounded-2xl overflow-hidden border border-border flex flex-col h-full group">
-              <div className="bg-primary p-8 flex items-center gap-6 relative overflow-hidden">
-                <div className="absolute -right-4 -bottom-4 opacity-10 transform scale-150 group-hover:scale-110 transition-transform duration-700">
-                  {svc.icon}
+            <div key={svc.id} className="glass-card-hover rounded-2xl overflow-hidden flex flex-col h-full group">
+              <div className="p-8 pb-0">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="p-2 rounded-lg bg-accent/10 text-accent">
+                    {svc.icon}
+                  </div>
+                  <span className="text-[11px] font-mono font-medium tracking-widest text-muted-foreground">{svc.tag}</span>
                 </div>
-                <div className="relative z-10 p-3 bg-white/20 backdrop-blur-sm rounded-xl">
-                  {svc.icon}
-                </div>
-                <div className="relative z-10">
-                  <h3 className="text-2xl font-bold text-white mb-1">{svc.title}</h3>
-                  <p className="text-primary-foreground/80 text-sm font-medium">{svc.desc}</p>
-                </div>
+                <h3 className="text-2xl font-bold text-white mb-2">{svc.title}</h3>
+                <p className="text-muted-foreground text-[15px]">{svc.desc}</p>
               </div>
-              
+
               <div className="p-8 flex-grow flex flex-col justify-between">
-                <ul className="space-y-4 mb-8">
+                <ul className="space-y-3 mb-8">
                   {svc.features.map((feat, i) => (
                     <li key={i} className="flex items-start gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-accent shrink-0 mt-0.5" />
-                      <span className="text-muted-foreground">{feat}</span>
+                      <CheckCircle2 className="w-4 h-4 text-accent shrink-0 mt-0.5" />
+                      <span className="text-foreground text-[14px]">{feat}</span>
                     </li>
                   ))}
                 </ul>
-                <Link 
+                <Link
                   href="/contact"
-                  className="w-full text-center py-3 rounded-lg border-2 border-primary text-primary font-bold hover:bg-primary hover:text-white transition-colors"
+                  className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300 group/btn"
                 >
                   Inquire About This Service
+                  <ArrowRight size={15} className="group-hover/btn:translate-x-1 transition-transform" />
                 </Link>
               </div>
             </div>

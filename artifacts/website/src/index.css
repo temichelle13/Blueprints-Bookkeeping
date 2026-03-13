@@ -1,9 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Outfit:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: 'DM Sans', sans-serif;
+  --font-sans: 'Inter', sans-serif;
   --font-display: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -21,64 +22,106 @@
   --color-ring: hsl(var(--ring));
   --color-card: hsl(var(--card));
   --color-card-foreground: hsl(var(--card-foreground));
+  --color-surface: hsl(var(--surface));
+  --color-glow: hsl(var(--glow));
 }
 
 :root {
-  /* Deep Navy (#1B2A5A) */
   --primary: 226 54% 23%;
   --primary-foreground: 0 0% 100%;
-  
-  /* Periwinkle/Purple-blue (#5B5EA6) */
-  --accent: 238 31% 50%;
+
+  --accent: 238 50% 62%;
   --accent-foreground: 0 0% 100%;
 
-  /* Backgrounds & foregrounds */
-  --background: 0 0% 100%;
-  --foreground: 226 54% 15%; /* Slightly darker navy for text */
-  
-  /* Cards and Sections */
-  --card: 0 0% 100%;
-  --card-foreground: 226 54% 15%;
-  
-  /* Muted / Light Grey (#F8F9FA) */
-  --muted: 210 17% 98%;
-  --muted-foreground: 226 20% 45%;
-  
-  /* Secondary (Soft blue-grey) */
-  --secondary: 226 20% 92%;
-  --secondary-foreground: 226 54% 23%;
+  --background: 228 30% 8%;
+  --foreground: 220 20% 88%;
+
+  --card: 228 28% 12%;
+  --card-foreground: 220 20% 88%;
+
+  --surface: 228 26% 15%;
+
+  --muted: 228 20% 18%;
+  --muted-foreground: 220 15% 58%;
+
+  --secondary: 228 25% 20%;
+  --secondary-foreground: 220 20% 88%;
 
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
-  
-  --border: 226 20% 90%;
-  --ring: 238 31% 50%;
+
+  --border: 228 20% 20%;
+  --ring: 238 50% 62%;
+  --glow: 238 60% 55%;
 
   --radius: 0.75rem;
 }
 
 @layer base {
   body {
-    @apply bg-background text-foreground antialiased font-sans selection:bg-accent/20 selection:text-primary;
+    @apply bg-background text-foreground antialiased font-sans;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, hsla(238, 50%, 40%, 0.12), transparent),
+      radial-gradient(ellipse 60% 40% at 80% 100%, hsla(226, 54%, 23%, 0.08), transparent);
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    background: hsla(238, 50%, 62%, 0.3);
+    color: white;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    @apply font-bold tracking-tight text-primary;
+    @apply font-bold tracking-tight text-white;
   }
 }
 
-/* Custom Utilities for smooth animations and shadows */
 @layer utilities {
-  .glass-panel {
-    @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-xl shadow-primary/5;
+  .glow-line {
+    @apply h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent;
   }
-  
-  .premium-shadow {
-    @apply shadow-lg shadow-primary/5 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300;
+
+  .glow-dot {
+    @apply w-1.5 h-1.5 rounded-full bg-accent;
+    box-shadow: 0 0 8px 2px hsl(238 50% 62% / 0.5);
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-accent via-blue-300 to-accent;
   }
+
+  .accent-bar {
+    @apply w-12 h-1 rounded-full bg-gradient-to-r from-accent to-blue-400;
+  }
+}
+
+.glass-card {
+  background: hsl(228 28% 12% / 0.6);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+}
+
+.glass-card-hover {
+  background: hsl(228 28% 12% / 0.6);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+  transition: all 0.5s;
+}
+
+.glass-card-hover:hover {
+  border-color: hsl(238 50% 62% / 0.3);
+  box-shadow: 0 25px 50px -12px hsl(238 50% 62% / 0.05);
+}
+
+input, textarea, select {
+  @apply text-foreground;
+}
+
+input::placeholder, textarea::placeholder {
+  @apply text-muted-foreground;
 }

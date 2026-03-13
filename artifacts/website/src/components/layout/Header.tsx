@@ -4,7 +4,6 @@ import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
-  { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
   { href: "/industries", label: "Industries" },
@@ -25,7 +24,6 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [location]);
@@ -33,54 +31,58 @@ export function Header() {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
         isScrolled
-          ? "bg-white/90 backdrop-blur-md border-border shadow-sm py-3"
-          : "bg-white border-transparent py-5"
+          ? "bg-background/80 backdrop-blur-xl border-b border-white/[0.06] py-3"
+          : "bg-transparent py-5"
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <img 
-              src={`${import.meta.env.BASE_URL}logo.png`} 
-              alt="Blueprints & Bookkeeping Logo" 
-              className="h-10 w-auto object-contain transition-transform group-hover:scale-105"
-            />
-            <span className="font-display font-bold text-xl text-primary hidden sm:block tracking-tight">
-              Blueprints & Bookkeeping
-            </span>
+          <Link href="/" className="flex items-center gap-3 group shrink-0">
+            <div className="relative">
+              <img
+                src={`${import.meta.env.BASE_URL}logo.png`}
+                alt="Blueprints & Bookkeeping Logo"
+                className="h-9 w-auto object-contain brightness-0 invert transition-transform group-hover:scale-105"
+              />
+            </div>
+            <div className="hidden sm:flex flex-col leading-none">
+              <span className="font-display font-bold text-[15px] text-white tracking-tight">
+                Blueprints &
+              </span>
+              <span className="font-display font-bold text-[15px] text-accent tracking-tight">
+                Bookkeeping
+              </span>
+            </div>
           </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-1">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  "text-sm font-medium transition-colors hover:text-accent relative",
-                  location === link.href ? "text-accent" : "text-foreground/80"
+                  "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300",
+                  location === link.href
+                    ? "text-accent bg-accent/10"
+                    : "text-muted-foreground hover:text-white hover:bg-white/[0.04]"
                 )}
               >
                 {link.label}
-                {location === link.href && (
-                  <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-accent rounded-full" />
-                )}
               </Link>
             ))}
+            <div className="w-px h-6 bg-white/10 mx-2" />
             <Link
               href="/contact"
-              className="px-5 py-2.5 rounded-full bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20 transition-all active:scale-95"
+              className="px-5 py-2 rounded-lg bg-accent/15 border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
             >
-              Contact Us
+              Get Started
             </Link>
           </nav>
 
-          {/* Mobile Menu Toggle */}
           <button
-            className="md:hidden p-2 text-foreground"
+            className="lg:hidden p-2 text-muted-foreground hover:text-white transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -89,16 +91,15 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile Nav */}
       {mobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-border shadow-xl py-4 px-4 flex flex-col gap-4 animate-in slide-in-from-top-2">
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-card/95 backdrop-blur-xl border-b border-white/[0.06] py-4 px-4 flex flex-col gap-1">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={cn(
-                "p-3 rounded-lg text-base font-medium",
-                location === link.href ? "bg-muted text-accent" : "text-foreground"
+                "p-3 rounded-lg text-base font-medium transition-colors",
+                location === link.href ? "bg-accent/10 text-accent" : "text-muted-foreground hover:text-white hover:bg-white/[0.04]"
               )}
             >
               {link.label}
@@ -106,9 +107,9 @@ export function Header() {
           ))}
           <Link
             href="/contact"
-            className="w-full mt-2 p-3 text-center rounded-lg bg-primary text-primary-foreground font-medium"
+            className="w-full mt-2 p-3 text-center rounded-lg bg-accent text-white font-semibold"
           >
-            Contact Us
+            Get Started
           </Link>
         </div>
       )}

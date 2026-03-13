@@ -1,77 +1,84 @@
 import { Link } from "wouter";
-import { TreePine, Bitcoin, ShoppingBag, Building2, Rocket } from "lucide-react";
+import { TreePine, Bitcoin, ShoppingBag, Building2, Rocket, ArrowRight } from "lucide-react";
 
 export default function Industries() {
   const industries = [
     {
-      icon: <TreePine className="w-8 h-8 text-white" />,
+      icon: <TreePine className="w-5 h-5" />,
       title: "Agriculture & Timber",
-      focus: "Local Douglas County Focus",
+      focus: "Douglas County Focus",
       desc: "Navigating Schedule F complexities, advanced equipment depreciation schedules, and multi-crew seasonal payroll structures."
     },
     {
-      icon: <Bitcoin className="w-8 h-8 text-white" />,
+      icon: <Bitcoin className="w-5 h-5" />,
       title: "Crypto & Digital Assets",
-      focus: "Emerging Market Expertise",
-      desc: "ASU 2023-08 compliance, meticulous blockchain reconciliation, and integrating DeFi transactions into clean, traditional general ledgers."
+      focus: "Emerging Markets",
+      desc: "ASU 2023-08 compliance, blockchain reconciliation, and integrating DeFi transactions into clean, traditional general ledgers."
     },
     {
-      icon: <ShoppingBag className="w-8 h-8 text-white" />,
+      icon: <ShoppingBag className="w-5 h-5" />,
       title: "Gig Economy & E-commerce",
-      focus: "High-Volume Transaction Management",
-      desc: "Seamless multi-platform reconciliation across Stripe, PayPal, Shopify, and Amazon to ensure accurate margin analysis."
+      focus: "High Volume",
+      desc: "Multi-platform reconciliation across Stripe, PayPal, Shopify, and Amazon for accurate margin analysis."
     },
     {
-      icon: <Building2 className="w-8 h-8 text-white" />,
+      icon: <Building2 className="w-5 h-5" />,
       title: "Multi-Entity Portfolios",
-      focus: "Real Estate & Holding Companies",
+      focus: "Real Estate & Holdings",
       desc: "Managing separate ledgers, resolving intercompany transactions, and structuring data for complex asset-heavy operators."
     },
     {
-      icon: <Rocket className="w-8 h-8 text-white" />,
+      icon: <Rocket className="w-5 h-5" />,
       title: "Tech Founders & Startups",
-      focus: "Investor-Ready Financials",
-      desc: "Deep burn rate analysis, operational cost tracking, and forecasting models required by venture capital and angel investors."
+      focus: "Investor-Ready",
+      desc: "Deep burn rate analysis, operational cost tracking, and forecasting models required by VC and angel investors."
     }
   ];
 
   return (
     <div className="pt-24 pb-20">
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center">
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-primary mb-6">Specialized Industry Expertise</h1>
-        <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-          We don't do generic data entry. We solve the high-friction financial challenges specific to complex, asset-heavy, and emerging markets.
-        </p>
+      <section className="py-16 mb-16 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="accent-bar mx-auto mb-6" />
+          <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-6">Industry Expertise</h1>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            We solve the high-friction financial challenges specific to complex, asset-heavy, and emerging markets.
+          </p>
+        </div>
       </section>
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {industries.map((ind, idx) => (
-            <div key={idx} className="bg-card p-8 rounded-2xl premium-shadow border border-border hover:border-primary/30 group">
-              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-transform">
-                {ind.icon}
+            <div key={idx} className="glass-card-hover rounded-2xl p-8 group">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2.5 rounded-lg bg-accent/10 text-accent group-hover:bg-accent group-hover:text-white transition-all duration-500">
+                  {ind.icon}
+                </div>
+                <span className="text-[11px] font-mono font-medium tracking-widest text-accent/70">{ind.focus.toUpperCase()}</span>
               </div>
-              <h3 className="text-2xl font-bold text-foreground mb-2">{ind.title}</h3>
-              <span className="inline-block px-3 py-1 bg-muted text-accent font-medium text-xs rounded-full mb-4">
-                {ind.focus}
-              </span>
-              <p className="text-muted-foreground leading-relaxed">
-                {ind.desc}
-              </p>
+              <h3 className="text-xl font-bold text-white mb-3">{ind.title}</h3>
+              <p className="text-muted-foreground leading-relaxed text-[15px]">{ind.desc}</p>
             </div>
           ))}
-          
-          <div className="bg-primary p-8 rounded-2xl premium-shadow flex flex-col items-center justify-center text-center">
-            <h3 className="text-2xl font-bold text-white mb-4">Don't see your niche?</h3>
-            <p className="text-primary-foreground/80 mb-6">
-              Our technical foundation allows us to adapt to complex environments quickly.
-            </p>
-            <Link 
-              href="/contact"
-              className="px-6 py-3 bg-white text-primary font-bold rounded-lg hover:bg-accent hover:text-white transition-colors"
-            >
-              Let's Discuss
-            </Link>
+
+          <div className="relative rounded-2xl p-8 flex flex-col items-center justify-center text-center overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-br from-accent/15 to-primary/20" />
+            <div className="absolute inset-[1px] rounded-2xl bg-card" />
+            <div className="absolute inset-0 border border-accent/20 rounded-2xl" />
+            <div className="relative">
+              <h3 className="text-xl font-bold text-white mb-3">Don't see your niche?</h3>
+              <p className="text-muted-foreground mb-6 text-[15px]">
+                Our technical foundation adapts to complex environments quickly.
+              </p>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white font-semibold rounded-lg hover:shadow-xl hover:shadow-accent/20 transition-all duration-300 text-sm"
+              >
+                Let's Discuss <ArrowRight size={16} />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
