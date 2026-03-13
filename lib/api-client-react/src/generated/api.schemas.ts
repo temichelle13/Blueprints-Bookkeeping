@@ -44,6 +44,33 @@ export interface ContactFormResponse {
   id: number;
 }
 
+export type NewsletterSubscribeInputSignupSource =
+  (typeof NewsletterSubscribeInputSignupSource)[keyof typeof NewsletterSubscribeInputSignupSource];
+
+export const NewsletterSubscribeInputSignupSource = {
+  footer: "footer",
+  lead_magnet: "lead_magnet",
+} as const;
+
+export interface NewsletterSubscribeInput {
+  email: string;
+  signupSource: NewsletterSubscribeInputSignupSource;
+}
+
+export interface NewsletterSubscribeResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface NewsletterUnsubscribeInput {
+  email: string;
+}
+
+export interface NewsletterUnsubscribeResponse {
+  success: boolean;
+  message: string;
+}
+
 export interface ErrorResponse {
   error: string;
 }

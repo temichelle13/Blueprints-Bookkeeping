@@ -32,3 +32,25 @@ export const SubmitContactFormBody = zod.object({
   biggestChallenge: zod.string().nullish(),
   preferredContactMethod: zod.string().nullish(),
 });
+
+/**
+ * Adds an email to the newsletter subscriber list
+ * @summary Subscribe to the newsletter
+ */
+export const SubscribeNewsletterBody = zod.object({
+  email: zod.string(),
+  signupSource: zod.enum(["footer", "lead_magnet"]),
+});
+
+/**
+ * Marks a subscriber as inactive
+ * @summary Unsubscribe from the newsletter
+ */
+export const UnsubscribeNewsletterBody = zod.object({
+  email: zod.string(),
+});
+
+export const UnsubscribeNewsletterResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string(),
+});

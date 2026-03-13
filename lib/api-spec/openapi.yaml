@@ -11,6 +11,8 @@ tags:
     description: Health operations
   - name: contact
     description: Contact form operations
+  - name: newsletter
+    description: Newsletter subscription operations
 paths:
   /healthz:
     get:
@@ -44,6 +46,56 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ContactFormResponse"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /newsletter/subscribe:
+    post:
+      operationId: subscribeNewsletter
+      tags: [newsletter]
+      summary: Subscribe to the newsletter
+      description: Adds an email to the newsletter subscriber list
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewsletterSubscribeInput"
+      responses:
+        "201":
+          description: Successfully subscribed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsletterSubscribeResponse"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /newsletter/unsubscribe:
+    post:
+      operationId: unsubscribeNewsletter
+      tags: [newsletter]
+      summary: Unsubscribe from the newsletter
+      description: Marks a subscriber as inactive
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewsletterUnsubscribeInput"
+      responses:
+        "200":
+          description: Successfully unsubscribed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsletterUnsubscribeResponse"
         "400":
           description: Invalid input
           content:
@@ -104,6 +156,44 @@ components:
         - success
         - message
         - id
+    NewsletterSubscribeInput:
+      type: object
+      properties:
+        email:
+          type: string
+        signupSource:
+          type: string
+          enum: [footer, lead_magnet]
+      required:
+        - email
+        - signupSource
+    NewsletterSubscribeResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+      required:
+        - success
+        - message
+    NewsletterUnsubscribeInput:
+      type: object
+      properties:
+        email:
+          type: string
+      required:
+        - email
+    NewsletterUnsubscribeResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+      required:
+        - success
+        - message
     ErrorResponse:
       type: object
       properties:

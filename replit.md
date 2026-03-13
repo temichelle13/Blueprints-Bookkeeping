@@ -49,8 +49,8 @@ Professional website for a remote bookkeeping, business planning, and advisory f
 - **Font stack**: Display font (Inter bold), JetBrains Mono for tags
 - **Contact**: tea@blueprintsandbookkeeping.com, 541-319-8654
 
-### Pages (9 total)
-1. **Home** — Hero with tagline, trust indicators, 3 pillars, scarcity CTA (20-client cap)
+### Pages (10 total)
+1. **Home** — Hero with tagline, trust indicators, 3 pillars, lead magnet section (Financial Readiness Checklist download gate), scarcity CTA (20-client cap)
 2. **About** — Tea's bio, credentials, digital badges. NO portrait image. Degrees listed as "coursework"/"studies" (not completed). Certs: CEH v12, QB ProAdvisor Advanced, Crypto Tax Certified, OR Notary RON
 3. **Services** — Advanced Bookkeeping, Business Plans, Digital Handshake (static web), Remote Online Notarization
 4. **Industries** — Agriculture/Timber, Crypto, Gig/E-commerce, Multi-Entity, Tech/Startups
@@ -58,7 +58,8 @@ Professional website for a remote bookkeeping, business planning, and advisory f
 6. **Portfolio** — Demo case study cards (no real client data)
 7. **Blog** — Blog listing + individual article pages (/blog/:slug). 4 starter articles in `src/data/blog-posts.ts`
 8. **Contact** — Dual-path: Quick Message + Discovery Intake Form
-9. *(Not Found)* — 404 page
+9. **Unsubscribe** — Newsletter unsubscribe page with email input
+10. *(Not Found)* — 404 page
 
 ### Header
 - Shows ONLY the BB icon (`public/logo-icon.png`) — cropped from full logo. No text beside it
@@ -75,8 +76,17 @@ Professional website for a remote bookkeeping, business planning, and advisory f
 - Firm is capped at 20 active clients — emphasize scarcity/exclusivity
 - About page: degrees are COURSEWORK/STUDIES only (not completed). Professional certs ARE earned
 
+### Newsletter & Lead Magnet
+- Footer includes newsletter signup form (email + subscribe button) under "Stay in the Loop"
+- Home page has a lead magnet section offering "Financial Readiness Checklist" PDF download gated behind email submission
+- PDF checklist at `public/downloads/financial-readiness-checklist.pdf` (generated via `scripts/generate-checklist-pdf.mjs`)
+- Unsubscribe page at `/unsubscribe` for email opt-out
+- Frontend components: `NewsletterSignup.tsx` (footer), `LeadMagnet.tsx` (home page)
+- Hook: `use-newsletter.ts` wraps the subscribe mutation
+
 ### Database
 - `contact_inquiries` table stores form submissions (name, email, phone, business name, industry, revenue range, services needed, software used, pain points, goals, message, form type)
+- `newsletter_subscribers` table stores email subscriptions (email unique, signup_source, active status, subscribed_at)
 
 ## TypeScript & Composite Projects
 
@@ -99,7 +109,7 @@ Express 5 API server. Routes live in `src/routes/` and use `@workspace/api-zod` 
 
 - Entry: `src/index.ts` — reads `PORT`, starts Express
 - App setup: `src/app.ts` — mounts CORS, JSON/urlencoded parsing, routes at `/api`
-- Routes: `src/routes/index.ts` mounts sub-routers; `src/routes/health.ts` exposes `GET /health`; `src/routes/contact.ts` exposes `POST /contact`
+- Routes: `src/routes/index.ts` mounts sub-routers; `src/routes/health.ts` exposes `GET /health`; `src/routes/contact.ts` exposes `POST /contact`; `src/routes/newsletter.ts` exposes `POST /newsletter/subscribe` and `POST /newsletter/unsubscribe`
 - Depends on: `@workspace/db`, `@workspace/api-zod`
 - `pnpm --filter @workspace/api-server run dev` — run the dev server
 - `pnpm --filter @workspace/api-server run build` — production esbuild bundle (`dist/index.cjs`)
@@ -120,6 +130,7 @@ Database layer using Drizzle ORM with PostgreSQL. Exports a Drizzle client insta
 - `src/index.ts` — creates a `Pool` + Drizzle instance, exports schema
 - `src/schema/index.ts` — barrel re-export of all models
 - `src/schema/contactInquiries.ts` — contact form submissions table
+- `src/schema/newsletterSubscribers.ts` — newsletter subscribers table (email, signup_source, active, subscribed_at)
 - `drizzle.config.ts` — Drizzle Kit config (requires `DATABASE_URL`, automatically provided by Replit)
 - Exports: `.` (pool, db, schema), `./schema` (schema only)
 
@@ -136,11 +147,11 @@ Run codegen: `pnpm --filter @workspace/api-spec run codegen`
 
 ### `lib/api-zod` (`@workspace/api-zod`)
 
-Generated Zod schemas from the OpenAPI spec (e.g. `HealthCheckResponse`, `SubmitContactFormBody`). Used by `api-server` for response validation.
+Generated Zod schemas from the OpenAPI spec (e.g. `HealthCheckResponse`, `SubmitContactFormBody`, `SubscribeNewsletterBody`, `UnsubscribeNewsletterBody`). Used by `api-server` for request validation.
 
 ### `lib/api-client-react` (`@workspace/api-client-react`)
 
-Generated React Query hooks and fetch client from the OpenAPI spec (e.g. `useHealthCheck`, `healthCheck`).
+Generated React Query hooks and fetch client from the OpenAPI spec (e.g. `useHealthCheck`, `healthCheck`, `useSubscribeNewsletter`, `useUnsubscribeNewsletter`).
 
 ### `scripts` (`@workspace/scripts`)
 

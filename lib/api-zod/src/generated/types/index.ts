@@ -11,3 +11,8 @@ export * from "./contactFormInputFormType";
 export * from "./contactFormResponse";
 export * from "./errorResponse";
 export * from "./healthStatus";
+export * from "./newsletterSubscribeInput";
+export * from "./newsletterSubscribeInputSignupSource";
+export * from "./newsletterSubscribeResponse";
+export * from "./newsletterUnsubscribeInput";
+export * from "./newsletterUnsubscribeResponse";

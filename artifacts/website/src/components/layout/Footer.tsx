@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { Mail, Phone, MapPin } from "lucide-react";
+import { FooterNewsletterSignup } from "@/components/NewsletterSignup";
 
 export function Footer() {
   return (
@@ -69,16 +70,19 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-5">Limited Availability</h3>
-            <p className="text-muted-foreground text-sm mb-5 leading-relaxed">
-              We cap our roster at 20 active clients. Reach out today to secure your spot.
+            <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-5">Stay in the Loop</h3>
+            <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
+              Get founder-focused financial tips and updates delivered to your inbox.
             </p>
-            <Link
-              href="/contact"
-              className="inline-block w-full text-center px-6 py-3 bg-accent/15 border border-accent/30 text-accent font-semibold rounded-lg hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
-            >
-              Book a Discovery Call
-            </Link>
+            <FooterNewsletterSignup />
+            <div className="mt-6 pt-6 border-t border-white/[0.06]">
+              <Link
+                href="/contact"
+                className="inline-block w-full text-center px-6 py-3 bg-accent/15 border border-accent/30 text-accent font-semibold rounded-lg hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
+              >
+                Book a Discovery Call
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -89,6 +93,7 @@ export function Footer() {
           <div className="flex gap-6">
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link href="/unsubscribe" className="hover:text-white transition-colors">Unsubscribe</Link>
           </div>
         </div>
       </div>
