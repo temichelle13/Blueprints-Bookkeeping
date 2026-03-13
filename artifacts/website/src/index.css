@@ -125,3 +125,82 @@ input, textarea, select {
 input::placeholder, textarea::placeholder {
   @apply text-muted-foreground;
 }
+
+@media print {
+  body {
+    background: white !important;
+    background-image: none !important;
+    color: #1a1a1a !important;
+  }
+
+  .marketing-guide {
+    color: #1a1a1a !important;
+  }
+
+  .marketing-guide * {
+    color: #1a1a1a !important;
+    border-color: #ddd !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  .marketing-guide .text-gradient {
+    -webkit-text-fill-color: #4f46e5 !important;
+    background: none !important;
+  }
+
+  .marketing-guide .glass-card,
+  .marketing-guide .glass-card-hover {
+    background: #f9f9f9 !important;
+    border: 1px solid #ddd !important;
+    page-break-inside: avoid;
+  }
+
+  .marketing-guide .accent-bar {
+    background: #4f46e5 !important;
+  }
+
+  .marketing-guide .glow-line {
+    background: #ddd !important;
+  }
+
+  .marketing-guide h1,
+  .marketing-guide h2,
+  .marketing-guide h3,
+  .marketing-guide h4 {
+    color: #111 !important;
+  }
+
+  .marketing-guide .text-accent,
+  .marketing-guide .text-accent\/80 {
+    color: #4f46e5 !important;
+  }
+
+  .marketing-guide .text-muted-foreground {
+    color: #555 !important;
+  }
+
+  .marketing-guide .text-green-400 {
+    color: #16a34a !important;
+  }
+
+  .marketing-guide .text-red-400 {
+    color: #dc2626 !important;
+  }
+
+  .marketing-guide .text-amber-300,
+  .marketing-guide .text-amber-400 {
+    color: #d97706 !important;
+  }
+
+  header, footer, .glow-dot {
+    display: none !important;
+  }
+
+  .marketing-guide button {
+    display: none !important;
+  }
+}
