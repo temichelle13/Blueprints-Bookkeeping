@@ -1,6 +1,5 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
   description: API specification
@@ -10,6 +9,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: contact
+    description: Contact form operations
 paths:
   /healthz:
     get:
@@ -24,6 +25,31 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /contact:
+    post:
+      operationId: submitContactForm
+      tags: [contact]
+      summary: Submit a contact form inquiry
+      description: Accepts quick contact or detailed intake form submissions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContactFormInput"
+      responses:
+        "201":
+          description: Inquiry submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactFormResponse"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +59,55 @@ components:
           type: string
       required:
         - status
-
+    ContactFormInput:
+      type: object
+      properties:
+        formType:
+          type: string
+          enum: [quick, detailed]
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        message:
+          type: ["string", "null"]
+        businessName:
+          type: ["string", "null"]
+        industry:
+          type: ["string", "null"]
+        servicesInterested:
+          type: array
+          items:
+            type: string
+        monthlyRevenueRange:
+          type: ["string", "null"]
+        biggestChallenge:
+          type: ["string", "null"]
+        preferredContactMethod:
+          type: ["string", "null"]
+      required:
+        - formType
+        - name
+        - email
+    ContactFormResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        id:
+          type: integer
+      required:
+        - success
+        - message
+        - id
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error

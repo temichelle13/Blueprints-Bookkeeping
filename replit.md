@@ -15,13 +15,15 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - **Validation**: Zod (`zod/v4`), `drizzle-zod`
 - **API codegen**: Orval (from OpenAPI spec)
 - **Build**: esbuild (CJS bundle)
+- **Frontend**: React + Vite + Tailwind CSS + Framer Motion
 
 ## Structure
 
 ```text
 artifacts-monorepo/
 ├── artifacts/              # Deployable applications
-│   └── api-server/         # Express API server
+│   ├── api-server/         # Express API server
+│   └── website/            # React+Vite frontend — Blueprints & Bookkeeping site
 ├── lib/                    # Shared libraries
 │   ├── api-spec/           # OpenAPI spec + Orval codegen config
 │   ├── api-client-react/   # Generated React Query hooks
@@ -34,6 +36,34 @@ artifacts-monorepo/
 ├── tsconfig.json           # Root TS project references
 └── package.json            # Root package with hoisted devDeps
 ```
+
+## Project: Blueprints & Bookkeeping, LLC
+
+Professional website for a remote bookkeeping, business planning, and advisory firm owned by Tea Larson-Hetrick, based in Roseburg, Oregon.
+
+### Brand
+- **Primary color (deep navy)**: #1B2A5A
+- **Secondary color (periwinkle)**: #5B5EA6
+- **Backgrounds**: white (#FFFFFF) and light-grey (#F8F9FA) alternating sections
+- **Contact**: tea@blueprintsandbookkeeping.com, 541-319-8654
+
+### Pages (7 total)
+1. **Home** — Hero with tagline, trust indicators, service overview cards, scarcity CTA (20-client cap)
+2. **About** — Tea's bio, credentials, philosophy (cybersecurity + finance intersection)
+3. **Services** — Advanced Bookkeeping, Business Plans, Static Web Design, Advisory, Digital Presence
+4. **Industries** — Cannabis, Crypto/Web3, Agriculture, Timber, Tech Startups, Multi-Entity
+5. **Pricing** — Three-tier flat-fee pricing (Bookkeeping $500+/mo, Business Plans $2.5k–$5k+, Web Design $1.5k–$3.5k+)
+6. **Portfolio** — Demo case study cards (no real client data)
+7. **Contact** — Dual-path: Quick Message + Discovery Intake Form
+
+### Important notes
+- Does NOT offer tax preparation — never include tax prep content
+- Pricing uses "starting at" ranges only
+- HTML/CSS designed to be portable for WordPress/Elementor HTML widgets
+- Firm is capped at 20 active clients — emphasize scarcity/exclusivity
+
+### Database
+- `contact_inquiries` table stores form submissions (name, email, phone, business name, industry, revenue range, services needed, software used, pain points, goals, message, form type)
 
 ## TypeScript & Composite Projects
 
@@ -56,11 +86,19 @@ Express 5 API server. Routes live in `src/routes/` and use `@workspace/api-zod` 
 
 - Entry: `src/index.ts` — reads `PORT`, starts Express
 - App setup: `src/app.ts` — mounts CORS, JSON/urlencoded parsing, routes at `/api`
-- Routes: `src/routes/index.ts` mounts sub-routers; `src/routes/health.ts` exposes `GET /health` (full path: `/api/health`)
+- Routes: `src/routes/index.ts` mounts sub-routers; `src/routes/health.ts` exposes `GET /health`; `src/routes/contact.ts` exposes `POST /contact`
 - Depends on: `@workspace/db`, `@workspace/api-zod`
 - `pnpm --filter @workspace/api-server run dev` — run the dev server
 - `pnpm --filter @workspace/api-server run build` — production esbuild bundle (`dist/index.cjs`)
 - Build bundles an allowlist of deps (express, cors, pg, drizzle-orm, zod, etc.) and externalizes the rest
+
+### `artifacts/website` (`@workspace/website`)
+
+React + Vite + Tailwind CSS frontend for Blueprints & Bookkeeping. Uses react-router-dom for client-side routing, react-hook-form + zod for form validation, framer-motion for animations.
+
+- 7 pages: Home, About, Services, Industries, Pricing, Portfolio, Contact
+- Contact form posts to `/api/contact` on the API server
+- Logo at `public/logo.png`, AI-generated images in `public/images/`
 
 ### `lib/db` (`@workspace/db`)
 
@@ -68,7 +106,7 @@ Database layer using Drizzle ORM with PostgreSQL. Exports a Drizzle client insta
 
 - `src/index.ts` — creates a `Pool` + Drizzle instance, exports schema
 - `src/schema/index.ts` — barrel re-export of all models
-- `src/schema/<modelname>.ts` — table definitions with `drizzle-zod` insert schemas (no models definitions exist right now)
+- `src/schema/contactInquiries.ts` — contact form submissions table
 - `drizzle.config.ts` — Drizzle Kit config (requires `DATABASE_URL`, automatically provided by Replit)
 - Exports: `.` (pool, db, schema), `./schema` (schema only)
 
@@ -85,7 +123,7 @@ Run codegen: `pnpm --filter @workspace/api-spec run codegen`
 
 ### `lib/api-zod` (`@workspace/api-zod`)
 
-Generated Zod schemas from the OpenAPI spec (e.g. `HealthCheckResponse`). Used by `api-server` for response validation.
+Generated Zod schemas from the OpenAPI spec (e.g. `HealthCheckResponse`, `SubmitContactFormBody`). Used by `api-server` for response validation.
 
 ### `lib/api-client-react` (`@workspace/api-client-react`)
 

@@ -8,3 +8,42 @@
 export interface HealthStatus {
   status: string;
 }
+
+export type ContactFormInputFormType =
+  (typeof ContactFormInputFormType)[keyof typeof ContactFormInputFormType];
+
+export const ContactFormInputFormType = {
+  quick: "quick",
+  detailed: "detailed",
+} as const;
+
+export interface ContactFormInput {
+  formType: ContactFormInputFormType;
+  name: string;
+  email: string;
+  /** @nullable */
+  phone?: string | null;
+  /** @nullable */
+  message?: string | null;
+  /** @nullable */
+  businessName?: string | null;
+  /** @nullable */
+  industry?: string | null;
+  servicesInterested?: string[];
+  /** @nullable */
+  monthlyRevenueRange?: string | null;
+  /** @nullable */
+  biggestChallenge?: string | null;
+  /** @nullable */
+  preferredContactMethod?: string | null;
+}
+
+export interface ContactFormResponse {
+  success: boolean;
+  message: string;
+  id: number;
+}
+
+export interface ErrorResponse {
+  error: string;
+}
