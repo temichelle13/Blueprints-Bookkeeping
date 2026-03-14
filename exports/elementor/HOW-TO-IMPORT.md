@@ -1,5 +1,33 @@
 # How to Import These Templates into WordPress + Elementor Pro
 
+## Option A: One-Click Kit Import (Recommended)
+
+The easiest way to import everything at once is using the **Elementor Kit** zip file.
+
+### What the Kit Includes
+- All 11 page/header/footer templates
+- Global color palette (dark theme with indigo accent)
+- Global typography (Outfit, Inter, JetBrains Mono)
+- Site background settings
+
+### How to Import
+
+1. In WordPress admin, go to **Templates > Kit Library**
+2. Click the **Import Kit** button (top-right, or via the upload icon)
+3. Select the file: **`blueprints-bookkeeping-kit.zip`**
+4. Elementor will show a preview of all included templates and settings
+5. Choose which items to import (select all for the full site)
+6. Click **Apply All** (or selectively apply templates and settings)
+7. Your templates, colors, and fonts are now installed site-wide
+
+After importing, create your pages (Home, About, Services, etc.), edit each with Elementor, and insert the corresponding template from **My Templates**. The header and footer will automatically apply to all pages.
+
+> **Note:** The kit zip does NOT replace the individual `.json` files below — those remain available if you prefer to import templates one at a time.
+
+---
+
+## Option B: Manual Import (Individual Templates)
+
 ## What's Included
 
 You have 11 Elementor template files:

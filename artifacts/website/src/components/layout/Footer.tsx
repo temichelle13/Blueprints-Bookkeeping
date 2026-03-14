@@ -66,7 +66,6 @@ export function Footer() {
               <li>Historical Cleanup</li>
               <li>Lender-Ready Business Plans</li>
               <li>Static Web Design</li>
-              <li>Remote Online Notarization</li>
             </ul>
           </div>
 

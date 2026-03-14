@@ -196,7 +196,7 @@
               "elType": "widget",
               "widgetType": "text-editor",
               "settings": {
-                "editor": "<p style=\"line-height:2.2;font-size:14px;color:#8B91A0;\">\nAdvanced Bookkeeping<br/>\nHistorical Cleanup<br/>\nLender-Ready Business Plans<br/>\nStatic Web Design<br/>\nRemote Online Notarization</p>",
+                "editor": "<p style=\"line-height:2.2;font-size:14px;color:#8B91A0;\">\nAdvanced Bookkeeping<br/>\nHistorical Cleanup<br/>\nLender-Ready Business Plans<br/>\nStatic Web Design</p>",
                 "text_color": "#D8DCE4",
                 "typography_typography": "custom",
                 "typography_font_family": "Inter"
