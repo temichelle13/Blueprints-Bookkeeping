@@ -70,7 +70,7 @@ export default function Schedule() {
             <div className="glass-card rounded-2xl overflow-hidden" style={{ minHeight: "600px" }}>
               <div className="w-full h-full min-h-[600px]">
                 <iframe
-                  src="https://calendly.com/blueprintsandbookkeeping"
+                  src="https://calendly.com/tea-blueprintsandbookkeeping/30min"
                   width="100%"
                   height="650"
                   frameBorder="0"
