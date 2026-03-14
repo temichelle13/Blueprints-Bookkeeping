@@ -2,13 +2,12 @@ import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { setApiBaseUrl } from "@workspace/api-client-react";
 import NotFound from "@/pages/not-found";
 
-// Layout
 import { Header } from "./components/layout/Header";
 import { Footer } from "./components/layout/Footer";
 
-// Pages
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Services from "./pages/Services";
@@ -23,6 +22,12 @@ import MarketingGuide from "./pages/MarketingGuide";
 import Unsubscribe from "./pages/Unsubscribe";
 import FAQ from "./pages/FAQ";
 import Schedule from "./pages/Schedule";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
+
+if (import.meta.env.VITE_API_URL) {
+  setApiBaseUrl(import.meta.env.VITE_API_URL as string);
+}
 
 const queryClient = new QueryClient();
 
@@ -54,6 +59,8 @@ function Router() {
         <Route path="/contact" component={Contact} />
         <Route path="/faq" component={FAQ} />
         <Route path="/schedule" component={Schedule} />
+        <Route path="/privacy" component={Privacy} />
+        <Route path="/terms" component={Terms} />
         <Route path="/marketing-guide" component={MarketingGuide} />
         <Route path="/unsubscribe" component={Unsubscribe} />
         <Route component={NotFound} />

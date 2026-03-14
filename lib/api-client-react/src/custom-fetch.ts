@@ -2,6 +2,12 @@ export type CustomFetchOptions = RequestInit & {
   responseType?: "json" | "text" | "blob" | "auto";
 };
 
+let _apiBaseUrl = "";
+
+export function setApiBaseUrl(url: string): void {
+  _apiBaseUrl = url.replace(/\/$/, "");
+}
+
 export type ErrorType<T = unknown> = ApiError<T>;
 
 export type BodyType<T> = T;
@@ -275,6 +281,13 @@ export async function customFetch<T = unknown>(
   input: RequestInfo | URL,
   options: CustomFetchOptions = {},
 ): Promise<T> {
+  if (_apiBaseUrl) {
+    const rawUrl = resolveUrl(input);
+    if (rawUrl.startsWith("/")) {
+      input = `${_apiBaseUrl}${rawUrl}`;
+    }
+  }
+
   const { responseType = "auto", headers: headersInit, ...init } = options;
 
   const method = resolveMethod(input, init.method);

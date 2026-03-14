@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { db, newsletterSubscribersTable } from "@workspace/db";
 import { SubscribeNewsletterBody, UnsubscribeNewsletterBody } from "@workspace/api-zod";
 import { eq } from "drizzle-orm";
+import { Resend } from "resend";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_EMAIL_LENGTH = 320;
@@ -9,6 +10,14 @@ const MAX_EMAIL_LENGTH = 320;
 function isValidEmail(email: string): boolean {
   return email.length <= MAX_EMAIL_LENGTH && EMAIL_RE.test(email);
 }
+
+function getResend(): Resend | null {
+  const key = process.env["RESEND_API_KEY"];
+  if (!key) return null;
+  return new Resend(key);
+}
+
+const FROM_ADDRESS = "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
 
 const router: IRouter = Router();
 
@@ -51,6 +60,39 @@ router.post("/newsletter/subscribe", async (req, res): Promise<void> => {
     email,
     signupSource,
   });
+
+  const resend = getResend();
+  if (resend) {
+    const welcomeHtml = `
+      <div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
+        <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
+          <h1 style="color:white;margin:0;font-size:20px;">Welcome to the Blueprints & Bookkeeping newsletter.</h1>
+        </div>
+        <div style="background:#f8f9ff;padding:32px;border-radius:0 0 8px 8px;border:1px solid #e2e5f0;">
+          <p>Hi there,</p>
+          <p>You're in. Welcome to the list.</p>
+          <p>I'm Tea — founder of Blueprints & Bookkeeping LLC. I work with ambitious founders who need more than basic data entry: multi-entity bookkeeping, institutional-grade business plans, and the financial clarity to actually grow.</p>
+          <p>What to expect from this newsletter:</p>
+          <ul style="line-height:1.8;">
+            <li>Practical financial insights for founders and small business owners</li>
+            <li>Real talk on bookkeeping systems, business planning, and securing capital</li>
+            <li>No fluff. No tax advice. Just actionable guidance.</li>
+          </ul>
+          <p>If you have an immediate question or want to talk about your business, you can <a href="https://blueprintsandbookkeeping.com/schedule" style="color:#6366f1;">book a free discovery call</a> anytime.</p>
+          <p>Talk soon,</p>
+          <p style="font-weight:600;">Tea Larson-Hetrick<br><span style="font-weight:normal;color:#666;">Blueprints & Bookkeeping LLC · Roseburg, Oregon</span></p>
+          <hr style="border:none;border-top:1px solid #e2e5f0;margin:24px 0;">
+          <p style="font-size:12px;color:#999;">You're receiving this because you signed up at blueprintsandbookkeeping.com. <a href="https://blueprintsandbookkeeping.com/unsubscribe" style="color:#6366f1;">Unsubscribe anytime.</a></p>
+        </div>
+      </div>`;
+
+    await resend.emails.send({
+      from: FROM_ADDRESS,
+      to: email,
+      subject: "You're subscribed — Blueprints & Bookkeeping",
+      html: welcomeHtml,
+    }).catch(() => {});
+  }
 
   res.status(201).json({
     success: true,
