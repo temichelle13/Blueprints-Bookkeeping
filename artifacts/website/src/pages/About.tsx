@@ -78,8 +78,8 @@ export default function About() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
               {[
                 {
-                  name: "QuickBooks ProAdvisor",
-                  img: "https://quickbooks.intuit.com/cas/dam/IMAGE/A4Hp8hSyh/proadvisor-badge.png",
+                  name: "QuickBooks ProAdvisor Gold",
+                  img: "/images/proadvisor-gold-badge.png",
                   fallbackColor: "from-green-600/20 to-green-800/20"
                 },
                 {
