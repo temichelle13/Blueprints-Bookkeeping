@@ -48,7 +48,7 @@ export default function Home() {
             transition={{ delay: 0.2 }}
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed"
           >
-            We transform financial complexity into scalable growth through advanced bookkeeping, lender-ready business plans, and modern digital presence.
+            We transform financial complexity into scalable growth through advanced bookkeeping, investor-focused business plans, and modern digital presence.
           </motion.p>
 
           <motion.div
@@ -94,7 +94,7 @@ export default function Home() {
               },
               {
                 icon: <BookOpen className="w-6 h-6" />,
-                title: "Lender-Ready Plans",
+                title: "Business Plans",
                 description: "3-to-5-year financial forecasting built to survive bank underwriting and institutional due diligence.",
                 tag: "PROJECT"
               },

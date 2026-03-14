@@ -56,7 +56,7 @@ export default function About() {
               <ul className="space-y-3 text-sm text-foreground">
                 <li className="flex items-center gap-3"><Award size={15} className="text-accent shrink-0" /> Certified Ethical Hacker (CEH v12)</li>
                 <li className="flex items-center gap-3"><Award size={15} className="text-accent shrink-0" /> QuickBooks ProAdvisor Advanced</li>
-                <li className="flex items-center gap-3"><Award size={15} className="text-accent shrink-0" /> Advanced Crypto Tax Certified</li>
+                <li className="flex items-center gap-3"><Award size={15} className="text-accent shrink-0" /> Advanced Crypto Accounting Certified</li>
                 <li className="flex items-center gap-3"><Award size={15} className="text-accent shrink-0" /> Oregon Notary (RON Approved)</li>
               </ul>
             </div>
@@ -88,7 +88,7 @@ export default function About() {
                   fallbackColor: "from-red-600/20 to-red-800/20"
                 },
                 {
-                  name: "Crypto Tax Certified",
+                  name: "Crypto Accounting Certified",
                   img: "",
                   fallbackColor: "from-orange-600/20 to-orange-800/20"
                 },

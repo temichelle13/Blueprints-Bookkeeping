@@ -187,9 +187,8 @@ function DetailedIntakeForm() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
           {[
             "Advanced Bookkeeping / Cleanup",
-            "Business Planning (Lender-Ready)",
-            "Digital Handshake (Web Design)",
-            "Remote Online Notarization"
+            "Business Planning",
+            "Digital Handshake (Web Design)"
           ].map((svc) => (
             <label key={svc} className="flex items-center gap-3 p-3 border border-white/[0.06] rounded-lg cursor-pointer hover:bg-surface transition-colors bg-surface/50">
               <input

@@ -23,7 +23,7 @@ export default function Services() {
     {
       id: "planning",
       icon: <BookOpen className="w-5 h-5" />,
-      title: "Lender-Ready Business Plans",
+      title: "Business Plans",
       desc: "Bridge the gap between your current operations and future funding.",
       tag: "PROJECT",
       features: [

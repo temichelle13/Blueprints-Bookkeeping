@@ -64,7 +64,7 @@ export function Footer() {
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li>Advanced Bookkeeping</li>
               <li>Historical Cleanup</li>
-              <li>Lender-Ready Business Plans</li>
+              <li>Business Plans</li>
               <li>Static Web Design</li>
             </ul>
           </div>

@@ -127,7 +127,7 @@ export default function MarketingGuide() {
                     <h4 className="font-semibold text-accent text-sm tracking-wide uppercase mb-2">Business Description (750 chars max)</h4>
                     <div className="bg-white/[0.03] rounded-xl p-4 border border-white/5">
                       <p className="text-muted-foreground text-[14px] leading-relaxed italic">
-                        "Blueprints & Bookkeeping is a boutique financial consultancy based in Roseburg, Oregon, serving founders and business owners nationwide. We specialize in advanced bookkeeping for complex operations — including multi-entity structuring, cryptocurrency accounting, and historical cleanups — alongside lender-ready business plans built to survive bank underwriting. With a strictly capped roster of 20 clients, we provide the dedicated attention and year-round availability that growing businesses demand. No offshore labor. No tax-season blackouts. Fortune 500 financial expertise applied to your business."
+                        "Blueprints & Bookkeeping is a boutique financial consultancy based in Roseburg, Oregon, serving founders and business owners nationwide. We specialize in advanced bookkeeping for complex operations — including multi-entity structuring, cryptocurrency accounting, and historical cleanups — alongside detailed business plans built to survive bank underwriting. With a strictly capped roster of 20 clients, we provide the dedicated attention and year-round availability that growing businesses demand. No offshore labor. No seasonal blackouts. Fortune 500 financial expertise applied to your business."
                       </p>
                     </div>
                   </div>
@@ -239,7 +239,7 @@ export default function MarketingGuide() {
                     <p className="text-muted-foreground text-[14px] mb-2">Your headline should immediately communicate who you help and how. Skip generic titles like "Owner at Blueprints & Bookkeeping."</p>
                     <div className="bg-white/[0.03] rounded-xl p-4 border border-white/5">
                       <p className="text-foreground text-[14px] font-medium italic">
-                        "I help founders get lender-ready with advanced bookkeeping & bulletproof business plans | Blueprints & Bookkeeping"
+                        "I help founders build rock-solid financials & bulletproof business plans | Blueprints & Bookkeeping"
                       </p>
                     </div>
                     <p className="text-muted-foreground text-[13px] mt-2">Alternative options:</p>
@@ -492,7 +492,7 @@ export default function MarketingGuide() {
                     },
                     {
                       topic: "Why Your CPA Isn't Enough",
-                      angle: "The gap between tax prep and year-round financial strategy"
+                      angle: "The gap between compliance-only bookkeeping and year-round financial strategy"
                     },
                     {
                       topic: "The Digital Business Plan",

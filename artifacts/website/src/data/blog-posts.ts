@@ -109,11 +109,11 @@ Every blockchain transaction creates an accounting event. If you're using multip
 - Automated blockchain transaction tracking
 - Cost basis calculation methods (FIFO, LIFO, specific identification)
 - Integration between your crypto platforms and your general ledger
-- Clear documentation for every transaction (the IRS is watching)
+- Clear documentation for every transaction
 
 **DeFi and Staking Income**
 
-If you're earning yield through staking, liquidity provision, or lending protocols, each reward event is a taxable transaction. Many businesses fail to track these micro-transactions, creating significant compliance risk.
+If you're earning yield through staking, liquidity provision, or lending protocols, each reward event creates a new cost basis entry that must be tracked. Many businesses fail to record these micro-transactions, creating significant compliance risk.
 
 **Getting Organized**
 

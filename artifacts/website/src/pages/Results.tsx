@@ -40,7 +40,7 @@ const caseStudies = [
     challenge:
       "A second-generation timber and agriculture operation had grown from a single LLC into four interrelated entities over five years. The books were a patchwork of spreadsheets, shoe-box receipts, and a neglected QuickBooks file. Two lender applications for a $400K equipment line had been declined due to unreliable financials.",
     approach:
-      "We performed a full historical cleanup across all four entities, reconciled 36 months of bank and credit card statements, and built a consolidated chart of accounts in QuickBooks Online. Then we developed a lender-ready 5-year business plan with realistic revenue projections backed by historical data.",
+      "We performed a full historical cleanup across all four entities, reconciled 36 months of bank and credit card statements, and built a consolidated chart of accounts in QuickBooks Online. Then we developed a detailed 5-year business plan with realistic revenue projections backed by historical data.",
     outcomes: [
       "36 months of financials reconciled across 4 entities",
       "$400K equipment line of credit approved on first submission",
@@ -49,18 +49,18 @@ const caseStudies = [
     ],
   },
   {
-    title: "Crypto Portfolio Compliance & Tax-Ready Books",
+    title: "Crypto Portfolio Compliance & Reconciled Books",
     client: "DeFi Protocol Founder — Remote (US-based)",
     industry: "Crypto / Digital Assets",
     challenge:
-      "A founder running a DeFi protocol and personal crypto portfolio had no formal bookkeeping. Over 2,000 transactions across 8 wallets and 3 exchanges were unreconciled. The founder faced a potential IRS inquiry and needed clean, defensible records before tax season.",
+      "A founder running a DeFi protocol and personal crypto portfolio had no formal bookkeeping. Over 2,000 transactions across 8 wallets and 3 exchanges were unreconciled. The founder needed clean, defensible records for an upcoming compliance review.",
     approach:
       "We integrated wallet and exchange data into a unified tracking system, applied FIFO cost-basis methodology across all transactions, and reconciled the full transaction history. We then set up ongoing automated categorization rules in QBO for fiat on/off ramps and staking rewards.",
     outcomes: [
       "2,000+ transactions reconciled across 8 wallets",
-      "Tax-ready P&L and balance sheet delivered 6 weeks before deadline",
+      "Clean, reconciled P&L and balance sheet delivered 6 weeks ahead of schedule",
       "Automated monthly categorization saving 10+ hours/month",
-      "No IRS issues — clean compliance posture established",
+      "Clean compliance posture established",
     ],
   },
   {
@@ -68,9 +68,9 @@ const caseStudies = [
     client: "Multi-Location Retail Owner — Southern Oregon",
     industry: "Retail / E-commerce",
     challenge:
-      "A retail business with three storefronts and an e-commerce channel had been declined for an SBA loan twice. The business plan was a generic template, and financials didn't match between the plan, the books, and the tax returns. The owner was ready to give up on expansion.",
+      "A retail business with three storefronts and an e-commerce channel had been declined for an SBA loan twice. The business plan was a generic template, and financials didn't match between the plan, the books, and the filed returns. The owner was ready to give up on expansion.",
     approach:
-      "We rebuilt the financial model from the ground up using actual historical performance data, created a 3-year projection with conservative, moderate, and aggressive scenarios, and packaged everything into a lender-ready business plan with a supporting Digital Handshake website for the underwriting team.",
+      "We rebuilt the financial model from the ground up using actual historical performance data, created a 3-year projection with conservative, moderate, and aggressive scenarios, and packaged everything into a detailed business plan with a supporting Digital Handshake website for the underwriting team.",
     outcomes: [
       "$250K SBA 7(a) loan approved on next application",
       "Business plan website impressed underwriting team",

@@ -5,9 +5,9 @@ import { useNewsletterMutation } from "@/hooks/use-newsletter";
 
 const CHECKLIST_ITEMS = [
   "Revenue & expense tracking health check",
-  "Key financial ratios every lender looks at",
+  "Key financial ratios banks and investors look at",
   "Common bookkeeping red flags to fix now",
-  "A step-by-step lender-readiness timeline",
+  "A step-by-step financial readiness timeline",
   "Questions to ask before hiring a bookkeeper",
 ];
 
@@ -43,7 +43,7 @@ export function LeadMagnetSection() {
               <span className="text-gradient">Readiness Checklist</span>
             </h2>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Are your books lender-ready? Use the same checklist our team applies when
+              Is your financial house in order? Use the same checklist our team applies when
               onboarding new founder clients — distilled into a one-page actionable guide.
             </p>
 
