@@ -21,6 +21,8 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import MarketingGuide from "./pages/MarketingGuide";
 import Unsubscribe from "./pages/Unsubscribe";
+import FAQ from "./pages/FAQ";
+import Schedule from "./pages/Schedule";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +52,8 @@ function Router() {
         <Route path="/blog/:slug" component={BlogPost} />
         <Route path="/blog" component={Blog} />
         <Route path="/contact" component={Contact} />
+        <Route path="/faq" component={FAQ} />
+        <Route path="/schedule" component={Schedule} />
         <Route path="/marketing-guide" component={MarketingGuide} />
         <Route path="/unsubscribe" component={Unsubscribe} />
         <Route component={NotFound} />

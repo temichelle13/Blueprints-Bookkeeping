@@ -46,6 +46,8 @@ export function Footer() {
                 { label: "Portfolio", href: "/portfolio" },
                 { label: "Client Results", href: "/results" },
                 { label: "Blog", href: "/blog" },
+                { label: "FAQ", href: "/faq" },
+                { label: "Book a Call", href: "/schedule" },
               ].map((item) => (
                 <li key={item.href}>
                   <Link
@@ -77,7 +79,7 @@ export function Footer() {
             <FooterNewsletterSignup />
             <div className="mt-6 pt-6 border-t border-white/[0.06]">
               <Link
-                href="/contact"
+                href="/schedule"
                 className="inline-block w-full text-center px-6 py-3 bg-accent/15 border border-accent/30 text-accent font-semibold rounded-lg hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
               >
                 Book a Discovery Call

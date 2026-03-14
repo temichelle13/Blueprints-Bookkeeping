@@ -71,6 +71,11 @@
       "sourceType": "github",
       "computedHash": "9505748dba2319487b285f8ab8c1e5417fce38a512d596e1c9e2e87b34b196e1"
     },
+    "paid-ads": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "74be53d9e279bafaf1f53e2612cbba0d9e4750df4116496732d877782f0c3a48"
+    },
     "pdf": {
       "source": "anthropics/skills",
       "sourceType": "github",
@@ -90,6 +95,11 @@
       "source": "anthropics/skills",
       "sourceType": "github",
       "computedHash": "b122f4d1e91aa1d83027e050b5b37c3156203ee85458d7b1360bc48167c9e02a"
+    },
+    "social-content": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "computedHash": "85ffbc05cf88939ba3ff643a315928185af16181470349dfbaad2880047c9900"
     },
     "social-media-carousel": {
       "source": "skill-zero/s",

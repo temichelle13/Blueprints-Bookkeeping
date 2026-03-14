@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { ArrowRight, BookOpen, Globe, Calculator, ShieldCheck, Clock, Users, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpen, Calculator, ShieldCheck, Clock, Users, Sparkles } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { LeadMagnetSection } from "@/components/LeadMagnet";
 
@@ -84,7 +84,7 @@ export default function Home() {
             <p className="text-muted-foreground text-lg max-w-2xl">Financial infrastructure designed for founders who have outgrown generalist solutions.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
               {
                 icon: <Calculator className="w-6 h-6" />,
@@ -120,22 +120,6 @@ export default function Home() {
                 </ul>
               </div>
             ))}
-          </div>
-
-          <div className="glass-card rounded-xl p-6 flex flex-col sm:flex-row items-center gap-6 border-dashed">
-            <div className="p-2.5 rounded-lg bg-accent/10 text-accent shrink-0">
-              <Globe className="w-5 h-5" />
-            </div>
-            <div className="flex-grow text-center sm:text-left">
-              <div className="flex items-center justify-center sm:justify-start gap-2 mb-1">
-                <h4 className="font-bold text-white text-[15px]">The Digital Handshake</h4>
-                <span className="text-[10px] font-mono tracking-widest text-accent bg-accent/10 px-2 py-0.5 rounded-full">ADD-ON</span>
-              </div>
-              <p className="text-sm text-muted-foreground">Take your business plan further — delivered as a custom static website instead of a PDF. Interactive financials, instant loading, zero maintenance.</p>
-            </div>
-            <Link href="/services#digital" className="shrink-0 px-5 py-2.5 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300 whitespace-nowrap">
-              Learn More
-            </Link>
           </div>
         </div>
       </section>
