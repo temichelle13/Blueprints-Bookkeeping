@@ -16,6 +16,8 @@
   "dependencies": {
     "archiver": "^7.0.1",
     "pngjs": "^7.0.0",
-    "sharp": "^0.34.5"
+    "sharp": "^0.34.5",
+    "stripe": "^20.4.1",
+    "stripe-replit-sync": "^1.0.0"
   }
 }
