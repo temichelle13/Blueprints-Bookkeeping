@@ -70,6 +70,11 @@ Professional website for a remote bookkeeping, business planning, and advisory f
 - `public/robots.txt` and `public/sitemap.xml` (includes all pages + blog post URLs)
 - Per-page titles via `usePageTitle()` hook (`src/hooks/use-page-title.ts`)
 
+### Stripe (Task #18 — Pending)
+- Stripe payment integration is planned but not yet connected. The Replit Stripe integration was dismissed by the user.
+- To proceed: connect the Stripe integration via the Integrations tab, OR provide Stripe Secret Key + Publishable Key as secrets (STRIPE_SECRET_KEY, STRIPE_PUBLISHABLE_KEY).
+- `stripe` and `stripe-replit-sync` packages are already installed at the workspace root.
+
 ### Important notes
 - Does NOT offer tax preparation — never include tax prep content
 - Pricing uses "starting at" ranges only
