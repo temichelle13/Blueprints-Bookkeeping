@@ -41,6 +41,11 @@
       "sourceType": "github",
       "computedHash": "2e83eda2221e97166172a0798e9b0379e34080595e107e2fc0cf580e9b3bbf7b"
     },
+    "docx": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "computedHash": "6962db07127ee540a56e4677f65576d0727668a1d67f7da8bc978f10791c2bfe"
+    },
     "find-skills": {
       "source": "vercel-labs/skills",
       "sourceType": "github",
@@ -85,6 +90,11 @@
       "source": "anthropics/skills",
       "sourceType": "github",
       "computedHash": "b122f4d1e91aa1d83027e050b5b37c3156203ee85458d7b1360bc48167c9e02a"
+    },
+    "social-media-carousel": {
+      "source": "skill-zero/s",
+      "sourceType": "github",
+      "computedHash": "d9e8f2c9ed46691dae5f6077c5506c42a989d29e9c80eaaa29f5ebebab8a8396"
     },
     "vercel-react-native-skills": {
       "source": "vercel-labs/agent-skills",

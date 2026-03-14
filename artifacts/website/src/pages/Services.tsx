@@ -1,11 +1,11 @@
 import { Link } from "wouter";
-import { Calculator, BookOpen, MonitorPlay, FileSignature, CheckCircle2, ArrowRight } from "lucide-react";
+import { Calculator, BookOpen, MonitorPlay, CheckCircle2, ArrowRight } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 
 export default function Services() {
   usePageTitle("Services");
 
-  const services = [
+  const coreServices = [
     {
       id: "bookkeeping",
       icon: <Calculator className="w-5 h-5" />,
@@ -33,34 +33,6 @@ export default function Services() {
         "Burn rate analysis for startups",
         "Strategic narrative development"
       ]
-    },
-    {
-      id: "digital",
-      icon: <MonitorPlay className="w-5 h-5" />,
-      title: "The Digital Handshake",
-      desc: "Transform your business plan into a secure, interactive web presence.",
-      tag: "INNOVATION",
-      features: [
-        "Business plans delivered as custom static websites",
-        "Modern alternative to standard PDF pitches",
-        "High-performance, secure digital hosting",
-        "Immediate validation of professional worth",
-        "No complex dynamic maintenance required"
-      ]
-    },
-    {
-      id: "notary",
-      icon: <FileSignature className="w-5 h-5" />,
-      title: "Remote Online Notarization",
-      desc: "Frictionless document execution for your high-stakes agreements.",
-      tag: "ADD-ON",
-      features: [
-        "Oregon-commissioned active notary",
-        "Secure video conferencing with KBA protocols",
-        "Instant execution for business plan docs",
-        "Corporate entity formation signatures",
-        "Nationwide remote service availability"
-      ]
     }
   ];
 
@@ -78,8 +50,8 @@ export default function Services() {
       </section>
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {services.map((svc) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+          {coreServices.map((svc) => (
             <div key={svc.id} className="glass-card-hover rounded-2xl overflow-hidden flex flex-col h-full group">
               <div className="p-8 pb-0">
                 <div className="flex items-center gap-3 mb-5">
@@ -111,6 +83,45 @@ export default function Services() {
               </div>
             </div>
           ))}
+        </div>
+
+        <div id="digital" className="glass-card rounded-2xl p-8 border border-dashed border-white/[0.08]">
+          <div className="flex flex-col md:flex-row md:items-start gap-8">
+            <div className="flex items-center gap-3 shrink-0">
+              <div className="p-3 rounded-xl bg-accent/10 text-accent">
+                <MonitorPlay className="w-6 h-6" />
+              </div>
+              <span className="text-[11px] font-mono font-medium tracking-widest text-muted-foreground">ADD-ON</span>
+            </div>
+            <div className="flex-grow">
+              <h3 className="text-xl font-bold text-white mb-2">The Digital Handshake</h3>
+              <p className="text-muted-foreground text-[15px] mb-5">
+                An optional enhancement for Business Plan clients — your plan delivered as a custom static website instead of a PDF. Interactive financials, instant loading, zero ongoing maintenance.
+              </p>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-6">
+                {[
+                  "Business plan as a custom static website",
+                  "Modern alternative to a standard PDF pitch",
+                  "High-performance, secure digital hosting",
+                  "Interactive financial models for reviewers",
+                  "No database or server maintenance required",
+                  "Password-protected or invite-only access"
+                ].map((feat, i) => (
+                  <li key={i} className="flex items-start gap-2 text-[14px] text-muted-foreground">
+                    <CheckCircle2 className="w-4 h-4 text-accent/60 shrink-0 mt-0.5" />
+                    {feat}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300 group/btn"
+              >
+                Ask About Adding This
+                <ArrowRight size={15} className="group-hover/btn:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
     </div>

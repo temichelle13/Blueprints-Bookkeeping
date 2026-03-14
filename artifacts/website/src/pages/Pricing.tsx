@@ -22,7 +22,7 @@ export default function Pricing() {
       </section>
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-4xl mx-auto mb-8">
           <div className="glass-card rounded-2xl p-8 relative flex flex-col hover:border-white/10 transition-all">
             <div className="mb-8">
               <span className="text-[11px] font-mono font-medium tracking-widest text-muted-foreground">ONGOING</span>
@@ -64,7 +64,7 @@ export default function Pricing() {
               <div className="flex items-baseline gap-1.5">
                 <span className="text-4xl font-extrabold text-white">$2.5k &ndash; $5k+</span>
               </div>
-              <p className="mt-4 text-sm text-muted-foreground">Lender and investor ready planning to secure essential capital.</p>
+              <p className="mt-4 text-sm text-muted-foreground">Detailed planning designed to secure capital and impress investors.</p>
             </div>
 
             <ul className="relative space-y-3.5 mb-8 flex-grow">
@@ -79,40 +79,20 @@ export default function Pricing() {
               Start Your Blueprint <ArrowRight size={15} />
             </Link>
           </div>
-
-          <div className="glass-card rounded-2xl p-8 relative flex flex-col hover:border-white/10 transition-all">
-            <div className="mb-8">
-              <span className="text-[11px] font-mono font-medium tracking-widest text-muted-foreground">INNOVATION</span>
-              <h2 className="text-2xl font-display font-bold text-white mt-2 mb-3">Static Web Design</h2>
-              <div className="flex items-baseline gap-1.5">
-                <span className="text-4xl font-extrabold text-white">$1.5k &ndash; $3.5k+</span>
-              </div>
-              <p className="mt-4 text-sm text-muted-foreground">Turn your business plan into an interactive digital handshake.</p>
-            </div>
-
-            <ul className="space-y-3.5 mb-8 flex-grow">
-              {['Custom coded static architecture', 'Blazing fast load times', 'Zero database maintenance', 'Interactive financial displays', 'High-end professional polish'].map((feat, i) => (
-                <li key={i} className="flex gap-3 text-sm text-foreground">
-                  <Check className="w-4 h-4 text-accent shrink-0 mt-0.5" /> {feat}
-                </li>
-              ))}
-            </ul>
-
-            <Link href="/contact" className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300">
-              Explore Digital Build
-            </Link>
-          </div>
         </div>
 
-        <div className="mt-10 glass-card rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-6 max-w-4xl mx-auto">
-          <div>
-            <h4 className="font-bold text-white text-[15px]">Need Remote Notarization?</h4>
-            <p className="text-sm text-muted-foreground mt-1">Available as a standalone service or integrated seamlessly into your planning project.</p>
+        <div className="glass-card rounded-xl p-6 flex flex-col sm:flex-row items-center gap-6 max-w-4xl mx-auto border-dashed border-white/[0.08]">
+          <div className="shrink-0 text-center sm:text-left">
+            <span className="text-[10px] font-mono tracking-widest text-accent bg-accent/10 px-2 py-1 rounded-full">ADD-ON</span>
+            <h4 className="font-bold text-white text-[15px] mt-2">The Digital Handshake</h4>
+            <p className="text-sm text-muted-foreground mt-1">$1.5k – $3.5k+</p>
           </div>
-          <div className="text-right shrink-0">
-            <span className="block font-semibold text-foreground text-sm mb-1">Per-session pricing available</span>
-            <Link href="/contact" className="text-accent hover:underline font-medium text-sm">Contact to schedule &rarr;</Link>
+          <div className="flex-grow text-sm text-muted-foreground text-center sm:text-left">
+            Pair your business plan with a custom static website — an interactive, high-performance alternative to a PDF pitch. Available as an add-on to any Business Plan project.
           </div>
+          <Link href="/contact" className="shrink-0 px-5 py-2.5 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300 whitespace-nowrap">
+            Ask About This
+          </Link>
         </div>
       </section>
     </div>

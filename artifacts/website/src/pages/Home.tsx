@@ -80,29 +80,25 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center text-center mb-16">
             <div className="accent-bar mb-6" />
-            <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">Three Pillars of Growth</h2>
+            <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">Two Core Services</h2>
             <p className="text-muted-foreground text-lg max-w-2xl">Financial infrastructure designed for founders who have outgrown generalist solutions.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             {[
               {
                 icon: <Calculator className="w-6 h-6" />,
                 title: "Advanced Bookkeeping",
                 description: "Multi-entity structuring, historical cleanups, and rule-based QBO automation for operations that demand precision.",
-                tag: "ONGOING"
+                tag: "ONGOING",
+                features: ["Multi-entity consolidation", "Historical cleanup & reconciliation", "Monthly close & financial statements"]
               },
               {
                 icon: <BookOpen className="w-6 h-6" />,
                 title: "Business Plans",
                 description: "3-to-5-year financial forecasting built to survive bank underwriting and institutional due diligence.",
-                tag: "PROJECT"
-              },
-              {
-                icon: <Globe className="w-6 h-6" />,
-                title: "The Digital Handshake",
-                description: "Ditch the PDF. Your business plan delivered as a custom, high-performance static website.",
-                tag: "INNOVATION"
+                tag: "PROJECT",
+                features: ["Rigorous 3-to-5 year forecasting", "SBA-ready documentation", "Market research & competitive analysis"]
               }
             ].map((pillar, i) => (
               <div key={i} className="glass-card-hover rounded-2xl p-8 group">
@@ -113,9 +109,33 @@ export default function Home() {
                   <span className="text-[11px] font-mono font-medium tracking-widest text-muted-foreground">{pillar.tag}</span>
                 </div>
                 <h3 className="text-xl font-bold text-white mb-3">{pillar.title}</h3>
-                <p className="text-muted-foreground leading-relaxed text-[15px]">{pillar.description}</p>
+                <p className="text-muted-foreground leading-relaxed text-[15px] mb-5">{pillar.description}</p>
+                <ul className="space-y-2">
+                  {pillar.features.map((f, j) => (
+                    <li key={j} className="flex items-center gap-2 text-[14px] text-muted-foreground">
+                      <span className="w-1.5 h-1.5 rounded-full bg-accent/60 shrink-0" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
+          </div>
+
+          <div className="glass-card rounded-xl p-6 flex flex-col sm:flex-row items-center gap-6 border-dashed">
+            <div className="p-2.5 rounded-lg bg-accent/10 text-accent shrink-0">
+              <Globe className="w-5 h-5" />
+            </div>
+            <div className="flex-grow text-center sm:text-left">
+              <div className="flex items-center justify-center sm:justify-start gap-2 mb-1">
+                <h4 className="font-bold text-white text-[15px]">The Digital Handshake</h4>
+                <span className="text-[10px] font-mono tracking-widest text-accent bg-accent/10 px-2 py-0.5 rounded-full">ADD-ON</span>
+              </div>
+              <p className="text-sm text-muted-foreground">Take your business plan further — delivered as a custom static website instead of a PDF. Interactive financials, instant loading, zero maintenance.</p>
+            </div>
+            <Link href="/services#digital" className="shrink-0 px-5 py-2.5 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300 whitespace-nowrap">
+              Learn More
+            </Link>
           </div>
         </div>
       </section>
