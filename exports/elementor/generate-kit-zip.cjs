@@ -151,9 +151,7 @@ function buildZip() {
       content: parsed.content,
       page_settings: parsed.page_settings || {},
       version: parsed.version || '0.4',
-      metadata: {
-        wp_page_template: 'elementor_header_footer',
-      },
+      ...(t.type === 'page' ? { metadata: { wp_page_template: 'elementor_header_footer' } } : {}),
     };
 
     archive.append(JSON.stringify(kitTemplate, null, 2), { name: `templates/${t.file}` });
