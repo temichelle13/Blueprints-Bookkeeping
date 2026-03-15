@@ -31,6 +31,7 @@ import Referral from "./pages/Referral";
 import AdminContracts from "./pages/AdminContracts";
 import Welcome from "./pages/Welcome";
 import Onboarding from "./pages/Onboarding";
+import ClientPortal from "./pages/ClientPortal";
 
 if (import.meta.env.VITE_API_URL) {
   setApiBaseUrl(import.meta.env.VITE_API_URL as string);
@@ -75,6 +76,7 @@ function Router() {
         <Route path="/unsubscribe" component={Unsubscribe} />
         <Route path="/welcome" component={Welcome} />
         <Route path="/onboarding" component={Onboarding} />
+        <Route path="/client-portal" component={ClientPortal} />
         <Route path="/admin/contracts" component={AdminContracts} />
         <Route component={NotFound} />
       </Switch>

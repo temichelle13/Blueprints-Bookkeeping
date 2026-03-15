@@ -39,6 +39,10 @@ import {
   AlertCircle,
   Eye,
   Settings,
+  Upload,
+  Download,
+  Link2,
+  Copy,
 } from "lucide-react";
 
 const API_BASE = import.meta.env.VITE_API_URL || "/api";
@@ -83,6 +87,18 @@ interface ContractTemplate {
   description: string | null;
   active: string;
   createdAt: string;
+}
+
+interface ClientDocument {
+  id: number;
+  clientName: string;
+  clientEmail: string;
+  fileName: string;
+  originalName: string;
+  fileSize: number;
+  mimeType: string;
+  storagePath: string;
+  uploadedAt: string;
 }
 
 interface AdobeStatus {
@@ -181,6 +197,9 @@ export default function AdminContracts() {
   const [sendDialogOpen, setSendDialogOpen] = useState(false);
   const [templateDialogOpen, setTemplateDialogOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [documents, setDocuments] = useState<ClientDocument[]>([]);
+  const [sendLinkDialogOpen, setSendLinkDialogOpen] = useState(false);
+  const [sendLinkForm, setSendLinkForm] = useState({ clientName: "", clientEmail: "" });
 
   const [sendForm, setSendForm] = useState({
     clientName: "",
@@ -226,6 +245,17 @@ export default function AdminContracts() {
     }
   }
 
+  async function fetchDocuments() {
+    try {
+      const res = await fetch(`${API_BASE}/documents`, { headers: adminHeaders() });
+      if (!res.ok) return;
+      const data = await res.json();
+      setDocuments(data);
+    } catch (err) {
+      console.error("Failed to fetch documents:", err);
+    }
+  }
+
   async function fetchAdobeStatus() {
     try {
       const res = await fetch(`${API_BASE}/contracts/adobe/status`, { headers: adminHeaders() });
@@ -238,7 +268,7 @@ export default function AdminContracts() {
   }
 
   useEffect(() => {
-    Promise.all([fetchContracts(), fetchTemplates(), fetchAdobeStatus()]).finally(
+    Promise.all([fetchContracts(), fetchTemplates(), fetchDocuments(), fetchAdobeStatus()]).finally(
       () => setLoading(false),
     );
   }, []);
@@ -326,7 +356,7 @@ export default function AdminContracts() {
     setAdminToken(tokenInput.trim());
     setTokenInput("");
     setLoading(true);
-    await Promise.all([fetchContracts(), fetchTemplates(), fetchAdobeStatus()]);
+    await Promise.all([fetchContracts(), fetchTemplates(), fetchDocuments(), fetchAdobeStatus()]);
     setLoading(false);
   }
 
@@ -496,6 +526,10 @@ export default function AdminContracts() {
                 <FileText className="w-4 h-4 mr-2" />
                 Contracts ({counts.all})
               </TabsTrigger>
+              <TabsTrigger value="documents" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
+                <Upload className="w-4 h-4 mr-2" />
+                Client Documents ({documents.length})
+              </TabsTrigger>
               <TabsTrigger value="templates" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
                 <Settings className="w-4 h-4 mr-2" />
                 Templates ({templates.length})
@@ -594,6 +628,179 @@ export default function AdminContracts() {
                             ) : (
                               <span className="text-gray-600 text-sm">—</span>
                             )}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="documents" className="space-y-4">
+              <div className="flex justify-between items-center">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => fetchDocuments()}
+                  className="border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10"
+                >
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Refresh
+                </Button>
+                <Dialog open={sendLinkDialogOpen} onOpenChange={setSendLinkDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
+                      <Link2 className="w-4 h-4 mr-2" />
+                      Send Upload Link
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="bg-[#121830] border-indigo-500/20 text-white">
+                    <DialogHeader>
+                      <DialogTitle>Send Secure Upload Link</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 mt-4">
+                      <div className="space-y-2">
+                        <Label>Client Name *</Label>
+                        <Input
+                          value={sendLinkForm.clientName}
+                          onChange={(e) => setSendLinkForm((p) => ({ ...p, clientName: e.target.value }))}
+                          className="bg-[#0a0e1a] border-indigo-500/20"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Client Email *</Label>
+                        <Input
+                          type="email"
+                          value={sendLinkForm.clientEmail}
+                          onChange={(e) => setSendLinkForm((p) => ({ ...p, clientEmail: e.target.value }))}
+                          className="bg-[#0a0e1a] border-indigo-500/20"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Upload Link</Label>
+                        <div className="flex gap-2">
+                          <Input
+                            readOnly
+                            value={sendLinkForm.clientName && sendLinkForm.clientEmail
+                              ? `${window.location.origin}/client-portal?name=${encodeURIComponent(sendLinkForm.clientName)}&email=${encodeURIComponent(sendLinkForm.clientEmail)}`
+                              : "Enter name and email to generate link"}
+                            className="bg-[#0a0e1a] border-indigo-500/20 text-sm"
+                          />
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            disabled={!sendLinkForm.clientName || !sendLinkForm.clientEmail}
+                            className="border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10 flex-shrink-0"
+                            onClick={() => {
+                              const link = `${window.location.origin}/client-portal?name=${encodeURIComponent(sendLinkForm.clientName)}&email=${encodeURIComponent(sendLinkForm.clientEmail)}`;
+                              navigator.clipboard.writeText(link);
+                              toast({ title: "Link Copied", description: "Upload link copied to clipboard." });
+                            }}
+                          >
+                            <Copy className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      <Button
+                        className="w-full bg-indigo-600 hover:bg-indigo-700"
+                        disabled={!sendLinkForm.clientName || !sendLinkForm.clientEmail}
+                        onClick={async () => {
+                          try {
+                            const res = await fetch(`${API_BASE}/documents/send-link`, {
+                              method: "POST",
+                              headers: adminHeaders(),
+                              body: JSON.stringify({
+                                clientName: sendLinkForm.clientName,
+                                clientEmail: sendLinkForm.clientEmail,
+                              }),
+                            });
+                            if (!res.ok) throw new Error("Send failed");
+                            toast({ title: "Link Sent", description: `Upload link emailed to ${sendLinkForm.clientEmail}.` });
+                            setSendLinkDialogOpen(false);
+                            setSendLinkForm({ clientName: "", clientEmail: "" });
+                          } catch {
+                            toast({ title: "Send Failed", description: "Could not send upload link email.", variant: "destructive" });
+                          }
+                        }}
+                      >
+                        <Send className="w-4 h-4 mr-2" />
+                        Email Upload Link
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+
+              <div className="glass-card overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="border-indigo-500/10 hover:bg-transparent">
+                      <TableHead className="text-gray-400">Client</TableHead>
+                      <TableHead className="text-gray-400">File Name</TableHead>
+                      <TableHead className="text-gray-400">Size</TableHead>
+                      <TableHead className="text-gray-400">Type</TableHead>
+                      <TableHead className="text-gray-400">Uploaded</TableHead>
+                      <TableHead className="text-gray-400">Download</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {documents.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={6} className="text-center text-gray-500 py-12">
+                          No documents uploaded yet.
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      documents.map((doc) => (
+                        <TableRow
+                          key={doc.id}
+                          className="border-indigo-500/10 hover:bg-indigo-500/5"
+                        >
+                          <TableCell>
+                            <div>
+                              <p className="text-white font-medium">{doc.clientName}</p>
+                              <p className="text-gray-500 text-sm">{doc.clientEmail}</p>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-gray-300 text-sm">
+                            {doc.originalName}
+                          </TableCell>
+                          <TableCell className="text-gray-400 text-sm">
+                            {doc.fileSize < 1024 * 1024
+                              ? (doc.fileSize / 1024).toFixed(1) + " KB"
+                              : (doc.fileSize / (1024 * 1024)).toFixed(1) + " MB"}
+                          </TableCell>
+                          <TableCell className="text-gray-400 text-sm">
+                            {doc.mimeType.split("/").pop()?.toUpperCase()}
+                          </TableCell>
+                          <TableCell className="text-gray-400 text-sm">
+                            {formatDate(doc.uploadedAt)}
+                          </TableCell>
+                          <TableCell>
+                            <button
+                              className="inline-flex items-center gap-1 text-indigo-400 hover:text-indigo-300 text-sm"
+                              onClick={() => {
+                                const url = `${API_BASE}/documents/${doc.id}/download`;
+                                fetch(url, { headers: adminHeaders() })
+                                  .then((r) => {
+                                    if (!r.ok) throw new Error("Download failed");
+                                    return r.blob();
+                                  })
+                                  .then((blob) => {
+                                    const blobUrl = URL.createObjectURL(blob);
+                                    const a = document.createElement("a");
+                                    a.href = blobUrl;
+                                    a.download = doc.originalName;
+                                    a.click();
+                                    URL.revokeObjectURL(blobUrl);
+                                  })
+                                  .catch((err) => console.error("Download error:", err));
+                              }}
+                            >
+                              <Download className="w-3.5 h-3.5" />
+                              Download
+                            </button>
                           </TableCell>
                         </TableRow>
                       ))

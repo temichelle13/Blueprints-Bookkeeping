@@ -49,7 +49,7 @@ Professional website for a remote bookkeeping, business planning, and advisory f
 - **Font stack**: Display font (Inter bold), JetBrains Mono for tags
 - **Contact**: tea@blueprintsandbookkeeping.com, 541-319-8654
 
-### Pages (12+ total)
+### Pages (14 total)
 1. **Home** — Hero with tagline, trust indicators, 3 pillars, lead magnet section (Financial Readiness Checklist download gate), scarcity CTA (20-client cap)
 2. **About** — Tea's bio, credentials, digital badges. NO portrait image. Degrees listed as "coursework"/"studies" (not completed). Certs: CEH v12, QB ProAdvisor Advanced, Crypto Tax Certified, OR Notary RON
 3. **Services** — Advanced Bookkeeping, Business Plans, Digital Handshake (static web), Remote Online Notarization
@@ -58,10 +58,11 @@ Professional website for a remote bookkeeping, business planning, and advisory f
 6. **Portfolio** — Demo case study cards (no real client data)
 7. **Blog** — Blog listing + individual article pages (/blog/:slug). 4 starter articles in `src/data/blog-posts.ts`
 8. **Contact** — Dual-path: Quick Message + Discovery Intake Form
-9. **Unsubscribe** — Newsletter unsubscribe page with email input
-10. **Welcome** (`/welcome`) — Post-payment success page shown after Stripe checkout. Shows next steps (onboarding form, contracts, document upload).
-11. **Onboarding** (`/onboarding`) — Self-service client intake form collecting business name, owner name, EIN/business type, bookkeeping software, notes. Submits to API which saves to CRM and triggers Adobe Sign contracts.
-12. *(Not Found)* — 404 page
+9. **Client Portal** (`/client-portal`) — Secure document upload portal. Clients enter name + email, drag-and-drop files (PDF, DOCX, XLSX, JPG, PNG, CSV; 25MB max per file). Confirmation email sent on upload. Supports pre-filled name/email via query params for secure link generation.
+10. **Unsubscribe** — Newsletter unsubscribe page with email input
+11. **Welcome** (`/welcome`) — Post-payment success page shown after Stripe checkout. Shows next steps (onboarding form, contracts, document upload).
+12. **Onboarding** (`/onboarding`) — Self-service client intake form collecting business name, owner name, EIN/business type, bookkeeping software, notes. Submits to API which saves to CRM and triggers Adobe Sign contracts.
+13. *(Not Found)* — 404 page
 
 ### Header
 - Shows ONLY the BB icon (`public/logo-icon.png`) — cropped from full logo. No text beside it
@@ -105,6 +106,7 @@ Professional website for a remote bookkeeping, business planning, and advisory f
 - `contract_templates` table stores references to Adobe Sign templates (name, contract type, Adobe template ID, trigger condition, prefill fields, active status)
 - `subscriptions` table stores Stripe subscription records (customer ID, subscription ID, plan, billing interval, status, client name/email, period dates)
 - `onboarding_submissions` table stores self-service intake form data (business name, owner name, EIN/type, bookkeeping software, notes, linked to subscription)
+- `client_documents` table stores uploaded client documents (client name/email, file name, original name, file size, MIME type, CC Storage path, upload timestamp)
 
 ### Adobe Acrobat Sign Contract Automation
 - **Integration**: Adobe Acrobat Sign API v6 for e-signatures, connected via OAuth2 refresh token flow
@@ -137,6 +139,25 @@ Professional website for a remote bookkeeping, business planning, and advisory f
   - `GET /contracts/adobe/templates` — list Adobe Sign library documents
   - `GET /contracts/:id/document` — download signed PDF (admin-authed proxy to Adobe Sign)
   - `POST /contracts/webhooks/booking` — booking webhook (Calendly or manual; no admin auth needed)
+
+### Client Document Upload Portal
+- **Purpose**: Allows clients to securely upload financial documents (tax returns, bank statements, etc.) without using email
+- **Client portal**: `/client-portal` page with drag-and-drop upload, name/email identification, progress indicator, confirmation screen
+- **Supported file types**: PDF, DOCX, XLSX, DOC, XLS, JPG, JPEG, PNG, CSV (validated both by MIME type AND extension)
+- **File size limit**: 25MB per file, up to 10 files per upload
+- **Storage**: Files are uploaded to Adobe Creative Cloud Storage under `Blueprints_Bookkeeping/ClientDocuments/{year}/{client_name}/{date}_{filename}`
+- **Emails**: Upload confirmation sent to client + notification sent to admin via Resend
+- **Admin dashboard**: "Client Documents" tab in `/admin/contracts` — lists all uploaded files with metadata, secure download button
+- **Secure link generation**: Admin can generate and email a pre-addressed upload link to a client (pre-fills name/email on the portal)
+- **Backend files**:
+  - `artifacts/api-server/src/routes/documents.ts` — REST API endpoints for upload, listing, download, send-link
+  - `lib/db/src/schema/clientDocuments.ts` — Database schema for client documents
+- **Frontend**: `artifacts/website/src/pages/ClientPortal.tsx` — client-facing upload portal
+- **API endpoints** (all under `/api`):
+  - `POST /documents/upload` — multipart file upload (public, no admin auth)
+  - `GET /documents` — list all documents (admin-authed)
+  - `GET /documents/:id/download` — download document via CC Storage proxy (admin-authed)
+  - `POST /documents/send-link` — email a secure upload link to a client (admin-authed)
 
 ## TypeScript & Composite Projects
 

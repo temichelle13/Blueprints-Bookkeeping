@@ -32,6 +32,7 @@ async function getAccessToken(): Promise<string> {
 export async function uploadToCreativeCloud(
   filePath: string,
   fileData: ArrayBuffer,
+  contentType: string = "application/pdf",
 ): Promise<string> {
   const token = await getAccessToken();
   const apiKey = process.env["ADOBE_SIGN_CLIENT_ID"];
@@ -41,7 +42,7 @@ export async function uploadToCreativeCloud(
     headers: {
       Authorization: `Bearer ${token}`,
       "x-api-key": apiKey || "",
-      "Content-Type": "application/pdf",
+      "Content-Type": contentType,
     },
     body: fileData,
   });

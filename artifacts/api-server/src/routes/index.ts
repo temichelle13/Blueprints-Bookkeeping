@@ -7,6 +7,7 @@ import feedbackRouter from "./feedback";
 import contractsRouter from "./contracts";
 import paymentsRouter from "./payments";
 import onboardingRouter from "./onboarding";
+import documentsRouter from "./documents";
 
 const router: IRouter = Router();
 
@@ -18,5 +19,6 @@ router.use(feedbackRouter);
 router.use(contractsRouter);
 router.use(paymentsRouter);
 router.use(onboardingRouter);
+router.use(documentsRouter);
 
 export default router;
