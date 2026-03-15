@@ -27,6 +27,7 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Feedback from "./pages/Feedback";
 import TaxPartners from "./pages/TaxPartners";
+import Referral from "./pages/Referral";
 
 if (import.meta.env.VITE_API_URL) {
   setApiBaseUrl(import.meta.env.VITE_API_URL as string);
@@ -66,6 +67,7 @@ function Router() {
         <Route path="/terms" component={Terms} />
         <Route path="/feedback" component={Feedback} />
         <Route path="/tax-partners" component={TaxPartners} />
+        <Route path="/referral" component={Referral} />
         <Route path="/marketing-guide" component={MarketingGuide} />
         <Route path="/unsubscribe" component={Unsubscribe} />
         <Route component={NotFound} />
