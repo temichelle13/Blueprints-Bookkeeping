@@ -1,0 +1,302 @@
+import { Link } from "wouter";
+import { motion } from "framer-motion";
+import { CreditCard, UserCheck, CalendarDays, MessageSquare, ArrowRight, BookOpen, FileText, Building2 } from "lucide-react";
+import { usePageTitle } from "@/hooks/use-page-title";
+
+export default function GetStarted() {
+  usePageTitle("Get Started — Blueprints & Bookkeeping");
+
+  const paths = [
+    {
+      icon: CreditCard,
+      color: "#6366F1",
+      badge: "FASTEST",
+      title: "Sign Up Online",
+      subtitle: "For Essentials or Growth bookkeeping",
+      description:
+        "Choose your tier, complete checkout, and submit your onboarding intake form — all in one visit. Contracts are sent automatically and you'll have access to the client portal immediately.",
+      steps: ["Pick Essentials ($500/mo) or Growth ($900/mo)", "Checkout securely via Stripe", "Complete your intake form", "Receive & sign contracts", "Upload your first documents"],
+      cta: "View Plans & Pricing",
+      href: "/pricing",
+      primary: true,
+    },
+    {
+      icon: UserCheck,
+      color: "#10B981",
+      badge: "EXISTING QB USERS",
+      title: "Already Have QuickBooks?",
+      subtitle: "Connect your existing account to Tea's firm",
+      description:
+        "If you're already on QuickBooks Online, skip the setup — we'll connect to your existing company file. Complete the intake form and Tea will send you a QuickBooks accountant invitation.",
+      steps: ["Fill out the intake form below", "Tea sends a QuickBooks accountant invite", "Accept the invite in QBO (takes 2 minutes)", "Sign your engagement letter", "Clean-up and handoff begins"],
+      cta: "Start Intake Form",
+      href: "/onboarding",
+      primary: false,
+    },
+    {
+      icon: MessageSquare,
+      color: "#F59E0B",
+      badge: "NO COMMITMENT",
+      title: "Leave Your Info",
+      subtitle: "Tea will reach out within one business day",
+      description:
+        "Not ready to commit yet? Just drop your name, email, and what you're working on. Tea will reach out personally to answer questions and figure out the best fit — no sales pressure.",
+      steps: ["Fill out a quick form", "Tea reviews your info", "Personal follow-up within 1 business day", "No calls required unless you want one"],
+      cta: "Send Your Info",
+      href: "/contact",
+      primary: false,
+    },
+    {
+      icon: CalendarDays,
+      color: "#8B5CF6",
+      badge: "RECOMMENDED FOR ADVANCED",
+      title: "Book a Discovery Call",
+      subtitle: "30 minutes, free, no obligation",
+      description:
+        "Best for Advanced bookkeeping, Business Plans, or complex situations (multi-entity, crypto, SBA). We'll look at your books together and build a custom scope and quote.",
+      steps: ["Pick a time that works for you", "30-min video or phone call with Tea", "Walk through your current situation", "Get a custom scope and pricing", "Move forward when ready"],
+      cta: "Book a Free Call",
+      href: "https://calendly.com/tea-blueprintsandbookkeeping/30min",
+      external: true,
+      primary: false,
+    },
+  ];
+
+  const container = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { staggerChildren: 0.1 } },
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 24 },
+    show: { opacity: 1, y: 0 },
+  };
+
+  return (
+    <div className="min-h-screen py-20 px-4">
+      <div className="max-w-6xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-16"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/20 bg-accent/5 mb-6 text-sm font-medium text-accent">
+            <span className="glow-dot" />
+            You choose how to start
+          </div>
+          <h1 className="text-4xl md:text-5xl font-display font-extrabold text-white mb-4">
+            Get Started Your Way
+          </h1>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            No single path required. Sign up online in minutes, connect your existing QuickBooks,
+            leave your info for a callback, or book a call for complex situations.
+          </p>
+        </motion.div>
+
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16"
+        >
+          {paths.map((path) => (
+            <motion.div
+              key={path.title}
+              variants={item}
+              style={{
+                background: path.primary ? `linear-gradient(135deg, rgba(99,102,241,0.12), rgba(99,102,241,0.04))` : "#161B2E",
+                border: path.primary ? "1px solid rgba(99,102,241,0.4)" : "1px solid #252B3D",
+                borderRadius: 16,
+                padding: 32,
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+                overflow: "hidden",
+              }}
+            >
+              {path.primary && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: 2,
+                    background: "linear-gradient(90deg, #6366F1, #818CF8)",
+                  }}
+                />
+              )}
+
+              <div className="flex items-start justify-between mb-5">
+                <div
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: 12,
+                    background: `${path.color}18`,
+                    border: `1px solid ${path.color}30`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                  }}
+                >
+                  <path.icon size={22} style={{ color: path.color }} />
+                </div>
+                <span
+                  style={{
+                    fontSize: 10,
+                    fontWeight: 700,
+                    letterSpacing: "0.08em",
+                    color: path.color,
+                    background: `${path.color}15`,
+                    border: `1px solid ${path.color}30`,
+                    borderRadius: 20,
+                    padding: "3px 10px",
+                  }}
+                >
+                  {path.badge}
+                </span>
+              </div>
+
+              <h2 className="text-xl font-display font-bold text-white mb-1">{path.title}</h2>
+              <p className="text-sm text-muted-foreground mb-3">{path.subtitle}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-5">{path.description}</p>
+
+              <ul className="space-y-2 mb-6 flex-1">
+                {path.steps.map((step, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm">
+                    <span
+                      style={{
+                        width: 20,
+                        height: 20,
+                        borderRadius: "50%",
+                        background: `${path.color}18`,
+                        border: `1px solid ${path.color}30`,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                        fontSize: 10,
+                        fontWeight: 700,
+                        color: path.color,
+                        marginTop: 1,
+                      }}
+                    >
+                      {i + 1}
+                    </span>
+                    <span className="text-muted-foreground">{step}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {path.external ? (
+                <a
+                  href={path.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 8,
+                    padding: "12px 20px",
+                    borderRadius: 10,
+                    background: path.primary ? "#6366F1" : `${path.color}18`,
+                    border: path.primary ? "none" : `1px solid ${path.color}30`,
+                    color: path.primary ? "white" : path.color,
+                    fontWeight: 600,
+                    fontSize: 14,
+                    textDecoration: "none",
+                    transition: "opacity 0.15s",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
+                  onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+                >
+                  {path.cta}
+                  <ArrowRight size={16} />
+                </a>
+              ) : (
+                <Link
+                  href={path.href}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 8,
+                    padding: "12px 20px",
+                    borderRadius: 10,
+                    background: path.primary ? "#6366F1" : `${path.color}18`,
+                    border: path.primary ? "none" : `1px solid ${path.color}30`,
+                    color: path.primary ? "white" : path.color,
+                    fontWeight: 600,
+                    fontSize: 14,
+                    textDecoration: "none",
+                    transition: "opacity 0.15s",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
+                  onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+                >
+                  {path.cta}
+                  <ArrowRight size={16} />
+                </Link>
+              )}
+            </motion.div>
+          ))}
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          style={{
+            background: "#161B2E",
+            border: "1px solid #252B3D",
+            borderRadius: 16,
+            padding: "40px",
+          }}
+        >
+          <h2 className="text-xl font-display font-bold text-white mb-2 text-center">
+            Once You're a Client
+          </h2>
+          <p className="text-muted-foreground text-sm text-center mb-8 max-w-xl mx-auto">
+            Everything lives in one place — documents, contracts, communication, and payments.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {[
+              {
+                icon: FileText,
+                title: "Sign Contracts",
+                desc: "Engagement letters sent via Adobe Acrobat Sign. Sign from any device in minutes.",
+              },
+              {
+                icon: BookOpen,
+                title: "Upload Documents",
+                desc: "Securely send statements, receipts, and records through the encrypted client portal.",
+                href: "/client-portal",
+              },
+              {
+                icon: Building2,
+                title: "QuickBooks Access",
+                desc: "Tea works directly in your QuickBooks Online account — no exports, no data re-entry.",
+              },
+            ].map((item) => (
+              <div key={item.title} className="text-center p-5 rounded-xl bg-surface/50">
+                <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 border border-accent/20 mb-3">
+                  <item.icon size={18} className="text-accent" />
+                </div>
+                <h3 className="font-semibold text-white text-sm mb-1">{item.title}</h3>
+                <p className="text-muted-foreground text-xs leading-relaxed">{item.desc}</p>
+                {item.href && (
+                  <Link href={item.href} className="inline-block mt-2 text-xs text-accent hover:underline">
+                    Open portal →
+                  </Link>
+                )}
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+}

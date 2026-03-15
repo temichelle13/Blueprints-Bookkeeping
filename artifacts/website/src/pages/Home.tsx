@@ -58,10 +58,10 @@ export default function Home() {
             className="flex flex-col sm:flex-row gap-4"
           >
             <Link
-              href="/contact"
+              href="/get-started"
               className="group px-8 py-4 rounded-xl bg-accent text-white font-semibold text-lg shadow-xl shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
             >
-              Schedule Discovery Call
+              Get Started
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link

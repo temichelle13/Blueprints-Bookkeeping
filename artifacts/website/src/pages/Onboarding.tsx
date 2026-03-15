@@ -93,6 +93,34 @@ export default function Onboarding() {
         </div>
       </section>
 
+      <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+        <div
+          style={{
+            background: "rgba(99,102,241,0.06)",
+            border: "1px solid rgba(99,102,241,0.25)",
+            borderRadius: 14,
+            padding: "24px 28px",
+          }}
+        >
+          <div className="flex items-start gap-3">
+            <Laptop className="text-accent shrink-0 mt-0.5" size={20} />
+            <div>
+              <h3 className="font-semibold text-white mb-1 text-sm">Already have QuickBooks Online?</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed mb-3">
+                No migration needed. Fill out this form and Tea will send you a <strong className="text-white">QuickBooks accountant invitation</strong> directly. Here's what happens next:
+              </p>
+              <ol className="space-y-1 text-sm text-muted-foreground list-decimal list-inside">
+                <li>You submit this intake form</li>
+                <li>Tea reviews it and sends a QBO accountant invite to your email</li>
+                <li>You open the invite and click <strong className="text-white">Accept</strong> (takes about 2 minutes)</li>
+                <li>Tea gets read/write access to your company file — no data export required</li>
+                <li>Your engagement letter and NDA arrive via Adobe Sign</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="glass-card rounded-2xl p-8 md:p-10">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

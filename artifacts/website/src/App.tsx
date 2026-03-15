@@ -26,6 +26,7 @@ import Schedule from "./pages/Schedule";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Feedback from "./pages/Feedback";
+import GetStarted from "./pages/GetStarted";
 import TaxPartners from "./pages/TaxPartners";
 import Referral from "./pages/Referral";
 import AdminContracts from "./pages/AdminContracts";
@@ -70,6 +71,7 @@ function Router() {
         <Route path="/privacy" component={Privacy} />
         <Route path="/terms" component={Terms} />
         <Route path="/feedback" component={Feedback} />
+        <Route path="/get-started" component={GetStarted} />
         <Route path="/tax-partners" component={TaxPartners} />
         <Route path="/referral" component={Referral} />
         <Route path="/marketing-guide" component={MarketingGuide} />
