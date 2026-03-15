@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { href: "/portfolio", label: "Portfolio" },
   { href: "/results", label: "Results" },
   { href: "/blog", label: "Blog" },
+  { href: "/tax-partners", label: "Tax Partners" },
 ];
 
 export function Header() {

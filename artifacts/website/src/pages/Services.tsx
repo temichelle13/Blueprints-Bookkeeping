@@ -85,6 +85,24 @@ export default function Services() {
           ))}
         </div>
 
+        <div className="glass-card rounded-2xl p-8 mb-6 border border-white/[0.06]">
+          <div className="flex flex-col md:flex-row md:items-center gap-6">
+            <div className="flex-grow">
+              <h3 className="text-lg font-bold text-white mb-2">Looking for Tax Preparation?</h3>
+              <p className="text-muted-foreground text-[15px]">
+                Tax preparation isn't part of our service offering — but we've built a vetted network of licensed CPAs and Enrolled Agents who specialize in it. We hand off clean, organized books so your tax season is seamless.
+              </p>
+            </div>
+            <Link
+              href="/tax-partners"
+              className="shrink-0 inline-flex items-center gap-2 px-6 py-2.5 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300 group/btn"
+            >
+              View Tax Partners
+              <ArrowRight size={15} className="group-hover/btn:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+        </div>
+
         <div id="digital" className="glass-card rounded-2xl p-8 border border-dashed border-white/[0.08]">
           <div className="flex flex-col md:flex-row md:items-start gap-8">
             <div className="flex items-center gap-3 shrink-0">

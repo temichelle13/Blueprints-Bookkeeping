@@ -47,6 +47,7 @@ export function Footer() {
                 { label: "Client Results", href: "/results" },
                 { label: "Blog", href: "/blog" },
                 { label: "FAQ", href: "/faq" },
+                { label: "Tax Partner Network", href: "/tax-partners" },
                 { label: "Book a Call", href: "/schedule" },
               ].map((item) => (
                 <li key={item.href}>

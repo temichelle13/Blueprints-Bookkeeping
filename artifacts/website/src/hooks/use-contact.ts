@@ -31,19 +31,21 @@ export function useContactMutation() {
   const { toast } = useToast();
   const mutation = useSubmitContactForm();
 
-  const submit = async (data: ContactFormInput) => {
+  const submit = async (data: ContactFormInput): Promise<boolean> => {
     try {
       await mutation.mutateAsync({ data });
       toast({
         title: "Inquiry Submitted",
         description: "Thank you for reaching out. We will be in touch shortly.",
       });
+      return true;
     } catch (error) {
       toast({
         title: "Submission Failed",
         description: "There was an error submitting your inquiry. Please try again.",
         variant: "destructive",
       });
+      return false;
     }
   };
 
