@@ -107,3 +107,107 @@ export interface OpenaiConversationWithMessages {
 export interface OpenaiError {
   error: string;
 }
+
+export type ContractStatus =
+  (typeof ContractStatus)[keyof typeof ContractStatus];
+
+export const ContractStatus = {
+  draft: "draft",
+  sent: "sent",
+  viewed: "viewed",
+  signed: "signed",
+  expired: "expired",
+  cancelled: "cancelled",
+} as const;
+
+export interface Contract {
+  id: number;
+  clientName: string;
+  clientEmail: string;
+  contractType: string;
+  /** @nullable */
+  templateId?: number | null;
+  /** @nullable */
+  adobeAgreementId?: string | null;
+  status: ContractStatus;
+  /** @nullable */
+  serviceType?: string | null;
+  /** @nullable */
+  pricingTier?: string | null;
+  /** @nullable */
+  startDate?: string | null;
+  /** @nullable */
+  sentAt?: string | null;
+  /** @nullable */
+  signedAt?: string | null;
+  /** @nullable */
+  expiredAt?: string | null;
+  /** @nullable */
+  signedDocumentUrl?: string | null;
+  remindersSent: number;
+  /** @nullable */
+  lastReminderAt?: string | null;
+  /** @nullable */
+  contactInquiryId?: number | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SendContractInput {
+  clientName: string;
+  clientEmail: string;
+  contractType: string;
+  serviceType?: string;
+  pricingTier?: string;
+  startDate?: string;
+}
+
+export interface SendContractResponse {
+  success: boolean;
+  message: string;
+  contractId: number;
+  /** @nullable */
+  adobeAgreementId?: string | null;
+}
+
+export interface SyncResult {
+  success: boolean;
+  synced: number;
+}
+
+export interface ReminderResult {
+  success: boolean;
+  remindersProcessed: number;
+  expired: number;
+}
+
+export interface ContractTemplate {
+  id: number;
+  name: string;
+  contractType: string;
+  /** @nullable */
+  adobeTemplateId?: string | null;
+  triggerCondition: string;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  prefillFields?: string[] | null;
+  active: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ContractTemplateInput {
+  name: string;
+  contractType: string;
+  adobeTemplateId?: string;
+  triggerCondition: string;
+  description?: string;
+  prefillFields?: string[];
+  active?: string;
+}
+
+export interface AdobeSignStatus {
+  configured: boolean;
+  message: string;
+}

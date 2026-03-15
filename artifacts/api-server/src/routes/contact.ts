@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { db, contactInquiriesTable } from "@workspace/db";
 import { SubmitContactFormBody } from "@workspace/api-zod";
 import { Resend } from "resend";
+import * as contractService from "../lib/contract-service";
 
 const router: IRouter = Router();
 
@@ -108,6 +109,18 @@ router.post("/contact", async (req, res): Promise<void> => {
       }),
     ]);
   }
+
+  contractService
+    .processFormSubmission({
+      formType: data.formType,
+      name: data.name,
+      email: data.email,
+      servicesInterested: data.servicesInterested ?? null,
+      contactInquiryId: inquiry.id,
+    })
+    .catch((err) => {
+      console.error("Contract automation error (non-blocking):", err);
+    });
 
   res.status(201).json({
     success: true,

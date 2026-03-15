@@ -15,6 +15,8 @@ tags:
     description: Newsletter subscription operations
   - name: openai
     description: OpenAI AI chat operations
+  - name: contracts
+    description: Contract management and Adobe Acrobat Sign operations
 paths:
   /healthz:
     get:
@@ -219,6 +221,250 @@ paths:
           description: SSE stream of assistant text chunks
           content:
             text/event-stream: {}
+  /contracts:
+    get:
+      operationId: listContracts
+      tags: [contracts]
+      summary: List all contracts
+      responses:
+        "200":
+          description: List of contracts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contract"
+  /contracts/send:
+    post:
+      operationId: sendContract
+      tags: [contracts]
+      summary: Manually send a contract
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendContractInput"
+      responses:
+        "201":
+          description: Contract sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SendContractResponse"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /contracts/{id}:
+    get:
+      operationId: getContract
+      tags: [contracts]
+      summary: Get a single contract
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Contract details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /contracts/{id}/sync:
+    post:
+      operationId: syncContract
+      tags: [contracts]
+      summary: Sync contract status with Adobe Sign
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Updated contract
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+  /contracts/sync-all:
+    post:
+      operationId: syncAllContracts
+      tags: [contracts]
+      summary: Sync all pending contracts
+      responses:
+        "200":
+          description: Sync result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SyncResult"
+  /contracts/process-reminders:
+    post:
+      operationId: processContractReminders
+      tags: [contracts]
+      summary: Process contract reminders
+      responses:
+        "200":
+          description: Reminder results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReminderResult"
+  /contracts/templates/list:
+    get:
+      operationId: listContractTemplates
+      tags: [contracts]
+      summary: List contract templates
+      responses:
+        "200":
+          description: List of templates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ContractTemplate"
+  /contracts/templates:
+    post:
+      operationId: createContractTemplate
+      tags: [contracts]
+      summary: Create a contract template
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractTemplateInput"
+      responses:
+        "201":
+          description: Template created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractTemplate"
+  /contracts/templates/{id}:
+    put:
+      operationId: updateContractTemplate
+      tags: [contracts]
+      summary: Update a contract template
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractTemplateInput"
+      responses:
+        "200":
+          description: Template updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractTemplate"
+    delete:
+      operationId: deleteContractTemplate
+      tags: [contracts]
+      summary: Delete a contract template
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+  /contracts/webhooks/booking:
+    post:
+      operationId: bookingWebhook
+      tags: [contracts]
+      summary: Webhook for service bookings (Calendly or manual)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event:
+                  type: string
+                payload:
+                  type: object
+                clientName:
+                  type: string
+                clientEmail:
+                  type: string
+                serviceType:
+                  type: string
+      responses:
+        "201":
+          description: Contracts triggered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  contracts:
+                    type: array
+                    items:
+                      type: object
+  /contracts/{id}/document:
+    get:
+      operationId: getContractDocument
+      tags: [contracts]
+      summary: Download signed contract PDF
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Signed PDF document
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Contract or signed document not found
+  /contracts/adobe/status:
+    get:
+      operationId: getAdobeSignStatus
+      tags: [contracts]
+      summary: Check Adobe Sign API status
+      responses:
+        "200":
+          description: API status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdobeSignStatus"
 components:
   schemas:
     HealthStatus:
@@ -392,3 +638,185 @@ components:
           type: string
       required:
         - error
+    Contract:
+      type: object
+      properties:
+        id:
+          type: integer
+        clientName:
+          type: string
+        clientEmail:
+          type: string
+        contractType:
+          type: string
+        templateId:
+          type: ["integer", "null"]
+        adobeAgreementId:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [draft, sent, viewed, signed, expired, cancelled]
+        serviceType:
+          type: ["string", "null"]
+        pricingTier:
+          type: ["string", "null"]
+        startDate:
+          type: ["string", "null"]
+        sentAt:
+          type: ["string", "null"]
+          format: date-time
+        signedAt:
+          type: ["string", "null"]
+          format: date-time
+        expiredAt:
+          type: ["string", "null"]
+          format: date-time
+        signedDocumentUrl:
+          type: ["string", "null"]
+        remindersSent:
+          type: integer
+        lastReminderAt:
+          type: ["string", "null"]
+          format: date-time
+        contactInquiryId:
+          type: ["integer", "null"]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - clientName
+        - clientEmail
+        - contractType
+        - status
+        - remindersSent
+        - createdAt
+        - updatedAt
+    SendContractInput:
+      type: object
+      properties:
+        clientName:
+          type: string
+        clientEmail:
+          type: string
+        contractType:
+          type: string
+        serviceType:
+          type: string
+        pricingTier:
+          type: string
+        startDate:
+          type: string
+      required:
+        - clientName
+        - clientEmail
+        - contractType
+    SendContractResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        contractId:
+          type: integer
+        adobeAgreementId:
+          type: ["string", "null"]
+      required:
+        - success
+        - message
+        - contractId
+    SyncResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        synced:
+          type: integer
+      required:
+        - success
+        - synced
+    ReminderResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        remindersProcessed:
+          type: integer
+        expired:
+          type: integer
+      required:
+        - success
+        - remindersProcessed
+        - expired
+    ContractTemplate:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        contractType:
+          type: string
+        adobeTemplateId:
+          type: ["string", "null"]
+        triggerCondition:
+          type: string
+        description:
+          type: ["string", "null"]
+        prefillFields:
+          type: ["array", "null"]
+          items:
+            type: string
+        active:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - contractType
+        - triggerCondition
+        - active
+        - createdAt
+        - updatedAt
+    ContractTemplateInput:
+      type: object
+      properties:
+        name:
+          type: string
+        contractType:
+          type: string
+        adobeTemplateId:
+          type: string
+        triggerCondition:
+          type: string
+        description:
+          type: string
+        prefillFields:
+          type: array
+          items:
+            type: string
+        active:
+          type: string
+      required:
+        - name
+        - contractType
+        - triggerCondition
+    AdobeSignStatus:
+      type: object
+      properties:
+        configured:
+          type: boolean
+        message:
+          type: string
+      required:
+        - configured
+        - message

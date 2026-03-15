@@ -131,3 +131,214 @@ export const SendOpenaiMessageParams = zod.object({
 export const SendOpenaiMessageBody = zod.object({
   content: zod.string(),
 });
+
+/**
+ * @summary List all contracts
+ */
+export const ListContractsResponseItem = zod.object({
+  id: zod.number(),
+  clientName: zod.string(),
+  clientEmail: zod.string(),
+  contractType: zod.string(),
+  templateId: zod.number().nullish(),
+  adobeAgreementId: zod.string().nullish(),
+  status: zod.enum([
+    "draft",
+    "sent",
+    "viewed",
+    "signed",
+    "expired",
+    "cancelled",
+  ]),
+  serviceType: zod.string().nullish(),
+  pricingTier: zod.string().nullish(),
+  startDate: zod.string().nullish(),
+  sentAt: zod.date().nullish(),
+  signedAt: zod.date().nullish(),
+  expiredAt: zod.date().nullish(),
+  signedDocumentUrl: zod.string().nullish(),
+  remindersSent: zod.number(),
+  lastReminderAt: zod.date().nullish(),
+  contactInquiryId: zod.number().nullish(),
+  createdAt: zod.date(),
+  updatedAt: zod.date(),
+});
+export const ListContractsResponse = zod.array(ListContractsResponseItem);
+
+/**
+ * @summary Manually send a contract
+ */
+export const SendContractBody = zod.object({
+  clientName: zod.string(),
+  clientEmail: zod.string(),
+  contractType: zod.string(),
+  serviceType: zod.string().optional(),
+  pricingTier: zod.string().optional(),
+  startDate: zod.string().optional(),
+});
+
+/**
+ * @summary Get a single contract
+ */
+export const GetContractParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const GetContractResponse = zod.object({
+  id: zod.number(),
+  clientName: zod.string(),
+  clientEmail: zod.string(),
+  contractType: zod.string(),
+  templateId: zod.number().nullish(),
+  adobeAgreementId: zod.string().nullish(),
+  status: zod.enum([
+    "draft",
+    "sent",
+    "viewed",
+    "signed",
+    "expired",
+    "cancelled",
+  ]),
+  serviceType: zod.string().nullish(),
+  pricingTier: zod.string().nullish(),
+  startDate: zod.string().nullish(),
+  sentAt: zod.date().nullish(),
+  signedAt: zod.date().nullish(),
+  expiredAt: zod.date().nullish(),
+  signedDocumentUrl: zod.string().nullish(),
+  remindersSent: zod.number(),
+  lastReminderAt: zod.date().nullish(),
+  contactInquiryId: zod.number().nullish(),
+  createdAt: zod.date(),
+  updatedAt: zod.date(),
+});
+
+/**
+ * @summary Sync contract status with Adobe Sign
+ */
+export const SyncContractParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const SyncContractResponse = zod.object({
+  id: zod.number(),
+  clientName: zod.string(),
+  clientEmail: zod.string(),
+  contractType: zod.string(),
+  templateId: zod.number().nullish(),
+  adobeAgreementId: zod.string().nullish(),
+  status: zod.enum([
+    "draft",
+    "sent",
+    "viewed",
+    "signed",
+    "expired",
+    "cancelled",
+  ]),
+  serviceType: zod.string().nullish(),
+  pricingTier: zod.string().nullish(),
+  startDate: zod.string().nullish(),
+  sentAt: zod.date().nullish(),
+  signedAt: zod.date().nullish(),
+  expiredAt: zod.date().nullish(),
+  signedDocumentUrl: zod.string().nullish(),
+  remindersSent: zod.number(),
+  lastReminderAt: zod.date().nullish(),
+  contactInquiryId: zod.number().nullish(),
+  createdAt: zod.date(),
+  updatedAt: zod.date(),
+});
+
+/**
+ * @summary Sync all pending contracts
+ */
+export const SyncAllContractsResponse = zod.object({
+  success: zod.boolean(),
+  synced: zod.number(),
+});
+
+/**
+ * @summary Process contract reminders
+ */
+export const ProcessContractRemindersResponse = zod.object({
+  success: zod.boolean(),
+  remindersProcessed: zod.number(),
+  expired: zod.number(),
+});
+
+/**
+ * @summary List contract templates
+ */
+export const ListContractTemplatesResponseItem = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  contractType: zod.string(),
+  adobeTemplateId: zod.string().nullish(),
+  triggerCondition: zod.string(),
+  description: zod.string().nullish(),
+  prefillFields: zod.array(zod.string()).nullish(),
+  active: zod.string(),
+  createdAt: zod.date(),
+  updatedAt: zod.date(),
+});
+export const ListContractTemplatesResponse = zod.array(
+  ListContractTemplatesResponseItem,
+);
+
+/**
+ * @summary Create a contract template
+ */
+export const CreateContractTemplateBody = zod.object({
+  name: zod.string(),
+  contractType: zod.string(),
+  adobeTemplateId: zod.string().optional(),
+  triggerCondition: zod.string(),
+  description: zod.string().optional(),
+  prefillFields: zod.array(zod.string()).optional(),
+  active: zod.string().optional(),
+});
+
+/**
+ * @summary Update a contract template
+ */
+export const UpdateContractTemplateParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateContractTemplateBody = zod.object({
+  name: zod.string(),
+  contractType: zod.string(),
+  adobeTemplateId: zod.string().optional(),
+  triggerCondition: zod.string(),
+  description: zod.string().optional(),
+  prefillFields: zod.array(zod.string()).optional(),
+  active: zod.string().optional(),
+});
+
+export const UpdateContractTemplateResponse = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  contractType: zod.string(),
+  adobeTemplateId: zod.string().nullish(),
+  triggerCondition: zod.string(),
+  description: zod.string().nullish(),
+  prefillFields: zod.array(zod.string()).nullish(),
+  active: zod.string(),
+  createdAt: zod.date(),
+  updatedAt: zod.date(),
+});
+
+/**
+ * @summary Delete a contract template
+ */
+export const DeleteContractTemplateParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+/**
+ * @summary Check Adobe Sign API status
+ */
+export const GetAdobeSignStatusResponse = zod.object({
+  configured: zod.boolean(),
+  message: zod.string(),
+});

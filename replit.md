@@ -92,6 +92,40 @@ Professional website for a remote bookkeeping, business planning, and advisory f
 ### Database
 - `contact_inquiries` table stores form submissions (name, email, phone, business name, industry, revenue range, services needed, software used, pain points, goals, message, form type)
 - `newsletter_subscribers` table stores email subscriptions (email unique, signup_source, active status, subscribed_at)
+- `contracts` table stores contract records (client name/email, contract type, Adobe agreement ID, status, service type, pricing tier, sent/signed/expired dates, reminders sent, signed document URL)
+- `contract_templates` table stores references to Adobe Sign templates (name, contract type, Adobe template ID, trigger condition, prefill fields, active status)
+
+### Adobe Acrobat Sign Contract Automation
+- **Integration**: Adobe Acrobat Sign API v6 for e-signatures, connected via OAuth2 refresh token flow
+- **Environment secrets needed**: `ADOBE_SIGN_CLIENT_ID`, `ADOBE_SIGN_CLIENT_SECRET`, `ADOBE_SIGN_REFRESH_TOKEN`
+- **Contract types**: Client Engagement Letter, Mutual NDA, Data Processing Agreement, Scope Change/Add-On
+- **Auto-trigger**: When contact/intake form is submitted OR a service booking occurs (via Calendly webhook or manual POST), contracts are automatically determined and sent based on form type and services selected
+  - Discovery/detailed forms trigger Mutual NDA
+  - Service bookings trigger Engagement Letter; DPA added for recurring clients
+- **Reminders**: Hourly scheduler checks for unsigned contracts and sends reminders at 24h and 72h; auto-expires after 14 days
+- **Archival**: Signed PDFs are archived to Adobe Creative Cloud Storage in organized folders (year/client name)
+- **Admin dashboard**: `/admin/contracts` — view all contracts (filterable by status), manage templates, manually send contracts
+- **Backend files**:
+  - `artifacts/api-server/src/lib/adobe-sign.ts` — Adobe Sign API client (auth, agreements, reminders, documents)
+  - `artifacts/api-server/src/lib/adobe-cc-storage.ts` — Creative Cloud Storage archival
+  - `artifacts/api-server/src/lib/contract-service.ts` — Business logic (send, trigger, reminders, sync)
+  - `artifacts/api-server/src/routes/contracts.ts` — REST API endpoints
+- **Frontend**: `artifacts/website/src/pages/AdminContracts.tsx` — admin contract management dashboard
+- **API endpoints** (all under `/api`):
+  - `GET /contracts` — list all contracts
+  - `GET /contracts/:id` — get single contract
+  - `POST /contracts/send` — manually send a contract
+  - `POST /contracts/:id/sync` — sync contract status with Adobe Sign
+  - `POST /contracts/sync-all` — sync all pending contracts
+  - `POST /contracts/process-reminders` — process reminders and expirations
+  - `GET /contracts/templates/list` — list templates
+  - `POST /contracts/templates` — create template
+  - `PUT /contracts/templates/:id` — update template
+  - `DELETE /contracts/templates/:id` — delete template
+  - `GET /contracts/adobe/status` — check Adobe Sign connection
+  - `GET /contracts/adobe/templates` — list Adobe Sign library documents
+  - `GET /contracts/:id/document` — download signed PDF (admin-authed proxy to Adobe Sign)
+  - `POST /contracts/webhooks/booking` — booking webhook (Calendly or manual; no admin auth needed)
 
 ## TypeScript & Composite Projects
 
@@ -114,7 +148,7 @@ Express 5 API server. Routes live in `src/routes/` and use `@workspace/api-zod` 
 
 - Entry: `src/index.ts` — reads `PORT`, starts Express
 - App setup: `src/app.ts` — mounts CORS, JSON/urlencoded parsing, routes at `/api`
-- Routes: `src/routes/index.ts` mounts sub-routers; `src/routes/health.ts` exposes `GET /health`; `src/routes/contact.ts` exposes `POST /contact`; `src/routes/newsletter.ts` exposes `POST /newsletter/subscribe` and `POST /newsletter/unsubscribe`
+- Routes: `src/routes/index.ts` mounts sub-routers; `src/routes/health.ts` exposes `GET /health`; `src/routes/contact.ts` exposes `POST /contact`; `src/routes/newsletter.ts` exposes `POST /newsletter/subscribe` and `POST /newsletter/unsubscribe`; `src/routes/contracts.ts` exposes contract management endpoints
 - Depends on: `@workspace/db`, `@workspace/api-zod`
 - `pnpm --filter @workspace/api-server run dev` — run the dev server
 - `pnpm --filter @workspace/api-server run build` — production esbuild bundle (`dist/index.cjs`)
