@@ -25,6 +25,7 @@ import FAQ from "./pages/FAQ";
 import Schedule from "./pages/Schedule";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import Feedback from "./pages/Feedback";
 
 if (import.meta.env.VITE_API_URL) {
   setApiBaseUrl(import.meta.env.VITE_API_URL as string);
@@ -62,6 +63,7 @@ function Router() {
         <Route path="/schedule" component={Schedule} />
         <Route path="/privacy" component={Privacy} />
         <Route path="/terms" component={Terms} />
+        <Route path="/feedback" component={Feedback} />
         <Route path="/marketing-guide" component={MarketingGuide} />
         <Route path="/unsubscribe" component={Unsubscribe} />
         <Route component={NotFound} />
