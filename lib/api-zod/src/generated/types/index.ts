@@ -9,6 +9,7 @@
 export * from "./contactFormInput";
 export * from "./contactFormInputFormType";
 export * from "./contactFormResponse";
+export * from "./createOpenaiConversationBody";
 export * from "./errorResponse";
 export * from "./healthStatus";
 export * from "./newsletterSubscribeInput";
@@ -16,3 +17,8 @@ export * from "./newsletterSubscribeInputSignupSource";
 export * from "./newsletterSubscribeResponse";
 export * from "./newsletterUnsubscribeInput";
 export * from "./newsletterUnsubscribeResponse";
+export * from "./openaiConversation";
+export * from "./openaiConversationWithMessages";
+export * from "./openaiError";
+export * from "./openaiMessage";
+export * from "./sendOpenaiMessageBody";

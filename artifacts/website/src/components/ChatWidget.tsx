@@ -1,0 +1,526 @@
+import { useState, useRef, useEffect, useCallback } from "react";
+import { MessageCircle, X, Send, Bot, User, Loader2, ChevronDown } from "lucide-react";
+import { getApiBaseUrl } from "@workspace/api-client-react";
+
+interface Message {
+  role: "user" | "assistant";
+  content: string;
+  streaming?: boolean;
+}
+
+export default function ChatWidget() {
+  const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [conversationId, setConversationId] = useState<number | null>(null);
+  const [hasNewMessage, setHasNewMessage] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const apiBase = getApiBaseUrl() || "/api";
+
+  useEffect(() => {
+    if (open) {
+      setHasNewMessage(false);
+      setTimeout(() => inputRef.current?.focus(), 100);
+    }
+  }, [open]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const getOrCreateConversation = useCallback(async (): Promise<number> => {
+    if (conversationId) return conversationId;
+
+    const res = await fetch(`${apiBase}/openai/conversations`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: "Website Chat" }),
+    });
+
+    if (!res.ok) throw new Error("Failed to create conversation");
+    const data = await res.json();
+    setConversationId(data.id);
+    return data.id;
+  }, [conversationId, apiBase]);
+
+  const sendMessage = useCallback(async () => {
+    const text = input.trim();
+    if (!text || loading) return;
+
+    setInput("");
+    setLoading(true);
+    setMessages((prev) => [...prev, { role: "user", content: text }]);
+
+    try {
+      const convId = await getOrCreateConversation();
+
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "", streaming: true },
+      ]);
+
+      const res = await fetch(
+        `${apiBase}/openai/conversations/${convId}/messages`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content: text }),
+        }
+      );
+
+      if (!res.ok || !res.body) {
+        throw new Error("Failed to send message");
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() ?? "";
+
+        for (const line of lines) {
+          if (!line.startsWith("data: ")) continue;
+          try {
+            const json = JSON.parse(line.slice(6));
+            if (json.content) {
+              setMessages((prev) => {
+                const updated = [...prev];
+                const last = updated[updated.length - 1];
+                if (last?.role === "assistant") {
+                  updated[updated.length - 1] = {
+                    ...last,
+                    content: last.content + json.content,
+                    streaming: true,
+                  };
+                }
+                return updated;
+              });
+            }
+            if (json.done) {
+              setMessages((prev) => {
+                const updated = [...prev];
+                const last = updated[updated.length - 1];
+                if (last?.role === "assistant") {
+                  updated[updated.length - 1] = { ...last, streaming: false };
+                }
+                return updated;
+              });
+              if (!open) setHasNewMessage(true);
+            }
+            if (json.error) {
+              setMessages((prev) => {
+                const updated = [...prev];
+                const last = updated[updated.length - 1];
+                if (last?.role === "assistant") {
+                  updated[updated.length - 1] = {
+                    ...last,
+                    content: json.error,
+                    streaming: false,
+                  };
+                }
+                return updated;
+              });
+            }
+          } catch {}
+        }
+      }
+    } catch {
+      setMessages((prev) => {
+        const updated = [...prev];
+        const last = updated[updated.length - 1];
+        if (last?.role === "assistant" && last.streaming) {
+          updated[updated.length - 1] = {
+            ...last,
+            content: "Sorry, something went wrong. Please try again.",
+            streaming: false,
+          };
+        } else {
+          updated.push({
+            role: "assistant",
+            content: "Sorry, something went wrong. Please try again.",
+          });
+        }
+        return updated;
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [input, loading, getOrCreateConversation, open, apiBase]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  const GREETING = messages.length === 0 && !loading;
+
+  return (
+    <>
+      {open && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setOpen(false)}
+        />
+      )}
+
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+        {open && (
+          <div
+            className="flex flex-col overflow-hidden"
+            style={{
+              width: "clamp(320px, 90vw, 420px)",
+              height: "clamp(420px, 70vh, 580px)",
+              background: "#161B2E",
+              border: "1px solid #252B3D",
+              borderRadius: "16px",
+              boxShadow: "0 24px 64px rgba(0,0,0,0.6)",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              style={{
+                background: "linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)",
+                padding: "16px 20px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <div
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: "50%",
+                    background: "rgba(255,255,255,0.2)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Bot size={18} color="white" />
+                </div>
+                <div>
+                  <div style={{ color: "white", fontWeight: 600, fontSize: 15, fontFamily: "Outfit, sans-serif" }}>
+                    Aria
+                  </div>
+                  <div style={{ color: "rgba(255,255,255,0.8)", fontSize: 12 }}>
+                    Blueprints & Bookkeeping Assistant
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={() => setOpen(false)}
+                style={{
+                  background: "rgba(255,255,255,0.15)",
+                  border: "none",
+                  borderRadius: "50%",
+                  width: 32,
+                  height: 32,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  transition: "background 0.15s",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.25)")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.15)")}
+              >
+                <ChevronDown size={16} color="white" />
+              </button>
+            </div>
+
+            <div
+              style={{
+                flex: 1,
+                overflowY: "auto",
+                padding: "16px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "12px",
+              }}
+            >
+              {GREETING && (
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "10px",
+                    alignItems: "flex-start",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: "50%",
+                      background: "linear-gradient(135deg, #6366F1, #4F46E5)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
+                      marginTop: 2,
+                    }}
+                  >
+                    <Bot size={14} color="white" />
+                  </div>
+                  <div
+                    style={{
+                      background: "#1E2336",
+                      borderRadius: "4px 12px 12px 12px",
+                      padding: "10px 14px",
+                      color: "#D8DCE4",
+                      fontSize: 14,
+                      lineHeight: 1.6,
+                      maxWidth: "85%",
+                    }}
+                  >
+                    <p style={{ margin: "0 0 8px" }}>
+                      Hi! I'm <strong>Aria</strong>, Tea's assistant. I can answer
+                      questions about our services, give you a price estimate, or
+                      help you book a free discovery call.
+                    </p>
+                    <p style={{ margin: 0, color: "#8B91A0", fontSize: 13 }}>
+                      What brings you in today?
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {messages.map((msg, i) => (
+                <div
+                  key={i}
+                  style={{
+                    display: "flex",
+                    gap: "10px",
+                    alignItems: "flex-start",
+                    flexDirection: msg.role === "user" ? "row-reverse" : "row",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: "50%",
+                      background:
+                        msg.role === "user"
+                          ? "linear-gradient(135deg, #252B3D, #1E2336)"
+                          : "linear-gradient(135deg, #6366F1, #4F46E5)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
+                      marginTop: 2,
+                      border: msg.role === "user" ? "1px solid #252B3D" : "none",
+                    }}
+                  >
+                    {msg.role === "user" ? (
+                      <User size={14} color="#8B91A0" />
+                    ) : (
+                      <Bot size={14} color="white" />
+                    )}
+                  </div>
+                  <div
+                    style={{
+                      background: msg.role === "user" ? "#6366F1" : "#1E2336",
+                      borderRadius:
+                        msg.role === "user"
+                          ? "12px 4px 12px 12px"
+                          : "4px 12px 12px 12px",
+                      padding: "10px 14px",
+                      color: msg.role === "user" ? "white" : "#D8DCE4",
+                      fontSize: 14,
+                      lineHeight: 1.6,
+                      maxWidth: "85%",
+                      whiteSpace: "pre-wrap",
+                    }}
+                  >
+                    {msg.content || (msg.streaming && (
+                      <span style={{ display: "flex", gap: 4, alignItems: "center" }}>
+                        <span style={{ animation: "pulse 1s infinite", opacity: 0.6 }}>●</span>
+                        <span style={{ animation: "pulse 1s infinite 0.2s", opacity: 0.6 }}>●</span>
+                        <span style={{ animation: "pulse 1s infinite 0.4s", opacity: 0.6 }}>●</span>
+                      </span>
+                    ))}
+                    {msg.streaming && msg.content && (
+                      <span
+                        style={{
+                          display: "inline-block",
+                          width: 2,
+                          height: "1em",
+                          background: "#6366F1",
+                          marginLeft: 2,
+                          verticalAlign: "text-bottom",
+                          animation: "blink 0.8s step-end infinite",
+                        }}
+                      />
+                    )}
+                  </div>
+                </div>
+              ))}
+
+              <div ref={messagesEndRef} />
+            </div>
+
+            <div
+              style={{
+                padding: "12px 16px",
+                borderTop: "1px solid #252B3D",
+                display: "flex",
+                gap: 10,
+                alignItems: "flex-end",
+                background: "#161B2E",
+              }}
+            >
+              <textarea
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Ask me anything…"
+                rows={1}
+                style={{
+                  flex: 1,
+                  background: "#1E2336",
+                  border: "1px solid #252B3D",
+                  borderRadius: 10,
+                  padding: "10px 14px",
+                  color: "#D8DCE4",
+                  fontSize: 14,
+                  resize: "none",
+                  outline: "none",
+                  fontFamily: "Inter, sans-serif",
+                  lineHeight: 1.5,
+                  maxHeight: 120,
+                  overflowY: "auto",
+                  transition: "border-color 0.15s",
+                }}
+                onFocus={(e) => (e.currentTarget.style.borderColor = "#6366F1")}
+                onBlur={(e) => (e.currentTarget.style.borderColor = "#252B3D")}
+                disabled={loading}
+              />
+              <button
+                onClick={sendMessage}
+                disabled={!input.trim() || loading}
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: "50%",
+                  background:
+                    input.trim() && !loading
+                      ? "linear-gradient(135deg, #6366F1, #4F46E5)"
+                      : "#252B3D",
+                  border: "none",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: input.trim() && !loading ? "pointer" : "not-allowed",
+                  flexShrink: 0,
+                  transition: "background 0.15s, transform 0.1s",
+                }}
+                onMouseEnter={(e) => {
+                  if (input.trim() && !loading)
+                    e.currentTarget.style.transform = "scale(1.05)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "scale(1)";
+                }}
+              >
+                {loading ? (
+                  <Loader2 size={16} color="#8B91A0" className="animate-spin" />
+                ) : (
+                  <Send size={16} color={input.trim() ? "white" : "#8B91A0"} />
+                )}
+              </button>
+            </div>
+
+            <div
+              style={{
+                padding: "8px 16px 10px",
+                textAlign: "center",
+                fontSize: 11,
+                color: "#8B91A0",
+                background: "#161B2E",
+              }}
+            >
+              AI assistant — not Tea. For urgent matters:{" "}
+              <a
+                href="mailto:tea@blueprintsandbookkeeping.com"
+                style={{ color: "#6366F1", textDecoration: "none" }}
+              >
+                email Tea directly
+              </a>
+            </div>
+
+            <style>{`
+              @keyframes blink {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0; }
+              }
+              @keyframes pulse {
+                0%, 100% { opacity: 0.3; }
+                50% { opacity: 1; }
+              }
+            `}</style>
+          </div>
+        )}
+
+        <button
+          onClick={() => setOpen((v) => !v)}
+          style={{
+            width: 56,
+            height: 56,
+            borderRadius: "50%",
+            background: "linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)",
+            border: "none",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            boxShadow: "0 8px 32px rgba(99,102,241,0.4)",
+            transition: "transform 0.2s, box-shadow 0.2s",
+            position: "relative",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = "scale(1.08)";
+            e.currentTarget.style.boxShadow = "0 12px 40px rgba(99,102,241,0.55)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = "scale(1)";
+            e.currentTarget.style.boxShadow = "0 8px 32px rgba(99,102,241,0.4)";
+          }}
+          title="Chat with Aria, our AI assistant"
+        >
+          {open ? (
+            <X size={22} color="white" />
+          ) : (
+            <MessageCircle size={22} color="white" />
+          )}
+          {hasNewMessage && !open && (
+            <span
+              style={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                width: 14,
+                height: 14,
+                background: "#EF4444",
+                borderRadius: "50%",
+                border: "2px solid #0E1118",
+              }}
+            />
+          )}
+        </button>
+      </div>
+    </>
+  );
+}

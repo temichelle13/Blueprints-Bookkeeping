@@ -8,6 +8,10 @@ export function setApiBaseUrl(url: string): void {
   _apiBaseUrl = url.replace(/\/$/, "");
 }
 
+export function getApiBaseUrl(): string {
+  return _apiBaseUrl;
+}
+
 export type ErrorType<T = unknown> = ApiError<T>;
 
 export type BodyType<T> = T;

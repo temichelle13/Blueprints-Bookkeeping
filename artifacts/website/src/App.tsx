@@ -6,6 +6,7 @@ import { setApiBaseUrl } from "@workspace/api-client-react";
 import NotFound from "@/pages/not-found";
 
 import { Header } from "./components/layout/Header";
+import ChatWidget from "./components/ChatWidget";
 import { Footer } from "./components/layout/Footer";
 
 import Home from "./pages/Home";
@@ -77,6 +78,7 @@ function App() {
           <Router />
         </WouterRouter>
         <Toaster />
+        <ChatWidget />
       </TooltipProvider>
     </QueryClientProvider>
   );
