@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { MessageCircle, X, Send, Bot, User, Loader2, ChevronDown } from "lucide-react";
 import { getApiBaseUrl } from "@workspace/api-client-react";
+import ReactMarkdown from "react-markdown";
 
 interface Message {
   role: "user" | "assistant";
@@ -341,28 +342,33 @@ export default function ChatWidget() {
                       fontSize: 14,
                       lineHeight: 1.6,
                       maxWidth: "85%",
-                      whiteSpace: "pre-wrap",
                     }}
                   >
-                    {msg.content || (msg.streaming && (
+                    {!msg.content && msg.streaming ? (
                       <span style={{ display: "flex", gap: 4, alignItems: "center" }}>
                         <span style={{ animation: "pulse 1s infinite", opacity: 0.6 }}>●</span>
                         <span style={{ animation: "pulse 1s infinite 0.2s", opacity: 0.6 }}>●</span>
                         <span style={{ animation: "pulse 1s infinite 0.4s", opacity: 0.6 }}>●</span>
                       </span>
-                    ))}
-                    {msg.streaming && msg.content && (
-                      <span
-                        style={{
-                          display: "inline-block",
-                          width: 2,
-                          height: "1em",
-                          background: "#6366F1",
-                          marginLeft: 2,
-                          verticalAlign: "text-bottom",
-                          animation: "blink 0.8s step-end infinite",
-                        }}
-                      />
+                    ) : msg.role === "assistant" ? (
+                      <div className="chat-markdown">
+                        <ReactMarkdown>{msg.content}</ReactMarkdown>
+                        {msg.streaming && (
+                          <span
+                            style={{
+                              display: "inline-block",
+                              width: 2,
+                              height: "1em",
+                              background: "#6366F1",
+                              marginLeft: 2,
+                              verticalAlign: "text-bottom",
+                              animation: "blink 0.8s step-end infinite",
+                            }}
+                          />
+                        )}
+                      </div>
+                    ) : (
+                      <span style={{ whiteSpace: "pre-wrap" }}>{msg.content}</span>
                     )}
                   </div>
                 </div>
@@ -469,6 +475,57 @@ export default function ChatWidget() {
               @keyframes pulse {
                 0%, 100% { opacity: 0.3; }
                 50% { opacity: 1; }
+              }
+              .chat-markdown p {
+                margin: 0 0 8px 0;
+              }
+              .chat-markdown p:last-child {
+                margin-bottom: 0;
+              }
+              .chat-markdown strong {
+                color: #fff;
+                font-weight: 600;
+              }
+              .chat-markdown em {
+                font-style: italic;
+              }
+              .chat-markdown ul, .chat-markdown ol {
+                margin: 6px 0 8px 0;
+                padding-left: 18px;
+              }
+              .chat-markdown li {
+                margin-bottom: 4px;
+                line-height: 1.5;
+              }
+              .chat-markdown a {
+                color: #818cf8;
+                text-decoration: underline;
+                word-break: break-all;
+              }
+              .chat-markdown a:hover {
+                color: #a5b4fc;
+              }
+              .chat-markdown code {
+                background: rgba(99,102,241,0.15);
+                border-radius: 4px;
+                padding: 1px 5px;
+                font-size: 12px;
+                font-family: 'JetBrains Mono', monospace;
+                color: #a5b4fc;
+              }
+              .chat-markdown h1, .chat-markdown h2, .chat-markdown h3 {
+                color: #fff;
+                font-weight: 600;
+                margin: 8px 0 4px;
+                line-height: 1.3;
+              }
+              .chat-markdown h1 { font-size: 15px; }
+              .chat-markdown h2 { font-size: 14px; }
+              .chat-markdown h3 { font-size: 13px; }
+              .chat-markdown hr {
+                border: none;
+                border-top: 1px solid #252B3D;
+                margin: 10px 0;
               }
             `}</style>
           </div>
