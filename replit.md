@@ -49,17 +49,19 @@ Professional website for a remote bookkeeping, business planning, and advisory f
 - **Font stack**: Display font (Inter bold), JetBrains Mono for tags
 - **Contact**: tea@blueprintsandbookkeeping.com, 541-319-8654
 
-### Pages (10 total)
+### Pages (12+ total)
 1. **Home** — Hero with tagline, trust indicators, 3 pillars, lead magnet section (Financial Readiness Checklist download gate), scarcity CTA (20-client cap)
 2. **About** — Tea's bio, credentials, digital badges. NO portrait image. Degrees listed as "coursework"/"studies" (not completed). Certs: CEH v12, QB ProAdvisor Advanced, Crypto Tax Certified, OR Notary RON
 3. **Services** — Advanced Bookkeeping, Business Plans, Digital Handshake (static web), Remote Online Notarization
 4. **Industries** — Agriculture/Timber, Crypto, Gig/E-commerce, Multi-Entity, Tech/Startups
-5. **Pricing** — Three-tier flat-fee (Bookkeeping $500+/mo, Plans $2.5k–$5k+, Web $1.5k–$3.5k+)
+5. **Pricing** — Three-tier flat-fee (Bookkeeping $500+/mo, Plans $2.5k–$5k+, Web $1.5k–$3.5k+). Essentials & Growth tiers have "Subscribe Now" buttons for self-service Stripe checkout. Monthly/Annual billing toggle with 10% annual discount.
 6. **Portfolio** — Demo case study cards (no real client data)
 7. **Blog** — Blog listing + individual article pages (/blog/:slug). 4 starter articles in `src/data/blog-posts.ts`
 8. **Contact** — Dual-path: Quick Message + Discovery Intake Form
 9. **Unsubscribe** — Newsletter unsubscribe page with email input
-10. *(Not Found)* — 404 page
+10. **Welcome** (`/welcome`) — Post-payment success page shown after Stripe checkout. Shows next steps (onboarding form, contracts, document upload).
+11. **Onboarding** (`/onboarding`) — Self-service client intake form collecting business name, owner name, EIN/business type, bookkeeping software, notes. Submits to API which saves to CRM and triggers Adobe Sign contracts.
+12. *(Not Found)* — 404 page
 
 ### Header
 - Shows ONLY the BB icon (`public/logo-icon.png`) — cropped from full logo. No text beside it
@@ -70,10 +72,17 @@ Professional website for a remote bookkeeping, business planning, and advisory f
 - `public/robots.txt` and `public/sitemap.xml` (includes all pages + blog post URLs)
 - Per-page titles via `usePageTitle()` hook (`src/hooks/use-page-title.ts`)
 
-### Stripe (Task #18 — Pending)
-- Stripe payment integration is planned but not yet connected. The Replit Stripe integration was dismissed by the user.
-- To proceed: connect the Stripe integration via the Integrations tab, OR provide Stripe Secret Key + Publishable Key as secrets (STRIPE_SECRET_KEY, STRIPE_PUBLISHABLE_KEY).
-- `stripe` and `stripe-replit-sync` packages are already installed at the workspace root.
+### Stripe Self-Service Subscriptions
+- **Package**: `stripe` installed in `artifacts/api-server`
+- **Environment secrets needed**: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `SITE_URL`
+- **Price IDs needed**: `STRIPE_ESSENTIALS_MONTHLY_PRICE_ID`, `STRIPE_ESSENTIALS_ANNUAL_PRICE_ID`, `STRIPE_GROWTH_MONTHLY_PRICE_ID`, `STRIPE_GROWTH_ANNUAL_PRICE_ID`
+- **API endpoints** (all under `/api`):
+  - `POST /payments/create-checkout-session` — creates Stripe Checkout session for a plan (essentials/growth, monthly/annual)
+  - `POST /payments/webhook` — handles Stripe webhooks (`checkout.session.completed`, `invoice.payment_failed`, `customer.subscription.deleted`)
+  - `POST /onboarding` — saves client intake form data, triggers Adobe Sign contracts, sends confirmation emails
+- **Webhook handling**: Raw body parsing configured in `app.ts` for `/api/payments/webhook` route
+- **Email notifications**: Both client and admin receive emails on subscription events (new subscriber, payment failed, cancellation)
+- **Database tables**: `subscriptions` (Stripe subscription tracking), `onboarding_submissions` (intake form data)
 
 ### Important notes
 - Does NOT offer tax preparation — never include tax prep content
@@ -94,6 +103,8 @@ Professional website for a remote bookkeeping, business planning, and advisory f
 - `newsletter_subscribers` table stores email subscriptions (email unique, signup_source, active status, subscribed_at)
 - `contracts` table stores contract records (client name/email, contract type, Adobe agreement ID, status, service type, pricing tier, sent/signed/expired dates, reminders sent, signed document URL)
 - `contract_templates` table stores references to Adobe Sign templates (name, contract type, Adobe template ID, trigger condition, prefill fields, active status)
+- `subscriptions` table stores Stripe subscription records (customer ID, subscription ID, plan, billing interval, status, client name/email, period dates)
+- `onboarding_submissions` table stores self-service intake form data (business name, owner name, EIN/type, bookkeeping software, notes, linked to subscription)
 
 ### Adobe Acrobat Sign Contract Automation
 - **Integration**: Adobe Acrobat Sign API v6 for e-signatures, connected via OAuth2 refresh token flow
@@ -148,7 +159,7 @@ Express 5 API server. Routes live in `src/routes/` and use `@workspace/api-zod` 
 
 - Entry: `src/index.ts` — reads `PORT`, starts Express
 - App setup: `src/app.ts` — mounts CORS, JSON/urlencoded parsing, routes at `/api`
-- Routes: `src/routes/index.ts` mounts sub-routers; `src/routes/health.ts` exposes `GET /health`; `src/routes/contact.ts` exposes `POST /contact`; `src/routes/newsletter.ts` exposes `POST /newsletter/subscribe` and `POST /newsletter/unsubscribe`; `src/routes/contracts.ts` exposes contract management endpoints
+- Routes: `src/routes/index.ts` mounts sub-routers; `src/routes/health.ts` exposes `GET /health`; `src/routes/contact.ts` exposes `POST /contact`; `src/routes/newsletter.ts` exposes `POST /newsletter/subscribe` and `POST /newsletter/unsubscribe`; `src/routes/contracts.ts` exposes contract management endpoints; `src/routes/payments.ts` exposes Stripe checkout and webhook endpoints; `src/routes/onboarding.ts` exposes self-service onboarding form endpoint
 - Depends on: `@workspace/db`, `@workspace/api-zod`
 - `pnpm --filter @workspace/api-server run dev` — run the dev server
 - `pnpm --filter @workspace/api-server run build` — production esbuild bundle (`dist/index.cjs`)

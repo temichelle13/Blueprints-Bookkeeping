@@ -51,6 +51,7 @@ const CONTRACT_TYPE_MAP: Record<string, string[]> = {
   "advisory": ["engagement_letter"],
   "discovery": ["mutual_nda"],
   "discovery_call": ["mutual_nda"],
+  "self_service_onboarding": ["engagement_letter", "mutual_nda"],
 };
 
 function normalizeServiceName(service: string): string {
@@ -159,6 +160,11 @@ export async function determineContractTypes(
   if (types.size === 0) {
     if (formType === "detailed" || formType === "discovery") {
       types.add("mutual_nda");
+    }
+
+    const formTypeMapped = CONTRACT_TYPE_MAP[formType];
+    if (formTypeMapped) {
+      for (const t of formTypeMapped) types.add(t);
     }
 
     if (servicesInterested && servicesInterested.length > 0) {

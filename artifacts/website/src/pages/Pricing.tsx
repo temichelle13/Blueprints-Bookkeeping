@@ -1,14 +1,21 @@
+import { useState } from "react";
 import { Link } from "wouter";
-import { Check, Shield, ArrowRight, HelpCircle } from "lucide-react";
+import { Check, Shield, ArrowRight, HelpCircle, CreditCard, Loader2 } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { useToast } from "@/hooks/use-toast";
+
+const API_BASE = import.meta.env.VITE_API_URL || "/api";
 
 const bookkeepingTiers = [
   {
     name: "Essentials",
     price: "$500",
+    annualPrice: "$5,400",
+    annualSavings: "$600",
     period: "/mo",
     prefix: "Starting at",
     tag: "ONGOING",
+    planKey: "essentials",
     description: "Clean books for a single-entity business with straightforward transactions.",
     features: [
       "Single entity",
@@ -19,14 +26,18 @@ const bookkeepingTiers = [
       "Email support",
     ],
     cta: "Get a Quote",
+    subscribable: true,
     featured: false,
   },
   {
     name: "Growth",
     price: "$900",
+    annualPrice: "$9,720",
+    annualSavings: "$1,080",
     period: "/mo",
     prefix: "Starting at",
     tag: "MOST POPULAR",
+    planKey: "growth",
     description: "For growing businesses with higher volume, multiple accounts, or niche complexity.",
     features: [
       "Up to 2 entities",
@@ -38,14 +49,18 @@ const bookkeepingTiers = [
       "Priority response",
     ],
     cta: "Get a Quote",
+    subscribable: true,
     featured: true,
   },
   {
     name: "Advanced",
     price: "Custom",
+    annualPrice: "",
+    annualSavings: "",
     period: "",
     prefix: "",
     tag: "ENTERPRISE",
+    planKey: "advanced",
     description: "Multi-entity structures, high-volume operations, and complex consolidations.",
     features: [
       "3+ entities or complex structures",
@@ -57,6 +72,7 @@ const bookkeepingTiers = [
       "Monthly strategy check-in",
     ],
     cta: "Contact for Pricing",
+    subscribable: false,
     featured: false,
   },
 ];
@@ -101,11 +117,171 @@ const businessPlanTiers = [
   },
 ];
 
+type BookkeepingTier = typeof bookkeepingTiers[0];
+type BusinessPlanTier = typeof businessPlanTiers[0];
+
+function SubscribeButton({ planKey, interval }: { planKey: string; interval: "monthly" | "annual" }) {
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
+
+  const handleSubscribe = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/payments/create-checkout-session`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: planKey, interval }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        toast({ title: "Error", description: data.error || "Could not start checkout.", variant: "destructive" });
+        setLoading(false);
+      }
+    } catch {
+      toast({ title: "Error", description: "Could not connect to payment server.", variant: "destructive" });
+      setLoading(false);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleSubscribe}
+      disabled={loading}
+      className="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-accent text-white font-semibold text-sm hover:shadow-xl hover:shadow-accent/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      {loading ? <Loader2 size={15} className="animate-spin" /> : <CreditCard size={15} />}
+      {loading ? "Redirecting..." : "Subscribe Now"}
+    </button>
+  );
+}
+
+function BookkeepingTierCard({
+  tier,
+  accent = false,
+  billingInterval,
+}: {
+  tier: BookkeepingTier;
+  accent?: boolean;
+  billingInterval: "monthly" | "annual";
+}) {
+  const showAnnual = billingInterval === "annual" && tier.annualPrice;
+
+  if (accent) {
+    return (
+      <div className="relative rounded-2xl p-8 flex flex-col overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-accent/20 to-accent/5" />
+        <div className="absolute inset-[1px] rounded-2xl bg-card" />
+        <div className="absolute inset-0 border border-accent/30 rounded-2xl" />
+        {tier.tag && (
+          <div className="absolute top-0 left-1/2 -translate-x-1/2">
+            <div className="px-4 py-1.5 bg-accent text-white text-xs font-bold tracking-wider rounded-b-lg shadow-lg shadow-accent/20">
+              {tier.tag}
+            </div>
+          </div>
+        )}
+        <div className="relative mt-4 mb-6">
+          <h3 className="text-xl font-display font-bold text-white mb-1">{tier.name}</h3>
+          <div className="flex items-baseline gap-1.5 mb-3">
+            {tier.prefix && <span className="text-xs text-muted-foreground">{tier.prefix}</span>}
+            {showAnnual ? (
+              <>
+                <span className="text-3xl font-extrabold text-white">{tier.annualPrice}</span>
+                <span className="text-muted-foreground text-sm">/yr</span>
+                {tier.annualSavings && (
+                  <span className="text-xs text-emerald-400 font-medium ml-1">Save {tier.annualSavings}</span>
+                )}
+              </>
+            ) : (
+              <>
+                <span className="text-3xl font-extrabold text-white">{tier.price}</span>
+                {tier.period && <span className="text-muted-foreground text-sm">{tier.period}</span>}
+              </>
+            )}
+          </div>
+          <p className="text-sm text-muted-foreground">{tier.description}</p>
+        </div>
+        <ul className="relative space-y-3 mb-8 flex-grow">
+          {tier.features.map((feat, i) => (
+            <li key={i} className="flex gap-3 text-sm text-foreground">
+              <Check className="w-4 h-4 text-accent shrink-0 mt-0.5" /> {feat}
+            </li>
+          ))}
+        </ul>
+        <div className="relative space-y-2">
+          {tier.subscribable && (
+            <SubscribeButton planKey={tier.planKey} interval={billingInterval} />
+          )}
+          <Link
+            href="/contact"
+            className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
+          >
+            {tier.cta} <ArrowRight size={15} />
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="glass-card rounded-2xl p-8 relative flex flex-col hover:border-white/10 transition-all">
+      {tier.tag && tier.tag !== "ONGOING" && tier.tag !== "PROJECT" && tier.tag !== "ENTERPRISE" && (
+        <div className="absolute top-0 left-1/2 -translate-x-1/2">
+          <div className="px-4 py-1.5 bg-accent text-white text-xs font-bold tracking-wider rounded-b-lg">
+            {tier.tag}
+          </div>
+        </div>
+      )}
+      <div className="mb-6">
+        <span className="text-[11px] font-mono font-medium tracking-widest text-muted-foreground">{tier.tag === "ENTERPRISE" ? "ENTERPRISE" : ""}</span>
+        <h3 className="text-xl font-display font-bold text-white mt-1 mb-1">{tier.name}</h3>
+        <div className="flex items-baseline gap-1.5 mb-3">
+          {tier.prefix && <span className="text-xs text-muted-foreground">{tier.prefix}</span>}
+          {showAnnual ? (
+            <>
+              <span className="text-3xl font-extrabold text-white">{tier.annualPrice}</span>
+              <span className="text-muted-foreground text-sm">/yr</span>
+              {tier.annualSavings && (
+                <span className="text-xs text-emerald-400 font-medium ml-1">Save {tier.annualSavings}</span>
+              )}
+            </>
+          ) : (
+            <>
+              <span className="text-3xl font-extrabold text-white">{tier.price}</span>
+              {tier.period && <span className="text-muted-foreground text-sm">{tier.period}</span>}
+            </>
+          )}
+        </div>
+        <p className="text-sm text-muted-foreground">{tier.description}</p>
+      </div>
+      <ul className="space-y-3 mb-8 flex-grow">
+        {tier.features.map((feat, i) => (
+          <li key={i} className="flex gap-3 text-sm text-foreground">
+            <Check className="w-4 h-4 text-accent shrink-0 mt-0.5" /> {feat}
+          </li>
+        ))}
+      </ul>
+      <div className="space-y-2">
+        {tier.subscribable && (
+          <SubscribeButton planKey={tier.planKey} interval={billingInterval} />
+        )}
+        <Link
+          href="/contact"
+          className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
+        >
+          {tier.cta}
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 function TierCard({
   tier,
   accent = false,
 }: {
-  tier: typeof bookkeepingTiers[0];
+  tier: BusinessPlanTier;
   accent?: boolean;
 }) {
   if (accent) {
@@ -157,7 +333,7 @@ function TierCard({
         </div>
       )}
       <div className="mb-6">
-        <span className="text-[11px] font-mono font-medium tracking-widest text-muted-foreground">{tier.tag === "ENTERPRISE" ? "ENTERPRISE" : tier.tag === "FULL PACKAGE" ? "FULL PACKAGE" : ""}</span>
+        <span className="text-[11px] font-mono font-medium tracking-widest text-muted-foreground">{tier.tag === "FULL PACKAGE" ? "FULL PACKAGE" : ""}</span>
         <h3 className="text-xl font-display font-bold text-white mt-1 mb-1">{tier.name}</h3>
         <div className="flex items-baseline gap-1.5 mb-3">
           {tier.prefix && <span className="text-xs text-muted-foreground">{tier.prefix}</span>}
@@ -185,6 +361,7 @@ function TierCard({
 
 export default function Pricing() {
   usePageTitle("Pricing");
+  const [billingInterval, setBillingInterval] = useState<"monthly" | "annual">("monthly");
 
   return (
     <div className="pt-24 pb-20">
@@ -203,13 +380,37 @@ export default function Pricing() {
       </section>
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="accent-bar" />
-          <h2 className="text-xs font-mono font-semibold tracking-widest text-accent uppercase">Bookkeeping</h2>
+        <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+          <div className="flex items-center gap-3">
+            <div className="accent-bar" />
+            <h2 className="text-xs font-mono font-semibold tracking-widest text-accent uppercase">Bookkeeping</h2>
+          </div>
+          <div className="inline-flex items-center bg-surface border border-white/[0.06] rounded-lg p-1">
+            <button
+              onClick={() => setBillingInterval("monthly")}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                billingInterval === "monthly"
+                  ? "bg-accent text-white shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setBillingInterval("annual")}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                billingInterval === "annual"
+                  ? "bg-accent text-white shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Annual <span className="text-emerald-400 text-xs ml-1">Save 10%</span>
+            </button>
+          </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
           {bookkeepingTiers.map((tier) => (
-            <TierCard key={tier.name} tier={tier} accent={tier.featured} />
+            <BookkeepingTierCard key={tier.name} tier={tier} accent={tier.featured} billingInterval={billingInterval} />
           ))}
         </div>
         <div className="glass-card rounded-xl p-5 flex items-start gap-3 max-w-3xl">

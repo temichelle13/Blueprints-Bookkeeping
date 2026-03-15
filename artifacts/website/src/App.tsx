@@ -29,6 +29,8 @@ import Feedback from "./pages/Feedback";
 import TaxPartners from "./pages/TaxPartners";
 import Referral from "./pages/Referral";
 import AdminContracts from "./pages/AdminContracts";
+import Welcome from "./pages/Welcome";
+import Onboarding from "./pages/Onboarding";
 
 if (import.meta.env.VITE_API_URL) {
   setApiBaseUrl(import.meta.env.VITE_API_URL as string);
@@ -71,6 +73,8 @@ function Router() {
         <Route path="/referral" component={Referral} />
         <Route path="/marketing-guide" component={MarketingGuide} />
         <Route path="/unsubscribe" component={Unsubscribe} />
+        <Route path="/welcome" component={Welcome} />
+        <Route path="/onboarding" component={Onboarding} />
         <Route path="/admin/contracts" component={AdminContracts} />
         <Route component={NotFound} />
       </Switch>
