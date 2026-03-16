@@ -1,8 +1,9 @@
-import { Switch, Route, Router as WouterRouter } from "wouter";
+import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { setApiBaseUrl } from "@workspace/api-client-react";
+import { useState, useEffect, useRef } from "react";
 import NotFound from "@/pages/not-found";
 import { usePageTracking } from "./hooks/usePageTracking";
 
@@ -42,12 +43,46 @@ if (import.meta.env.VITE_API_URL) {
 
 const queryClient = new QueryClient();
 
+function PageTransition({ children }: { children: React.ReactNode }) {
+  const [location] = useLocation();
+  const [isVisible, setIsVisible] = useState(true);
+  const [displayChildren, setDisplayChildren] = useState(children);
+  const previousLocation = useRef(location);
+
+  useEffect(() => {
+    if (location !== previousLocation.current) {
+      setIsVisible(false);
+      const timer = setTimeout(() => {
+        setDisplayChildren(children);
+        previousLocation.current = location;
+        window.scrollTo(0, 0);
+        setIsVisible(true);
+      }, 200);
+      return () => clearTimeout(timer);
+    } else {
+      setDisplayChildren(children);
+    }
+  }, [location, children]);
+
+  return (
+    <div
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? "translateY(0)" : "translateY(8px)",
+        transition: "opacity 300ms ease, transform 300ms ease",
+      }}
+    >
+      {displayChildren}
+    </div>
+  );
+}
+
 function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
-        {children}
+        <PageTransition>{children}</PageTransition>
       </main>
       <Footer />
     </div>

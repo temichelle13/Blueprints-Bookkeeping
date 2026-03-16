@@ -39,13 +39,14 @@ export function Footer() {
             <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-5">Navigate</h3>
             <ul className="space-y-3">
               {[
-                { label: "About Tea", href: "/about" },
                 { label: "Services", href: "/services" },
                 { label: "Industries", href: "/industries" },
+                { label: "About Tea", href: "/about" },
                 { label: "Pricing", href: "/pricing" },
                 { label: "Portfolio", href: "/portfolio" },
-                { label: "Client Results", href: "/results" },
                 { label: "Blog", href: "/blog" },
+                { label: "Contact", href: "/contact" },
+                { label: "Client Results", href: "/results" },
                 { label: "FAQ", href: "/faq" },
                 { label: "Tax Partner Network", href: "/tax-partners" },
                 { label: "Referral Program", href: "/referral" },

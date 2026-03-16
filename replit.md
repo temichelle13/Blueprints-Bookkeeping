@@ -1,229 +1,92 @@
-# Workspace
+# Overview
 
-## Overview
+This project is a pnpm monorepo using TypeScript, designed for Blueprints & Bookkeeping, LLC, a remote bookkeeping, business planning, and advisory firm. The primary goal is to create a professional online presence, automate client onboarding, contract management, and provide secure document uploads.
 
-pnpm workspace monorepo using TypeScript. Each package manages its own dependencies.
+The project includes a React-based frontend with a dark theme and glassmorphism elements, an Express API server, and integrations with external services like Stripe for subscriptions and Adobe Acrobat Sign for e-signatures. It aims to streamline operations for the firm, enhance client experience, and manage business growth efficiently. The firm is capped at 20 active clients, emphasizing scarcity and exclusivity.
 
-## Stack
+# User Preferences
 
-- **Monorepo tool**: pnpm workspaces
-- **Node.js version**: 24
-- **Package manager**: pnpm
-- **TypeScript version**: 5.9
-- **API framework**: Express 5
-- **Database**: PostgreSQL + Drizzle ORM
-- **Validation**: Zod (`zod/v4`), `drizzle-zod`
-- **API codegen**: Orval (from OpenAPI spec)
-- **Build**: esbuild (CJS bundle)
-- **Frontend**: React + Vite + Tailwind CSS + Framer Motion
+- Does NOT offer tax preparation — never include tax prep content.
+- Pricing uses "starting at" ranges only.
+- Firm is capped at 20 active clients — emphasize scarcity/exclusivity.
+- About page: degrees are COURSEWORK/STUDIES only (not completed). Professional certs ARE earned.
 
-## Structure
+# System Architecture
 
-```text
-artifacts-monorepo/
-├── artifacts/              # Deployable applications
-│   ├── api-server/         # Express API server
-│   └── website/            # React+Vite frontend — Blueprints & Bookkeeping site
-├── lib/                    # Shared libraries
-│   ├── api-spec/           # OpenAPI spec + Orval codegen config
-│   ├── api-client-react/   # Generated React Query hooks
-│   ├── api-zod/            # Generated Zod schemas from OpenAPI
-│   └── db/                 # Drizzle ORM schema + DB connection
-├── scripts/                # Utility scripts (single workspace package)
-│   └── src/                # Individual .ts scripts, run via `pnpm --filter @workspace/scripts run <script>`
-├── pnpm-workspace.yaml     # pnpm workspace (artifacts/*, lib/*, lib/integrations/*, scripts)
-├── tsconfig.base.json      # Shared TS options (composite, bundler resolution, es2022)
-├── tsconfig.json           # Root TS project references
-└── package.json            # Root package with hoisted devDeps
-```
+## Monorepo Structure
 
-## Project: Blueprints & Bookkeeping, LLC
+The project is organized as a pnpm workspace monorepo with separate `artifacts` (deployable applications) and `lib` (shared libraries) directories.
+- **`artifacts/api-server`**: Express API server handling business logic, database interactions, and external API integrations.
+- **`artifacts/website`**: React + Vite frontend for the Blueprints & Bookkeeping public site and client portal.
+- **`lib/api-spec`**: Manages OpenAPI specification and codegen for API clients and Zod schemas.
+- **`lib/api-client-react`**: Generated React Query hooks for frontend API interaction.
+- **`lib/api-zod`**: Generated Zod schemas for API request/response validation.
+- **`lib/db`**: Drizzle ORM setup for PostgreSQL database interactions.
+- **`scripts`**: Contains utility scripts for various tasks.
 
-Professional website for a remote bookkeeping, business planning, and advisory firm owned by Tea Larson-Hetrick, based in Roseburg, Oregon.
+## Frontend (Website)
 
-### Brand & Theme
-- **Primary color (deep navy)**: #1B2A5A
-- **Secondary color (periwinkle/accent)**: #5B5EA6
-- **Theme**: Dark — deep navy-black background, glassmorphism cards, gradient text, glow accents
-- **CSS**: Custom `.glass-card` and `.glass-card-hover` in plain CSS (Tailwind v4 compatible). `@layer utilities` for glow-line, glow-dot, text-gradient, accent-bar
-- **Font stack**: Display font (Inter bold), JetBrains Mono for tags
-- **Contact**: tea@blueprintsandbookkeeping.com, 541-319-8654
+- **Technology Stack**: React, Vite, Tailwind CSS, Framer Motion.
+- **Design System**: Dark theme with deep navy-black background, glassmorphism cards, gradient text, and glow accents.
+- **Styling**: Custom CSS utilities for glassmorphism, glow effects, text gradients, and accent bars.
+- **Typography**: Inter (bold) for display, JetBrains Mono for tags.
+- **Key Pages**: Home, About, Services, Industries, Pricing, Portfolio, Blog, Contact, Client Portal, Unsubscribe, Welcome, Onboarding, and 404.
+- **Navigation**: Header with BB icon, simplified navigation (About, Services, Industries, Pricing, Portfolio, Blog), and a "Get Started" CTA.
+- **SEO**: Comprehensive SEO meta tags, `robots.txt`, `sitemap.xml`, and per-page title management.
+- **Forms**: React Hook Form with Zod for validation.
 
-### Pages (14 total)
-1. **Home** — Hero with tagline, trust indicators, 3 pillars, lead magnet section (Financial Readiness Checklist download gate), scarcity CTA (20-client cap)
-2. **About** — Tea's bio, credentials, digital badges. NO portrait image. Degrees listed as "coursework"/"studies" (not completed). Certs: CEH v12, QB ProAdvisor Advanced, Crypto Tax Certified, OR Notary RON
-3. **Services** — Advanced Bookkeeping, Business Plans, Digital Handshake (static web), Remote Online Notarization
-4. **Industries** — Agriculture/Timber, Crypto, Gig/E-commerce, Multi-Entity, Tech/Startups
-5. **Pricing** — Three-tier flat-fee (Bookkeeping $500+/mo, Plans $2.5k–$5k+, Web $1.5k–$3.5k+). Essentials & Growth tiers have "Subscribe Now" buttons for self-service Stripe checkout. Monthly/Annual billing toggle with 10% annual discount.
-6. **Portfolio** — Demo case study cards (no real client data)
-7. **Blog** — Blog listing + individual article pages (/blog/:slug). 4 starter articles in `src/data/blog-posts.ts`
-8. **Contact** — Dual-path: Quick Message + Discovery Intake Form
-9. **Client Portal** (`/client-portal`) — Secure document upload portal. Clients enter name + email, drag-and-drop files (PDF, DOCX, XLSX, JPG, PNG, CSV; 25MB max per file). Confirmation email sent on upload. Supports pre-filled name/email via query params for secure link generation.
-10. **Unsubscribe** — Newsletter unsubscribe page with email input
-11. **Welcome** (`/welcome`) — Post-payment success page shown after Stripe checkout. Shows next steps (onboarding form, contracts, document upload).
-12. **Onboarding** (`/onboarding`) — Self-service client intake form collecting business name, owner name, EIN/business type, bookkeeping software, notes. Submits to API which saves to CRM and triggers Adobe Sign contracts.
-13. *(Not Found)* — 404 page
+## Backend (API Server)
 
-### Header
-- Shows ONLY the BB icon (`public/logo-icon.png`) — cropped from full logo. No text beside it
-- Nav: About, Services, Industries, Pricing, Portfolio, Blog + "Get Started" CTA
+- **Framework**: Express 5.
+- **Data Validation**: Zod.
+- **API Definition**: OpenAPI 3.1.
+- **Core Routes**: Health checks, contact form submissions, newsletter management, contract management, payment processing (Stripe webhooks), and client onboarding.
+- **File Uploads**: Handles secure client document uploads.
 
-### SEO
-- `index.html`: meta description, keywords, OG tags, Twitter cards, canonical URL, JSON-LD (ProfessionalService schema)
-- `public/robots.txt` and `public/sitemap.xml` (includes all pages + blog post URLs)
-- Per-page titles via `usePageTitle()` hook (`src/hooks/use-page-title.ts`)
+## Database
 
-### Stripe Self-Service Subscriptions
-- **Package**: `stripe` installed in `artifacts/api-server`
-- **Environment secrets needed**: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `SITE_URL`
-- **Price IDs needed**: `STRIPE_ESSENTIALS_MONTHLY_PRICE_ID`, `STRIPE_ESSENTIALS_ANNUAL_PRICE_ID`, `STRIPE_GROWTH_MONTHLY_PRICE_ID`, `STRIPE_GROWTH_ANNUAL_PRICE_ID`
-- **API endpoints** (all under `/api`):
-  - `POST /payments/create-checkout-session` — creates Stripe Checkout session for a plan (essentials/growth, monthly/annual)
-  - `POST /payments/webhook` — handles Stripe webhooks (`checkout.session.completed`, `invoice.payment_failed`, `customer.subscription.deleted`)
-  - `POST /onboarding` — saves client intake form data, triggers Adobe Sign contracts, sends confirmation emails
-- **Webhook handling**: Raw body parsing configured in `app.ts` for `/api/payments/webhook` route
-- **Email notifications**: Both client and admin receive emails on subscription events (new subscriber, payment failed, cancellation)
-- **Database tables**: `subscriptions` (Stripe subscription tracking), `onboarding_submissions` (intake form data)
+- **ORM**: Drizzle ORM.
+- **Database**: PostgreSQL.
+- **Key Tables**:
+    - `contact_inquiries`: Stores contact form submissions.
+    - `newsletter_subscribers`: Manages newsletter subscriptions.
+    - `contracts`: Tracks contract records, statuses, and Adobe Sign integration details.
+    - `contract_templates`: Stores references to Adobe Sign templates.
+    - `subscriptions`: Records Stripe subscription details.
+    - `onboarding_submissions`: Stores client intake form data.
+    - `client_documents`: Manages uploaded client documents.
 
-### Important notes
-- Does NOT offer tax preparation — never include tax prep content
-- Pricing uses "starting at" ranges only
-- Firm is capped at 20 active clients — emphasize scarcity/exclusivity
-- About page: degrees are COURSEWORK/STUDIES only (not completed). Professional certs ARE earned
+## Contract Automation
 
-### Newsletter & Lead Magnet
-- Footer includes newsletter signup form (email + subscribe button) under "Stay in the Loop"
-- Home page has a lead magnet section offering "Financial Readiness Checklist" PDF download gated behind email submission
-- PDF checklist at `public/downloads/financial-readiness-checklist.pdf` (generated via `scripts/generate-checklist-pdf.mjs`)
-- Unsubscribe page at `/unsubscribe` for email opt-out
-- Frontend components: `NewsletterSignup.tsx` (footer), `LeadMagnet.tsx` (home page)
-- Hook: `use-newsletter.ts` wraps the subscribe mutation
+- **Integration**: Adobe Acrobat Sign API v6.
+- **Functionality**:
+    - Automatic contract generation and sending based on form submissions or service bookings (e.g., Mutual NDA, Engagement Letter).
+    - Scheduled reminders for unsigned contracts and auto-expiration.
+    - Archival of signed PDFs to Adobe Creative Cloud Storage.
+    - Admin dashboard for contract management.
 
-### Database
-- `contact_inquiries` table stores form submissions (name, email, phone, business name, industry, revenue range, services needed, software used, pain points, goals, message, form type)
-- `newsletter_subscribers` table stores email subscriptions (email unique, signup_source, active status, subscribed_at)
-- `contracts` table stores contract records (client name/email, contract type, Adobe agreement ID, status, service type, pricing tier, sent/signed/expired dates, reminders sent, signed document URL)
-- `contract_templates` table stores references to Adobe Sign templates (name, contract type, Adobe template ID, trigger condition, prefill fields, active status)
-- `subscriptions` table stores Stripe subscription records (customer ID, subscription ID, plan, billing interval, status, client name/email, period dates)
-- `onboarding_submissions` table stores self-service intake form data (business name, owner name, EIN/type, bookkeeping software, notes, linked to subscription)
-- `client_documents` table stores uploaded client documents (client name/email, file name, original name, file size, MIME type, CC Storage path, upload timestamp)
+## Client Document Upload Portal
 
-### Adobe Acrobat Sign Contract Automation
-- **Integration**: Adobe Acrobat Sign API v6 for e-signatures, connected via OAuth2 refresh token flow
-- **Environment secrets needed**: `ADOBE_SIGN_CLIENT_ID`, `ADOBE_SIGN_CLIENT_SECRET`, `ADOBE_SIGN_REFRESH_TOKEN`
-- **Contract types**: Client Engagement Letter, Mutual NDA, Data Processing Agreement, Scope Change/Add-On
-- **Auto-trigger**: When contact/intake form is submitted OR a service booking occurs (via Calendly webhook or manual POST), contracts are automatically determined and sent based on form type and services selected
-  - Discovery/detailed forms trigger Mutual NDA
-  - Service bookings trigger Engagement Letter; DPA added for recurring clients
-- **Reminders**: Hourly scheduler checks for unsigned contracts and sends reminders at 24h and 72h; auto-expires after 14 days
-- **Archival**: Signed PDFs are archived to Adobe Creative Cloud Storage in organized folders (year/client name)
-- **Admin dashboard**: `/admin/contracts` — view all contracts (filterable by status), manage templates, manually send contracts
-- **Backend files**:
-  - `artifacts/api-server/src/lib/adobe-sign.ts` — Adobe Sign API client (auth, agreements, reminders, documents)
-  - `artifacts/api-server/src/lib/adobe-cc-storage.ts` — Creative Cloud Storage archival
-  - `artifacts/api-server/src/lib/contract-service.ts` — Business logic (send, trigger, reminders, sync)
-  - `artifacts/api-server/src/routes/contracts.ts` — REST API endpoints
-- **Frontend**: `artifacts/website/src/pages/AdminContracts.tsx` — admin contract management dashboard
-- **API endpoints** (all under `/api`):
-  - `GET /contracts` — list all contracts
-  - `GET /contracts/:id` — get single contract
-  - `POST /contracts/send` — manually send a contract
-  - `POST /contracts/:id/sync` — sync contract status with Adobe Sign
-  - `POST /contracts/sync-all` — sync all pending contracts
-  - `POST /contracts/process-reminders` — process reminders and expirations
-  - `GET /contracts/templates/list` — list templates
-  - `POST /contracts/templates` — create template
-  - `PUT /contracts/templates/:id` — update template
-  - `DELETE /contracts/templates/:id` — delete template
-  - `GET /contracts/adobe/status` — check Adobe Sign connection
-  - `GET /contracts/adobe/templates` — list Adobe Sign library documents
-  - `GET /contracts/:id/document` — download signed PDF (admin-authed proxy to Adobe Sign)
-  - `POST /contracts/webhooks/booking` — booking webhook (Calendly or manual; no admin auth needed)
+- **Purpose**: Securely upload client financial documents.
+- **Features**: Drag-and-drop interface, name/email identification, progress indicators.
+- **Validation**: Supports specific file types (PDF, DOCX, XLSX, JPG, PNG, CSV) and a 25MB per-file limit (max 10 files per upload).
+- **Storage**: Files uploaded to Adobe Creative Cloud Storage.
+- **Notifications**: Email confirmations to clients and notifications to admins.
+- **Admin Features**: Listing, downloading, and secure link generation for client uploads.
 
-### Client Document Upload Portal
-- **Purpose**: Allows clients to securely upload financial documents (tax returns, bank statements, etc.) without using email
-- **Client portal**: `/client-portal` page with drag-and-drop upload, name/email identification, progress indicator, confirmation screen
-- **Supported file types**: PDF, DOCX, XLSX, DOC, XLS, JPG, JPEG, PNG, CSV (validated both by MIME type AND extension)
-- **File size limit**: 25MB per file, up to 10 files per upload
-- **Storage**: Files are uploaded to Adobe Creative Cloud Storage under `Blueprints_Bookkeeping/ClientDocuments/{year}/{client_name}/{date}_{filename}`
-- **Emails**: Upload confirmation sent to client + notification sent to admin via Resend
-- **Admin dashboard**: "Client Documents" tab in `/admin/contracts` — lists all uploaded files with metadata, secure download button
-- **Secure link generation**: Admin can generate and email a pre-addressed upload link to a client (pre-fills name/email on the portal)
-- **Backend files**:
-  - `artifacts/api-server/src/routes/documents.ts` — REST API endpoints for upload, listing, download, send-link
-  - `lib/db/src/schema/clientDocuments.ts` — Database schema for client documents
-- **Frontend**: `artifacts/website/src/pages/ClientPortal.tsx` — client-facing upload portal
-- **API endpoints** (all under `/api`):
-  - `POST /documents/upload` — multipart file upload (public, no admin auth)
-  - `GET /documents` — list all documents (admin-authed)
-  - `GET /documents/:id/download` — download document via CC Storage proxy (admin-authed)
-  - `POST /documents/send-link` — email a secure upload link to a client (admin-authed)
+## TypeScript Configuration
 
-## TypeScript & Composite Projects
+- **Monorepo Typechecking**: `tsconfig.base.json` with `composite: true` and root `tsconfig.json` with project references ensures correct cross-package type checking and build order.
+- **Build Process**: `tsc --build --emitDeclarationOnly` for type declarations; actual JS bundling via esbuild, Vite, or tsx.
 
-Every package extends `tsconfig.base.json` which sets `composite: true`. The root `tsconfig.json` lists all packages as project references. This means:
+# External Dependencies
 
-- **Always typecheck from the root** — run `pnpm run typecheck` (which runs `tsc --build --emitDeclarationOnly`). This builds the full dependency graph so that cross-package imports resolve correctly. Running `tsc` inside a single package will fail if its dependencies haven't been built yet.
-- **`emitDeclarationOnly`** — we only emit `.d.ts` files during typecheck; actual JS bundling is handled by esbuild/tsx/vite...etc, not `tsc`.
-- **Project references** — when package A depends on package B, A's `tsconfig.json` must list B in its `references` array. `tsc --build` uses this to determine build order and skip up-to-date packages.
-
-## Root Scripts
-
-- `pnpm run build` — runs `typecheck` first, then recursively runs `build` in all packages that define it
-- `pnpm run typecheck` — runs `tsc --build --emitDeclarationOnly` using project references
-
-## Packages
-
-### `artifacts/api-server` (`@workspace/api-server`)
-
-Express 5 API server. Routes live in `src/routes/` and use `@workspace/api-zod` for request and response validation and `@workspace/db` for persistence.
-
-- Entry: `src/index.ts` — reads `PORT`, starts Express
-- App setup: `src/app.ts` — mounts CORS, JSON/urlencoded parsing, routes at `/api`
-- Routes: `src/routes/index.ts` mounts sub-routers; `src/routes/health.ts` exposes `GET /health`; `src/routes/contact.ts` exposes `POST /contact`; `src/routes/newsletter.ts` exposes `POST /newsletter/subscribe` and `POST /newsletter/unsubscribe`; `src/routes/contracts.ts` exposes contract management endpoints; `src/routes/payments.ts` exposes Stripe checkout and webhook endpoints; `src/routes/onboarding.ts` exposes self-service onboarding form endpoint
-- Depends on: `@workspace/db`, `@workspace/api-zod`
-- `pnpm --filter @workspace/api-server run dev` — run the dev server
-- `pnpm --filter @workspace/api-server run build` — production esbuild bundle (`dist/index.cjs`)
-- Build bundles an allowlist of deps (express, cors, pg, drizzle-orm, zod, etc.) and externalizes the rest
-
-### `artifacts/website` (`@workspace/website`)
-
-React + Vite + Tailwind CSS frontend for Blueprints & Bookkeeping. Uses react-router-dom for client-side routing, react-hook-form + zod for form validation, framer-motion for animations.
-
-- 7 pages: Home, About, Services, Industries, Pricing, Portfolio, Contact
-- Contact form posts to `/api/contact` on the API server
-- Logo at `public/logo.png`, AI-generated images in `public/images/`
-
-### `lib/db` (`@workspace/db`)
-
-Database layer using Drizzle ORM with PostgreSQL. Exports a Drizzle client instance and schema models.
-
-- `src/index.ts` — creates a `Pool` + Drizzle instance, exports schema
-- `src/schema/index.ts` — barrel re-export of all models
-- `src/schema/contactInquiries.ts` — contact form submissions table
-- `src/schema/newsletterSubscribers.ts` — newsletter subscribers table (email, signup_source, active, subscribed_at)
-- `drizzle.config.ts` — Drizzle Kit config (requires `DATABASE_URL`, automatically provided by Replit)
-- Exports: `.` (pool, db, schema), `./schema` (schema only)
-
-Production migrations are handled by Replit when publishing. In development, we just use `pnpm --filter @workspace/db run push`, and we fallback to `pnpm --filter @workspace/db run push-force`.
-
-### `lib/api-spec` (`@workspace/api-spec`)
-
-Owns the OpenAPI 3.1 spec (`openapi.yaml`) and the Orval config (`orval.config.ts`). Running codegen produces output into two sibling packages:
-
-1. `lib/api-client-react/src/generated/` — React Query hooks + fetch client
-2. `lib/api-zod/src/generated/` — Zod schemas
-
-Run codegen: `pnpm --filter @workspace/api-spec run codegen`
-
-### `lib/api-zod` (`@workspace/api-zod`)
-
-Generated Zod schemas from the OpenAPI spec (e.g. `HealthCheckResponse`, `SubmitContactFormBody`, `SubscribeNewsletterBody`, `UnsubscribeNewsletterBody`). Used by `api-server` for request validation.
-
-### `lib/api-client-react` (`@workspace/api-client-react`)
-
-Generated React Query hooks and fetch client from the OpenAPI spec (e.g. `useHealthCheck`, `healthCheck`, `useSubscribeNewsletter`, `useUnsubscribeNewsletter`).
-
-### `scripts` (`@workspace/scripts`)
-
-Utility scripts package. Each script is a `.ts` file in `src/` with a corresponding npm script in `package.json`. Run scripts via `pnpm --filter @workspace/scripts run <script>`. Scripts can import any workspace package (e.g., `@workspace/db`) by adding it as a dependency in `scripts/package.json`.
+- **Stripe**: For self-service subscriptions (Essentials & Growth tiers), managing checkout sessions, and webhook processing.
+    - Environment secrets: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `SITE_URL`, `STRIPE_ESSENTIALS_MONTHLY_PRICE_ID`, `STRIPE_ESSENTIALS_ANNUAL_PRICE_ID`, `STRIPE_GROWTH_MONTHLY_PRICE_ID`, `STRIPE_GROWTH_ANNUAL_PRICE_ID`.
+- **Adobe Acrobat Sign API v6**: For e-signature workflows, contract automation, and management.
+    - Environment secrets: `ADOBE_SIGN_CLIENT_ID`, `ADOBE_SIGN_CLIENT_SECRET`, `ADOBE_SIGN_REFRESH_TOKEN`.
+- **Adobe Creative Cloud Storage**: For archiving signed contracts and storing client-uploaded documents.
+- **PostgreSQL**: Primary database for all application data, managed with Drizzle ORM.
+- **Resend**: For sending email notifications (e.g., subscription events, document upload confirmations).
+- **Calendly**: Potentially integrated for booking webhooks to trigger contract automation.
+- **Google Fonts**: Inter and JetBrains Mono for typography.

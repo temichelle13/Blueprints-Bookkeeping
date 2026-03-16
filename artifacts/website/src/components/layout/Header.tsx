@@ -4,15 +4,13 @@ import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
-  { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
   { href: "/industries", label: "Industries" },
+  { href: "/about", label: "About" },
   { href: "/pricing", label: "Pricing" },
   { href: "/portfolio", label: "Portfolio" },
-  { href: "/results", label: "Results" },
   { href: "/blog", label: "Blog" },
-  { href: "/tax-partners", label: "Tax Partners" },
-  { href: "/referral", label: "Referral Program" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export function Header() {
