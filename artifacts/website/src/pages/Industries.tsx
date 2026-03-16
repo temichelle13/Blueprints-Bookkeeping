@@ -3,6 +3,7 @@ import { TreePine, Bitcoin, ShoppingBag, Building2, Rocket, ArrowRight } from "l
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 import { serviceSchema } from "@/lib/seo-schemas";
+import { ScopeDisclaimer } from "@/components/ScopeDisclaimer";
 
 const BASE_URL = "https://blueprintsandbookkeeping.com";
 
@@ -63,7 +64,7 @@ export default function Industries() {
         path="/industries"
         jsonLd={jsonLd}
       />
-      <section className="py-16 mb-16 relative">
+      <section className="py-16 mb-8 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="accent-bar mx-auto mb-6" />
@@ -73,6 +74,8 @@ export default function Industries() {
           </p>
         </div>
       </section>
+
+      <ScopeDisclaimer />
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

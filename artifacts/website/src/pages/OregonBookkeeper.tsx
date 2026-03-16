@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { MapPin, CheckCircle2, ArrowRight, Calculator, BookOpen, Shield, Clock, Users, TreePine } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { localBusinessSchema, serviceSchema, breadcrumbSchema } from "@/lib/seo-schemas";
+import { ScopeDisclaimer } from "@/components/ScopeDisclaimer";
 
 const BASE_URL = "https://blueprintsandbookkeeping.com";
 
@@ -52,6 +53,8 @@ export default function OregonBookkeeper() {
           </p>
         </div>
       </section>
+
+      <ScopeDisclaimer />
 
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
         <div className="glass-card rounded-2xl p-8 border border-accent/10">
