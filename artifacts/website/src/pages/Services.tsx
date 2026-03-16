@@ -3,7 +3,7 @@ import { Calculator, BookOpen, MonitorPlay, Stamp, CheckCircle2, ArrowRight } fr
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 import { serviceSchema } from "@/lib/seo-schemas";
-import { ScopeDisclaimer } from "@/components/ScopeDisclaimer";
+
 
 const BASE_URL = "https://blueprintsandbookkeeping.com";
 
@@ -72,8 +72,6 @@ export default function Services() {
           </p>
         </div>
       </section>
-
-      <ScopeDisclaimer />
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
