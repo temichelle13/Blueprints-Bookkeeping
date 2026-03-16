@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Link } from "wouter";
-import { Mail, Phone, MapPin, Send, Loader2, CheckCircle2, Video, FileUp, ArrowRight } from "lucide-react";
+import { Mail, Phone, Send, Loader2, CheckCircle2, Video, FileUp, ArrowRight, Globe } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 import { useContactMutation } from "@/hooks/use-contact";
@@ -151,6 +151,12 @@ export default function Contact() {
       </section>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-3 rounded-xl border border-accent/20 bg-accent/[0.06] px-5 py-4 mb-10">
+          <Globe size={20} className="text-accent shrink-0" />
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            <span className="font-semibold text-white">100 % Virtual Practice</span> — All meetings, consultations, and services are conducted online. No in-person visits or physical office location.
+          </p>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-14">
           {contactCards.map((card) => {
             const CardIcon = card.icon;
@@ -245,10 +251,10 @@ export default function Contact() {
 
               <div className="flex items-start gap-3">
                 <div className="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
-                  <MapPin size={16} className="text-accent" />
+                  <Globe size={16} className="text-accent" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-white">Roseburg, Oregon</p>
+                  <p className="text-sm font-medium text-white">Virtual Only</p>
                   <p className="text-xs text-muted-foreground">Serving clients nationwide</p>
                 </div>
               </div>
