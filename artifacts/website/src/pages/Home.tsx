@@ -2,7 +2,6 @@ import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { ArrowRight, BookOpen, Calculator, ShieldCheck, Clock, Users, Sparkles } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
-import { LeadMagnetSection } from "@/components/LeadMagnet";
 import { StatsProofBar, CredentialBadgeStrip, GoogleReviewsCallout, FeaturedInPlaceholder } from "@/components/TrustSignals";
 import { SEO } from "@/components/SEO";
 import { localBusinessSchema } from "@/lib/seo-schemas";
@@ -271,8 +270,6 @@ export default function Home() {
       <FeaturedInPlaceholder />
 
       <div className="glow-line max-w-5xl mx-auto" />
-
-      <LeadMagnetSection />
 
       <section className="py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 via-accent/[0.02] to-transparent" />

@@ -42,7 +42,6 @@ import ClientPortal from "./pages/ClientPortal";
 import BusinessPlanning from "./pages/BusinessPlanning";
 import Status from "./pages/Status";
 import PaymentSuccess from "./pages/PaymentSuccess";
-import Resources from "./pages/Resources";
 import ServiceBookkeeping from "./pages/services/Bookkeeping";
 import ServiceBusinessPlans from "./pages/services/BusinessPlans";
 import ServiceDigitalHandshake from "./pages/services/DigitalHandshake";
@@ -134,7 +133,6 @@ function Router() {
         <Route path="/business-planning" component={BusinessPlanning} />
         <Route path="/status" component={Status} />
         <Route path="/payment-success" component={PaymentSuccess} />
-        <Route path="/resources" component={Resources} />
         <Route path="/services/bookkeeping" component={ServiceBookkeeping} />
         <Route path="/services/business-plans" component={ServiceBusinessPlans} />
         <Route path="/services/digital-handshake" component={ServiceDigitalHandshake} />
