@@ -1,4 +1,15 @@
 User-agent: *
 Allow: /
 
+Disallow: /admin
+Disallow: /admin/
+Disallow: /client-portal
+Disallow: /onboarding
+Disallow: /welcome
+Disallow: /payment-success
+Disallow: /status
+Disallow: /feedback
+Disallow: /unsubscribe
+Disallow: /marketing-guide
+
 Sitemap: https://blueprintsandbookkeeping.com/sitemap.xml

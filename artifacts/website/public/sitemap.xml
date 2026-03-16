@@ -67,6 +67,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://blueprintsandbookkeeping.com/resources</loc>
+    <lastmod>2026-03-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://blueprintsandbookkeeping.com/blog</loc>
     <lastmod>2026-03-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -79,7 +85,7 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://blueprintsandbookkeeping.com/blog/sba-loan-business-plan-requirements</loc>
+    <loc>https://blueprintsandbookkeeping.com/blog/what-makes-a-strong-business-plan</loc>
     <lastmod>2026-03-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -140,12 +146,6 @@
   </url>
   <url>
     <loc>https://blueprintsandbookkeeping.com/referral</loc>
-    <lastmod>2026-03-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://blueprintsandbookkeeping.com/marketing-guide</loc>
     <lastmod>2026-03-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
