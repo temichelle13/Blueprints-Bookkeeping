@@ -7,6 +7,7 @@ import { useState, useEffect, useRef } from "react";
 import NotFound from "@/pages/not-found";
 import { usePageTracking } from "./hooks/usePageTracking";
 
+import { ThemeProvider } from "./hooks/use-theme";
 import { Header } from "./components/layout/Header";
 import ChatWidget from "./components/ChatWidget";
 import CookieConsent, { hasAcceptedCookies } from "./components/CookieConsent";
@@ -146,16 +147,18 @@ function ConsentAwareChatWidget() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-          <Router />
-        </WouterRouter>
-        <Toaster />
-        <ConsentAwareChatWidget />
-        <CookieConsent />
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+            <Router />
+          </WouterRouter>
+          <Toaster />
+          <ConsentAwareChatWidget />
+          <CookieConsent />
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }
 

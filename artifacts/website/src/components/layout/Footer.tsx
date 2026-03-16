@@ -1,18 +1,36 @@
 import { Link } from "wouter";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, Users } from "lucide-react";
 import { FooterNewsletterSignup } from "@/components/NewsletterSignup";
 
 export function Footer() {
   return (
-    <footer className="relative border-t border-white/[0.06]">
+    <footer className="relative border-t border-border/50">
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
+        <div className="refer-founder-callout glass-card rounded-2xl p-8 mb-12 flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
+          <div className="p-3 bg-accent/10 rounded-xl shrink-0">
+            <Users size={28} className="text-accent" />
+          </div>
+          <div className="flex-grow text-center sm:text-left">
+            <h3 className="text-lg font-display font-bold mb-1">Know a Founder Who Needs Better Books?</h3>
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              Refer a fellow founder and you'll both receive a complimentary financial health check. Great bookkeeping grows through word of mouth.
+            </p>
+          </div>
+          <a
+            href="mailto:tea@blueprintsandbookkeeping.com?subject=Founder%20Referral&body=Hi%20Tea%2C%0A%0AI'd%20like%20to%20refer%20a%20fellow%20founder%20to%20Blueprints%20%26%20Bookkeeping.%0A%0AReferral%20Name%3A%20%0AReferral%20Email%3A%20%0A%0AThanks!"
+            className="shrink-0 px-6 py-3 bg-accent/15 border border-accent/30 text-accent font-semibold rounded-lg hover:bg-accent hover:text-white hover:border-accent transition-all duration-300 text-sm whitespace-nowrap"
+          >
+            Refer a Founder
+          </a>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           <div className="lg:col-span-1">
             <Link href="/" className="inline-block mb-4">
               <span className="font-display font-bold text-2xl tracking-tight">
-                <span className="text-white">Blueprints &</span><br />
+                <span className="text-foreground">Blueprints &</span><br />
                 <span className="text-accent">Bookkeeping</span>
               </span>
             </Link>
@@ -55,7 +73,7 @@ export function Footer() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-muted-foreground hover:text-white text-sm transition-colors"
+                    className="text-muted-foreground hover:text-foreground text-sm transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -69,7 +87,7 @@ export function Footer() {
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li>Advanced Bookkeeping</li>
               <li>Historical Cleanup</li>
-              <li><Link href="/business-planning" className="hover:text-white transition-colors">Business Plans</Link></li>
+              <li><Link href="/business-planning" className="hover:text-foreground transition-colors">Business Plans</Link></li>
               <li>Static Web Design</li>
             </ul>
           </div>
@@ -80,7 +98,7 @@ export function Footer() {
               Get founder-focused financial tips and updates delivered to your inbox.
             </p>
             <FooterNewsletterSignup />
-            <div className="mt-6 pt-6 border-t border-white/[0.06]">
+            <div className="mt-6 pt-6 border-t border-border/50">
               <Link
                 href="/schedule"
                 className="inline-block w-full text-center px-6 py-3 bg-accent/15 border border-accent/30 text-accent font-semibold rounded-lg hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
@@ -96,10 +114,10 @@ export function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} Blueprints & Bookkeeping, LLC. All rights reserved.</p>
           <div className="flex gap-6">
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-            <Link href="/unsubscribe" className="hover:text-white transition-colors">Unsubscribe</Link>
-            <Link href="/feedback" className="hover:text-white transition-colors">Site Feedback</Link>
+            <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-foreground transition-colors">Terms of Service</Link>
+            <Link href="/unsubscribe" className="hover:text-foreground transition-colors">Unsubscribe</Link>
+            <Link href="/feedback" className="hover:text-foreground transition-colors">Site Feedback</Link>
           </div>
         </div>
       </div>

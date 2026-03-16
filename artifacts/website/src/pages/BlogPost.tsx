@@ -1,7 +1,50 @@
 import { useParams, Link } from "wouter";
-import { ArrowLeft, Calendar, Clock } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, Linkedin, Twitter, Mail } from "lucide-react";
 import { blogPosts } from "@/data/blog-posts";
 import { usePageTitle } from "@/hooks/use-page-title";
+
+function ShareBar({ title, slug }: { title: string; slug: string }) {
+  const pageUrl = `${window.location.origin}${import.meta.env.BASE_URL}blog/${slug}`;
+  const encodedUrl = encodeURIComponent(pageUrl);
+  const encodedTitle = encodeURIComponent(title);
+
+  const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`;
+  const emailUrl = `mailto:?subject=${encodedTitle}&body=Check out this article: ${encodedUrl}`;
+
+  const buttonClass = "inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 border";
+
+  return (
+    <div className="share-bar flex flex-wrap gap-3 my-10">
+      <span className="text-muted-foreground text-sm font-medium self-center mr-1">Share this article:</span>
+      <a
+        href={linkedInUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`${buttonClass} bg-[#0A66C2]/10 border-[#0A66C2]/30 text-[#0A66C2] hover:bg-[#0A66C2] hover:text-white hover:border-[#0A66C2]`}
+      >
+        <Linkedin size={16} />
+        LinkedIn
+      </a>
+      <a
+        href={twitterUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`${buttonClass} bg-foreground/5 border-foreground/10 text-foreground hover:bg-foreground hover:text-background hover:border-foreground`}
+      >
+        <Twitter size={16} />
+        X (Twitter)
+      </a>
+      <a
+        href={emailUrl}
+        className={`${buttonClass} bg-accent/10 border-accent/30 text-accent hover:bg-accent hover:text-white hover:border-accent`}
+      >
+        <Mail size={16} />
+        Email
+      </a>
+    </div>
+  );
+}
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
@@ -12,7 +55,7 @@ export default function BlogPost() {
   if (!post) {
     return (
       <div className="pt-32 pb-20 text-center">
-        <h1 className="text-3xl font-bold text-white mb-4">Article Not Found</h1>
+        <h1 className="text-3xl font-bold mb-4">Article Not Found</h1>
         <p className="text-muted-foreground mb-8">The article you're looking for doesn't exist.</p>
         <Link href="/blog" className="text-accent hover:underline font-medium">
           &larr; Back to Blog
@@ -33,7 +76,7 @@ export default function BlogPost() {
           </Link>
 
           <span className="text-[11px] font-mono font-medium tracking-widest text-accent block mb-4">{post.category.toUpperCase()}</span>
-          <h1 className="text-3xl md:text-4xl font-display font-bold text-white mb-6 leading-tight">{post.title}</h1>
+          <h1 className="text-3xl md:text-4xl font-display font-bold mb-6 leading-tight">{post.title}</h1>
 
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <span className="flex items-center gap-1.5">
@@ -56,7 +99,7 @@ export default function BlogPost() {
 
             if (trimmed.startsWith('**') && trimmed.endsWith('**')) {
               return (
-                <h2 key={i} className="text-xl font-bold text-white mt-10 mb-4">
+                <h2 key={i} className="text-xl font-bold mt-10 mb-4">
                   {trimmed.replace(/\*\*/g, '')}
                 </h2>
               );
@@ -91,7 +134,7 @@ export default function BlogPost() {
             }
 
             const rendered = trimmed
-              .replace(/\*\*(.+?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>');
+              .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold">$1</strong>');
 
             return (
               <p key={i} className="text-foreground leading-relaxed text-[15px]" dangerouslySetInnerHTML={{ __html: rendered }} />
@@ -99,10 +142,12 @@ export default function BlogPost() {
           })}
         </div>
 
+        <ShareBar title={post.title} slug={post.slug} />
+
         <div className="glow-line my-12" />
 
         <div className="glass-card rounded-2xl p-8 text-center">
-          <h3 className="text-xl font-bold text-white mb-3">Ready to elevate your financial infrastructure?</h3>
+          <h3 className="text-xl font-bold mb-3">Ready to elevate your financial infrastructure?</h3>
           <p className="text-muted-foreground mb-6 text-[15px]">Schedule a free discovery call and let's discuss your business goals.</p>
           <Link
             href="/contact"
