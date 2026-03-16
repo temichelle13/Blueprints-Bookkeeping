@@ -5,6 +5,7 @@ import { CreditCard, UserCheck, CalendarDays, MessageSquare, ArrowRight, BookOpe
 import { usePageTitle } from "@/hooks/use-page-title";
 
 const API_BASE = import.meta.env.VITE_API_URL || "/api";
+const STRIPE_CONFIGURED = !!import.meta.env.VITE_STRIPE_PUBLIC_KEY;
 
 export default function GetStarted() {
   usePageTitle("Get Started — Blueprints & Bookkeeping");
@@ -47,19 +48,28 @@ export default function GetStarted() {
       icon: CreditCard,
       color: "#6366F1",
       badge: "FASTEST",
-      title: "Sign Up Online",
+      title: STRIPE_CONFIGURED ? "Sign Up Online" : "Get Started",
       subtitle: "For Essentials or Growth bookkeeping",
-      description:
-        "Review our plans and pricing, then reach out to get started. Contracts are sent after your discovery call and you'll have access to the client portal right away.",
-      steps: [
-        "Review Essentials ($500/mo) or Growth ($900/mo)",
-        "Book a quick discovery call or send your info",
-        "Complete your intake form",
-        "Receive & sign contracts",
-        "Upload your first documents",
-      ],
-      cta: "View Plans & Pricing",
-      href: "/pricing",
+      description: STRIPE_CONFIGURED
+        ? "Choose your tier, complete checkout, and submit your onboarding intake form — all in one visit. Contracts are sent automatically and you'll have access to the client portal immediately."
+        : "Review our plans and pricing, then reach out to get started. Contracts are sent after your discovery call and you'll have access to the client portal right away.",
+      steps: STRIPE_CONFIGURED
+        ? [
+            "Pick Essentials ($500/mo) or Growth ($900/mo)",
+            "Checkout securely via Stripe",
+            "Complete your intake form",
+            "Receive & sign contracts",
+            "Upload your first documents",
+          ]
+        : [
+            "Review Essentials ($500/mo) or Growth ($900/mo)",
+            "Book a quick discovery call or send your info",
+            "Complete your intake form",
+            "Receive & sign contracts",
+            "Upload your first documents",
+          ],
+      cta: STRIPE_CONFIGURED ? "View Plans & Pricing" : "Get in Touch to Get Started",
+      href: STRIPE_CONFIGURED ? "/pricing" : "/contact",
       external: false,
       primary: true,
     },
