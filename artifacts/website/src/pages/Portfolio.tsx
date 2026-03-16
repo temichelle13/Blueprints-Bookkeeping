@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 import { Link } from "wouter";
-import { ArrowRight, BadgeCheck, GraduationCap, ShieldCheck, BookOpen, Award, Briefcase, Brain, FileText, Code2, Rss, Zap } from "lucide-react";
+import { ArrowRight, BadgeCheck, GraduationCap, ShieldCheck, BookOpen, Award, Briefcase, Brain, FileText, Code2, Rss, Zap, Linkedin, Github, ExternalLink } from "lucide-react";
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -184,6 +184,69 @@ const researchAndWork = [
   },
 ];
 
+const professionalProfiles = [
+  {
+    label: "LinkedIn",
+    handle: "tealarson-hetrick",
+    url: "https://linkedin.com/in/tealarson-hetrick",
+    description: "Professional profile, endorsements, and work history",
+    icon: Linkedin,
+    color: "from-blue-600/10 to-blue-500/5",
+    border: "border-blue-500/20",
+    iconColor: "text-blue-400",
+  },
+  {
+    label: "GitHub",
+    handle: "temichelle13",
+    url: "https://github.com/temichelle13",
+    description: "Open-source repositories and technical contributions",
+    icon: Github,
+    color: "from-slate-500/10 to-slate-400/5",
+    border: "border-slate-400/20",
+    iconColor: "text-slate-300",
+  },
+  {
+    label: "ORCID",
+    handle: "0009-0001-9240-7160",
+    url: "https://orcid.org/0009-0001-9240-7160",
+    description: "Verified researcher identity and publication record",
+    icon: BadgeCheck,
+    color: "from-green-600/10 to-green-500/5",
+    border: "border-green-500/20",
+    iconColor: "text-green-400",
+  },
+  {
+    label: "Medium",
+    handle: "@tealarson-hetrick",
+    url: "https://medium.com/@tealarson-hetrick",
+    description: "Published writing on AI and cryptocurrency",
+    icon: Rss,
+    color: "from-stone-400/10 to-stone-300/5",
+    border: "border-stone-400/20",
+    iconColor: "text-stone-300",
+  },
+  {
+    label: "ResearchGate",
+    handle: "Tea-Larson-Hetrick",
+    url: "https://www.researchgate.net/profile/Tea-Larson-Hetrick",
+    description: "Academic research profile and published papers",
+    icon: FileText,
+    color: "from-teal-600/10 to-teal-500/5",
+    border: "border-teal-500/20",
+    iconColor: "text-teal-400",
+  },
+  {
+    label: "Google Developer",
+    handle: "tealarson-hetrick",
+    url: "https://g.dev/tealarson-hetrick",
+    description: "Google developer profile and technology work",
+    icon: Code2,
+    color: "from-yellow-500/10 to-amber-500/5",
+    border: "border-yellow-500/20",
+    iconColor: "text-yellow-400",
+  },
+];
+
 export default function Portfolio() {
   usePageTitle("Credentials & Certifications");
 
@@ -210,6 +273,47 @@ export default function Portfolio() {
           </motion.div>
         </div>
       </section>
+
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+        <motion.div {...fadeUp} className="mb-8">
+          <div className="accent-bar mb-4" />
+          <h2 className="text-2xl font-display font-bold text-white">Professional Profiles</h2>
+          <p className="text-muted-foreground mt-2">Verified across research, development, and publishing platforms.</p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {professionalProfiles.map((profile, i) => {
+            const Icon = profile.icon;
+            return (
+              <motion.a
+                key={profile.label}
+                href={profile.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.06 }}
+                className={`glass-card rounded-2xl p-5 flex items-start gap-4 border ${profile.border} bg-gradient-to-br ${profile.color} hover:scale-[1.02] hover:shadow-lg transition-all duration-200 group`}
+              >
+                <div className={`p-2.5 rounded-xl bg-white/[0.06] shrink-0 ${profile.iconColor}`}>
+                  <Icon className="w-5 h-5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5 mb-0.5">
+                    <p className="text-white font-semibold text-sm">{profile.label}</p>
+                    <ExternalLink className="w-3 h-3 text-muted-foreground group-hover:text-accent transition-colors shrink-0" />
+                  </div>
+                  <p className="text-accent text-xs font-mono mb-1.5 truncate">{profile.handle}</p>
+                  <p className="text-muted-foreground text-xs leading-relaxed">{profile.description}</p>
+                </div>
+              </motion.a>
+            );
+          })}
+        </div>
+      </section>
+
+      <div className="glow-line max-w-5xl mx-auto" />
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
         <motion.div {...fadeUp} className="mb-10">
