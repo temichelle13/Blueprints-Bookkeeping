@@ -1,10 +1,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { Check, Shield, ArrowRight, HelpCircle, CreditCard, Loader2 } from "lucide-react";
+import { Check, Shield, ArrowRight, HelpCircle, Calendar } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
-import { useToast } from "@/hooks/use-toast";
-
-const API_BASE = import.meta.env.VITE_API_URL || "/api";
 
 const bookkeepingTiers = [
   {
@@ -123,76 +120,26 @@ type BookkeepingTier = typeof bookkeepingTiers[0];
 type BusinessPlanTier = typeof businessPlanTiers[0];
 
 function SubscribeButton({ planKey, interval }: { planKey: string; interval: "monthly" | "annual" }) {
-  const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
-
-  const handleSubscribe = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(`${API_BASE}/payments/create-checkout-session`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: planKey, interval }),
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        toast({ title: "Error", description: data.error || "Could not start checkout.", variant: "destructive" });
-        setLoading(false);
-      }
-    } catch {
-      toast({ title: "Error", description: "Could not connect to payment server.", variant: "destructive" });
-      setLoading(false);
-    }
-  };
-
   return (
-    <button
-      onClick={handleSubscribe}
-      disabled={loading}
-      className="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-accent text-white font-semibold text-sm hover:shadow-xl hover:shadow-accent/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+    <Link
+      href="/contact"
+      className="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-accent text-white font-semibold text-sm hover:shadow-xl hover:shadow-accent/20 transition-all duration-300"
     >
-      {loading ? <Loader2 size={15} className="animate-spin" /> : <CreditCard size={15} />}
-      {loading ? "Redirecting..." : "Subscribe Now"}
-    </button>
+      <Calendar size={15} />
+      Book a Call to Get Started
+    </Link>
   );
 }
 
 function DepositButton({ serviceKey, label }: { serviceKey: string; label?: string }) {
-  const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
-
-  const handleDeposit = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(`${API_BASE}/payments/create-deposit-session`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ service: serviceKey }),
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        toast({ title: "Error", description: data.error || "Could not start checkout.", variant: "destructive" });
-        setLoading(false);
-      }
-    } catch {
-      toast({ title: "Error", description: "Could not connect to payment server.", variant: "destructive" });
-      setLoading(false);
-    }
-  };
-
   return (
-    <button
-      onClick={handleDeposit}
-      disabled={loading}
-      className="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-accent text-white font-semibold text-sm hover:shadow-xl hover:shadow-accent/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+    <Link
+      href="/contact"
+      className="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-accent text-white font-semibold text-sm hover:shadow-xl hover:shadow-accent/20 transition-all duration-300"
     >
-      {loading ? <Loader2 size={15} className="animate-spin" /> : <CreditCard size={15} />}
-      {loading ? "Redirecting..." : label || "Pay Deposit"}
-    </button>
+      <Calendar size={15} />
+      {label || "Book a Call to Get Started"}
+    </Link>
   );
 }
 
