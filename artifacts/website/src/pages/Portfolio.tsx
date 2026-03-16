@@ -63,22 +63,6 @@ const intuitCerts = [
 
 const licensesAndTech = [
   {
-    name: "Oregon Remote Online Notary (RON)",
-    issuer: "Oregon Secretary of State",
-    description: "State-approved remote online notarization. Legally binding document notarization for clients anywhere — no in-person visit required.",
-    icon: BadgeCheck,
-    color: "from-accent/10 to-primary/5",
-    border: "border-accent/20",
-  },
-  {
-    name: "Oregon Notary Public Commission",
-    issuer: "Oregon Secretary of State",
-    description: "Active in-person notary commission for the State of Oregon.",
-    icon: BadgeCheck,
-    color: "from-accent/10 to-primary/5",
-    border: "border-accent/20",
-  },
-  {
     name: "Ethical Hacking",
     issuer: "PACKT",
     description: "Cybersecurity training covering penetration testing, vulnerability assessment, and ethical hacking techniques — directly applied to client data protection and infrastructure security.",
@@ -254,7 +238,7 @@ export default function Portfolio() {
     <div className="pt-24 pb-20">
       <SEO
         title="Credentials & Certifications"
-        description="Tea Larson-Hetrick's professional certifications, licenses, and education — QuickBooks ProAdvisor Level 1 & 2, Certified Bookkeeping Professional, Oregon Notary, HarvardX, Yale, and more."
+        description="Tea Larson-Hetrick's professional certifications, licenses, and education — QuickBooks ProAdvisor Level 1 & 2, Certified Bookkeeping Professional, Certified Ethical Hacker, HarvardX, Yale, and more."
         path="/portfolio"
       />
 

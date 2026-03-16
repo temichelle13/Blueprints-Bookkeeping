@@ -45,7 +45,6 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import ServiceBookkeeping from "./pages/services/Bookkeeping";
 import ServiceBusinessPlans from "./pages/services/BusinessPlans";
 import ServiceDigitalHandshake from "./pages/services/DigitalHandshake";
-import ServiceNotary from "./pages/services/Notary";
 import OregonBookkeeper from "./pages/OregonBookkeeper";
 import Resources from "./pages/Resources";
 
@@ -138,7 +137,6 @@ function Router() {
         <Route path="/services/bookkeeping" component={ServiceBookkeeping} />
         <Route path="/services/business-plans" component={ServiceBusinessPlans} />
         <Route path="/services/digital-handshake" component={ServiceDigitalHandshake} />
-        <Route path="/services/notary" component={ServiceNotary} />
         <Route path="/oregon-bookkeeper" component={OregonBookkeeper} />
         <Route path="/admin/contracts" component={AdminContracts} />
         <Route path="/admin" component={AdminDashboard} />

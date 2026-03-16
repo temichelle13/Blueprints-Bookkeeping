@@ -64,7 +64,6 @@ export default function About() {
                 <li className="flex items-center gap-3"><Award size={15} className="text-accent shrink-0" /> Certified Ethical Hacker (CEH v12)</li>
                 <li className="flex items-center gap-3"><Award size={15} className="text-accent shrink-0" /> QuickBooks ProAdvisor Advanced</li>
                 <li className="flex items-center gap-3"><Award size={15} className="text-accent shrink-0" /> Advanced Crypto Accounting Certified</li>
-                <li className="flex items-center gap-3"><Award size={15} className="text-accent shrink-0" /> Oregon Notary (RON Approved)</li>
               </ul>
             </div>
 
@@ -102,12 +101,6 @@ export default function About() {
                   fallbackColor: "from-orange-600/20 to-orange-800/20",
                   url: "https://cryptoaccountingacademy.com/"
                 },
-                {
-                  name: "Oregon RON Notary",
-                  img: "",
-                  fallbackColor: "from-blue-600/20 to-blue-800/20",
-                  url: "https://sos.oregon.gov/business/Pages/notary.aspx"
-                }
               ].map((badge, i) => (
                 <a key={i} href={badge.url} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center text-center group">
                   <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${badge.fallbackColor} border border-white/[0.06] flex items-center justify-center mb-3 group-hover:scale-105 transition-transform`}>

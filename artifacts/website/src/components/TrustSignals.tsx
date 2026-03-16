@@ -59,10 +59,10 @@ export function StatsProofBar() {
     },
     {
       icon: <ShieldCheck className="w-6 h-6" />,
-      value: 3,
+      value: 2,
       suffix: "",
       label: "Core Services",
-      description: "Books · Plans · Notary",
+      description: "Books · Plans",
     },
     {
       icon: <Award className="w-6 h-6" />,

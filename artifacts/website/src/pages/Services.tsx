@@ -167,27 +167,6 @@ export default function Services() {
         </div>
 
         <div className="glass-card rounded-2xl p-8 mt-6 border border-white/[0.06]">
-          <div className="flex flex-col md:flex-row md:items-center gap-6">
-            <div className="flex items-center gap-3 shrink-0">
-              <div className="p-3 rounded-xl bg-accent/10 text-accent">
-                <Stamp className="w-6 h-6" />
-              </div>
-              <span className="text-[11px] font-mono font-medium tracking-widest text-muted-foreground">LOCAL</span>
-            </div>
-            <div className="flex-grow">
-              <h3 className="text-lg font-bold text-white mb-2">Notary Services</h3>
-              <p className="text-muted-foreground text-[15px]">
-                Professional notary services available in Roseburg, Oregon and surrounding Douglas County. Convenient scheduling for business and personal documents.
-              </p>
-            </div>
-            <Link
-              href="/services/notary"
-              className="shrink-0 inline-flex items-center gap-2 px-6 py-2.5 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300 group/btn"
-            >
-              Learn More
-              <ArrowRight size={15} className="group-hover/btn:translate-x-1 transition-transform" />
-            </Link>
-          </div>
         </div>
       </section>
     </div>
