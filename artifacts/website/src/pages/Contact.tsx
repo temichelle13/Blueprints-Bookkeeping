@@ -93,6 +93,10 @@ function QuickContactForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div className="absolute opacity-0 h-0 w-0 overflow-hidden" aria-hidden="true" tabIndex={-1}>
+        <label htmlFor="quick-website">Website</label>
+        <input {...register("website")} id="quick-website" tabIndex={-1} autoComplete="off" />
+      </div>
       <div>
         <label htmlFor="quick-name" className="sr-only">Name</label>
         <input {...register("name")} id="quick-name" placeholder="Name" className={inputClass} aria-describedby={errors.name ? "quick-name-error" : undefined} />
@@ -137,6 +141,10 @@ function DetailedIntakeForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <div className="absolute opacity-0 h-0 w-0 overflow-hidden" aria-hidden="true" tabIndex={-1}>
+        <label htmlFor="detailed-website">Website</label>
+        <input {...register("website")} id="detailed-website" tabIndex={-1} autoComplete="off" />
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label htmlFor="detail-name" className={labelClass}>Your Name *</label>

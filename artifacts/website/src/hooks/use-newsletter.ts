@@ -1,13 +1,23 @@
-import { useSubscribeNewsletter, type NewsletterSubscribeInput } from "@workspace/api-client-react";
+import { useSubscribeNewsletter } from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
+import { trackEvent } from "@/lib/analytics";
+
+interface SubscribeParams {
+  email: string;
+  signupSource: "footer" | "lead_magnet";
+  website?: string;
+}
 
 export function useNewsletterMutation() {
   const { toast } = useToast();
   const mutation = useSubscribeNewsletter();
 
-  const subscribe = async (data: NewsletterSubscribeInput) => {
+  const subscribe = async (data: SubscribeParams) => {
     try {
-      const result = await mutation.mutateAsync({ data });
+      const { website: _honeypot, ...payload } = data;
+      const result = await mutation.mutateAsync({ data: { ...payload, website: _honeypot } as any });
+      const eventName = data.signupSource === "lead_magnet" ? "Lead Magnet Download" : "Newsletter Signup";
+      trackEvent(eventName, { source: data.signupSource });
       toast({
         title: "You're In!",
         description: result.message,

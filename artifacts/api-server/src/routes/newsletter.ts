@@ -22,6 +22,14 @@ const FROM_ADDRESS = "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping
 const router: IRouter = Router();
 
 router.post("/newsletter/subscribe", async (req, res): Promise<void> => {
+  if (req.body?.website) {
+    res.status(201).json({
+      success: true,
+      message: "You're subscribed! Thank you for signing up.",
+    });
+    return;
+  }
+
   const parsed = SubscribeNewsletterBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });

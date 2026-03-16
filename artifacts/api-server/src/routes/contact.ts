@@ -25,6 +25,15 @@ const OWNER_EMAIL = "tea@blueprintsandbookkeeping.com";
 const FROM_ADDRESS = "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
 
 router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
+  if (req.body?.website) {
+    res.status(201).json({
+      success: true,
+      message: "Thank you for your inquiry! We will be in touch within 48 hours.",
+      id: 0,
+    });
+    return;
+  }
+
   const parsed = SubmitContactFormBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });

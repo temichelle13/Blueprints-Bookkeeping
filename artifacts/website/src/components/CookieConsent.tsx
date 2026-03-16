@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Cookie, X } from "lucide-react";
+import { initAnalytics, trackPageview } from "@/lib/analytics";
 
 const CONSENT_KEY = "bb_cookie_consent";
 
@@ -20,7 +21,10 @@ export default function CookieConsent() {
 
   useEffect(() => {
     const consent = getCookieConsent();
-    if (!consent) {
+    if (consent === "accepted") {
+      initAnalytics();
+      trackPageview();
+    } else if (!consent) {
       const timer = setTimeout(() => setVisible(true), 1000);
       return () => clearTimeout(timer);
     }
@@ -28,6 +32,8 @@ export default function CookieConsent() {
 
   const handleAccept = () => {
     localStorage.setItem(CONSENT_KEY, "accepted");
+    initAnalytics();
+    trackPageview();
     setVisible(false);
     window.dispatchEvent(new Event("cookie-consent-changed"));
   };
@@ -54,9 +60,13 @@ export default function CookieConsent() {
           <div className="flex-1 min-w-0">
             <h2 className="text-white font-semibold text-sm mb-1">We value your privacy</h2>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              We use optional cookies for analytics and our AI chatbot assistant.
+              We use privacy-friendly analytics to understand how visitors use our site and optional cookies for our AI chatbot assistant.
+              No personal data is shared with third parties.
               Essential cookies required for site functionality are always active.
-              You can change your preference at any time.
+              You can change your preference at any time.{" "}
+              <a href={`${import.meta.env.BASE_URL}privacy`} className="text-accent hover:underline">
+                Privacy Policy
+              </a>
             </p>
           </div>
           <button

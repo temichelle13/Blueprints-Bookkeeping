@@ -13,13 +13,14 @@ const CHECKLIST_ITEMS = [
 
 export function LeadMagnetSection() {
   const [email, setEmail] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const { subscribe, isPending } = useNewsletterMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
-    const success = await subscribe({ email: email.trim(), signupSource: "lead_magnet" });
+    const success = await subscribe({ email: email.trim(), signupSource: "lead_magnet", website: honeypot });
     if (success) {
       setSubmitted(true);
       setEmail("");
@@ -98,6 +99,10 @@ export function LeadMagnetSection() {
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
+                      <div className="absolute opacity-0 h-0 w-0 overflow-hidden" aria-hidden="true" tabIndex={-1}>
+                        <label htmlFor="lm-website">Website</label>
+                        <input id="lm-website" type="text" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} tabIndex={-1} autoComplete="off" />
+                      </div>
                       <div>
                         <label htmlFor="lead-magnet-email" className="sr-only">Email address</label>
                         <input

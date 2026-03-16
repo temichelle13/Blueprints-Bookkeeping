@@ -1,14 +1,14 @@
-import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
-import { useSubmitContactForm, type ContactFormInput } from "@workspace/api-client-react";
+import { useSubmitContactForm } from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
+import { trackEvent } from "@/lib/analytics";
 
-// Exported schemas for React Hook Form validation
 export const quickContactSchema = z.object({
   formType: z.literal("quick"),
   name: z.string().min(2, "Name is required"),
   email: z.string().email("Valid email is required"),
   message: z.string().min(10, "Please provide a little more detail"),
+  website: z.string().optional(),
 });
 
 export const detailedContactSchema = z.object({
@@ -22,6 +22,7 @@ export const detailedContactSchema = z.object({
   monthlyRevenueRange: z.string().optional(),
   biggestChallenge: z.string().min(10, "Please describe your challenge"),
   preferredContactMethod: z.string().optional(),
+  website: z.string().optional(),
 });
 
 export type QuickContactValues = z.infer<typeof quickContactSchema>;
@@ -31,9 +32,11 @@ export function useContactMutation() {
   const { toast } = useToast();
   const mutation = useSubmitContactForm();
 
-  const submit = async (data: ContactFormInput): Promise<boolean> => {
+  const submit = async (data: QuickContactValues | DetailedContactValues): Promise<boolean> => {
     try {
-      await mutation.mutateAsync({ data });
+      const { website: _honeypot, ...formData } = data as any;
+      await mutation.mutateAsync({ data: { ...formData, website: _honeypot } as any });
+      trackEvent("Contact Form Submission", { form_type: data.formType });
       toast({
         title: "Inquiry Submitted",
         description: "Thank you for reaching out. We will be in touch shortly.",
