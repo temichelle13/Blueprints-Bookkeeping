@@ -51,8 +51,9 @@ The project is structured as a pnpm monorepo, separating deployable applications
 - **Design System**: Dark theme with deep navy-black background (plus light mode toggle), glassmorphism cards, gradient text, and glow accents.
 - **CSS**: Custom `.glass-card`, `.glass-card-hover`, and Tailwind `@layer utilities` for specific effects like glow-line, glow-dot, text-gradient, and accent-bar.
 - **Typography**: Inter (bold) for display, JetBrains Mono for tags.
-- **Key Pages**: Home, About, Services, Industries, Pricing, Portfolio, Blog, Contact, Client Portal, Unsubscribe, Welcome, Onboarding, Status, and 404.
-- **Navigation**: Header with BB icon (`public/logo-icon.png`) and skip-navigation link, simplified navigation (About, Services, Industries, Pricing, Portfolio, Blog) with ARIA landmarks, and a "Get Started" CTA.
+- **Key Pages**: Home, About, Services, Industries, Pricing, Portfolio, Blog, Resources, Contact, Client Portal, Unsubscribe, Welcome, Onboarding, Status, PaymentSuccess, and 404.
+- **Resources Library**: `/resources` page with 13 downloadable PDF templates across 4 categories (Bookkeeping, Business Planning, Crypto, Operations). Downloads gated behind email capture modal with session-based unlock. PDFs generated via `scripts/generate-pdfs.mjs` using pdfkit with brand colors and logo.
+- **Navigation**: Header with BB icon (`public/logo-icon.png`) and skip-navigation link, simplified navigation (About, Services, Industries, Pricing, Portfolio, Blog, Resources) with ARIA landmarks, and a "Get Started" CTA.
 - **SEO**: Comprehensive SEO meta tags (description, keywords, OG, Twitter cards, JSON-LD), `robots.txt`, `sitemap.xml`, and per-page title management.
 - **Analytics & Consent**: Plausible Analytics integration with cookie consent banner (Accept/Decline), route tracking, and conversion event tracking.
 - **Accessibility**: WCAG 2.1 AA compliant (skip-links, focus-visible styles, ARIA landmarks, heading hierarchy, programmatic labels, role="alert" for errors).

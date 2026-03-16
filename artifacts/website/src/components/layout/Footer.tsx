@@ -65,6 +65,7 @@ export function Footer() {
                 { label: "Blog", href: "/blog" },
                 { label: "Contact", href: "/contact" },
                 { label: "Client Results", href: "/results" },
+                { label: "Free Templates", href: "/resources" },
                 { label: "FAQ", href: "/faq" },
                 { label: "Tax Partner Network", href: "/tax-partners" },
                 { label: "Referral Program", href: "/referral" },
