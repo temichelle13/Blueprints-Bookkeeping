@@ -7,6 +7,12 @@ const app: Express = express();
 
 app.use(helmet());
 
+app.use((req, res, next) => {
+  res.setHeader("Sec-GPC", "1");
+  req.gpc = req.headers["sec-gpc"] === "1";
+  next();
+});
+
 const isProduction = process.env.NODE_ENV === "production";
 const corsOriginEnv = process.env.CORS_ORIGIN;
 

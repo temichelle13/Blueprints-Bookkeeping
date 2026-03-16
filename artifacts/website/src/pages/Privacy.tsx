@@ -82,7 +82,20 @@ export default function Privacy() {
           </section>
 
           <section>
-            <h2 className="text-white font-bold text-lg mb-3">9. Contact Us</h2>
+            <h2 className="text-white font-bold text-lg mb-3">9. Global Privacy Control (GPC)</h2>
+            <p className="mb-3">We respect the <a href="https://globalprivacycontrol.org/" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">Global Privacy Control (GPC)</a> signal. GPC is a browser-level setting that lets you tell websites you do not want your personal data sold or shared. When we detect the GPC signal from your browser, we treat it as a valid opt-out request and will not engage in any discretionary tracking or data sharing for your visit.</p>
+            <p className="mb-3">To enable GPC, you can use a supported browser or browser extension that sends the <code className="bg-white/10 px-1.5 py-0.5 rounded text-sm">Sec-GPC</code> header automatically. Supported options include:</p>
+            <ul className="list-disc list-inside space-y-1 pl-2">
+              <li>Firefox (built-in setting under Privacy & Security)</li>
+              <li>Brave (enabled by default)</li>
+              <li>DuckDuckGo browser and extension</li>
+              <li>Privacy Badger extension</li>
+            </ul>
+            <p className="mt-3">No action is needed beyond enabling GPC in your browser — our site automatically detects and honors the signal on every request.</p>
+          </section>
+
+          <section>
+            <h2 className="text-white font-bold text-lg mb-3">10. Contact Us</h2>
             <p>If you have questions about this Privacy Policy, please reach out:</p>
             <div className="mt-3 pl-4 border-l border-accent/30 space-y-1">
               <p>Blueprints & Bookkeeping LLC</p>
