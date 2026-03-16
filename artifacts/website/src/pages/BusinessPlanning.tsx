@@ -199,7 +199,7 @@ export default function BusinessPlanning() {
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Every business is different. We tailor each plan to your stage, industry,
-            and goals — whether you're launching, raising capital, or scaling.
+            and goals — whether you're launching, growing, or planning your next move.
           </p>
         </motion.div>
 
@@ -222,7 +222,7 @@ export default function BusinessPlanning() {
               <p className="text-muted-foreground text-[15px] mb-6">
                 {svc.description}
               </p>
-              <ul className="space-y-3 mt-auto">
+              <ul className="space-y-3 mb-6">
                 {svc.features.map((feat) => (
                   <li key={feat} className="flex items-start gap-3">
                     <CheckCircle2 className="w-4 h-4 text-accent shrink-0 mt-0.5" />
@@ -230,6 +230,15 @@ export default function BusinessPlanning() {
                   </li>
                 ))}
               </ul>
+              <div className="mt-auto">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-accent text-white text-sm font-semibold hover:bg-accent/90 transition-all duration-300"
+                >
+                  Book a Call to Get Started
+                  <ArrowRight size={14} />
+                </Link>
+              </div>
             </motion.div>
           ))}
         </div>
@@ -268,8 +277,8 @@ export default function BusinessPlanning() {
                     "500+ sample plans and benchmark data",
                     "Automatic financial statement generation",
                     "Real-time performance dashboards",
-                    "Lender-approved formatting and outputs",
-                    "Pitch-ready one-page plan summaries",
+                    "Professional formatting and polished outputs",
+                    "One-page executive summary exports",
                   ].map((benefit) => (
                     <div key={benefit} className="flex items-start gap-2">
                       <CheckCircle2 className="w-4 h-4 text-accent shrink-0 mt-0.5" />
