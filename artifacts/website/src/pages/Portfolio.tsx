@@ -32,6 +32,27 @@ const fadeUp = {
   viewport: { once: true },
 };
 
+const nationalSecurityCerts: CertEntry[] = [
+  {
+    name: "AI + AGI in National Security",
+    issuer: "Special Competitive Studies Project (SCSP)",
+    description: "Rare national security credential covering the geopolitical and strategic implications of AI and AGI — issued by the Special Competitive Studies Project, a US government-chartered advisory commission.",
+    badge: `${import.meta.env.BASE_URL}images/badge-scsp-national-security.png`,
+    color: "from-blue-600/10 to-indigo-700/5",
+    border: "border-blue-500/20",
+    url: "https://www.coursera.org/account/accomplishments/badge/5J6FiMaDQQ6ehYjGg7EOAQ",
+  },
+  {
+    name: "AI in National Security: Microcredential",
+    issuer: "Special Competitive Studies Project (SCSP)",
+    description: "Microcredential edition of the SCSP national security AI program — focused applied competencies for professionals working at the intersection of technology, intelligence, and policy.",
+    icon: ShieldCheck,
+    color: "from-blue-600/10 to-indigo-700/5",
+    border: "border-blue-500/20",
+    url: "https://www.coursera.org/account/accomplishments/records/TAIYT5DSJI1U",
+  },
+];
+
 const intuitCerts = [
   {
     name: "QuickBooks ProAdvisor — Level 1",
@@ -82,22 +103,22 @@ const intuitCerts = [
 
 const licensesAndTech: CertEntry[] = [
   {
-    name: "Ethical Hacking",
-    issuer: "PACKT",
-    description: "Cybersecurity training covering penetration testing, vulnerability assessment, and ethical hacking techniques — directly applied to client data protection and infrastructure security.",
+    name: "Certified Ethical Hacker (CEH) v12",
+    issuer: "Coursera / EC-Council",
+    description: "Three-course specialization covering ethical hacking reconnaissance, system hacking and malware analysis, advanced network attacks, web hacking, and cryptography — directly applied to client data protection.",
     icon: ShieldCheck,
     color: "from-red-500/10 to-rose-500/5",
     border: "border-red-500/20",
-    url: "https://www.credly.com/users/tealarson-hetrick",
+    url: "https://coursera.org/verify/specialization/AFOGOQ19VBCK",
   },
   {
-    name: "Cybersecurity Foundations",
-    issuer: "Microsoft",
-    description: "Microsoft-certified foundational cybersecurity training covering threat landscapes, security controls, identity management, and data protection best practices.",
+    name: "Foundations of Cybersecurity",
+    issuer: "Google",
+    description: "Google-certified cybersecurity training covering threat landscapes, security frameworks, network defense, and data protection best practices.",
     icon: ShieldCheck,
     color: "from-blue-500/10 to-sky-500/5",
     border: "border-blue-500/20",
-    url: "https://www.credly.com/users/tealarson-hetrick",
+    url: "https://www.coursera.org/account/accomplishments/verify/VJ3GY10M8X48",
   },
   {
     name: "Google AI Essentials",
@@ -107,6 +128,42 @@ const licensesAndTech: CertEntry[] = [
     color: "from-yellow-500/10 to-amber-500/5",
     border: "border-yellow-500/20",
     url: "https://www.credly.com/badges/97b2b906-189e-4921-ba7c-30f4f3334c8f/public_url",
+  },
+  {
+    name: "Foundations of Business Intelligence",
+    issuer: "Google",
+    description: "Google-certified BI training covering data modeling, dashboard design, stakeholder communication, and analytics-driven decision making.",
+    icon: Zap,
+    color: "from-yellow-500/10 to-amber-500/5",
+    border: "border-yellow-500/20",
+    url: "https://www.coursera.org/account/accomplishments/records/E8HX7LY389H8",
+  },
+  {
+    name: "Foundations of Project Management",
+    issuer: "Google",
+    description: "Google-certified project management training covering methodologies, stakeholder management, risk analysis, and Agile frameworks.",
+    icon: Award,
+    color: "from-yellow-500/10 to-amber-500/5",
+    border: "border-yellow-500/20",
+    url: "https://www.coursera.org/account/accomplishments/verify/NGLNBSGTPKQ4",
+  },
+  {
+    name: "Economics of Cloud Computing",
+    issuer: "Microsoft",
+    description: "Microsoft-certified training covering cloud economics, cost optimization, infrastructure-as-a-service models, and enterprise cloud migration strategy.",
+    icon: Zap,
+    color: "from-blue-500/10 to-sky-500/5",
+    border: "border-blue-500/20",
+    url: "https://learn.microsoft.com/api/achievements/share/en-us/tealarson-hetrick/2DMNZC8V?sharingId=3B49CB782E364529",
+  },
+  {
+    name: "Generative AI Fundamentals",
+    issuer: "Databricks",
+    description: "Databricks Academy accreditation covering large language models, generative AI architecture, prompt engineering, and responsible AI deployment.",
+    icon: Brain,
+    color: "from-red-500/10 to-orange-500/5",
+    border: "border-red-500/20",
+    url: "https://credentials.databricks.com/99d6ab70-bf88-49e2-a650-8d7c765fe00d",
   },
 ];
 
@@ -133,6 +190,30 @@ const specializedCerts = [
 
 const leadershipCerts = [
   {
+    title: "Exercising Leadership: Foundational Principles",
+    school: "HarvardX",
+    focus: "Leadership communication, influence, and executive presence.",
+    url: "https://courses.edx.org/certificates/04f26e09cd414470bebc4a9852865dba",
+  },
+  {
+    title: "Managing Emotions in Times of Uncertainty & Stress",
+    school: "Yale University",
+    focus: "Emotional intelligence and resilience frameworks for high-stakes professional environments.",
+    url: "https://www.coursera.org/account/accomplishments/certificate/7MPSBTXW624E",
+  },
+  {
+    title: "Intro to Psychology",
+    school: "Yale University",
+    focus: "Foundational psychology principles covering human behavior, cognition, emotion, and social dynamics.",
+    url: "https://coursera.org/share/e9d32ec91ee35b8ad28c00f99aa8dcd7",
+  },
+  {
+    title: "Strategic Innovation and Entrepreneurship",
+    school: "University of Illinois",
+    focus: "Innovation frameworks, entrepreneurial strategy, and growth-stage business planning.",
+    url: "https://www.coursera.org/account/accomplishments/records/MVW4VCQQQ9A2",
+  },
+  {
     title: "Organizational Management Professional",
     school: "Jack Welch Management Institute",
     focus: "Leadership strategy, organizational performance, and management excellence.",
@@ -143,21 +224,6 @@ const leadershipCerts = [
     focus: "Professional negotiation techniques, conflict resolution, and deal-making strategy.",
   },
   {
-    title: "Communications and Leadership",
-    school: "HarvardX",
-    focus: "Leadership communication, influence, and executive presence.",
-  },
-  {
-    title: "Intro to Psychology",
-    school: "Yale University",
-    focus: "Foundational psychology principles covering human behavior, cognition, emotion, and social dynamics.",
-  },
-  {
-    title: "Strategic Innovation and Entrepreneurship",
-    school: "University of Illinois",
-    focus: "Innovation frameworks, entrepreneurial strategy, and growth-stage business planning.",
-  },
-  {
     title: "Business Communications",
     school: "Dwayne University",
     focus: "Professional written and verbal communication in business contexts.",
@@ -166,6 +232,7 @@ const leadershipCerts = [
     title: "Software Engineer",
     school: "HackerRank",
     focus: "Software engineering skills assessment and certification.",
+    url: "https://www.hackerrank.com/certificates/1bcc726ea337",
   },
 ];
 
@@ -345,6 +412,52 @@ export default function Portfolio() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
         <motion.div {...fadeUp} className="mb-10">
           <div className="accent-bar mb-4" />
+          <h2 className="text-2xl font-display font-bold text-white">National Security & Strategic Intelligence</h2>
+          <p className="text-muted-foreground mt-2">Rare in the financial advisory sector — credentials that signal data discipline and macroeconomic awareness at the highest level.</p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {nationalSecurityCerts.map((cert, i) => (
+            <motion.a
+              key={cert.name}
+              href={cert.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.07 }}
+              className={`relative glass-card rounded-2xl p-7 border ${cert.border} overflow-hidden group hover:scale-[1.02] transition-all duration-200`}
+            >
+              <div className={`absolute inset-0 bg-gradient-to-br ${cert.color} pointer-events-none`} />
+              <div className="relative">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex-1 pr-3">
+                    <h3 className="text-base font-bold text-white mb-1 group-hover:text-accent transition-colors">{cert.name}</h3>
+                    <p className="text-sm text-accent font-medium">{cert.issuer}</p>
+                  </div>
+                  {"badge" in cert ? (
+                    <img src={(cert as CertWithBadge).badge} alt={cert.name} className="w-14 h-14 object-contain shrink-0" loading="lazy" />
+                  ) : (
+                    <div className="p-2.5 rounded-xl bg-white/[0.06] shrink-0">
+                      {(() => { const Icon = (cert as CertWithIcon).icon; return <Icon className="w-5 h-5 text-accent" />; })()}
+                    </div>
+                  )}
+                </div>
+                <p className="text-muted-foreground text-[14px] leading-relaxed">
+                  {cert.description}
+                </p>
+              </div>
+            </motion.a>
+          ))}
+        </div>
+      </section>
+
+      <div className="glow-line max-w-5xl mx-auto" />
+
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+        <motion.div {...fadeUp} className="mb-10">
+          <div className="accent-bar mb-4" />
           <h2 className="text-2xl font-display font-bold text-white">QuickBooks & Intuit Certifications</h2>
           <p className="text-muted-foreground mt-2">Intuit-certified across bookkeeping, tax, crypto, and advisory services.</p>
         </motion.div>
@@ -392,8 +505,8 @@ export default function Portfolio() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-20">
         <motion.div {...fadeUp} className="mb-10">
           <div className="accent-bar mb-4" />
-          <h2 className="text-2xl font-display font-bold text-white">Licenses, Technology & Security</h2>
-          <p className="text-muted-foreground mt-2">State-licensed notary, cybersecurity-trained, and current on AI tools.</p>
+          <h2 className="text-2xl font-display font-bold text-white">Technology & Security</h2>
+          <p className="text-muted-foreground mt-2">Cybersecurity-trained, cloud-certified, and current on AI tools.</p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -443,25 +556,49 @@ export default function Portfolio() {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {leadershipCerts.map((cert, i) => (
-            <motion.div
-              key={cert.school + cert.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className="glass-card rounded-2xl p-7 flex gap-5"
-            >
-              <div className="p-3 rounded-xl bg-accent/10 text-accent h-fit shrink-0">
-                <Award className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="text-base font-bold text-white mb-1">{cert.title}</h3>
-                <p className="text-accent text-sm font-medium mb-3">{cert.school}</p>
-                <p className="text-muted-foreground text-[14px] leading-relaxed">{cert.focus}</p>
-              </div>
-            </motion.div>
-          ))}
+          {leadershipCerts.map((cert, i) => {
+            const inner = (
+              <>
+                <div className="p-3 rounded-xl bg-accent/10 text-accent h-fit shrink-0">
+                  <Award className="w-6 h-6" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <h3 className="text-base font-bold text-white group-hover:text-accent transition-colors">{cert.title}</h3>
+                    {cert.url && <ExternalLink className="w-3.5 h-3.5 text-muted-foreground group-hover:text-accent transition-colors shrink-0" />}
+                  </div>
+                  <p className="text-accent text-sm font-medium mb-3">{cert.school}</p>
+                  <p className="text-muted-foreground text-[14px] leading-relaxed">{cert.focus}</p>
+                </div>
+              </>
+            );
+            return cert.url ? (
+              <motion.a
+                key={cert.school + cert.title}
+                href={cert.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className="glass-card rounded-2xl p-7 flex gap-5 group hover:scale-[1.02] transition-all duration-200"
+              >
+                {inner}
+              </motion.a>
+            ) : (
+              <motion.div
+                key={cert.school + cert.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className="glass-card rounded-2xl p-7 flex gap-5 group"
+              >
+                {inner}
+              </motion.div>
+            );
+          })}
         </div>
 
         <motion.div
