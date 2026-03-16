@@ -1,6 +1,7 @@
 import { Award, Shield, Fingerprint, BrainCircuit, GraduationCap, BadgeCheck } from "lucide-react";
 import { Link } from "wouter";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { CredentialBadgeStrip } from "@/components/TrustSignals";
 
 export default function About() {
   usePageTitle("About Tea Larson-Hetrick");
@@ -119,6 +120,10 @@ export default function About() {
           </Link>
         </div>
       </section>
+
+      <div className="glow-line max-w-5xl mx-auto" />
+
+      <CredentialBadgeStrip />
     </div>
   );
 }

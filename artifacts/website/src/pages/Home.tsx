@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, BookOpen, Calculator, ShieldCheck, Clock, Users, Sparkles } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { LeadMagnetSection } from "@/components/LeadMagnet";
+import { StatsProofBar, CredentialBadgeStrip, GoogleReviewsCallout, FeaturedInPlaceholder } from "@/components/TrustSignals";
 
 export default function Home() {
   usePageTitle();
@@ -76,6 +77,10 @@ export default function Home() {
 
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
       </section>
+
+      <StatsProofBar />
+
+      <div className="glow-line max-w-5xl mx-auto" />
 
       <section className="py-28 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -254,6 +259,16 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <div className="glow-line max-w-5xl mx-auto" />
+
+      <CredentialBadgeStrip compact />
+
+      <div className="glow-line max-w-5xl mx-auto" />
+
+      <GoogleReviewsCallout />
+
+      <FeaturedInPlaceholder />
 
       <div className="glow-line max-w-5xl mx-auto" />
 

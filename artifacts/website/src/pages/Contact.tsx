@@ -9,6 +9,7 @@ import {
   type DetailedContactValues
 } from "@/hooks/use-contact";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { GoogleReviewsCallout } from "@/components/TrustSignals";
 
 export default function Contact() {
   usePageTitle("Contact Us");
@@ -70,6 +71,8 @@ export default function Contact() {
           </div>
         </div>
       </section>
+
+      <GoogleReviewsCallout />
     </div>
   );
 }

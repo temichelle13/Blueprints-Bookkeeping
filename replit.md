@@ -11,6 +11,7 @@ Key capabilities include:
 - Stripe integration for self-service subscription payments.
 - SEO optimization for discoverability.
 - Newsletter and lead magnet functionality for client engagement.
+- Integration with a PostgreSQL database using Drizzle ORM for data persistence.
 
 # User Preferences
 
@@ -18,6 +19,11 @@ Key capabilities include:
 - Pricing uses "starting at" ranges only.
 - Firm is capped at 20 active clients — emphasize scarcity/exclusivity.
 - About page: degrees are COURSEWORK/STUDIES only (not completed). Professional certs ARE earned.
+- I prefer concise and direct communication.
+- I value iterative development and clear explanations of proposed changes.
+- Please ask for my confirmation before implementing significant architectural changes or major feature additions.
+- Ensure all code is well-documented and follows TypeScript best practices.
+- Do not make changes to the existing branding guidelines, including primary and secondary colors, theme, and font stack, without explicit approval.
 
 # System Architecture
 
@@ -26,7 +32,7 @@ Key capabilities include:
 The project is organized as a pnpm workspace monorepo with separate `artifacts` (deployable applications) and `lib` (shared libraries) directories.
 - **`artifacts/api-server`**: Express API server handling business logic, database interactions, and external API integrations.
 - **`artifacts/website`**: React + Vite frontend for the Blueprints & Bookkeeping public site and client portal.
-- **`lib/api-spec`**: Manages OpenAPI specification and codegen for API clients and Zod schemas.
+- **`lib/api-spec`**: Manages OpenAPI specification and codegen for API clients and Zod schemas using Orval.
 - **`lib/api-client-react`**: Generated React Query hooks for frontend API interaction.
 - **`lib/api-zod`**: Generated Zod schemas for API request/response validation.
 - **`lib/db`**: Drizzle ORM setup for PostgreSQL database interactions.
