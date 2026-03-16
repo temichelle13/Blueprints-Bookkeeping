@@ -106,30 +106,47 @@ const licensesAndTech = [
 
 const leadershipCerts = [
   {
-    degree: "Organizational Management Professional",
+    title: "Organizational Management Professional",
     school: "Jack Welch Management Institute",
-    focus: "Leadership strategy, organizational performance, and management excellence based on the Jack Welch framework.",
+    focus: "Leadership strategy, organizational performance, and management excellence.",
   },
   {
-    degree: "American Negotiation Professional",
+    title: "American Negotiation Professional",
     school: "American Negotiation Institute",
     focus: "Professional negotiation techniques, conflict resolution, and deal-making strategy.",
   },
   {
-    degree: "Communications and Leadership",
+    title: "Communications and Leadership",
     school: "HarvardX",
-    focus: "Leadership communication, influence, and executive presence from Harvard's online platform.",
+    focus: "Leadership communication, influence, and executive presence.",
   },
   {
-    degree: "Strategic Innovation and Entrepreneurship",
+    title: "Intro to Psychology",
+    school: "Yale University",
+    focus: "Foundational psychology principles covering human behavior, cognition, emotion, and social dynamics.",
+  },
+  {
+    title: "Strategic Innovation and Entrepreneurship",
     school: "University of Illinois",
     focus: "Innovation frameworks, entrepreneurial strategy, and growth-stage business planning.",
   },
   {
-    degree: "Business Communications",
+    title: "Business Communications",
     school: "Dwayne University",
     focus: "Professional written and verbal communication in business contexts.",
   },
+  {
+    title: "Software Engineer",
+    school: "HackerRank",
+    focus: "Software engineering skills assessment and certification.",
+  },
+];
+
+const academicStudies = [
+  "Business",
+  "Equine Science",
+  "Psychology",
+  "Communications",
 ];
 
 export default function Portfolio() {
@@ -139,7 +156,7 @@ export default function Portfolio() {
     <div className="pt-24 pb-20">
       <SEO
         title="Credentials & Certifications"
-        description="Tea Larson-Hetrick's professional certifications, licenses, and continuing education — QuickBooks ProAdvisor, Certified Bookkeeping Professional, Oregon Notary, and more."
+        description="Tea Larson-Hetrick's professional certifications, licenses, and education — QuickBooks ProAdvisor Level 1 & 2, Certified Bookkeeping Professional, Oregon Notary, HarvardX, Yale, and more."
         path="/portfolio"
       />
 
@@ -251,13 +268,13 @@ export default function Portfolio() {
         <motion.div {...fadeUp} className="mb-10">
           <div className="accent-bar mb-4" />
           <h2 className="text-2xl font-display font-bold text-white">Leadership & Professional Development</h2>
-          <p className="text-muted-foreground mt-2">Certifications and coursework in management, communication, strategy, and negotiation.</p>
+          <p className="text-muted-foreground mt-2">Certifications in management, communication, strategy, and negotiation.</p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {leadershipCerts.map((ed, i) => (
+          {leadershipCerts.map((cert, i) => (
             <motion.div
-              key={ed.school + ed.degree}
+              key={cert.school + cert.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -268,9 +285,9 @@ export default function Portfolio() {
                 <Award className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-white mb-1">{ed.degree}</h3>
-                <p className="text-accent text-sm font-medium mb-3">{ed.school}</p>
-                <p className="text-muted-foreground text-[14px] leading-relaxed">{ed.focus}</p>
+                <h3 className="text-base font-bold text-white mb-1">{cert.title}</h3>
+                <p className="text-accent text-sm font-medium mb-3">{cert.school}</p>
+                <p className="text-muted-foreground text-[14px] leading-relaxed">{cert.focus}</p>
               </div>
             </motion.div>
           ))}
@@ -287,6 +304,32 @@ export default function Portfolio() {
             Additional certifications are being compiled and will be added here shortly.
           </p>
         </motion.div>
+      </section>
+
+      <div className="glow-line max-w-5xl mx-auto" />
+
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-20">
+        <motion.div {...fadeUp} className="mb-10">
+          <div className="accent-bar mb-4" />
+          <h2 className="text-2xl font-display font-bold text-white">Academic Background</h2>
+          <p className="text-muted-foreground mt-2">Areas of study across multiple institutions.</p>
+        </motion.div>
+
+        <div className="flex flex-wrap gap-4">
+          {academicStudies.map((subject, i) => (
+            <motion.div
+              key={subject}
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.08 }}
+              className="glass-card rounded-xl px-6 py-4 flex items-center gap-3"
+            >
+              <div className="w-2 h-2 rounded-full bg-accent shrink-0" />
+              <p className="text-foreground font-medium text-[15px]">{subject}</p>
+            </motion.div>
+          ))}
+        </div>
       </section>
 
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
