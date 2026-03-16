@@ -14,6 +14,7 @@ export default function Home() {
           <img
             src={`${import.meta.env.BASE_URL}images/hero-bg.png`}
             alt=""
+            aria-hidden="true"
             className="w-full h-full object-cover opacity-30"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/70 to-background" />
@@ -149,7 +150,7 @@ export default function Home() {
                       {item.icon}
                     </div>
                     <div>
-                      <h4 className="font-bold text-white text-[15px] mb-1">{item.title}</h4>
+                      <h3 className="font-bold text-white text-[15px] mb-1">{item.title}</h3>
                       <p className="text-muted-foreground text-[15px] leading-relaxed">{item.desc}</p>
                     </div>
                   </div>

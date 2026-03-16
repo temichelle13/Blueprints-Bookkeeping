@@ -222,6 +222,7 @@ export default function ChatWidget() {
               </div>
               <button
                 onClick={() => setOpen(false)}
+                aria-label="Minimize chat"
                 style={{
                   background: "rgba(255,255,255,0.15)",
                   border: "none",
@@ -387,8 +388,10 @@ export default function ChatWidget() {
                 background: "#161B2E",
               }}
             >
+              <label htmlFor="chat-input" className="sr-only">Chat message</label>
               <textarea
                 ref={inputRef}
+                id="chat-input"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
@@ -417,6 +420,7 @@ export default function ChatWidget() {
               <button
                 onClick={sendMessage}
                 disabled={!input.trim() || loading}
+                aria-label="Send message"
                 style={{
                   width: 40,
                   height: 40,
@@ -533,6 +537,8 @@ export default function ChatWidget() {
 
         <button
           onClick={() => setOpen((v) => !v)}
+          aria-label={open ? "Close chat" : "Open chat with Aria"}
+          aria-expanded={open}
           style={{
             width: 56,
             height: 56,

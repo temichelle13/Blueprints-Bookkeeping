@@ -21,15 +21,15 @@ export function Footer() {
             </p>
             <div className="flex flex-col gap-3 text-sm">
               <a href="mailto:tea@blueprintsandbookkeeping.com" className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-colors">
-                <Mail size={15} className="text-accent/60" />
+                <Mail size={15} className="text-accent/60" aria-hidden="true" />
                 tea@blueprintsandbookkeeping.com
               </a>
               <a href="tel:+15413198654" className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-colors">
-                <Phone size={15} className="text-accent/60" />
+                <Phone size={15} className="text-accent/60" aria-hidden="true" />
                 (541) 319-8654
               </a>
               <div className="flex items-center gap-3 text-muted-foreground">
-                <MapPin size={15} className="text-accent/60" />
+                <MapPin size={15} className="text-accent/60" aria-hidden="true" />
                 Roseburg, Oregon (Remote Nationwide)
               </div>
             </div>

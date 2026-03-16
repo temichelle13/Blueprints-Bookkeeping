@@ -39,21 +39,21 @@ export default function Contact() {
               <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-6">Direct Channels</h3>
               <div className="space-y-5">
                 <div className="flex items-center gap-4">
-                  <div className="p-2.5 bg-accent/10 rounded-lg text-accent"><Mail size={18} /></div>
+                  <div className="p-2.5 bg-accent/10 rounded-lg text-accent" aria-hidden="true"><Mail size={18} /></div>
                   <div>
                     <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-mono">Email</p>
                     <a href="mailto:tea@blueprintsandbookkeeping.com" className="font-medium text-foreground hover:text-accent transition-colors text-sm">tea@blueprintsandbookkeeping.com</a>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="p-2.5 bg-accent/10 rounded-lg text-accent"><Phone size={18} /></div>
+                  <div className="p-2.5 bg-accent/10 rounded-lg text-accent" aria-hidden="true"><Phone size={18} /></div>
                   <div>
                     <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-mono">Phone</p>
                     <a href="tel:+15413198654" className="font-medium text-foreground hover:text-accent transition-colors text-sm">(541) 319-8654</a>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="p-2.5 bg-accent/10 rounded-lg text-accent"><MapPin size={18} /></div>
+                  <div className="p-2.5 bg-accent/10 rounded-lg text-accent" aria-hidden="true"><MapPin size={18} /></div>
                   <div>
                     <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-mono">Location</p>
                     <p className="font-medium text-foreground text-sm">Roseburg, Oregon (Remote US)</p>
@@ -91,23 +91,26 @@ function QuickContactForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
-        <input {...register("name")} placeholder="Name" className={inputClass} />
-        {errors.name && <span className="text-destructive text-xs mt-1">{errors.name.message}</span>}
+        <label htmlFor="quick-name" className="sr-only">Name</label>
+        <input {...register("name")} id="quick-name" placeholder="Name" className={inputClass} aria-describedby={errors.name ? "quick-name-error" : undefined} />
+        {errors.name && <span id="quick-name-error" role="alert" className="text-destructive text-xs mt-1 block">{errors.name.message}</span>}
       </div>
       <div>
-        <input {...register("email")} placeholder="Email Address" type="email" className={inputClass} />
-        {errors.email && <span className="text-destructive text-xs mt-1">{errors.email.message}</span>}
+        <label htmlFor="quick-email" className="sr-only">Email Address</label>
+        <input {...register("email")} id="quick-email" placeholder="Email Address" type="email" className={inputClass} aria-describedby={errors.email ? "quick-email-error" : undefined} />
+        {errors.email && <span id="quick-email-error" role="alert" className="text-destructive text-xs mt-1 block">{errors.email.message}</span>}
       </div>
       <div>
-        <textarea {...register("message")} placeholder="How can we help?" rows={4} className={`${inputClass} resize-none`} />
-        {errors.message && <span className="text-destructive text-xs mt-1">{errors.message.message}</span>}
+        <label htmlFor="quick-message" className="sr-only">Message</label>
+        <textarea {...register("message")} id="quick-message" placeholder="How can we help?" rows={4} className={`${inputClass} resize-none`} aria-describedby={errors.message ? "quick-message-error" : undefined} />
+        {errors.message && <span id="quick-message-error" role="alert" className="text-destructive text-xs mt-1 block">{errors.message.message}</span>}
       </div>
       <button
         type="submit"
         disabled={isPending}
         className="w-full py-3 bg-accent text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-accent/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
-        <Send size={16} />
+        <Send size={16} aria-hidden="true" />
         {isPending ? "Sending..." : "Send Message"}
       </button>
     </form>
@@ -133,33 +136,33 @@ function DetailedIntakeForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className={labelClass}>Your Name *</label>
-          <input {...register("name")} className={inputClass} />
-          {errors.name && <span className="text-destructive text-xs mt-1">{errors.name.message}</span>}
+          <label htmlFor="detail-name" className={labelClass}>Your Name *</label>
+          <input {...register("name")} id="detail-name" className={inputClass} aria-describedby={errors.name ? "detail-name-error" : undefined} />
+          {errors.name && <span id="detail-name-error" role="alert" className="text-destructive text-xs mt-1 block">{errors.name.message}</span>}
         </div>
         <div>
-          <label className={labelClass}>Business Name *</label>
-          <input {...register("businessName")} className={inputClass} />
-          {errors.businessName && <span className="text-destructive text-xs mt-1">{errors.businessName.message}</span>}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className={labelClass}>Email Address *</label>
-          <input {...register("email")} type="email" className={inputClass} />
-          {errors.email && <span className="text-destructive text-xs mt-1">{errors.email.message}</span>}
-        </div>
-        <div>
-          <label className={labelClass}>Phone Number</label>
-          <input {...register("phone")} type="tel" className={inputClass} />
+          <label htmlFor="detail-business" className={labelClass}>Business Name *</label>
+          <input {...register("businessName")} id="detail-business" className={inputClass} aria-describedby={errors.businessName ? "detail-business-error" : undefined} />
+          {errors.businessName && <span id="detail-business-error" role="alert" className="text-destructive text-xs mt-1 block">{errors.businessName.message}</span>}
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className={labelClass}>Industry *</label>
-          <select {...register("industry")} className={inputClass}>
+          <label htmlFor="detail-email" className={labelClass}>Email Address *</label>
+          <input {...register("email")} id="detail-email" type="email" className={inputClass} aria-describedby={errors.email ? "detail-email-error" : undefined} />
+          {errors.email && <span id="detail-email-error" role="alert" className="text-destructive text-xs mt-1 block">{errors.email.message}</span>}
+        </div>
+        <div>
+          <label htmlFor="detail-phone" className={labelClass}>Phone Number</label>
+          <input {...register("phone")} id="detail-phone" type="tel" className={inputClass} />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label htmlFor="detail-industry" className={labelClass}>Industry *</label>
+          <select {...register("industry")} id="detail-industry" className={inputClass} aria-describedby={errors.industry ? "detail-industry-error" : undefined}>
             <option value="">Select an industry...</option>
             <option value="Agriculture & Timber">Agriculture & Timber</option>
             <option value="Crypto/Digital Assets">Crypto / Digital Assets</option>
@@ -168,11 +171,11 @@ function DetailedIntakeForm() {
             <option value="Real Estate/Multi-Entity">Real Estate / Holding</option>
             <option value="Other">Other</option>
           </select>
-          {errors.industry && <span className="text-destructive text-xs mt-1">{errors.industry.message}</span>}
+          {errors.industry && <span id="detail-industry-error" role="alert" className="text-destructive text-xs mt-1 block">{errors.industry.message}</span>}
         </div>
         <div>
-          <label className={labelClass}>Avg. Monthly Revenue</label>
-          <select {...register("monthlyRevenueRange")} className={inputClass}>
+          <label htmlFor="detail-revenue" className={labelClass}>Avg. Monthly Revenue</label>
+          <select {...register("monthlyRevenueRange")} id="detail-revenue" className={inputClass}>
             <option value="">Select range...</option>
             <option value="Pre-revenue">Pre-revenue</option>
             <option value="$1k - $10k">$1k - $10k</option>
@@ -201,13 +204,13 @@ function DetailedIntakeForm() {
             </label>
           ))}
         </div>
-        {errors.servicesInterested && <span className="text-destructive text-xs mt-1 block">{errors.servicesInterested.message}</span>}
+        {errors.servicesInterested && <span role="alert" className="text-destructive text-xs mt-1 block">{errors.servicesInterested.message}</span>}
       </div>
 
       <div>
-        <label className={labelClass}>What is your biggest operational challenge right now? *</label>
-        <textarea {...register("biggestChallenge")} rows={4} className={`${inputClass} resize-none`} />
-        {errors.biggestChallenge && <span className="text-destructive text-xs mt-1">{errors.biggestChallenge.message}</span>}
+        <label htmlFor="detail-challenge" className={labelClass}>What is your biggest operational challenge right now? *</label>
+        <textarea {...register("biggestChallenge")} id="detail-challenge" rows={4} className={`${inputClass} resize-none`} aria-describedby={errors.biggestChallenge ? "detail-challenge-error" : undefined} />
+        {errors.biggestChallenge && <span id="detail-challenge-error" role="alert" className="text-destructive text-xs mt-1 block">{errors.biggestChallenge.message}</span>}
       </div>
 
       <button
@@ -215,7 +218,7 @@ function DetailedIntakeForm() {
         disabled={isPending}
         className="px-8 py-4 bg-accent text-white font-bold text-lg rounded-xl hover:shadow-xl hover:shadow-accent/20 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center gap-2"
       >
-        <Send size={18} />
+        <Send size={18} aria-hidden="true" />
         {isPending ? "Submitting Application..." : "Submit Discovery Application"}
       </button>
     </form>

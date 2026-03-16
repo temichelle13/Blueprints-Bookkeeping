@@ -367,28 +367,38 @@ export default function GetStarted() {
           ) : (
             <form onSubmit={handleOtherSubmit} className="space-y-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input
-                  type="text"
-                  placeholder="Your name (optional)"
-                  value={otherName}
-                  onChange={(e) => setOtherName(e.target.value)}
-                  className={inputClass}
-                  style={inputStyle}
-                  onFocus={(e) => Object.assign(e.currentTarget.style, inputFocusStyle)}
-                  onBlur={(e) => Object.assign(e.currentTarget.style, inputStyle)}
-                />
-                <input
-                  type="email"
-                  placeholder="Your email (so Tea can reply)"
-                  value={otherEmail}
-                  onChange={(e) => setOtherEmail(e.target.value)}
-                  className={inputClass}
-                  style={inputStyle}
-                  onFocus={(e) => Object.assign(e.currentTarget.style, inputFocusStyle)}
-                  onBlur={(e) => Object.assign(e.currentTarget.style, inputStyle)}
-                />
+                <div>
+                  <label htmlFor="gs-other-name" className="sr-only">Your name (optional)</label>
+                  <input
+                    id="gs-other-name"
+                    type="text"
+                    placeholder="Your name (optional)"
+                    value={otherName}
+                    onChange={(e) => setOtherName(e.target.value)}
+                    className={inputClass}
+                    style={inputStyle}
+                    onFocus={(e) => Object.assign(e.currentTarget.style, inputFocusStyle)}
+                    onBlur={(e) => Object.assign(e.currentTarget.style, inputStyle)}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="gs-other-email" className="sr-only">Your email</label>
+                  <input
+                    id="gs-other-email"
+                    type="email"
+                    placeholder="Your email (so Tea can reply)"
+                    value={otherEmail}
+                    onChange={(e) => setOtherEmail(e.target.value)}
+                    className={inputClass}
+                    style={inputStyle}
+                    onFocus={(e) => Object.assign(e.currentTarget.style, inputFocusStyle)}
+                    onBlur={(e) => Object.assign(e.currentTarget.style, inputStyle)}
+                  />
+                </div>
               </div>
+              <label htmlFor="gs-other-message" className="sr-only">Describe your situation</label>
               <textarea
+                id="gs-other-message"
                 placeholder="Describe your situation — business type, what you need, any questions. No right or wrong answer."
                 value={otherMessage}
                 onChange={(e) => setOtherMessage(e.target.value)}
@@ -399,7 +409,7 @@ export default function GetStarted() {
                 onFocus={(e) => Object.assign(e.currentTarget.style, { ...inputStyle, ...inputFocusStyle })}
                 onBlur={(e) => Object.assign(e.currentTarget.style, inputStyle)}
               />
-              {error && <p className="text-red-400 text-xs">{error}</p>}
+              {error && <p role="alert" className="text-red-400 text-xs">{error}</p>}
               <button
                 type="submit"
                 disabled={submitting || !otherMessage.trim()}

@@ -28,7 +28,9 @@ export function FooterNewsletterSignup() {
 
   return (
     <form onSubmit={handleSubmit} className="flex gap-2">
+      <label htmlFor="footer-newsletter-email" className="sr-only">Email address</label>
       <input
+        id="footer-newsletter-email"
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
@@ -41,7 +43,7 @@ export function FooterNewsletterSignup() {
         disabled={isPending}
         className="shrink-0 px-4 py-2.5 bg-accent/15 border border-accent/30 text-accent font-semibold text-sm rounded-lg hover:bg-accent hover:text-white hover:border-accent transition-all duration-300 disabled:opacity-50 flex items-center gap-1.5"
       >
-        {isPending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+        {isPending ? <Loader2 size={14} className="animate-spin" aria-hidden="true" /> : <Send size={14} aria-hidden="true" />}
         Subscribe
       </button>
     </form>

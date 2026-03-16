@@ -99,7 +99,9 @@ export function LeadMagnetSection() {
 
                     <form onSubmit={handleSubmit} className="space-y-4">
                       <div>
+                        <label htmlFor="lead-magnet-email" className="sr-only">Email address</label>
                         <input
+                          id="lead-magnet-email"
                           type="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}

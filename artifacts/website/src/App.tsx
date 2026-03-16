@@ -9,6 +9,7 @@ import { usePageTracking } from "./hooks/usePageTracking";
 
 import { Header } from "./components/layout/Header";
 import ChatWidget from "./components/ChatWidget";
+import CookieConsent, { hasAcceptedCookies } from "./components/CookieConsent";
 import { Footer } from "./components/layout/Footer";
 
 import Home from "./pages/Home";
@@ -81,7 +82,7 @@ function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow">
+      <main id="main-content" className="flex-grow">
         <PageTransition>{children}</PageTransition>
       </main>
       <Footer />
@@ -126,6 +127,19 @@ function Router() {
   );
 }
 
+function ConsentAwareChatWidget() {
+  const [allowed, setAllowed] = useState(hasAcceptedCookies());
+
+  useEffect(() => {
+    const handler = () => setAllowed(hasAcceptedCookies());
+    window.addEventListener("cookie-consent-changed", handler);
+    return () => window.removeEventListener("cookie-consent-changed", handler);
+  }, []);
+
+  if (!allowed) return null;
+  return <ChatWidget />;
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -134,7 +148,8 @@ function App() {
           <Router />
         </WouterRouter>
         <Toaster />
-        <ChatWidget />
+        <ConsentAwareChatWidget />
+        <CookieConsent />
       </TooltipProvider>
     </QueryClientProvider>
   );

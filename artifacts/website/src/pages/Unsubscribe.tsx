@@ -67,7 +67,9 @@ export default function Unsubscribe() {
                 Enter your email address to unsubscribe from our newsletter.
               </p>
               <form onSubmit={handleSubmit} className="space-y-4">
+                <label htmlFor="unsub-email" className="sr-only">Email address</label>
                 <input
+                  id="unsub-email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}

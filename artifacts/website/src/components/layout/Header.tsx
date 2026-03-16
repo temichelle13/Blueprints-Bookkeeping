@@ -31,6 +31,10 @@ export function Header() {
   }, [location]);
 
   return (
+    <>
+    <a href="#main-content" className="skip-nav">
+      Skip to main content
+    </a>
     <header
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
@@ -53,7 +57,7 @@ export function Header() {
             </span>
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-1" aria-label="Main navigation">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
@@ -80,7 +84,8 @@ export function Header() {
           <button
             className="lg:hidden p-2 text-muted-foreground hover:text-white transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -88,7 +93,7 @@ export function Header() {
       </div>
 
       {mobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 right-0 bg-card/95 backdrop-blur-xl border-b border-white/[0.06] py-4 px-4 flex flex-col gap-1">
+        <nav className="lg:hidden absolute top-full left-0 right-0 bg-card/95 backdrop-blur-xl border-b border-white/[0.06] py-4 px-4 flex flex-col gap-1" aria-label="Mobile navigation">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
@@ -107,8 +112,9 @@ export function Header() {
           >
             Get Started
           </Link>
-        </div>
+        </nav>
       )}
     </header>
+    </>
   );
 }

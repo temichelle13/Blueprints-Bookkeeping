@@ -38,12 +38,12 @@ export default function About() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
             <div className="glass-card rounded-xl p-6 group hover:border-accent/20 transition-all">
               <BrainCircuit className="w-7 h-7 text-accent mb-4" />
-              <h4 className="font-bold text-white mb-2 text-[15px]">Technical Depth</h4>
+              <h3 className="font-bold text-white mb-2 text-[15px]">Technical Depth</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">Comfortably managing crypto-assets, multi-location structures, and SBA-ready forecasts.</p>
             </div>
             <div className="glass-card rounded-xl p-6 group hover:border-accent/20 transition-all">
               <Fingerprint className="w-7 h-7 text-accent mb-4" />
-              <h4 className="font-bold text-white mb-2 text-[15px]">Data Security First</h4>
+              <h3 className="font-bold text-white mb-2 text-[15px]">Data Security First</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">As a CEH v12, your sensitive data is protected by enterprise-grade security. No offshore labor, ever.</p>
             </div>
           </div>

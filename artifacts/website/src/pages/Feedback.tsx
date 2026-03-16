@@ -126,8 +126,8 @@ export default function Feedback() {
           }}
         >
           {status === "error" && (
-            <div className="flex items-start gap-3 mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20">
-              <AlertCircle size={18} className="text-red-400 shrink-0 mt-0.5" />
+            <div role="alert" className="flex items-start gap-3 mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20">
+              <AlertCircle size={18} className="text-red-400 shrink-0 mt-0.5" aria-hidden="true" />
               <p className="text-red-300 text-sm">{errorMsg}</p>
             </div>
           )}
@@ -135,10 +135,11 @@ export default function Feedback() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <label className="block text-sm font-medium text-muted-foreground mb-2">
+                <label htmlFor="feedback-name" className="block text-sm font-medium text-muted-foreground mb-2">
                   Your Name <span className="text-muted-foreground/50">(optional)</span>
                 </label>
                 <input
+                  id="feedback-name"
                   type="text"
                   className={inputClass}
                   placeholder="Jane Smith"
@@ -147,10 +148,11 @@ export default function Feedback() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-muted-foreground mb-2">
+                <label htmlFor="feedback-email" className="block text-sm font-medium text-muted-foreground mb-2">
                   Email <span className="text-muted-foreground/50">(optional)</span>
                 </label>
                 <input
+                  id="feedback-email"
                   type="email"
                   className={inputClass}
                   placeholder="jane@example.com"
@@ -161,11 +163,12 @@ export default function Feedback() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-muted-foreground mb-2">
+              <label htmlFor="feedback-category" className="block text-sm font-medium text-muted-foreground mb-2">
                 What type of feedback is this?
               </label>
               <div className="relative">
                 <select
+                  id="feedback-category"
                   className={`${inputClass} appearance-none pr-10 cursor-pointer`}
                   value={form.category}
                   onChange={(e) => set("category", e.target.value)}
@@ -185,11 +188,12 @@ export default function Feedback() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-muted-foreground mb-2">
+              <label htmlFor="feedback-page" className="block text-sm font-medium text-muted-foreground mb-2">
                 Which page or area? <span className="text-muted-foreground/50">(optional)</span>
               </label>
               <div className="relative">
                 <select
+                  id="feedback-page"
                   className={`${inputClass} appearance-none pr-10 cursor-pointer`}
                   value={form.page}
                   onChange={(e) => set("page", e.target.value)}
@@ -209,10 +213,11 @@ export default function Feedback() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-muted-foreground mb-2">
+              <label htmlFor="feedback-description" className="block text-sm font-medium text-muted-foreground mb-2">
                 Describe the issue
               </label>
               <textarea
+                id="feedback-description"
                 className={inputClass}
                 rows={5}
                 placeholder="Tell us what happened, what you expected, or what you'd like to see changed…"
