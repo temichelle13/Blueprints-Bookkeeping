@@ -45,25 +45,24 @@ export function StatsProofBar() {
   const stats = [
     {
       icon: <Users className="w-6 h-6" />,
-      value: 15,
-      suffix: "+",
-      label: "Founders Funded",
-      description: "SBA & investor-backed",
-    },
-    {
-      icon: <TrendingUp className="w-6 h-6" />,
-      value: 2,
-      suffix: "M+",
-      prefix: "$",
-      label: "Lender-Ready Financials",
-      description: "Delivered to underwriters",
-    },
-    {
-      icon: <ShieldCheck className="w-6 h-6" />,
       value: 20,
       suffix: "",
       label: "Client Maximum",
-      description: "Always available",
+      description: "Small roster, full attention",
+    },
+    {
+      icon: <TrendingUp className="w-6 h-6" />,
+      value: 365,
+      suffix: "",
+      label: "Days a Year",
+      description: "No seasonal blackouts",
+    },
+    {
+      icon: <ShieldCheck className="w-6 h-6" />,
+      value: 3,
+      suffix: "",
+      label: "Core Services",
+      description: "Books · Plans · Notary",
     },
     {
       icon: <Award className="w-6 h-6" />,

@@ -127,7 +127,7 @@ export default function MarketingGuide() {
                     <h4 className="font-semibold text-accent text-sm tracking-wide uppercase mb-2">Business Description (750 chars max)</h4>
                     <div className="bg-white/[0.03] rounded-xl p-4 border border-white/5">
                       <p className="text-muted-foreground text-[14px] leading-relaxed italic">
-                        "Blueprints & Bookkeeping is a boutique financial consultancy based in Roseburg, Oregon, serving founders and business owners nationwide. We specialize in advanced bookkeeping for complex operations — including multi-entity structuring, cryptocurrency accounting, and historical cleanups — alongside detailed business plans built to survive bank underwriting. With a strictly capped roster of 20 clients, we provide the dedicated attention and year-round availability that growing businesses demand. No offshore labor. No seasonal blackouts. Fortune 500 financial expertise applied to your business."
+                        "Blueprints & Bookkeeping is a boutique financial consultancy based in Roseburg, Oregon, serving founders and business owners nationwide. We specialize in advanced bookkeeping for complex operations — including multi-entity structuring, cryptocurrency accounting, and historical cleanups — alongside detailed business plans built to survive bank underwriting. With a strictly capped roster of 20 clients, we provide the dedicated attention and year-round availability that growing businesses demand. No offshore labor. No seasonal blackouts. Expert-level financial support applied directly to your business."
                       </p>
                     </div>
                   </div>
@@ -246,7 +246,7 @@ export default function MarketingGuide() {
                     <ul className="mt-1 space-y-1">
                       {[
                         '"Boutique bookkeeper for complex operations | Multi-entity, crypto, SBA readiness"',
-                        '"Fortune 500 finance experience → helping founders scale | Year-round bookkeeping + business plans"'
+                        '"Expert bookkeeper for complex operations → helping founders scale | Year-round bookkeeping + business plans"'
                       ].map((alt, i) => (
                         <li key={i} className="text-muted-foreground text-[13px] flex items-start gap-2">
                           <span className="text-accent">→</span>
@@ -259,14 +259,14 @@ export default function MarketingGuide() {
                   <div>
                     <h4 className="font-semibold text-accent text-sm tracking-wide uppercase mb-2">About Section</h4>
                     <p className="text-muted-foreground text-[14px] mb-2 leading-relaxed">
-                      Write in first person. Tell your story: why you left Fortune 500 finance to build a boutique practice, what problem you saw in the market, and who you serve now. End with a call to action.
+                      Write in first person. Tell your story: why you built a boutique practice, what problem you saw in the market, and who you serve now. End with a call to action.
                     </p>
                     <div className="bg-white/[0.03] rounded-xl p-4 border border-white/5 space-y-3">
                       <p className="text-muted-foreground text-[14px] leading-relaxed">
                         <span className="text-accent font-semibold">Opening hook:</span> Start with a pain point your ideal client feels. Example: "Most founders I meet have the same story: their bookkeeper can't handle the complexity, their CPA only shows up in Q1, and their business plan is a dusty PDF nobody trusts."
                       </p>
                       <p className="text-muted-foreground text-[14px] leading-relaxed">
-                        <span className="text-accent font-semibold">Middle:</span> Your credibility — Fortune 500 background, CEH v12 certification, QuickBooks ProAdvisor Advanced. What makes your approach different (20-client cap, year-round, no offshore).
+                        <span className="text-accent font-semibold">Middle:</span> Your credibility — CEH v12 certification, QuickBooks ProAdvisor Advanced, Advanced Crypto Accounting Certified. What makes your approach different (20-client cap, year-round, no offshore).
                       </p>
                       <p className="text-muted-foreground text-[14px] leading-relaxed">
                         <span className="text-accent font-semibold">Close:</span> "If your books are holding you back from your next round of funding or your next big hire, let's talk. Link to your website."
@@ -349,7 +349,7 @@ export default function MarketingGuide() {
                         },
                         {
                           type: "The Personal Story",
-                          example: '"I left Fortune 500 finance because I was tired of watching founders get ignored by the very firms they were paying. So I built something different..."',
+                          example: '"I built Blueprints & Bookkeeping because I was tired of watching founders get ignored by the very firms they were paying. So I built something different..."',
                           why: "Humanizes your brand. People connect with origin stories."
                         }
                       ].map((post, i) => (

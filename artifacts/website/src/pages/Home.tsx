@@ -182,7 +182,7 @@ export default function Home() {
                 </div>
                 <div className="space-y-4">
                   {[
-                    { label: "Fortune 500 Financial Expertise", value: true },
+                    { label: "Advanced Bookkeeping Expertise", value: true },
                     { label: "Certified Ethical Hacker (CEH v12)", value: true },
                     { label: "QuickBooks ProAdvisor Advanced", value: true },
                     { label: "Year-Round Availability", value: true },
