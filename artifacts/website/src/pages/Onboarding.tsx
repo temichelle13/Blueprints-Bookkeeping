@@ -1,11 +1,31 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Send, CheckCircle, Building2, User, Phone, FileText, Laptop, StickyNote } from "lucide-react";
+import { Send, CheckCircle, Building2, User, Phone, FileText, Laptop, StickyNote, MapPin } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 import { useToast } from "@/hooks/use-toast";
 
 const API_BASE = import.meta.env.VITE_API_URL || "/api";
+
+const US_STATES = [
+  { code: "AL", name: "Alabama" }, { code: "AK", name: "Alaska" }, { code: "AZ", name: "Arizona" },
+  { code: "AR", name: "Arkansas" }, { code: "CA", name: "California" }, { code: "CO", name: "Colorado" },
+  { code: "CT", name: "Connecticut" }, { code: "DE", name: "Delaware" }, { code: "DC", name: "District of Columbia" },
+  { code: "FL", name: "Florida" }, { code: "GA", name: "Georgia" }, { code: "HI", name: "Hawaii" },
+  { code: "ID", name: "Idaho" }, { code: "IL", name: "Illinois" }, { code: "IN", name: "Indiana" },
+  { code: "IA", name: "Iowa" }, { code: "KS", name: "Kansas" }, { code: "KY", name: "Kentucky" },
+  { code: "LA", name: "Louisiana" }, { code: "ME", name: "Maine" }, { code: "MD", name: "Maryland" },
+  { code: "MA", name: "Massachusetts" }, { code: "MI", name: "Michigan" }, { code: "MN", name: "Minnesota" },
+  { code: "MS", name: "Mississippi" }, { code: "MO", name: "Missouri" }, { code: "MT", name: "Montana" },
+  { code: "NE", name: "Nebraska" }, { code: "NV", name: "Nevada" }, { code: "NH", name: "New Hampshire" },
+  { code: "NJ", name: "New Jersey" }, { code: "NM", name: "New Mexico" }, { code: "NY", name: "New York" },
+  { code: "NC", name: "North Carolina" }, { code: "ND", name: "North Dakota" }, { code: "OH", name: "Ohio" },
+  { code: "OK", name: "Oklahoma" }, { code: "OR", name: "Oregon" }, { code: "PA", name: "Pennsylvania" },
+  { code: "RI", name: "Rhode Island" }, { code: "SC", name: "South Carolina" }, { code: "SD", name: "South Dakota" },
+  { code: "TN", name: "Tennessee" }, { code: "TX", name: "Texas" }, { code: "UT", name: "Utah" },
+  { code: "VT", name: "Vermont" }, { code: "VA", name: "Virginia" }, { code: "WA", name: "Washington" },
+  { code: "WV", name: "West Virginia" }, { code: "WI", name: "Wisconsin" }, { code: "WY", name: "Wyoming" },
+];
 
 interface OnboardingFormValues {
   clientName: string;
@@ -15,6 +35,7 @@ interface OnboardingFormValues {
   phone: string;
   einBusinessType: string;
   currentBookkeepingSoftware: string;
+  businessState: string;
   notes: string;
 }
 
@@ -206,6 +227,23 @@ export default function Onboarding() {
                   placeholder="e.g. LLC, S-Corp, Sole Prop"
                 />
               </div>
+            </div>
+
+            <div>
+              <label className={labelClass}>
+                <MapPin className="inline w-4 h-4 mr-1 text-accent" />
+                Business State *
+              </label>
+              <select
+                {...register("businessState", { required: "Business state is required" })}
+                className={inputClass}
+              >
+                <option value="">Select your business state...</option>
+                {US_STATES.map((s) => (
+                  <option key={s.code} value={s.code}>{s.name}</option>
+                ))}
+              </select>
+              {errors.businessState && <span className="text-destructive text-xs mt-1">{errors.businessState.message}</span>}
             </div>
 
             <div>

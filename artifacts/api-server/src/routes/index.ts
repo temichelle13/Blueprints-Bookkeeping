@@ -10,6 +10,7 @@ import onboardingRouter from "./onboarding";
 import documentsRouter from "./documents";
 import adminRouter from "./admin";
 import calWebhookRouter from "./cal-webhook";
+import nexusRouter from "./nexus";
 
 const router: IRouter = Router();
 
@@ -24,5 +25,6 @@ router.use(onboardingRouter);
 router.use(documentsRouter);
 router.use(adminRouter);
 router.use(calWebhookRouter);
+router.use(nexusRouter);
 
 export default router;

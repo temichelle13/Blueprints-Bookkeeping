@@ -78,7 +78,7 @@ The project is structured as a pnpm monorepo, separating deployable applications
     - `/api/webhooks/cal`: Cal.com booking webhook handling.
 - **Self-Service Subscriptions**: Handles Stripe deposit payments and subscription events.
 - **File Uploads**: Secure client document uploads to Adobe Creative Cloud Storage.
-- **Database Schema**: PostgreSQL with Drizzle ORM, managing `contact_inquiries`, `newsletter_subscribers`, `contracts`, `subscriptions`, `onboarding_submissions`, `client_documents`, and `bookings`.
+- **Database Schema**: PostgreSQL with Drizzle ORM, managing `contact_inquiries`, `newsletter_subscribers`, `contracts`, `subscriptions`, `onboarding_submissions`, `client_documents`, `bookings`, `state_nexus_rules`, and `nexus_notifications_log`.
 
 **Cal.com Scheduling Integration**:
 - **Frontend**: `/schedule` page with Cal.com inline embed.
@@ -87,7 +87,8 @@ The project is structured as a pnpm monorepo, separating deployable applications
 **Contract Automation & Admin Dashboards**:
 - **Integration**: Adobe Acrobat Sign API v6 for automatic contract generation, sending, and archiving to Adobe Creative Cloud Storage.
 - **Document Portal**: Secure drag-and-drop interface for financial documents.
-- **Admin Dashboards**: CRM dashboard at `/admin` for inquiries, newsletter subscribers, and contract management.
+- **Admin Dashboards**: CRM dashboard at `/admin` for inquiries, newsletter subscribers, contract management, and state nexus monitoring.
+- **State Nexus Monitoring**: Tracks client counts by U.S. state, compares against Foreign Qualification thresholds, sends email alerts via Resend when warning/alert levels are reached. Admin can edit thresholds per-state and trigger manual checks. Daily scheduled check at 8 AM Pacific.
 
 **Newsletter & Lead Magnet**:
 - **Signup**: Footer newsletter signup and home page lead magnet (gated PDF download).

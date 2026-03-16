@@ -30,6 +30,7 @@ export const onboardingSubmissionsTable = pgTable("onboarding_submissions", {
   currentBookkeepingSoftware: text("current_bookkeeping_software"),
   notes: text("notes"),
   plan: text("plan"),
+  businessState: text("business_state"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 

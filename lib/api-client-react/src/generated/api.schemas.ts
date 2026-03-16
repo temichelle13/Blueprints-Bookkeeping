@@ -292,6 +292,79 @@ export type UnsubscribeNewsletterByTokenParams = {
   token: string;
 };
 
+export type NexusSummaryItemRiskLevel =
+  (typeof NexusSummaryItemRiskLevel)[keyof typeof NexusSummaryItemRiskLevel];
+
+export const NexusSummaryItemRiskLevel = {
+  safe: "safe",
+  warning: "warning",
+  alert: "alert",
+} as const;
+
+export interface NexusSummaryItem {
+  stateCode: string;
+  stateName: string;
+  clientCount: number;
+  foreignQualificationThreshold: number;
+  bookkeepingLicenseRequired: boolean;
+  /** @nullable */
+  bookkeepingLicenseNotes?: string | null;
+  /** @nullable */
+  authorityName?: string | null;
+  /** @nullable */
+  authorityUrl?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  warningThresholdPercent: number;
+  riskLevel: NexusSummaryItemRiskLevel;
+  /** @nullable */
+  lastNotificationSent?: string | null;
+  /** @nullable */
+  lastNotificationType?: string | null;
+}
+
+export interface StateNexusRule {
+  id: number;
+  stateCode: string;
+  stateName: string;
+  foreignQualificationThreshold: number;
+  bookkeepingLicenseRequired: boolean;
+  /** @nullable */
+  bookkeepingLicenseNotes?: string | null;
+  /** @nullable */
+  authorityName?: string | null;
+  /** @nullable */
+  authorityUrl?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  warningThresholdPercent: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UpdateNexusRuleInput {
+  foreignQualificationThreshold?: number;
+  warningThresholdPercent?: number;
+  bookkeepingLicenseRequired?: boolean;
+  notes?: string;
+  authorityUrl?: string;
+}
+
+export interface NexusCheckResult {
+  success: boolean;
+  warnings: number;
+  alerts: number;
+}
+
+export interface NexusNotificationLog {
+  id: number;
+  stateCode: string;
+  notificationType: string;
+  clientCount: number;
+  threshold: number;
+  sentAt: string;
+}
+
 export type BookingWebhookBodyPayload = { [key: string]: unknown };
 
 export type BookingWebhookBody = {

@@ -397,3 +397,96 @@ export const CalWebhookResponse = zod.object({
   success: zod.boolean(),
   bookingId: zod.number(),
 });
+
+/**
+ * @summary Get state nexus summary with client counts and risk levels
+ */
+export const GetNexusSummaryResponseItem = zod.object({
+  stateCode: zod.string(),
+  stateName: zod.string(),
+  clientCount: zod.number(),
+  foreignQualificationThreshold: zod.number(),
+  bookkeepingLicenseRequired: zod.boolean(),
+  bookkeepingLicenseNotes: zod.string().nullish(),
+  authorityName: zod.string().nullish(),
+  authorityUrl: zod.string().nullish(),
+  notes: zod.string().nullish(),
+  warningThresholdPercent: zod.number(),
+  riskLevel: zod.enum(["safe", "warning", "alert"]),
+  lastNotificationSent: zod.date().nullish(),
+  lastNotificationType: zod.string().nullish(),
+});
+export const GetNexusSummaryResponse = zod.array(GetNexusSummaryResponseItem);
+
+/**
+ * @summary Get all state nexus rules
+ */
+export const GetNexusRulesResponseItem = zod.object({
+  id: zod.number(),
+  stateCode: zod.string(),
+  stateName: zod.string(),
+  foreignQualificationThreshold: zod.number(),
+  bookkeepingLicenseRequired: zod.boolean(),
+  bookkeepingLicenseNotes: zod.string().nullish(),
+  authorityName: zod.string().nullish(),
+  authorityUrl: zod.string().nullish(),
+  notes: zod.string().nullish(),
+  warningThresholdPercent: zod.number(),
+  createdAt: zod.date(),
+  updatedAt: zod.date(),
+});
+export const GetNexusRulesResponse = zod.array(GetNexusRulesResponseItem);
+
+/**
+ * @summary Update nexus rule thresholds for a state
+ */
+export const UpdateNexusRuleParams = zod.object({
+  stateCode: zod.coerce.string(),
+});
+
+export const UpdateNexusRuleBody = zod.object({
+  foreignQualificationThreshold: zod.number().optional(),
+  warningThresholdPercent: zod.number().optional(),
+  bookkeepingLicenseRequired: zod.boolean().optional(),
+  notes: zod.string().optional(),
+  authorityUrl: zod.string().optional(),
+});
+
+export const UpdateNexusRuleResponse = zod.object({
+  id: zod.number(),
+  stateCode: zod.string(),
+  stateName: zod.string(),
+  foreignQualificationThreshold: zod.number(),
+  bookkeepingLicenseRequired: zod.boolean(),
+  bookkeepingLicenseNotes: zod.string().nullish(),
+  authorityName: zod.string().nullish(),
+  authorityUrl: zod.string().nullish(),
+  notes: zod.string().nullish(),
+  warningThresholdPercent: zod.number(),
+  createdAt: zod.date(),
+  updatedAt: zod.date(),
+});
+
+/**
+ * @summary Trigger a manual nexus threshold check and send pending notifications
+ */
+export const RunNexusCheckResponse = zod.object({
+  success: zod.boolean(),
+  warnings: zod.number(),
+  alerts: zod.number(),
+});
+
+/**
+ * @summary View nexus notification history
+ */
+export const GetNexusNotificationsResponseItem = zod.object({
+  id: zod.number(),
+  stateCode: zod.string(),
+  notificationType: zod.string(),
+  clientCount: zod.number(),
+  threshold: zod.number(),
+  sentAt: zod.date(),
+});
+export const GetNexusNotificationsResponse = zod.array(
+  GetNexusNotificationsResponseItem,
+);

@@ -35,6 +35,7 @@ router.post("/onboarding", async (req, res): Promise<void> => {
     notes,
     plan,
     stripeSessionId,
+    businessState,
   } = req.body as {
     clientName?: string;
     clientEmail?: string;
@@ -46,10 +47,24 @@ router.post("/onboarding", async (req, res): Promise<void> => {
     notes?: string;
     plan?: string;
     stripeSessionId?: string;
+    businessState?: string;
   };
 
-  if (!clientName || !clientEmail || !businessName || !ownerName) {
-    res.status(400).json({ error: "Name, email, business name, and owner name are required." });
+  if (!clientName || !clientEmail || !businessName || !ownerName || !businessState) {
+    res.status(400).json({ error: "Name, email, business name, owner name, and business state are required." });
+    return;
+  }
+
+  const normalizedState = businessState.trim().toUpperCase();
+  const VALID_STATE_CODES = [
+    "AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN",
+    "IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH",
+    "NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT",
+    "VT","VA","WA","WV","WI","WY",
+  ];
+
+  if (!VALID_STATE_CODES.includes(normalizedState)) {
+    res.status(400).json({ error: "Invalid business state. Please provide a valid two-letter U.S. state code." });
     return;
   }
 
@@ -107,6 +122,7 @@ router.post("/onboarding", async (req, res): Promise<void> => {
         currentBookkeepingSoftware: currentBookkeepingSoftware ?? null,
         notes: notes ?? null,
         plan: plan ?? null,
+        businessState: normalizedState,
         stripeSessionId: stripeSessionId ?? null,
         subscriptionId,
       })

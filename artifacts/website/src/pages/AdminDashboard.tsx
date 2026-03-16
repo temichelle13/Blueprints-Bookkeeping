@@ -38,6 +38,14 @@ import {
   ChevronDown,
   ChevronUp,
   Eye,
+  MapPin,
+  AlertTriangle,
+  ShieldCheck,
+  ShieldAlert,
+  Bell,
+  Play,
+  ExternalLink,
+  Save,
 } from "lucide-react";
 
 const API_BASE = import.meta.env.VITE_API_URL || "/api";
@@ -95,6 +103,31 @@ interface Stats {
   };
 }
 
+interface NexusSummaryItem {
+  stateCode: string;
+  stateName: string;
+  clientCount: number;
+  foreignQualificationThreshold: number;
+  bookkeepingLicenseRequired: boolean;
+  bookkeepingLicenseNotes: string | null;
+  authorityName: string | null;
+  authorityUrl: string | null;
+  notes: string | null;
+  warningThresholdPercent: number;
+  riskLevel: "safe" | "warning" | "alert";
+  lastNotificationSent: string | null;
+  lastNotificationType: string | null;
+}
+
+interface NexusNotification {
+  id: number;
+  stateCode: string;
+  notificationType: string;
+  clientCount: number;
+  threshold: number;
+  sentAt: string;
+}
+
 type SortField = "createdAt" | "name" | "status" | "formType";
 type SortDir = "asc" | "desc";
 
@@ -139,6 +172,14 @@ export default function AdminDashboard() {
   const [sortField, setSortField] = useState<SortField>("createdAt");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
+  const [nexusSummary, setNexusSummary] = useState<NexusSummaryItem[]>([]);
+  const [nexusNotifications, setNexusNotifications] = useState<NexusNotification[]>([]);
+  const [nexusLoading, setNexusLoading] = useState(false);
+  const [showZeroStates, setShowZeroStates] = useState(false);
+  const [editingState, setEditingState] = useState<string | null>(null);
+  const [editThreshold, setEditThreshold] = useState("");
+  const [editWarning, setEditWarning] = useState("");
+  const [runningCheck, setRunningCheck] = useState(false);
   const { toast } = useToast();
 
   const fetchData = useCallback(async () => {
@@ -169,9 +210,82 @@ export default function AdminDashboard() {
     }
   }, [toast]);
 
+  const fetchNexusData = useCallback(async () => {
+    setNexusLoading(true);
+    try {
+      const [summaryRes, notifRes] = await Promise.all([
+        fetch(`${API_BASE}/admin/nexus/summary`, { headers: adminHeaders() }),
+        fetch(`${API_BASE}/admin/nexus/notifications`, { headers: adminHeaders() }),
+      ]);
+
+      if (summaryRes.status === 401 || notifRes.status === 401) {
+        sessionStorage.removeItem("admin_token");
+        setAuthenticated(false);
+        return;
+      }
+
+      if (summaryRes.ok) setNexusSummary(await summaryRes.json());
+      if (notifRes.ok) setNexusNotifications(await notifRes.json());
+    } catch {
+      toast({ title: "Error", description: "Failed to load nexus data", variant: "destructive" });
+    } finally {
+      setNexusLoading(false);
+    }
+  }, [toast]);
+
+  const handleRunCheck = async () => {
+    setRunningCheck(true);
+    try {
+      const res = await fetch(`${API_BASE}/admin/nexus/check`, {
+        method: "POST",
+        headers: adminHeaders(),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        toast({
+          title: "Nexus Check Complete",
+          description: `${data.warnings} warning(s), ${data.alerts} alert(s) sent`,
+        });
+        fetchNexusData();
+      }
+    } catch {
+      toast({ title: "Error", description: "Failed to run nexus check", variant: "destructive" });
+    } finally {
+      setRunningCheck(false);
+    }
+  };
+
+  const handleSaveThreshold = async (stateCode: string) => {
+    try {
+      const body: Record<string, unknown> = {};
+      if (editThreshold) body.foreignQualificationThreshold = parseInt(editThreshold, 10);
+      if (editWarning) body.warningThresholdPercent = parseInt(editWarning, 10);
+
+      const res = await fetch(`${API_BASE}/admin/nexus/rules/${stateCode}`, {
+        method: "PATCH",
+        headers: adminHeaders(),
+        body: JSON.stringify(body),
+      });
+
+      if (res.ok) {
+        toast({ title: "Updated", description: `Thresholds updated for ${stateCode}` });
+        setEditingState(null);
+        fetchNexusData();
+      } else {
+        const err = await res.json();
+        toast({ title: "Error", description: err.error, variant: "destructive" });
+      }
+    } catch {
+      toast({ title: "Error", description: "Failed to save", variant: "destructive" });
+    }
+  };
+
   useEffect(() => {
-    if (authenticated) fetchData();
-  }, [authenticated, fetchData]);
+    if (authenticated) {
+      fetchData();
+      fetchNexusData();
+    }
+  }, [authenticated, fetchData, fetchNexusData]);
 
   const handleLogin = () => {
     if (!tokenInput.trim()) return;
@@ -355,6 +469,10 @@ export default function AdminDashboard() {
               <TabsTrigger value="subscribers" className="data-[state=active]:bg-indigo-600">
                 Newsletter
               </TabsTrigger>
+              <TabsTrigger value="nexus" className="data-[state=active]:bg-indigo-600">
+                <MapPin className="w-4 h-4 mr-1" />
+                State Nexus
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="inquiries" className="space-y-4">
@@ -493,6 +611,240 @@ export default function AdminDashboard() {
                   </Table>
                 </div>
               </div>
+            </TabsContent>
+
+            <TabsContent value="nexus" className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="text-gray-400">
+                  {(() => {
+                    const alertCount = nexusSummary.filter((s) => s.riskLevel === "alert").length;
+                    const warningCount = nexusSummary.filter((s) => s.riskLevel === "warning").length;
+                    const withClients = nexusSummary.filter((s) => s.clientCount > 0).length;
+                    return (
+                      <span>
+                        {withClients} states with clients · {alertCount} alert{alertCount !== 1 ? "s" : ""} · {warningCount} warning{warningCount !== 1 ? "s" : ""}
+                      </span>
+                    );
+                  })()}
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowZeroStates(!showZeroStates)}
+                    className="border-white/10 text-gray-300 hover:text-white"
+                  >
+                    {showZeroStates ? "Hide" : "Show"} Empty States
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleRunCheck}
+                    disabled={runningCheck}
+                    className="border-white/10 text-gray-300 hover:text-white"
+                  >
+                    <Play className="w-4 h-4 mr-1" />
+                    {runningCheck ? "Running..." : "Run Check Now"}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="bg-[#111827] border border-white/10 rounded-xl overflow-hidden">
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-white/10 hover:bg-transparent">
+                        <TableHead className="text-gray-400">State</TableHead>
+                        <TableHead className="text-gray-400">Clients</TableHead>
+                        <TableHead className="text-gray-400">Threshold</TableHead>
+                        <TableHead className="text-gray-400">Warning %</TableHead>
+                        <TableHead className="text-gray-400">Risk</TableHead>
+                        <TableHead className="text-gray-400">License</TableHead>
+                        <TableHead className="text-gray-400">Last Notification</TableHead>
+                        <TableHead className="text-gray-400">Requirements</TableHead>
+                        <TableHead className="text-gray-400 w-10"></TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {nexusSummary
+                        .filter((s) => showZeroStates || s.clientCount > 0)
+                        .sort((a, b) => {
+                          const riskOrder = { alert: 0, warning: 1, safe: 2 };
+                          if (riskOrder[a.riskLevel] !== riskOrder[b.riskLevel]) {
+                            return riskOrder[a.riskLevel] - riskOrder[b.riskLevel];
+                          }
+                          return b.clientCount - a.clientCount;
+                        })
+                        .map((item) => (
+                          <TableRow key={item.stateCode} className="border-white/10 hover:bg-white/5">
+                            <TableCell>
+                              <div className="font-medium text-white">{item.stateName}</div>
+                              <div className="text-xs text-gray-500">{item.stateCode}</div>
+                            </TableCell>
+                            <TableCell className="text-white font-bold text-lg">{item.clientCount}</TableCell>
+                            <TableCell>
+                              {editingState === item.stateCode ? (
+                                <Input
+                                  type="number"
+                                  value={editThreshold}
+                                  onChange={(e) => setEditThreshold(e.target.value)}
+                                  className="w-20 h-8 bg-[#0a0e1a] border-white/10 text-white text-sm"
+                                />
+                              ) : (
+                                <span className="text-gray-300">{item.foreignQualificationThreshold}</span>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              {editingState === item.stateCode ? (
+                                <Input
+                                  type="number"
+                                  value={editWarning}
+                                  onChange={(e) => setEditWarning(e.target.value)}
+                                  className="w-20 h-8 bg-[#0a0e1a] border-white/10 text-white text-sm"
+                                />
+                              ) : (
+                                <span className="text-gray-300">{item.warningThresholdPercent}%</span>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              <Badge
+                                variant="outline"
+                                className={
+                                  item.riskLevel === "alert"
+                                    ? "bg-red-500/20 text-red-300 border-red-500/30"
+                                    : item.riskLevel === "warning"
+                                    ? "bg-amber-500/20 text-amber-300 border-amber-500/30"
+                                    : "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
+                                }
+                              >
+                                {item.riskLevel === "alert" ? (
+                                  <ShieldAlert className="w-3 h-3 mr-1" />
+                                ) : item.riskLevel === "warning" ? (
+                                  <AlertTriangle className="w-3 h-3 mr-1" />
+                                ) : (
+                                  <ShieldCheck className="w-3 h-3 mr-1" />
+                                )}
+                                {item.riskLevel.charAt(0).toUpperCase() + item.riskLevel.slice(1)}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              {item.bookkeepingLicenseRequired ? (
+                                <Badge variant="outline" className="bg-purple-500/20 text-purple-300 border-purple-500/30">
+                                  Required
+                                </Badge>
+                              ) : (
+                                <span className="text-gray-500 text-sm">No</span>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-gray-400 text-sm">
+                              {item.lastNotificationSent ? (
+                                <div>
+                                  <div>{formatDate(item.lastNotificationSent)}</div>
+                                  <div className="text-xs text-gray-500">{item.lastNotificationType}</div>
+                                </div>
+                              ) : (
+                                <span className="text-gray-600">—</span>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-gray-400 text-sm max-w-[200px]">
+                              <div className="flex items-start gap-1">
+                                <span className="truncate">{item.notes || "Standard nexus rules"}</span>
+                                {item.authorityUrl && (
+                                  <a
+                                    href={item.authorityUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-indigo-400 hover:text-indigo-300 shrink-0"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <ExternalLink className="w-3.5 h-3.5" />
+                                  </a>
+                                )}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              {editingState === item.stateCode ? (
+                                <div className="flex gap-1">
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="h-7 w-7 p-0 border-emerald-500/30 text-emerald-400"
+                                    onClick={() => handleSaveThreshold(item.stateCode)}
+                                  >
+                                    <Save className="w-3.5 h-3.5" />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="h-7 w-7 p-0 border-white/10 text-gray-400"
+                                    onClick={() => setEditingState(null)}
+                                  >
+                                    ✕
+                                  </Button>
+                                </div>
+                              ) : (
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="h-7 w-7 p-0 text-gray-500 hover:text-white"
+                                  onClick={() => {
+                                    setEditingState(item.stateCode);
+                                    setEditThreshold(String(item.foreignQualificationThreshold));
+                                    setEditWarning(String(item.warningThresholdPercent));
+                                  }}
+                                >
+                                  ✎
+                                </Button>
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      {nexusSummary.filter((s) => showZeroStates || s.clientCount > 0).length === 0 && (
+                        <TableRow>
+                          <TableCell colSpan={9} className="text-center text-gray-500 py-12">
+                            {nexusLoading ? "Loading nexus data..." : "No states with active clients"}
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
+
+              {nexusNotifications.length > 0 && (
+                <div className="bg-[#111827] border border-white/10 rounded-xl p-6">
+                  <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
+                    <Bell className="w-4 h-4 text-indigo-400" />
+                    Notification History
+                  </h3>
+                  <div className="space-y-2 max-h-64 overflow-y-auto">
+                    {nexusNotifications.map((n) => (
+                      <div
+                        key={n.id}
+                        className="flex items-center justify-between py-2 px-3 rounded-lg bg-white/[0.02] border border-white/5"
+                      >
+                        <div className="flex items-center gap-3">
+                          <Badge
+                            variant="outline"
+                            className={
+                              n.notificationType === "alert"
+                                ? "bg-red-500/20 text-red-300 border-red-500/30"
+                                : "bg-amber-500/20 text-amber-300 border-amber-500/30"
+                            }
+                          >
+                            {n.notificationType}
+                          </Badge>
+                          <span className="text-white text-sm font-medium">{n.stateCode}</span>
+                          <span className="text-gray-400 text-sm">
+                            {n.clientCount} / {n.threshold} clients
+                          </span>
+                        </div>
+                        <span className="text-gray-500 text-xs">{formatDate(n.sentAt)}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </TabsContent>
           </Tabs>
         </motion.div>

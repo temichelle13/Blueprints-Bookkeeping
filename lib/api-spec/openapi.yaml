@@ -19,6 +19,8 @@ tags:
     description: Contract management and Adobe Acrobat Sign operations
   - name: scheduling
     description: Cal.com scheduling and booking operations
+  - name: admin
+    description: Admin dashboard and state nexus monitoring operations
 paths:
   /healthz:
     get:
@@ -530,7 +532,115 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /admin/nexus/summary:
+    get:
+      operationId: getNexusSummary
+      tags: [admin]
+      summary: Get state nexus summary with client counts and risk levels
+      security:
+        - adminToken: []
+      responses:
+        "200":
+          description: Nexus summary for all states
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NexusSummaryItem"
+        "401":
+          description: Unauthorized
+  /admin/nexus/rules:
+    get:
+      operationId: getNexusRules
+      tags: [admin]
+      summary: Get all state nexus rules
+      security:
+        - adminToken: []
+      responses:
+        "200":
+          description: List of nexus rules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StateNexusRule"
+        "401":
+          description: Unauthorized
+  /admin/nexus/rules/{stateCode}:
+    patch:
+      operationId: updateNexusRule
+      tags: [admin]
+      summary: Update nexus rule thresholds for a state
+      security:
+        - adminToken: []
+      parameters:
+        - name: stateCode
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateNexusRuleInput"
+      responses:
+        "200":
+          description: Updated rule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StateNexusRule"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+        "404":
+          description: State not found
+  /admin/nexus/check:
+    post:
+      operationId: runNexusCheck
+      tags: [admin]
+      summary: Trigger a manual nexus threshold check and send pending notifications
+      security:
+        - adminToken: []
+      responses:
+        "200":
+          description: Check result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NexusCheckResult"
+        "401":
+          description: Unauthorized
+  /admin/nexus/notifications:
+    get:
+      operationId: getNexusNotifications
+      tags: [admin]
+      summary: View nexus notification history
+      security:
+        - adminToken: []
+      responses:
+        "200":
+          description: List of notification log entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NexusNotificationLog"
+        "401":
+          description: Unauthorized
 components:
+  securitySchemes:
+    adminToken:
+      type: apiKey
+      in: header
+      name: x-admin-token
+      description: Admin authentication token
   schemas:
     HealthStatus:
       type: object
@@ -959,3 +1069,129 @@ components:
         - status
         - createdAt
         - updatedAt
+    NexusSummaryItem:
+      type: object
+      properties:
+        stateCode:
+          type: string
+        stateName:
+          type: string
+        clientCount:
+          type: integer
+        foreignQualificationThreshold:
+          type: integer
+        bookkeepingLicenseRequired:
+          type: boolean
+        bookkeepingLicenseNotes:
+          type: ["string", "null"]
+        authorityName:
+          type: ["string", "null"]
+        authorityUrl:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        warningThresholdPercent:
+          type: integer
+        riskLevel:
+          type: string
+          enum: [safe, warning, alert]
+        lastNotificationSent:
+          type: ["string", "null"]
+          format: date-time
+        lastNotificationType:
+          type: ["string", "null"]
+      required:
+        - stateCode
+        - stateName
+        - clientCount
+        - foreignQualificationThreshold
+        - bookkeepingLicenseRequired
+        - warningThresholdPercent
+        - riskLevel
+    StateNexusRule:
+      type: object
+      properties:
+        id:
+          type: integer
+        stateCode:
+          type: string
+        stateName:
+          type: string
+        foreignQualificationThreshold:
+          type: integer
+        bookkeepingLicenseRequired:
+          type: boolean
+        bookkeepingLicenseNotes:
+          type: ["string", "null"]
+        authorityName:
+          type: ["string", "null"]
+        authorityUrl:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        warningThresholdPercent:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - stateCode
+        - stateName
+        - foreignQualificationThreshold
+        - bookkeepingLicenseRequired
+        - warningThresholdPercent
+        - createdAt
+        - updatedAt
+    UpdateNexusRuleInput:
+      type: object
+      properties:
+        foreignQualificationThreshold:
+          type: integer
+        warningThresholdPercent:
+          type: integer
+        bookkeepingLicenseRequired:
+          type: boolean
+        notes:
+          type: string
+        authorityUrl:
+          type: string
+    NexusCheckResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        warnings:
+          type: integer
+        alerts:
+          type: integer
+      required:
+        - success
+        - warnings
+        - alerts
+    NexusNotificationLog:
+      type: object
+      properties:
+        id:
+          type: integer
+        stateCode:
+          type: string
+        notificationType:
+          type: string
+        clientCount:
+          type: integer
+        threshold:
+          type: integer
+        sentAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - stateCode
+        - notificationType
+        - clientCount
+        - threshold
+        - sentAt

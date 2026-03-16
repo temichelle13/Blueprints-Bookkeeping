@@ -34,6 +34,9 @@ import type {
   NewsletterSubscribeResponse,
   NewsletterUnsubscribeInput,
   NewsletterUnsubscribeResponse,
+  NexusCheckResult,
+  NexusNotificationLog,
+  NexusSummaryItem,
   OpenaiConversation,
   OpenaiConversationWithMessages,
   OpenaiError,
@@ -42,8 +45,10 @@ import type {
   SendContractInput,
   SendContractResponse,
   SendOpenaiMessageBody,
+  StateNexusRule,
   SyncResult,
   UnsubscribeNewsletterByTokenParams,
+  UpdateNexusRuleInput,
 } from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
@@ -2178,3 +2183,396 @@ export const useCalWebhook = <
 > => {
   return useMutation(getCalWebhookMutationOptions(options));
 };
+
+/**
+ * @summary Get state nexus summary with client counts and risk levels
+ */
+export const getGetNexusSummaryUrl = () => {
+  return `/api/admin/nexus/summary`;
+};
+
+export const getNexusSummary = async (
+  options?: RequestInit,
+): Promise<NexusSummaryItem[]> => {
+  return customFetch<NexusSummaryItem[]>(getGetNexusSummaryUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetNexusSummaryQueryKey = () => {
+  return [`/api/admin/nexus/summary`] as const;
+};
+
+export const getGetNexusSummaryQueryOptions = <
+  TData = Awaited<ReturnType<typeof getNexusSummary>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getNexusSummary>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetNexusSummaryQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getNexusSummary>>> = ({
+    signal,
+  }) => getNexusSummary({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getNexusSummary>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetNexusSummaryQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getNexusSummary>>
+>;
+export type GetNexusSummaryQueryError = ErrorType<void>;
+
+/**
+ * @summary Get state nexus summary with client counts and risk levels
+ */
+
+export function useGetNexusSummary<
+  TData = Awaited<ReturnType<typeof getNexusSummary>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getNexusSummary>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetNexusSummaryQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Get all state nexus rules
+ */
+export const getGetNexusRulesUrl = () => {
+  return `/api/admin/nexus/rules`;
+};
+
+export const getNexusRules = async (
+  options?: RequestInit,
+): Promise<StateNexusRule[]> => {
+  return customFetch<StateNexusRule[]>(getGetNexusRulesUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetNexusRulesQueryKey = () => {
+  return [`/api/admin/nexus/rules`] as const;
+};
+
+export const getGetNexusRulesQueryOptions = <
+  TData = Awaited<ReturnType<typeof getNexusRules>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getNexusRules>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetNexusRulesQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getNexusRules>>> = ({
+    signal,
+  }) => getNexusRules({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getNexusRules>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetNexusRulesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getNexusRules>>
+>;
+export type GetNexusRulesQueryError = ErrorType<void>;
+
+/**
+ * @summary Get all state nexus rules
+ */
+
+export function useGetNexusRules<
+  TData = Awaited<ReturnType<typeof getNexusRules>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getNexusRules>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetNexusRulesQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Update nexus rule thresholds for a state
+ */
+export const getUpdateNexusRuleUrl = (stateCode: string) => {
+  return `/api/admin/nexus/rules/${stateCode}`;
+};
+
+export const updateNexusRule = async (
+  stateCode: string,
+  updateNexusRuleInput: UpdateNexusRuleInput,
+  options?: RequestInit,
+): Promise<StateNexusRule> => {
+  return customFetch<StateNexusRule>(getUpdateNexusRuleUrl(stateCode), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateNexusRuleInput),
+  });
+};
+
+export const getUpdateNexusRuleMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateNexusRule>>,
+    TError,
+    { stateCode: string; data: BodyType<UpdateNexusRuleInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateNexusRule>>,
+  TError,
+  { stateCode: string; data: BodyType<UpdateNexusRuleInput> },
+  TContext
+> => {
+  const mutationKey = ["updateNexusRule"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateNexusRule>>,
+    { stateCode: string; data: BodyType<UpdateNexusRuleInput> }
+  > = (props) => {
+    const { stateCode, data } = props ?? {};
+
+    return updateNexusRule(stateCode, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateNexusRuleMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateNexusRule>>
+>;
+export type UpdateNexusRuleMutationBody = BodyType<UpdateNexusRuleInput>;
+export type UpdateNexusRuleMutationError = ErrorType<void>;
+
+/**
+ * @summary Update nexus rule thresholds for a state
+ */
+export const useUpdateNexusRule = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateNexusRule>>,
+    TError,
+    { stateCode: string; data: BodyType<UpdateNexusRuleInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateNexusRule>>,
+  TError,
+  { stateCode: string; data: BodyType<UpdateNexusRuleInput> },
+  TContext
+> => {
+  return useMutation(getUpdateNexusRuleMutationOptions(options));
+};
+
+/**
+ * @summary Trigger a manual nexus threshold check and send pending notifications
+ */
+export const getRunNexusCheckUrl = () => {
+  return `/api/admin/nexus/check`;
+};
+
+export const runNexusCheck = async (
+  options?: RequestInit,
+): Promise<NexusCheckResult> => {
+  return customFetch<NexusCheckResult>(getRunNexusCheckUrl(), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getRunNexusCheckMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof runNexusCheck>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof runNexusCheck>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = ["runNexusCheck"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof runNexusCheck>>,
+    void
+  > = () => {
+    return runNexusCheck(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RunNexusCheckMutationResult = NonNullable<
+  Awaited<ReturnType<typeof runNexusCheck>>
+>;
+
+export type RunNexusCheckMutationError = ErrorType<void>;
+
+/**
+ * @summary Trigger a manual nexus threshold check and send pending notifications
+ */
+export const useRunNexusCheck = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof runNexusCheck>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof runNexusCheck>>,
+  TError,
+  void,
+  TContext
+> => {
+  return useMutation(getRunNexusCheckMutationOptions(options));
+};
+
+/**
+ * @summary View nexus notification history
+ */
+export const getGetNexusNotificationsUrl = () => {
+  return `/api/admin/nexus/notifications`;
+};
+
+export const getNexusNotifications = async (
+  options?: RequestInit,
+): Promise<NexusNotificationLog[]> => {
+  return customFetch<NexusNotificationLog[]>(getGetNexusNotificationsUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetNexusNotificationsQueryKey = () => {
+  return [`/api/admin/nexus/notifications`] as const;
+};
+
+export const getGetNexusNotificationsQueryOptions = <
+  TData = Awaited<ReturnType<typeof getNexusNotifications>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getNexusNotifications>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetNexusNotificationsQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getNexusNotifications>>
+  > = ({ signal }) => getNexusNotifications({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getNexusNotifications>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetNexusNotificationsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getNexusNotifications>>
+>;
+export type GetNexusNotificationsQueryError = ErrorType<void>;
+
+/**
+ * @summary View nexus notification history
+ */
+
+export function useGetNexusNotifications<
+  TData = Awaited<ReturnType<typeof getNexusNotifications>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getNexusNotifications>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetNexusNotificationsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
