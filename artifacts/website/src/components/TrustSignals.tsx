@@ -205,22 +205,8 @@ export function GoogleReviewsCallout() {
             See what clients are saying about working with Blueprints & Bookkeeping.
           </p>
 
-          {/*
-            ADMIN NOTE FOR TEA:
-            ─────────────────────────────────────────────
-            Replace the placeholder URL below with your actual Google Business Profile
-            review link once it's verified and live. The link format is typically:
-            https://g.page/r/YOUR_PLACE_ID/review
-            
-            You can find this link in your Google Business Profile dashboard
-            under "Get more reviews" → "Share review form".
-            
-            Once you have real reviews, update the star rating and review
-            count above to match your actual Google rating.
-            ─────────────────────────────────────────────
-          */}
           <a
-            href="https://www.google.com/maps/place/Blueprints+%26+Bookkeeping"
+            href="https://share.google/tFabL2u2cEZcsyGb7"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-3 bg-white/[0.06] border border-white/10 rounded-xl text-white font-semibold text-sm hover:bg-white/[0.1] hover:border-white/20 transition-all"
@@ -234,10 +220,6 @@ export function GoogleReviewsCallout() {
             Read Our Google Reviews
             <ExternalLink className="w-4 h-4 opacity-60" />
           </a>
-
-          <p className="text-[11px] text-muted-foreground/50 mt-4 italic">
-            Rating shown is a placeholder — will update automatically once the Google Business Profile is verified.
-          </p>
         </motion.div>
       </div>
     </section>

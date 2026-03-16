@@ -29,7 +29,7 @@ export default function About() {
               Tea brings a rare intersection of enterprise financial management, software engineering, and cybersecurity to Blueprints & Bookkeeping, LLC.
             </p>
             <p>
-              Having served as a Senior Financial Expert for a Fortune 500 global financial technology leader, Tea understands exactly where standard accounting breaks down for complex businesses. Generalist bookkeepers hit a "complexity ceiling," leaving multi-entity owners and tech founders with messy historical data and a lack of strategic foresight.
+              With deep experience in financial operations for complex, multi-entity businesses, Tea understands exactly where standard accounting breaks down. Generalist bookkeepers hit a "complexity ceiling," leaving founders with messy historical data, mismatched records, and a lack of strategic foresight.
             </p>
             <p className="text-muted-foreground border-l-2 border-accent/30 pl-4 italic">
               Standard accounting firms are excellent for annual compliance, but they vanish during the first-quarter tax season. Blueprints & Bookkeeping intentionally excludes in-house tax preparation&mdash;eliminating the seasonal blind spot to remain a proactive, dedicated operational resource 12 months a year.
