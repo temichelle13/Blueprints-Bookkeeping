@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Mail, Phone, MapPin, Send, Loader2, CheckCircle2 } from "lucide-react";
+import { Link } from "wouter";
+import { Mail, Phone, MapPin, Send, Loader2, CheckCircle2, Video, FileUp, ArrowRight } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 import { useContactMutation } from "@/hooks/use-contact";
@@ -17,30 +18,37 @@ const messageSchema = z.object({
 });
 type MessageValues = z.infer<typeof messageSchema>;
 
-function CalendlyEmbed() {
-  const [loaded, setLoaded] = useState(false);
-  return (
-    <div className="relative rounded-2xl overflow-hidden" style={{ minHeight: "660px" }}>
-      {!loaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-card/60">
-          <div className="text-center">
-            <div className="w-8 h-8 border-2 border-accent/30 border-t-accent rounded-full animate-spin mx-auto mb-3" />
-            <p className="text-muted-foreground text-sm">Loading calendar…</p>
-          </div>
-        </div>
-      )}
-      <iframe
-        src={`${CALENDLY_URL}?embed_type=Inline&hide_gdpr_banner=1&background_color=161b2e&text_color=d8dce4&primary_color=6366f1`}
-        width="100%"
-        height="660"
-        frameBorder="0"
-        title="Book a discovery call with Tea"
-        onLoad={() => setLoaded(true)}
-        style={{ display: "block" }}
-      />
-    </div>
-  );
-}
+const contactCards = [
+  {
+    icon: Video,
+    color: "#6366F1",
+    title: "Book a Free Discovery Call",
+    description: "30 minutes with Tea — talk through your situation, get a custom recommendation, zero obligation.",
+    cta: "Pick a Time on Calendly",
+    href: CALENDLY_URL,
+    external: true,
+    newTab: true,
+  },
+  {
+    icon: Phone,
+    color: "#10B981",
+    title: "Call or Text",
+    description: "(541) 319-8654 — voicemail and text are both welcome. Tea will get back to you within one business day.",
+    cta: "Dial (541) 319-8654",
+    href: "tel:+15413198654",
+    external: true,
+    newTab: false,
+  },
+  {
+    icon: FileUp,
+    color: "#F59E0B",
+    title: "Send Documents Securely",
+    description: "Upload financial statements, receipts, or records through our encrypted client portal.",
+    cta: "Open Document Portal",
+    href: "/client-portal",
+    external: false,
+  },
+];
 
 function MessageForm() {
   const { submit: sendMessage, isPending } = useContactMutation();
@@ -85,27 +93,31 @@ function MessageForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <input type="text" {...register("website")} className="hidden" tabIndex={-1} autoComplete="off" />
 
-      <div>
-        <label className={labelClass}>Your Name</label>
-        <input {...register("name")} placeholder="Jane Smith" className={inputClass} />
-        {errors.name && <p className="text-destructive text-xs mt-1">{errors.name.message}</p>}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label htmlFor="contact-name" className={labelClass}>Your Name</label>
+          <input id="contact-name" {...register("name")} placeholder="Jane Smith" className={inputClass} aria-invalid={!!errors.name} />
+          {errors.name && <p id="contact-name-error" role="alert" className="text-destructive text-xs mt-1">{errors.name.message}</p>}
+        </div>
+
+        <div>
+          <label htmlFor="contact-email" className={labelClass}>Email Address</label>
+          <input id="contact-email" {...register("email")} type="email" placeholder="jane@company.com" className={inputClass} aria-invalid={!!errors.email} />
+          {errors.email && <p id="contact-email-error" role="alert" className="text-destructive text-xs mt-1">{errors.email.message}</p>}
+        </div>
       </div>
 
       <div>
-        <label className={labelClass}>Email Address</label>
-        <input {...register("email")} type="email" placeholder="jane@company.com" className={inputClass} />
-        {errors.email && <p className="text-destructive text-xs mt-1">{errors.email.message}</p>}
-      </div>
-
-      <div>
-        <label className={labelClass}>Message</label>
+        <label htmlFor="contact-message" className={labelClass}>Message</label>
         <textarea
+          id="contact-message"
           {...register("message")}
-          rows={5}
+          rows={4}
           placeholder="Tell me a little about your business and what you need help with…"
           className={`${inputClass} resize-none`}
+          aria-invalid={!!errors.message}
         />
-        {errors.message && <p className="text-destructive text-xs mt-1">{errors.message.message}</p>}
+        {errors.message && <p id="contact-message-error" role="alert" className="text-destructive text-xs mt-1">{errors.message.message}</p>}
       </div>
 
       <button
@@ -125,7 +137,7 @@ export default function Contact() {
 
   return (
     <div className="pt-24 pb-20">
-      <SEO description="Get in touch with Blueprints & Bookkeeping. Book a free discovery call or send a message — Tea will respond within one business day." />
+      <SEO description="Get in touch with Blueprints & Bookkeeping. Book a free discovery call, give us a call, or send documents securely — Tea will respond within one business day." />
 
       <section className="py-12 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
@@ -133,44 +145,115 @@ export default function Contact() {
           <div className="accent-bar mx-auto mb-6" />
           <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">Get in Touch</h1>
           <p className="text-lg text-muted-foreground">
-            Book a free 30-minute call, or send a message and Tea will reply within one business day.
+            Three easy ways to connect — pick whichever works best for you.
           </p>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-14">
+          {contactCards.map((card) => {
+            const CardIcon = card.icon;
+            const inner = (
+              <div
+                className="glass-card rounded-2xl p-7 flex flex-col h-full group cursor-pointer transition-all duration-300 hover:border-accent/30 hover:-translate-y-1 hover:shadow-lg hover:shadow-accent/5"
+              >
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 shrink-0"
+                  style={{
+                    background: `${card.color}15`,
+                    border: `1px solid ${card.color}30`,
+                  }}
+                >
+                  <CardIcon size={22} style={{ color: card.color }} />
+                </div>
 
-          <div className="lg:col-span-2">
-            <p className="text-xs font-mono font-semibold uppercase tracking-widest text-accent mb-3">Book a Free Discovery Call</p>
-            <div className="glass-card rounded-2xl overflow-hidden">
-              <CalendlyEmbed />
+                <h2 className="text-lg font-display font-bold text-white mb-2">{card.title}</h2>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-5 flex-1">{card.description}</p>
+
+                <span
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold transition-colors"
+                  style={{ color: card.color }}
+                >
+                  {card.cta}
+                  <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+                </span>
+              </div>
+            );
+
+            if (card.external) {
+              return (
+                <a
+                  key={card.title}
+                  href={card.href}
+                  {...(card.newTab ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  className="no-underline"
+                >
+                  {inner}
+                </a>
+              );
+            }
+
+            return (
+              <Link key={card.title} href={card.href} className="no-underline">
+                {inner}
+              </Link>
+            );
+          })}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+          <div className="lg:col-span-3">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="accent-bar" />
+              <h2 className="text-xs font-mono font-semibold uppercase tracking-widest text-accent">Send a Message</h2>
             </div>
-          </div>
-
-          <div className="space-y-6">
             <div className="glass-card rounded-2xl p-7">
-              <p className="text-xs font-mono font-semibold uppercase tracking-widest text-accent mb-5">Send a Message</p>
               <MessageForm />
             </div>
+          </div>
 
-            <div className="glass-card rounded-2xl p-7 space-y-5">
-              <p className="text-xs font-mono font-semibold uppercase tracking-widest text-muted-foreground mb-2">Direct Contact</p>
-              <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                <Phone size={16} className="text-accent shrink-0" />
-                <a href="tel:+15413198654" className="hover:text-white transition-colors">(541) 319-8654</a>
+          <div className="lg:col-span-2">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="accent-bar" />
+              <h2 className="text-xs font-mono font-semibold uppercase tracking-widest text-accent">Direct Contact</h2>
+            </div>
+            <div className="glass-card rounded-2xl p-7 space-y-6">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
+                  <Phone size={16} className="text-accent" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-white">
+                    <a href="tel:+15413198654" className="hover:text-accent transition-colors">(541) 319-8654</a>
+                  </p>
+                  <p className="text-xs text-muted-foreground">Voicemail & text welcome</p>
+                </div>
               </div>
-              <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                <Mail size={16} className="text-accent shrink-0" />
-                <a href="mailto:tea@blueprintsandbookkeeping.com" className="hover:text-white transition-colors">tea@blueprintsandbookkeeping.com</a>
+
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
+                  <Mail size={16} className="text-accent" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-white">
+                    <a href="mailto:tea@blueprintsandbookkeeping.com" className="hover:text-accent transition-colors">tea@blueprintsandbookkeeping.com</a>
+                  </p>
+                  <p className="text-xs text-muted-foreground">Replies within one business day</p>
+                </div>
               </div>
-              <div className="flex items-start gap-3 text-sm text-muted-foreground">
-                <MapPin size={16} className="text-accent shrink-0 mt-0.5" />
-                <span>Roseburg, OR — serving clients nationwide</span>
+
+              <div className="flex items-start gap-3">
+                <div className="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
+                  <MapPin size={16} className="text-accent" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-white">Roseburg, Oregon</p>
+                  <p className="text-xs text-muted-foreground">Serving clients nationwide</p>
+                </div>
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>
