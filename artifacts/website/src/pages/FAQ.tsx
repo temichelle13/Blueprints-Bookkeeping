@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { ChevronDown } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { Link } from "wouter";
 import { cn } from "@/lib/utils";
+import { SEO } from "@/components/SEO";
+import { faqPageSchema } from "@/lib/seo-schemas";
 
 const faqs = [
   {
@@ -103,8 +105,21 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 export default function FAQ() {
   usePageTitle("FAQ");
 
+  const jsonLd = useMemo(() => {
+    const allItems = faqs.flatMap((section) =>
+      section.items.map((item) => ({ question: item.q, answer: item.a }))
+    );
+    return faqPageSchema(allItems);
+  }, []);
+
   return (
     <div className="pt-24 pb-20">
+      <SEO
+        title="FAQ"
+        description="Frequently asked questions about our bookkeeping services, business plans, pricing, and process. Straight answers for founders and business owners."
+        path="/faq"
+        jsonLd={jsonLd}
+      />
       <section className="py-16 mb-10 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

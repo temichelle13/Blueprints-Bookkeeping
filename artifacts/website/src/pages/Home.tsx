@@ -4,19 +4,29 @@ import { ArrowRight, BookOpen, Calculator, ShieldCheck, Clock, Users, Sparkles }
 import { usePageTitle } from "@/hooks/use-page-title";
 import { LeadMagnetSection } from "@/components/LeadMagnet";
 import { StatsProofBar, CredentialBadgeStrip, GoogleReviewsCallout, FeaturedInPlaceholder } from "@/components/TrustSignals";
+import { SEO } from "@/components/SEO";
+import { localBusinessSchema } from "@/lib/seo-schemas";
 
 export default function Home() {
   usePageTitle();
 
   return (
     <div>
+      <SEO
+        description="Your Blueprint to Business Success. Advanced bookkeeping, investor-focused business plans, and modern digital presence for complex, high-growth businesses. Based in Roseburg, Oregon — serving nationwide."
+        path="/"
+        jsonLd={localBusinessSchema()}
+      />
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
             src={`${import.meta.env.BASE_URL}images/hero-bg.png`}
             alt=""
             aria-hidden="true"
+            width={1920}
+            height={1080}
             className="w-full h-full object-cover opacity-30"
+            fetchPriority="high"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/70 to-background" />
         </div>

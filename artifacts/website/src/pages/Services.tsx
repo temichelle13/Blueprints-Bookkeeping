@@ -1,9 +1,26 @@
 import { Link } from "wouter";
-import { Calculator, BookOpen, MonitorPlay, CheckCircle2, ArrowRight } from "lucide-react";
+import { Calculator, BookOpen, MonitorPlay, Stamp, CheckCircle2, ArrowRight } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { SEO } from "@/components/SEO";
+import { serviceSchema } from "@/lib/seo-schemas";
+
+const BASE_URL = "https://blueprintsandbookkeeping.com";
 
 export default function Services() {
   usePageTitle("Services");
+
+  const jsonLd = [
+    serviceSchema({
+      name: "Advanced Bookkeeping & Cleanup",
+      description: "Multi-entity structuring, historical cleanups, and rule-based QBO automation for complex businesses.",
+      url: `${BASE_URL}/services`
+    }),
+    serviceSchema({
+      name: "Business Plans & Financial Forecasting",
+      description: "SBA-ready and investor-grade business plans with rigorous 3-to-5-year financial modeling.",
+      url: `${BASE_URL}/services`
+    })
+  ];
 
   const coreServices = [
     {
@@ -38,6 +55,12 @@ export default function Services() {
 
   return (
     <div className="pt-24 pb-20">
+      <SEO
+        title="Services"
+        description="Advanced bookkeeping, SBA-ready business plans, Digital Handshake web presentations, and notary services. Beyond simple data entry — robust financial infrastructure for ambitious founders."
+        path="/services"
+        jsonLd={jsonLd}
+      />
       <section className="py-16 mb-16 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -74,10 +97,10 @@ export default function Services() {
                   ))}
                 </ul>
                 <Link
-                  href={svc.id === "planning" ? "/business-planning" : "/schedule"}
+                  href={svc.id === "planning" ? "/services/business-plans" : "/services/bookkeeping"}
                   className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300 group/btn"
                 >
-                  {svc.id === "planning" ? "Learn More" : "Schedule a Consultation"}
+                  Learn More
                   <ArrowRight size={15} className="group-hover/btn:translate-x-1 transition-transform" />
                 </Link>
               </div>
@@ -132,13 +155,37 @@ export default function Services() {
                 ))}
               </ul>
               <Link
-                href="/schedule"
+                href="/services/digital-handshake"
                 className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300 group/btn"
               >
-                Schedule a Consultation
+                Learn More
                 <ArrowRight size={15} className="group-hover/btn:translate-x-1 transition-transform" />
               </Link>
             </div>
+          </div>
+        </div>
+
+        <div className="glass-card rounded-2xl p-8 mt-6 border border-white/[0.06]">
+          <div className="flex flex-col md:flex-row md:items-center gap-6">
+            <div className="flex items-center gap-3 shrink-0">
+              <div className="p-3 rounded-xl bg-accent/10 text-accent">
+                <Stamp className="w-6 h-6" />
+              </div>
+              <span className="text-[11px] font-mono font-medium tracking-widest text-muted-foreground">LOCAL</span>
+            </div>
+            <div className="flex-grow">
+              <h3 className="text-lg font-bold text-white mb-2">Notary Services</h3>
+              <p className="text-muted-foreground text-[15px]">
+                Professional notary services available in Roseburg, Oregon and surrounding Douglas County. Convenient scheduling for business and personal documents.
+              </p>
+            </div>
+            <Link
+              href="/services/notary"
+              className="shrink-0 inline-flex items-center gap-2 px-6 py-2.5 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300 group/btn"
+            >
+              Learn More
+              <ArrowRight size={15} className="group-hover/btn:translate-x-1 transition-transform" />
+            </Link>
           </div>
         </div>
       </section>

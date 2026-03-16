@@ -86,10 +86,11 @@ export function Footer() {
           <div>
             <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-5">Services</h3>
             <ul className="space-y-3 text-sm text-muted-foreground">
-              <li>Advanced Bookkeeping</li>
-              <li>Historical Cleanup</li>
-              <li><Link href="/business-planning" className="hover:text-foreground transition-colors">Business Plans</Link></li>
-              <li>Static Web Design</li>
+              <li><Link href="/services/bookkeeping" className="hover:text-white transition-colors">Advanced Bookkeeping</Link></li>
+              <li><Link href="/services/business-plans" className="hover:text-white transition-colors">Business Plans</Link></li>
+              <li><Link href="/services/digital-handshake" className="hover:text-white transition-colors">Digital Handshake</Link></li>
+              <li><Link href="/services/notary" className="hover:text-white transition-colors">Notary Services</Link></li>
+              <li><Link href="/oregon-bookkeeper" className="hover:text-white transition-colors">Oregon Bookkeeper</Link></li>
             </ul>
           </div>
 

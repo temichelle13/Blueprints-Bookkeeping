@@ -43,6 +43,11 @@ import BusinessPlanning from "./pages/BusinessPlanning";
 import Status from "./pages/Status";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import Resources from "./pages/Resources";
+import ServiceBookkeeping from "./pages/services/Bookkeeping";
+import ServiceBusinessPlans from "./pages/services/BusinessPlans";
+import ServiceDigitalHandshake from "./pages/services/DigitalHandshake";
+import ServiceNotary from "./pages/services/Notary";
+import OregonBookkeeper from "./pages/OregonBookkeeper";
 
 if (import.meta.env.VITE_API_URL) {
   setApiBaseUrl(import.meta.env.VITE_API_URL as string);
@@ -130,6 +135,11 @@ function Router() {
         <Route path="/status" component={Status} />
         <Route path="/payment-success" component={PaymentSuccess} />
         <Route path="/resources" component={Resources} />
+        <Route path="/services/bookkeeping" component={ServiceBookkeeping} />
+        <Route path="/services/business-plans" component={ServiceBusinessPlans} />
+        <Route path="/services/digital-handshake" component={ServiceDigitalHandshake} />
+        <Route path="/services/notary" component={ServiceNotary} />
+        <Route path="/oregon-bookkeeper" component={OregonBookkeeper} />
         <Route path="/admin/contracts" component={AdminContracts} />
         <Route path="/admin" component={AdminDashboard} />
         <Route component={NotFound} />

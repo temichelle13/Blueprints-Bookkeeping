@@ -2,6 +2,10 @@ import { useParams, Link } from "wouter";
 import { ArrowLeft, Calendar, Clock, Linkedin, Twitter, Mail } from "lucide-react";
 import { blogPosts } from "@/data/blog-posts";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { SEO } from "@/components/SEO";
+import { breadcrumbSchema } from "@/lib/seo-schemas";
+
+const BASE_URL = "https://blueprintsandbookkeeping.com";
 
 function ShareBar({ title, slug }: { title: string; slug: string }) {
   const pageUrl = `${window.location.origin}${import.meta.env.BASE_URL}blog/${slug}`;
@@ -66,8 +70,20 @@ export default function BlogPost() {
 
   const paragraphs = post.content.split('\n\n');
 
+  const jsonLd = breadcrumbSchema([
+    { name: "Home", url: BASE_URL },
+    { name: "Blog", url: `${BASE_URL}/blog` },
+    { name: post.title, url: `${BASE_URL}/blog/${post.slug}` }
+  ]);
+
   return (
     <div className="pt-24 pb-20">
+      <SEO
+        title={post.title}
+        description={post.excerpt}
+        path={`/blog/${post.slug}`}
+        jsonLd={jsonLd}
+      />
       <section className="py-16 mb-8 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">

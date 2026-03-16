@@ -4,6 +4,7 @@ import { ArrowRight, Calendar, Clock } from "lucide-react";
 import { blogPosts } from "@/data/blog-posts";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SEO } from "@/components/SEO";
 
 function BlogCardSkeleton() {
   return (
@@ -35,6 +36,11 @@ export default function Blog() {
 
   return (
     <div className="pt-24 pb-20">
+      <SEO
+        title="Blog & Resources"
+        description="Insights on bookkeeping, business planning, and financial strategy for complex, high-growth operations. Expert articles from Blueprints & Bookkeeping."
+        path="/blog"
+      />
       <section className="py-16 mb-16 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

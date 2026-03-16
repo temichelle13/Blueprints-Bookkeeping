@@ -1,9 +1,26 @@
 import { Link } from "wouter";
 import { TreePine, Bitcoin, ShoppingBag, Building2, Rocket, ArrowRight } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { SEO } from "@/components/SEO";
+import { serviceSchema } from "@/lib/seo-schemas";
+
+const BASE_URL = "https://blueprintsandbookkeeping.com";
 
 export default function Industries() {
   usePageTitle("Industries We Serve");
+
+  const jsonLd = [
+    serviceSchema({
+      name: "Agriculture & Timber Bookkeeping",
+      description: "Schedule F complexities, equipment depreciation, and multi-crew seasonal payroll for Douglas County operations.",
+      url: `${BASE_URL}/industries`
+    }),
+    serviceSchema({
+      name: "Crypto & Digital Asset Bookkeeping",
+      description: "ASU 2023-08 compliance, blockchain reconciliation, and DeFi transaction integration.",
+      url: `${BASE_URL}/industries`
+    })
+  ];
 
   const industries = [
     {
@@ -40,6 +57,12 @@ export default function Industries() {
 
   return (
     <div className="pt-24 pb-20">
+      <SEO
+        title="Industries We Serve"
+        description="Specialized bookkeeping for agriculture, timber, crypto, e-commerce, multi-entity portfolios, and tech startups. We solve high-friction financial challenges in complex, asset-heavy markets."
+        path="/industries"
+        jsonLd={jsonLd}
+      />
       <section className="py-16 mb-16 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
