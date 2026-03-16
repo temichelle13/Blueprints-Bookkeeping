@@ -15,15 +15,12 @@ Key capabilities include:
 
 # User Preferences
 
-- Does NOT offer tax preparation — never include tax prep content.
-- Pricing uses "starting at" ranges only.
-- Firm is capped at 20 active clients — emphasize scarcity/exclusivity.
-- About page: degrees are COURSEWORK/STUDIES only (not completed). Professional certs ARE earned.
-- I prefer concise and direct communication.
-- I value iterative development and clear explanations of proposed changes.
-- Please ask for my confirmation before implementing significant architectural changes or major feature additions.
-- Ensure all code is well-documented and follows TypeScript best practices.
-- Do not make changes to the existing branding guidelines, including primary and secondary colors, theme, and font stack, without explicit approval.
+- **Communication**: I prefer direct and concise language.
+- **Workflow**: I want iterative development with clear explanations of changes.
+- **Interaction**: Ask before making major architectural changes or introducing new dependencies.
+- **Content Policy**: Do NOT offer tax preparation services or include any tax-related content. Degrees listed on the "About" page should be referred to as "coursework" or "studies" only, not "completed degrees." Emphasize the 20-client cap for scarcity. Pricing should always use "starting at" ranges.
+- **Coding Standards**: Ensure all code is well-documented and follows TypeScript best practices.
+- **Branding**: Do not make changes to the existing branding guidelines, including primary and secondary colors, theme, and font stack, without explicit approval.
 
 # System Architecture
 
@@ -42,11 +39,12 @@ The project is organized as a pnpm workspace monorepo with separate `artifacts` 
 
 - **Technology Stack**: React, Vite, Tailwind CSS, Framer Motion.
 - **Design System**: Dark theme with deep navy-black background, glassmorphism cards, gradient text, and glow accents.
+- **Branding**: Primary color: `#1B2A5A` (deep navy), Secondary color: `#5B5EA6` (periwinkle).
 - **Styling**: Custom CSS utilities for glassmorphism, glow effects, text gradients, and accent bars.
 - **Typography**: Inter (bold) for display, JetBrains Mono for tags.
 - **Key Pages**: Home, About, Services, Industries, Pricing, Portfolio, Blog, Contact, Client Portal, Unsubscribe, Welcome, Onboarding, and 404.
-- **Navigation**: Header with BB icon, simplified navigation (About, Services, Industries, Pricing, Portfolio, Blog), and a "Get Started" CTA.
-- **SEO**: Comprehensive SEO meta tags, `robots.txt`, `sitemap.xml`, and per-page title management.
+- **Navigation**: Header with BB icon (`public/logo-icon.png`), simplified navigation (About, Services, Industries, Pricing, Portfolio, Blog), and a "Get Started" CTA.
+- **SEO**: Comprehensive SEO meta tags (description, keywords, OG, Twitter cards, JSON-LD), `robots.txt`, `sitemap.xml`, and per-page title management.
 - **Forms**: React Hook Form with Zod for validation.
 
 ## Backend (API Server)
@@ -74,7 +72,7 @@ The project is organized as a pnpm workspace monorepo with separate `artifacts` 
 
 - **Integration**: Adobe Acrobat Sign API v6.
 - **Functionality**:
-    - Automatic contract generation and sending based on form submissions or service bookings (e.g., Mutual NDA, Engagement Letter).
+    - Automatic contract generation and sending based on form submissions or service bookings (e.g., Mutual NDA, Engagement Letter, Data Processing Agreement, Scope Change).
     - Scheduled reminders for unsigned contracts and auto-expiration.
     - Archival of signed PDFs to Adobe Creative Cloud Storage.
     - Admin dashboard for contract management.

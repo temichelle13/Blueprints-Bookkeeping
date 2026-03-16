@@ -12,7 +12,9 @@ import * as zod from "zod";
  * @summary Health check
  */
 export const HealthCheckResponse = zod.object({
-  status: zod.string(),
+  status: zod.enum(["ok", "degraded"]),
+  db: zod.enum(["ok", "error"]),
+  timestamp: zod.date(),
 });
 
 /**
@@ -332,6 +334,24 @@ export const UpdateContractTemplateResponse = zod.object({
  * @summary Delete a contract template
  */
 export const DeleteContractTemplateParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+/**
+ * @summary Webhook for service bookings (Calendly or manual)
+ */
+export const BookingWebhookBody = zod.object({
+  event: zod.string().optional(),
+  payload: zod.object({}).passthrough().optional(),
+  clientName: zod.string().optional(),
+  clientEmail: zod.string().optional(),
+  serviceType: zod.string().optional(),
+});
+
+/**
+ * @summary Download signed contract PDF
+ */
+export const GetContractDocumentParams = zod.object({
   id: zod.coerce.number(),
 });
 

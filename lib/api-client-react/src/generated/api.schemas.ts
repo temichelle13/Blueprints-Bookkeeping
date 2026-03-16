@@ -5,8 +5,26 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+export type HealthStatusStatus =
+  (typeof HealthStatusStatus)[keyof typeof HealthStatusStatus];
+
+export const HealthStatusStatus = {
+  ok: "ok",
+  degraded: "degraded",
+} as const;
+
+export type HealthStatusDb =
+  (typeof HealthStatusDb)[keyof typeof HealthStatusDb];
+
+export const HealthStatusDb = {
+  ok: "ok",
+  error: "error",
+} as const;
+
 export interface HealthStatus {
-  status: string;
+  status: HealthStatusStatus;
+  db: HealthStatusDb;
+  timestamp: string;
 }
 
 export type ContactFormInputFormType =
@@ -211,3 +229,21 @@ export interface AdobeSignStatus {
   configured: boolean;
   message: string;
 }
+
+export type BookingWebhookBodyPayload = { [key: string]: unknown };
+
+export type BookingWebhookBody = {
+  event?: string;
+  payload?: BookingWebhookBodyPayload;
+  clientName?: string;
+  clientEmail?: string;
+  serviceType?: string;
+};
+
+export type BookingWebhook201ContractsItem = { [key: string]: unknown };
+
+export type BookingWebhook201 = {
+  success?: boolean;
+  message?: string;
+  contracts?: BookingWebhook201ContractsItem[];
+};

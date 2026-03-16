@@ -31,6 +31,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+        "503":
+          description: Degraded — one or more dependencies are unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
   /contact:
     post:
       operationId: submitContactForm
@@ -472,8 +478,17 @@ components:
       properties:
         status:
           type: string
+          enum: [ok, degraded]
+        db:
+          type: string
+          enum: [ok, error]
+        timestamp:
+          type: string
+          format: date-time
       required:
         - status
+        - db
+        - timestamp
     ContactFormInput:
       type: object
       properties:

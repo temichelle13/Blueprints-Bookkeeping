@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import rateLimit from "express-rate-limit";
 import { db, contactInquiriesTable } from "@workspace/db";
 import { SubmitContactFormBody } from "@workspace/api-zod";
 import { Resend } from "resend";
@@ -12,10 +13,18 @@ function getResend(): Resend | null {
   return new Resend(key);
 }
 
+const contactLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many submissions from this IP. Please try again later." },
+});
+
 const OWNER_EMAIL = "tea@blueprintsandbookkeeping.com";
 const FROM_ADDRESS = "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
 
-router.post("/contact", async (req, res): Promise<void> => {
+router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
   const parsed = SubmitContactFormBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });

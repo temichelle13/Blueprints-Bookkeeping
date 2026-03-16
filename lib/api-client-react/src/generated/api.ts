@@ -18,6 +18,8 @@ import type {
 
 import type {
   AdobeSignStatus,
+  BookingWebhook201,
+  BookingWebhookBody,
   ContactFormInput,
   ContactFormResponse,
   Contract,
@@ -73,7 +75,7 @@ export const getHealthCheckQueryKey = () => {
 
 export const getHealthCheckQueryOptions = <
   TData = Awaited<ReturnType<typeof healthCheck>>,
-  TError = ErrorType<unknown>,
+  TError = ErrorType<HealthStatus>,
 >(options?: {
   query?: UseQueryOptions<
     Awaited<ReturnType<typeof healthCheck>>,
@@ -100,7 +102,7 @@ export const getHealthCheckQueryOptions = <
 export type HealthCheckQueryResult = NonNullable<
   Awaited<ReturnType<typeof healthCheck>>
 >;
-export type HealthCheckQueryError = ErrorType<unknown>;
+export type HealthCheckQueryError = ErrorType<HealthStatus>;
 
 /**
  * @summary Health check
@@ -108,7 +110,7 @@ export type HealthCheckQueryError = ErrorType<unknown>;
 
 export function useHealthCheck<
   TData = Awaited<ReturnType<typeof healthCheck>>,
-  TError = ErrorType<unknown>,
+  TError = ErrorType<HealthStatus>,
 >(options?: {
   query?: UseQueryOptions<
     Awaited<ReturnType<typeof healthCheck>>,
@@ -1731,6 +1733,179 @@ export const useDeleteContractTemplate = <
 > => {
   return useMutation(getDeleteContractTemplateMutationOptions(options));
 };
+
+/**
+ * @summary Webhook for service bookings (Calendly or manual)
+ */
+export const getBookingWebhookUrl = () => {
+  return `/api/contracts/webhooks/booking`;
+};
+
+export const bookingWebhook = async (
+  bookingWebhookBody: BookingWebhookBody,
+  options?: RequestInit,
+): Promise<BookingWebhook201> => {
+  return customFetch<BookingWebhook201>(getBookingWebhookUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(bookingWebhookBody),
+  });
+};
+
+export const getBookingWebhookMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof bookingWebhook>>,
+    TError,
+    { data: BodyType<BookingWebhookBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof bookingWebhook>>,
+  TError,
+  { data: BodyType<BookingWebhookBody> },
+  TContext
+> => {
+  const mutationKey = ["bookingWebhook"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof bookingWebhook>>,
+    { data: BodyType<BookingWebhookBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return bookingWebhook(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type BookingWebhookMutationResult = NonNullable<
+  Awaited<ReturnType<typeof bookingWebhook>>
+>;
+export type BookingWebhookMutationBody = BodyType<BookingWebhookBody>;
+export type BookingWebhookMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Webhook for service bookings (Calendly or manual)
+ */
+export const useBookingWebhook = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof bookingWebhook>>,
+    TError,
+    { data: BodyType<BookingWebhookBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof bookingWebhook>>,
+  TError,
+  { data: BodyType<BookingWebhookBody> },
+  TContext
+> => {
+  return useMutation(getBookingWebhookMutationOptions(options));
+};
+
+/**
+ * @summary Download signed contract PDF
+ */
+export const getGetContractDocumentUrl = (id: number) => {
+  return `/api/contracts/${id}/document`;
+};
+
+export const getContractDocument = async (
+  id: number,
+  options?: RequestInit,
+): Promise<Blob> => {
+  return customFetch<Blob>(getGetContractDocumentUrl(id), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetContractDocumentQueryKey = (id: number) => {
+  return [`/api/contracts/${id}/document`] as const;
+};
+
+export const getGetContractDocumentQueryOptions = <
+  TData = Awaited<ReturnType<typeof getContractDocument>>,
+  TError = ErrorType<void>,
+>(
+  id: number,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getContractDocument>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetContractDocumentQueryKey(id);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getContractDocument>>
+  > = ({ signal }) => getContractDocument(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getContractDocument>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetContractDocumentQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getContractDocument>>
+>;
+export type GetContractDocumentQueryError = ErrorType<void>;
+
+/**
+ * @summary Download signed contract PDF
+ */
+
+export function useGetContractDocument<
+  TData = Awaited<ReturnType<typeof getContractDocument>>,
+  TError = ErrorType<void>,
+>(
+  id: number,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getContractDocument>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetContractDocumentQueryOptions(id, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
 
 /**
  * @summary Check Adobe Sign API status
