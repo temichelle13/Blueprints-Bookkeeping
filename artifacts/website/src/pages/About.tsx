@@ -55,6 +55,31 @@ export default function About() {
             </div>
           </div>
 
+          <div className="glass-card rounded-2xl p-8 mb-12">
+            <div className="flex items-center gap-3 mb-4">
+              <Shield className="w-7 h-7 text-accent" />
+              <h3 className="text-xl font-display font-bold text-white">Security First</h3>
+            </div>
+            <p className="text-muted-foreground leading-relaxed mb-6">
+              Our books are managed by a professional trained in IBM-standard cybersecurity and data classification. Your sensitive financial data is protected with the same rigor used in enterprise environments.
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+              {[
+                { name: "Cybersecurity Fundamentals", img: `${import.meta.env.BASE_URL}images/badge-ibm-cybersecurity.png`, url: "https://www.credly.com/badges/44179f58-1ad3-4b02-9f5d-6bf2258a3c49/public_url" },
+                { name: "Cybersecurity with Capstone", img: `${import.meta.env.BASE_URL}images/badge-ibm-cybersecurity-capstone.png`, url: "https://www.credly.com/badges/abc7661b-7147-4ccf-8fce-926ac6d32572/public_url" },
+                { name: "IBM Granite Data Classification", img: `${import.meta.env.BASE_URL}images/badge-ibm-granite.png`, url: "https://www.credly.com/badges/e428bd41-b6fa-4a0e-9c90-4a6cbbc2d128/public_url" },
+                { name: "Google AI Essentials", img: `${import.meta.env.BASE_URL}images/badge-google-ai.png`, url: "https://www.credly.com/badges/97b2b906-189e-4921-ba7c-30f4f3334c8f/public_url" },
+              ].map((badge) => (
+                <a key={badge.name} href={badge.url} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center text-center group">
+                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-600/20 to-blue-800/20 border border-white/[0.06] flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+                    <img src={badge.img} alt={badge.name} width={56} height={56} loading="lazy" className="w-14 h-14 object-contain" />
+                  </div>
+                  <span className="text-xs text-muted-foreground font-medium group-hover:text-accent transition-colors">{badge.name}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
             <div className="glass-card rounded-2xl p-6">
               <h3 className="font-bold text-sm uppercase tracking-wider text-muted-foreground mb-5 flex items-center gap-2">

@@ -2,7 +2,29 @@ import { motion } from "framer-motion";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 import { Link } from "wouter";
-import { ArrowRight, BadgeCheck, GraduationCap, ShieldCheck, BookOpen, Award, Briefcase, Brain, FileText, Code2, Rss, Zap, Linkedin, Github, ExternalLink } from "lucide-react";
+import { ArrowRight, BadgeCheck, GraduationCap, ShieldCheck, Award, Brain, FileText, Code2, Rss, Zap, Linkedin, Github, ExternalLink } from "lucide-react";
+
+type CertWithBadge = {
+  name: string;
+  issuer: string;
+  description: string;
+  badge: string;
+  color: string;
+  border: string;
+  url: string;
+};
+
+type CertWithIcon = {
+  name: string;
+  issuer: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+  color: string;
+  border: string;
+  url: string;
+};
+
+type CertEntry = CertWithBadge | CertWithIcon;
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -15,53 +37,50 @@ const intuitCerts = [
     name: "QuickBooks ProAdvisor — Level 1",
     issuer: "Intuit",
     description: "Core QuickBooks Online certification covering client onboarding, transaction management, bank reconciliation, and reporting fundamentals.",
-    badge: `${import.meta.env.BASE_URL}images/proadvisor-gold-badge.png`,
+    badge: `${import.meta.env.BASE_URL}images/badge-qb-level1.png`,
     color: "from-green-500/10 to-emerald-500/5",
     border: "border-green-500/20",
+    url: "https://www.credly.com/badges/c400e0bb-4ea5-4744-83da-af7e9bb890c1/public_url",
   },
   {
     name: "QuickBooks ProAdvisor — Level 2",
     issuer: "Intuit",
     description: "Advanced QuickBooks Online certification covering complex workflows, automation, multi-entity management, and accountant-level tools.",
-    badge: `${import.meta.env.BASE_URL}images/intuit-proadvisor-badge-tier-gold.png`,
+    badge: `${import.meta.env.BASE_URL}images/badge-qb-level2.png`,
     color: "from-green-500/10 to-emerald-500/5",
     border: "border-green-500/20",
+    url: "https://www.credly.com/badges/76acb9d5-763f-4768-acf5-5d7bdff90313/public_url",
+  },
+  {
+    name: "QuickBooks Payroll Certification",
+    issuer: "Intuit",
+    description: "Certification in QuickBooks payroll management covering payroll setup, processing, tax compliance, and reporting.",
+    badge: `${import.meta.env.BASE_URL}images/badge-qb-payroll.png`,
+    color: "from-green-500/10 to-emerald-500/5",
+    border: "border-green-500/20",
+    url: "https://www.credly.com/badges/5adba910-e07f-4ad7-ba97-2ffe67a76118/public_url",
   },
   {
     name: "Certified Bookkeeping Professional",
     issuer: "Intuit",
     description: "Professional-level bookkeeping certification validating expertise in financial record-keeping, accounts management, and reporting accuracy.",
-    icon: BookOpen,
+    badge: `${import.meta.env.BASE_URL}images/badge-intuit-bookkeeping.png`,
     color: "from-blue-500/10 to-indigo-500/5",
     border: "border-blue-500/20",
+    url: "https://www.credly.com/badges/e2823194-36dc-4ab3-ab1d-155b9189714f/public_url",
   },
   {
     name: "Tax Exam — Level 1",
     issuer: "Intuit",
     description: "Foundational tax knowledge certification covering individual and small business tax concepts, preparation principles, and compliance basics.",
-    icon: BookOpen,
+    badge: `${import.meta.env.BASE_URL}images/badge-tax-exam-l1.png`,
     color: "from-blue-500/10 to-indigo-500/5",
     border: "border-blue-500/20",
-  },
-  {
-    name: "Crypto Tax Certification",
-    issuer: "Intuit",
-    description: "Specialized certification covering digital asset taxation, cost-basis methodology, transaction reconciliation, and crypto income reporting.",
-    icon: BookOpen,
-    color: "from-orange-500/10 to-amber-500/5",
-    border: "border-orange-500/20",
-  },
-  {
-    name: "Client Advisory Services",
-    issuer: "Intuit",
-    description: "Certification in delivering strategic advisory services to clients — moving beyond bookkeeping to actionable financial guidance and business insights.",
-    icon: Briefcase,
-    color: "from-accent/10 to-primary/5",
-    border: "border-accent/20",
+    url: "https://www.credly.com/users/tealarson-hetrick",
   },
 ];
 
-const licensesAndTech = [
+const licensesAndTech: CertEntry[] = [
   {
     name: "Ethical Hacking",
     issuer: "PACKT",
@@ -69,6 +88,7 @@ const licensesAndTech = [
     icon: ShieldCheck,
     color: "from-red-500/10 to-rose-500/5",
     border: "border-red-500/20",
+    url: "https://www.credly.com/users/tealarson-hetrick",
   },
   {
     name: "Cybersecurity Foundations",
@@ -77,14 +97,37 @@ const licensesAndTech = [
     icon: ShieldCheck,
     color: "from-blue-500/10 to-sky-500/5",
     border: "border-blue-500/20",
+    url: "https://www.credly.com/users/tealarson-hetrick",
   },
   {
     name: "Google AI Essentials",
     issuer: "Google",
     description: "Foundational AI literacy certification from Google covering AI principles, practical applications, and responsible AI use in professional settings.",
-    icon: Brain,
+    badge: `${import.meta.env.BASE_URL}images/badge-google-ai.png`,
     color: "from-yellow-500/10 to-amber-500/5",
     border: "border-yellow-500/20",
+    url: "https://www.credly.com/badges/97b2b906-189e-4921-ba7c-30f4f3334c8f/public_url",
+  },
+];
+
+const specializedCerts = [
+  {
+    name: "Cryptocurrency Tax Certification",
+    issuer: "Intuit",
+    description: "Specialized certification covering digital asset taxation, cost-basis methodology, transaction reconciliation, and crypto income reporting.",
+    badge: `${import.meta.env.BASE_URL}images/badge-crypto-tax.png`,
+    color: "from-orange-500/10 to-amber-500/5",
+    border: "border-orange-500/20",
+    url: "https://www.credly.com/badges/cf7b715a-a68b-4384-b5c0-b802bb9234fc/public_url",
+  },
+  {
+    name: "Client Advisory Services Foundations",
+    issuer: "Intuit",
+    description: "Certification in delivering strategic advisory services to clients — moving beyond bookkeeping to actionable financial guidance and business insights.",
+    badge: `${import.meta.env.BASE_URL}images/badge-client-advisory.png`,
+    color: "from-accent/10 to-primary/5",
+    border: "border-accent/20",
+    url: "https://www.credly.com/badges/a7bd0f27-6dfa-439c-bbea-3bbac947fd5c/public_url",
   },
 ];
 
@@ -308,40 +351,38 @@ export default function Portfolio() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {intuitCerts.map((cert, i) => (
-            <motion.div
+            <motion.a
               key={cert.name}
+              href={cert.url}
+              target="_blank"
+              rel="noopener noreferrer"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.07 }}
-              className={`relative glass-card rounded-2xl p-7 border ${cert.border} overflow-hidden`}
+              className={`relative glass-card rounded-2xl p-7 border ${cert.border} overflow-hidden group hover:scale-[1.02] transition-all duration-200`}
             >
               <div className={`absolute inset-0 bg-gradient-to-br ${cert.color} pointer-events-none`} />
               <div className="relative">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1 pr-3">
-                    <h3 className="text-base font-bold text-white mb-1">{cert.name}</h3>
+                    <h3 className="text-base font-bold text-white mb-1 group-hover:text-accent transition-colors">{cert.name}</h3>
                     <p className="text-sm text-accent font-medium">{cert.issuer}</p>
                   </div>
-                  {"badge" in cert && cert.badge ? (
+                  {cert.badge ? (
                     <img
-                      src={cert.badge as string}
+                      src={cert.badge}
                       alt={cert.name}
                       className="w-14 h-14 object-contain shrink-0"
+                      loading="lazy"
                     />
-                  ) : (
-                    "icon" in cert && cert.icon && (
-                      <div className="p-2.5 rounded-xl bg-white/[0.06]">
-                        <cert.icon className="w-5 h-5 text-accent" />
-                      </div>
-                    )
-                  )}
+                  ) : null}
                 </div>
                 <p className="text-muted-foreground text-[14px] leading-relaxed">
                   {cert.description}
                 </p>
               </div>
-            </motion.div>
+            </motion.a>
           ))}
         </div>
       </section>
@@ -357,30 +398,37 @@ export default function Portfolio() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {licensesAndTech.map((cert, i) => (
-            <motion.div
+            <motion.a
               key={cert.name}
+              href={cert.url}
+              target="_blank"
+              rel="noopener noreferrer"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.07 }}
-              className={`relative glass-card rounded-2xl p-7 border ${cert.border} overflow-hidden`}
+              className={`relative glass-card rounded-2xl p-7 border ${cert.border} overflow-hidden group hover:scale-[1.02] transition-all duration-200`}
             >
               <div className={`absolute inset-0 bg-gradient-to-br ${cert.color} pointer-events-none`} />
               <div className="relative">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1 pr-3">
-                    <h3 className="text-base font-bold text-white mb-1">{cert.name}</h3>
+                    <h3 className="text-base font-bold text-white mb-1 group-hover:text-accent transition-colors">{cert.name}</h3>
                     <p className="text-sm text-accent font-medium">{cert.issuer}</p>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-white/[0.06] shrink-0">
-                    <cert.icon className="w-5 h-5 text-accent" />
-                  </div>
+                  {"badge" in cert ? (
+                    <img src={(cert as CertWithBadge).badge} alt={cert.name} className="w-14 h-14 object-contain shrink-0" loading="lazy" />
+                  ) : (
+                    <div className="p-2.5 rounded-xl bg-white/[0.06] shrink-0">
+                      {(() => { const Icon = (cert as CertWithIcon).icon; return <Icon className="w-5 h-5 text-accent" />; })()}
+                    </div>
+                  )}
                 </div>
                 <p className="text-muted-foreground text-[14px] leading-relaxed">
                   {cert.description}
                 </p>
               </div>
-            </motion.div>
+            </motion.a>
           ))}
         </div>
       </section>
@@ -491,6 +539,61 @@ export default function Portfolio() {
             </motion.div>
           ))}
         </div>
+      </section>
+
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-20">
+        <motion.div {...fadeUp} className="mb-10">
+          <div className="accent-bar mb-4" />
+          <h2 className="text-2xl font-display font-bold text-white">Specialized Services</h2>
+          <p className="text-muted-foreground mt-2">Advanced certifications for niche financial services.</p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {specializedCerts.map((cert, i) => (
+            <motion.a
+              key={cert.name}
+              href={cert.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.07 }}
+              className={`relative glass-card rounded-2xl p-7 border ${cert.border} overflow-hidden group hover:scale-[1.02] transition-all duration-200`}
+            >
+              <div className={`absolute inset-0 bg-gradient-to-br ${cert.color} pointer-events-none`} />
+              <div className="relative">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex-1 pr-3">
+                    <h3 className="text-base font-bold text-white mb-1 group-hover:text-accent transition-colors">{cert.name}</h3>
+                    <p className="text-sm text-accent font-medium">{cert.issuer}</p>
+                  </div>
+                  <img src={cert.badge} alt={cert.name} className="w-14 h-14 object-contain shrink-0" loading="lazy" />
+                </div>
+                <p className="text-muted-foreground text-[14px] leading-relaxed">
+                  {cert.description}
+                </p>
+              </div>
+            </motion.a>
+          ))}
+        </div>
+      </section>
+
+      <div className="glow-line max-w-5xl mx-auto" />
+
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 my-20 text-center">
+        <motion.div {...fadeUp}>
+          <a
+            href="https://www.credly.com/users/tealarson-hetrick"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-accent/10 border border-accent/25 text-accent font-bold rounded-xl hover:bg-accent hover:text-white hover:border-accent hover:shadow-xl hover:shadow-accent/20 transition-all duration-300"
+          >
+            <BadgeCheck size={20} />
+            Verify My Credentials on Credly
+            <ExternalLink size={16} />
+          </a>
+        </motion.div>
       </section>
 
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

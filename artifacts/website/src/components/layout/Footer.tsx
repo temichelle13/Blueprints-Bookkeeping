@@ -124,7 +124,20 @@ export function Footer() {
         </p>
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Blueprints & Bookkeeping, LLC. All rights reserved.</p>
+          <div className="flex items-center gap-4">
+            <p>&copy; {new Date().getFullYear()} Blueprints & Bookkeeping, LLC. All rights reserved.</p>
+            <div className="flex items-center gap-2">
+              {[
+                { src: `${import.meta.env.BASE_URL}images/badge-qb-level2.png`, alt: "QuickBooks ProAdvisor Level 2", url: "https://www.credly.com/badges/76acb9d5-763f-4768-acf5-5d7bdff90313/public_url" },
+                { src: `${import.meta.env.BASE_URL}images/badge-qb-payroll.png`, alt: "QuickBooks Payroll Certification", url: "https://www.credly.com/badges/5adba910-e07f-4ad7-ba97-2ffe67a76118/public_url" },
+                { src: `${import.meta.env.BASE_URL}images/badge-intuit-bookkeeping.png`, alt: "Intuit Bookkeeping Certification", url: "https://www.credly.com/badges/e2823194-36dc-4ab3-ab1d-155b9189714f/public_url" },
+              ].map((badge) => (
+                <a key={badge.alt} href={badge.url} target="_blank" rel="noopener noreferrer" className="shrink-0 hover:scale-110 transition-transform">
+                  <img src={badge.src} alt={badge.alt} className="w-8 h-8 object-contain" loading="lazy" />
+                </a>
+              ))}
+            </div>
+          </div>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-foreground transition-colors">Terms of Service</Link>
