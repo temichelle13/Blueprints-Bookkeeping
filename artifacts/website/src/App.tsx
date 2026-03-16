@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { setApiBaseUrl } from "@workspace/api-client-react";
 import NotFound from "@/pages/not-found";
+import { usePageTracking } from "./hooks/usePageTracking";
 
 import { Header } from "./components/layout/Header";
 import ChatWidget from "./components/ChatWidget";
@@ -54,6 +55,8 @@ function Layout({ children }: { children: React.ReactNode }) {
 }
 
 function Router() {
+  usePageTracking();
+
   return (
     <Layout>
       <Switch>

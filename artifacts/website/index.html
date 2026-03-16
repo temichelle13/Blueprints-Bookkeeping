@@ -29,6 +29,33 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
+    <!--
+      ============================================================
+      GOOGLE ANALYTICS 4 (GA4) SETUP INSTRUCTIONS
+      ============================================================
+      To enable analytics tracking on this website:
+
+      1. Go to https://analytics.google.com/ and sign in with a Google account.
+      2. Click "Admin" (gear icon) in the bottom-left corner.
+      3. Click "Create" > "Property" and follow the prompts to create a new GA4 property.
+      4. In "Data Streams", add a "Web" stream for your domain (e.g. blueprintsandbookkeeping.com).
+      5. Copy the "Measurement ID" — it looks like G-XXXXXXXXXX.
+      6. Replace BOTH occurrences of G-XXXXXXXXXX below with your real Measurement ID.
+
+      That's it! GA4 will start collecting page view data automatically.
+      The automatic page view on initial load is disabled (send_page_view: false) because
+      the usePageTracking hook in src/hooks/usePageTracking.ts handles all page views,
+      including the initial load and subsequent client-side route changes via Wouter.
+      ============================================================
+    -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX', { send_page_view: false });
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
