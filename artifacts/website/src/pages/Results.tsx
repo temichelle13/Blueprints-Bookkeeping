@@ -28,6 +28,9 @@ export default function Results() {
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
               Real outcomes from real founders. Every engagement is confidential — names and details are anonymized to protect our clients' privacy.
             </p>
+            <p className="mt-6 text-sm text-muted-foreground/70 italic max-w-xl mx-auto">
+              Past results are not a guarantee of future outcomes. Every business is unique, and individual results will vary based on circumstances, market conditions, and other factors.
+            </p>
           </motion.div>
         </div>
       </section>

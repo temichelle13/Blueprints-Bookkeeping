@@ -21,8 +21,7 @@ export default function Home() {
         <div className="absolute inset-0 z-0">
           <img
             src={`${import.meta.env.BASE_URL}images/hero-bg.png`}
-            alt=""
-            aria-hidden="true"
+            alt="Blueprints & Bookkeeping — professional bookkeeping and business plan services for founders"
             width={1920}
             height={1080}
             className="w-full h-full object-cover opacity-30"

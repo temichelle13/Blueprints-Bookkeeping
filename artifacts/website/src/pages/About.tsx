@@ -81,33 +81,37 @@ export default function About() {
                 {
                   name: "QuickBooks ProAdvisor Gold",
                   img: "/images/proadvisor-gold-badge.png",
-                  fallbackColor: "from-green-600/20 to-green-800/20"
+                  fallbackColor: "from-green-600/20 to-green-800/20",
+                  url: "https://quickbooks.intuit.com/find-an-accountant/"
                 },
                 {
                   name: "CEH v12 Certified",
                   img: "",
-                  fallbackColor: "from-red-600/20 to-red-800/20"
+                  fallbackColor: "from-red-600/20 to-red-800/20",
+                  url: "https://www.eccouncil.org/programs/certified-ethical-hacker-ceh/"
                 },
                 {
                   name: "Crypto Accounting Certified",
                   img: "",
-                  fallbackColor: "from-orange-600/20 to-orange-800/20"
+                  fallbackColor: "from-orange-600/20 to-orange-800/20",
+                  url: "https://cryptoaccountingacademy.com/"
                 },
                 {
                   name: "Oregon RON Notary",
                   img: "",
-                  fallbackColor: "from-blue-600/20 to-blue-800/20"
+                  fallbackColor: "from-blue-600/20 to-blue-800/20",
+                  url: "https://sos.oregon.gov/business/Pages/notary.aspx"
                 }
               ].map((badge, i) => (
-                <div key={i} className="flex flex-col items-center text-center group">
+                <a key={i} href={badge.url} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center text-center group">
                   <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${badge.fallbackColor} border border-white/[0.06] flex items-center justify-center mb-3 group-hover:scale-105 transition-transform`}>
                     {badge.img ? (
                       <img src={badge.img} alt={badge.name} width={56} height={56} loading="lazy" className="w-14 h-14 object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).nextElementSibling && ((e.target as HTMLImageElement).nextElementSibling as HTMLElement).classList.remove('hidden'); }} />
                     ) : null}
                     <Shield className={`w-8 h-8 text-accent ${badge.img ? 'hidden' : ''}`} />
                   </div>
-                  <span className="text-xs text-muted-foreground font-medium">{badge.name}</span>
-                </div>
+                  <span className="text-xs text-muted-foreground font-medium group-hover:text-accent transition-colors">{badge.name}</span>
+                </a>
               ))}
             </div>
           </div>

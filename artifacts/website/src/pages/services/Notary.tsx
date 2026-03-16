@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { Stamp, CheckCircle2, ArrowRight, Shield, FileText, MapPin, Clock } from "lucide-react";
+import { Stamp, CheckCircle2, ArrowRight, Shield, FileText, MapPin, Clock, Monitor, AlertTriangle } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { serviceSchema, breadcrumbSchema } from "@/lib/seo-schemas";
@@ -82,6 +82,80 @@ export default function Notary() {
               </ul>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <h2 className="text-2xl font-display font-bold text-white mb-6">In-Person vs. Remote Online Notarization (RON)</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="glass-card-hover rounded-2xl p-6 group">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="p-2 rounded-lg bg-accent/10 text-accent group-hover:bg-accent group-hover:text-white transition-all duration-500">
+                <MapPin className="w-5 h-5" />
+              </div>
+              <h3 className="font-bold text-white">In-Person Notarization</h3>
+            </div>
+            <p className="text-muted-foreground text-[14px] leading-relaxed mb-4">
+              Traditional notarization performed face-to-face in Roseburg or surrounding Douglas County. Available by appointment for all document types.
+            </p>
+            <ul className="space-y-2">
+              {["All document types accepted", "Valid government-issued photo ID required", "Available by appointment"].map((item, j) => (
+                <li key={j} className="flex items-start gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-accent shrink-0 mt-0.5" />
+                  <span className="text-foreground text-[14px]">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="glass-card-hover rounded-2xl p-6 group">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="p-2 rounded-lg bg-accent/10 text-accent group-hover:bg-accent group-hover:text-white transition-all duration-500">
+                <Monitor className="w-5 h-5" />
+              </div>
+              <h3 className="font-bold text-white">Remote Online Notarization (RON)</h3>
+            </div>
+            <p className="text-muted-foreground text-[14px] leading-relaxed mb-4">
+              Notarization performed via a secure audio-video session. Convenient for clients who cannot meet in person. Oregon-commissioned RON.
+            </p>
+            <div className="mb-3">
+              <span className="text-xs font-semibold text-accent uppercase tracking-wider">Eligible for RON</span>
+            </div>
+            <ul className="space-y-2 mb-5">
+              {["Powers of attorney", "Affidavits and sworn statements", "Business contracts and agreements", "LLC operating agreements", "Real estate transfer documents", "Loan and mortgage documents"].map((item, j) => (
+                <li key={j} className="flex items-start gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-accent shrink-0 mt-0.5" />
+                  <span className="text-foreground text-[14px]">{item}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="mb-3">
+              <span className="text-xs font-semibold text-red-400 uppercase tracking-wider">Not eligible for RON — Require in-person</span>
+            </div>
+            <ul className="space-y-2 mb-5">
+              {["Self-proved wills and codicils (Oregon law requires physical presence)", "Documents requiring witness signatures not supported by the RON platform", "Court-ordered documents specifying in-person notarization", "Documents where the receiving agency or county explicitly requires wet-ink notarization"].map((item, j) => (
+                <li key={j} className="flex items-start gap-2">
+                  <span className="w-4 h-4 text-red-400 shrink-0 mt-0.5 flex items-center justify-center text-xs font-bold">✕</span>
+                  <span className="text-foreground text-[14px]">{item}</span>
+                </li>
+              ))}
+            </ul>
+            <ul className="space-y-2">
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 text-accent shrink-0 mt-0.5" />
+                <span className="text-foreground text-[14px]">Identity verified via knowledge-based authentication (KBA) + credential analysis</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 text-accent shrink-0 mt-0.5" />
+                <span className="text-foreground text-[14px]">Session recorded and tamper-sealed per Oregon RON requirements</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div className="flex items-start gap-3 rounded-xl border border-amber-500/25 bg-amber-500/5 px-5 py-4">
+          <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" aria-hidden="true" />
+          <p className="text-[13px] leading-relaxed text-amber-200/80">
+            <span className="font-semibold text-amber-300">Out-of-state clients:</span> RON acceptance varies by state. Some states may not recognize a notarization performed via Oregon RON for certain document types. If you are located outside Oregon, please verify with your local authority, receiving agency, or attorney that Oregon RON is accepted in your jurisdiction before scheduling. Eligibility of specific document types may also depend on the requirements of the receiving county or agency.
+          </p>
         </div>
       </section>
 

@@ -366,7 +366,7 @@ export default function Pricing() {
             Flat-fee pricing for predictable cash flow. You pay for outcomes, clarity, and executive-level expertise — not hours.
           </p>
           <div className="mt-6 inline-flex items-center gap-2 bg-accent/10 text-accent border border-accent/20 px-4 py-2 rounded-full text-sm font-medium">
-            <Shield size={14} /> All plans include mandatory Technology & Security Surcharge
+            <Shield size={14} /> All plans include a mandatory Technology & Security Surcharge of $50/mo
           </div>
         </div>
       </section>
@@ -409,7 +409,7 @@ export default function Pricing() {
           <HelpCircle className="w-4 h-4 text-accent/60 shrink-0 mt-0.5" />
           <p className="text-sm text-muted-foreground">
             <span className="text-foreground font-medium">How pricing is determined: </span>
-            Final monthly rate is based on transaction volume, number of entities, and niche complexity (crypto, agriculture, multi-currency, etc.). All quotes are flat-fee — no surprise hourly charges.
+            Final monthly rate is based on transaction volume, number of entities, and niche complexity (crypto, agriculture, multi-currency, etc.). All quotes are flat-fee — no surprise hourly charges. A mandatory $50/mo Technology & Security Surcharge applies to all bookkeeping tiers and covers secure cloud infrastructure, encrypted file handling, and software licensing.
           </p>
         </div>
       </section>

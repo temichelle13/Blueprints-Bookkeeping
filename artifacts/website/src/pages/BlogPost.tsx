@@ -108,6 +108,11 @@ export default function BlogPost() {
       </section>
 
       <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-start gap-3 rounded-xl border border-amber-500/25 bg-amber-500/5 px-5 py-3 mb-8">
+          <span className="text-[13px] leading-relaxed text-amber-200/80">
+            <span className="font-semibold text-amber-300">Disclaimer:</span> This article is for informational purposes only and does not constitute professional tax, legal, or investment advice. Please consult a licensed professional for guidance specific to your situation.
+          </span>
+        </div>
         <div className="prose-custom space-y-5">
           {paragraphs.map((paragraph, i) => {
             const trimmed = paragraph.trim();
