@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 import { Link } from "wouter";
-import { ArrowRight, BadgeCheck, GraduationCap, ShieldCheck, BookOpen } from "lucide-react";
+import { ArrowRight, BadgeCheck, GraduationCap, ShieldCheck, BookOpen, Award, Briefcase, Brain } from "lucide-react";
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -10,61 +10,126 @@ const fadeUp = {
   viewport: { once: true },
 };
 
-const certifications = [
+const intuitCerts = [
   {
-    name: "QuickBooks ProAdvisor Gold",
+    name: "QuickBooks ProAdvisor — Level 1",
     issuer: "Intuit",
-    description: "Advanced QuickBooks Online certification covering complex setups, automation, multi-entity management, and accountant workflows. Gold tier reflects ongoing continuing education.",
+    description: "Core QuickBooks Online certification covering client onboarding, transaction management, bank reconciliation, and reporting fundamentals.",
     badge: `${import.meta.env.BASE_URL}images/proadvisor-gold-badge.png`,
     color: "from-green-500/10 to-emerald-500/5",
     border: "border-green-500/20",
   },
   {
-    name: "Certified Ethical Hacker v12",
-    issuer: "EC-Council",
-    description: "Enterprise-grade cybersecurity certification. Directly applied to client data protection — no offshore labor, encrypted document handling, and secure client portal infrastructure.",
-    icon: ShieldCheck,
-    color: "from-red-500/10 to-rose-500/5",
-    border: "border-red-500/20",
+    name: "QuickBooks ProAdvisor — Level 2",
+    issuer: "Intuit",
+    description: "Advanced QuickBooks Online certification covering complex workflows, automation, multi-entity management, and accountant-level tools.",
+    badge: `${import.meta.env.BASE_URL}images/intuit-proadvisor-badge-tier-gold.png`,
+    color: "from-green-500/10 to-emerald-500/5",
+    border: "border-green-500/20",
   },
   {
-    name: "Advanced Crypto Accounting Certified",
-    issuer: "Crypto Accounting Certification Program",
-    description: "Specialized certification covering ASU 2023-08 compliance, FIFO/LIFO cost-basis methodology, DeFi transaction reconciliation, staking income treatment, and digital asset tax readiness.",
+    name: "Certified Bookkeeping Professional",
+    issuer: "Intuit",
+    description: "Professional-level bookkeeping certification validating expertise in financial record-keeping, accounts management, and reporting accuracy.",
+    icon: BookOpen,
+    color: "from-blue-500/10 to-indigo-500/5",
+    border: "border-blue-500/20",
+  },
+  {
+    name: "Tax Exam — Level 1",
+    issuer: "Intuit",
+    description: "Foundational tax knowledge certification covering individual and small business tax concepts, preparation principles, and compliance basics.",
+    icon: BookOpen,
+    color: "from-blue-500/10 to-indigo-500/5",
+    border: "border-blue-500/20",
+  },
+  {
+    name: "Crypto Tax Certification",
+    issuer: "Intuit",
+    description: "Specialized certification covering digital asset taxation, cost-basis methodology, transaction reconciliation, and crypto income reporting.",
     icon: BookOpen,
     color: "from-orange-500/10 to-amber-500/5",
     border: "border-orange-500/20",
   },
   {
-    name: "Oregon Remote Online Notary (RON)",
-    issuer: "Oregon Secretary of State — RON Approved",
-    description: "State-approved remote online notarization. Allows secure, legally binding document notarization for clients anywhere — no in-person visit required for engagement letters or contracts.",
-    icon: BadgeCheck,
+    name: "Client Advisory Services",
+    issuer: "Intuit",
+    description: "Certification in delivering strategic advisory services to clients — moving beyond bookkeeping to actionable financial guidance and business insights.",
+    icon: Briefcase,
     color: "from-accent/10 to-primary/5",
     border: "border-accent/20",
   },
 ];
 
-const education = [
+const licensesAndTech = [
   {
-    degree: "MBA Coursework",
-    school: "Walden University",
-    focus: "Business strategy, financial management, and organizational leadership.",
+    name: "Oregon Remote Online Notary (RON)",
+    issuer: "Oregon Secretary of State",
+    description: "State-approved remote online notarization. Legally binding document notarization for clients anywhere — no in-person visit required.",
+    icon: BadgeCheck,
+    color: "from-accent/10 to-primary/5",
+    border: "border-accent/20",
   },
   {
-    degree: "Business Administration Studies",
-    school: "St. Andrews University",
-    focus: "International business and financial systems.",
+    name: "Oregon Notary Public Commission",
+    issuer: "Oregon Secretary of State",
+    description: "Active in-person notary commission for the State of Oregon.",
+    icon: BadgeCheck,
+    color: "from-accent/10 to-primary/5",
+    border: "border-accent/20",
+  },
+  {
+    name: "Ethical Hacking",
+    issuer: "PACKT",
+    description: "Cybersecurity training covering penetration testing, vulnerability assessment, and ethical hacking techniques — directly applied to client data protection and infrastructure security.",
+    icon: ShieldCheck,
+    color: "from-red-500/10 to-rose-500/5",
+    border: "border-red-500/20",
+  },
+  {
+    name: "Cybersecurity Foundations",
+    issuer: "Microsoft",
+    description: "Microsoft-certified foundational cybersecurity training covering threat landscapes, security controls, identity management, and data protection best practices.",
+    icon: ShieldCheck,
+    color: "from-blue-500/10 to-sky-500/5",
+    border: "border-blue-500/20",
+  },
+  {
+    name: "Google AI Essentials",
+    issuer: "Google",
+    description: "Foundational AI literacy certification from Google covering AI principles, practical applications, and responsible AI use in professional settings.",
+    icon: Brain,
+    color: "from-yellow-500/10 to-amber-500/5",
+    border: "border-yellow-500/20",
   },
 ];
 
-const continuingEd = [
-  "Advanced financial modeling and forecasting",
-  "Business plan structure and financial documentation standards",
-  "Multi-entity tax structure and consolidation",
-  "Agriculture & timber accounting (Schedule F)",
-  "Cybersecurity for financial data and cloud infrastructure",
-  "Digital asset compliance and blockchain transaction analysis",
+const leadershipCerts = [
+  {
+    degree: "Organizational Management Professional",
+    school: "Jack Welch Management Institute",
+    focus: "Leadership strategy, organizational performance, and management excellence based on the Jack Welch framework.",
+  },
+  {
+    degree: "American Negotiation Professional",
+    school: "American Negotiation Institute",
+    focus: "Professional negotiation techniques, conflict resolution, and deal-making strategy.",
+  },
+  {
+    degree: "Communications and Leadership",
+    school: "HarvardX",
+    focus: "Leadership communication, influence, and executive presence from Harvard's online platform.",
+  },
+  {
+    degree: "Strategic Innovation and Entrepreneurship",
+    school: "University of Illinois",
+    focus: "Innovation frameworks, entrepreneurial strategy, and growth-stage business planning.",
+  },
+  {
+    degree: "Business Communications",
+    school: "Dwayne University",
+    focus: "Professional written and verbal communication in business contexts.",
+  },
 ];
 
 export default function Portfolio() {
@@ -74,7 +139,7 @@ export default function Portfolio() {
     <div className="pt-24 pb-20">
       <SEO
         title="Credentials & Certifications"
-        description="Tea Larson-Hetrick's professional certifications, education, and continuing education — QuickBooks ProAdvisor Gold, CEH v12, Advanced Crypto Accounting, and Oregon RON Notary."
+        description="Tea Larson-Hetrick's professional certifications, licenses, and continuing education — QuickBooks ProAdvisor, Certified Bookkeeping Professional, Oregon Notary, and more."
         path="/portfolio"
       />
 
@@ -97,41 +162,42 @@ export default function Portfolio() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
         <motion.div {...fadeUp} className="mb-10">
           <div className="accent-bar mb-4" />
-          <h2 className="text-2xl font-display font-bold text-white">Professional Certifications</h2>
+          <h2 className="text-2xl font-display font-bold text-white">QuickBooks & Intuit Certifications</h2>
+          <p className="text-muted-foreground mt-2">Intuit-certified across bookkeeping, tax, crypto, and advisory services.</p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {certifications.map((cert, i) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {intuitCerts.map((cert, i) => (
             <motion.div
               key={cert.name}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className={`relative glass-card rounded-2xl p-8 border ${cert.border} overflow-hidden`}
+              transition={{ delay: i * 0.07 }}
+              className={`relative glass-card rounded-2xl p-7 border ${cert.border} overflow-hidden`}
             >
               <div className={`absolute inset-0 bg-gradient-to-br ${cert.color} pointer-events-none`} />
               <div className="relative">
-                <div className="flex items-start justify-between mb-5">
-                  <div>
-                    <h3 className="text-lg font-bold text-white mb-1">{cert.name}</h3>
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex-1 pr-3">
+                    <h3 className="text-base font-bold text-white mb-1">{cert.name}</h3>
                     <p className="text-sm text-accent font-medium">{cert.issuer}</p>
                   </div>
-                  {cert.badge ? (
+                  {"badge" in cert && cert.badge ? (
                     <img
-                      src={cert.badge}
+                      src={cert.badge as string}
                       alt={cert.name}
-                      className="w-16 h-16 object-contain shrink-0"
+                      className="w-14 h-14 object-contain shrink-0"
                     />
                   ) : (
-                    cert.icon && (
-                      <div className="p-3 rounded-xl bg-white/[0.06]">
-                        <cert.icon className="w-7 h-7 text-accent" />
+                    "icon" in cert && cert.icon && (
+                      <div className="p-2.5 rounded-xl bg-white/[0.06]">
+                        <cert.icon className="w-5 h-5 text-accent" />
                       </div>
                     )
                   )}
                 </div>
-                <p className="text-muted-foreground text-[15px] leading-relaxed">
+                <p className="text-muted-foreground text-[14px] leading-relaxed">
                   {cert.description}
                 </p>
               </div>
@@ -145,26 +211,34 @@ export default function Portfolio() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-20">
         <motion.div {...fadeUp} className="mb-10">
           <div className="accent-bar mb-4" />
-          <h2 className="text-2xl font-display font-bold text-white">Education</h2>
+          <h2 className="text-2xl font-display font-bold text-white">Licenses, Technology & Security</h2>
+          <p className="text-muted-foreground mt-2">State-licensed notary, cybersecurity-trained, and current on AI tools.</p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {education.map((ed, i) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {licensesAndTech.map((cert, i) => (
             <motion.div
-              key={ed.school}
+              key={cert.name}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className="glass-card rounded-2xl p-8 flex gap-5"
+              transition={{ delay: i * 0.07 }}
+              className={`relative glass-card rounded-2xl p-7 border ${cert.border} overflow-hidden`}
             >
-              <div className="p-3 rounded-xl bg-accent/10 text-accent h-fit shrink-0">
-                <GraduationCap className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-white mb-1">{ed.degree}</h3>
-                <p className="text-accent text-sm font-medium mb-3">{ed.school}</p>
-                <p className="text-muted-foreground text-[15px] leading-relaxed">{ed.focus}</p>
+              <div className={`absolute inset-0 bg-gradient-to-br ${cert.color} pointer-events-none`} />
+              <div className="relative">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex-1 pr-3">
+                    <h3 className="text-base font-bold text-white mb-1">{cert.name}</h3>
+                    <p className="text-sm text-accent font-medium">{cert.issuer}</p>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-white/[0.06] shrink-0">
+                    <cert.icon className="w-5 h-5 text-accent" />
+                  </div>
+                </div>
+                <p className="text-muted-foreground text-[14px] leading-relaxed">
+                  {cert.description}
+                </p>
               </div>
             </motion.div>
           ))}
@@ -176,25 +250,43 @@ export default function Portfolio() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-20">
         <motion.div {...fadeUp} className="mb-10">
           <div className="accent-bar mb-4" />
-          <h2 className="text-2xl font-display font-bold text-white">Continuing Education</h2>
-          <p className="text-muted-foreground mt-2">Active areas of professional development beyond base certifications.</p>
+          <h2 className="text-2xl font-display font-bold text-white">Leadership & Professional Development</h2>
+          <p className="text-muted-foreground mt-2">Certifications and coursework in management, communication, strategy, and negotiation.</p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {continuingEd.map((item, i) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {leadershipCerts.map((ed, i) => (
             <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 16 }}
+              key={ed.school + ed.degree}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.06 }}
-              className="glass-card rounded-xl px-5 py-4 flex items-start gap-3"
+              transition={{ delay: i * 0.08 }}
+              className="glass-card rounded-2xl p-7 flex gap-5"
             >
-              <div className="w-1.5 h-1.5 rounded-full bg-accent mt-2 shrink-0" />
-              <p className="text-foreground text-[15px] leading-relaxed">{item}</p>
+              <div className="p-3 rounded-xl bg-accent/10 text-accent h-fit shrink-0">
+                <Award className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-white mb-1">{ed.degree}</h3>
+                <p className="text-accent text-sm font-medium mb-3">{ed.school}</p>
+                <p className="text-muted-foreground text-[14px] leading-relaxed">{ed.focus}</p>
+              </div>
             </motion.div>
           ))}
         </div>
+
+        <motion.div
+          {...fadeUp}
+          className="mt-6 glass-card rounded-2xl p-6 border border-accent/10 flex items-center gap-4"
+        >
+          <div className="p-2.5 rounded-xl bg-accent/10 shrink-0">
+            <GraduationCap className="w-5 h-5 text-accent" />
+          </div>
+          <p className="text-muted-foreground text-sm">
+            Additional certifications are being compiled and will be added here shortly.
+          </p>
+        </motion.div>
       </section>
 
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -210,13 +302,13 @@ export default function Portfolio() {
               Ready to work with a verified specialist?
             </h2>
             <p className="text-lg text-muted-foreground mb-8">
-              Book a free 30-minute discovery call — no sales pitch, just an honest look at your books.
+              Book a free 30-minute discovery call — no sales pitch, just an honest look at your needs.
             </p>
             <Link
-              href="/get-started"
+              href="/contact"
               className="inline-flex items-center gap-2 px-8 py-3 bg-accent text-white rounded-xl font-bold hover:shadow-xl hover:shadow-accent/20 transition-all duration-300"
             >
-              Get Started <ArrowRight size={18} />
+              Get in Touch <ArrowRight size={18} />
             </Link>
           </div>
         </motion.div>
