@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 import { Link } from "wouter";
-import { ArrowRight, BadgeCheck, GraduationCap, ShieldCheck, BookOpen, Award, Briefcase, Brain } from "lucide-react";
+import { ArrowRight, BadgeCheck, GraduationCap, ShieldCheck, BookOpen, Award, Briefcase, Brain, FileText, Code2, Rss, Zap } from "lucide-react";
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -147,6 +147,41 @@ const academicStudies = [
   "Equine Science",
   "Psychology",
   "Communications",
+];
+
+const researchAndWork = [
+  {
+    title: "The Graph Protocol — Research Paper",
+    outlet: "Published Research",
+    description: "Published a research paper on The Graph Protocol covering decentralized query infrastructure, subgraph indexing, and network mechanics. Repository hosted on GitHub.",
+    icon: FileText,
+    color: "from-violet-500/10 to-purple-500/5",
+    border: "border-violet-500/20",
+  },
+  {
+    title: "The Graph Sunrise Upgrade Program",
+    outlet: "Contributor & Developer",
+    description: "Active contributor and developer in The Graph's Sunrise upgrade program — working on protocol-level improvements and maintaining open-source tooling for graph querying.",
+    icon: Code2,
+    color: "from-blue-500/10 to-indigo-500/5",
+    border: "border-blue-500/20",
+  },
+  {
+    title: "Artificial Intelligence & Cryptocurrency",
+    outlet: "Medium — Two Publications",
+    description: "Commissioned writer for two Medium publications. Covers artificial intelligence developments, emerging technology, and the evolving cryptocurrency landscape.",
+    icon: Rss,
+    color: "from-green-500/10 to-emerald-500/5",
+    border: "border-green-500/20",
+  },
+  {
+    title: "AI Model Training",
+    outlet: "Active Contributor",
+    description: "Contributes to AI model training and development outside of regular client work — applying domain expertise in finance and language to improve model performance and accuracy.",
+    icon: Brain,
+    color: "from-amber-500/10 to-yellow-500/5",
+    border: "border-amber-500/20",
+  },
 ];
 
 export default function Portfolio() {
@@ -295,15 +330,53 @@ export default function Portfolio() {
 
         <motion.div
           {...fadeUp}
-          className="mt-6 glass-card rounded-2xl p-6 border border-accent/10 flex items-center gap-4"
+          className="mt-6 glass-card rounded-2xl p-6 border border-accent/10 flex items-start gap-4"
         >
-          <div className="p-2.5 rounded-xl bg-accent/10 shrink-0">
-            <GraduationCap className="w-5 h-5 text-accent" />
+          <div className="p-2.5 rounded-xl bg-accent/10 shrink-0 mt-0.5">
+            <Zap className="w-5 h-5 text-accent" />
           </div>
-          <p className="text-muted-foreground text-sm">
-            Additional certifications are being compiled and will be added here shortly.
-          </p>
+          <div>
+            <p className="text-white font-semibold text-sm mb-1">Always Learning</p>
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              Currently active in school and continuously pursuing certifications, technology education, and professional development. ProAdvisor certifications are actively maintained. More credentials are being added as they are earned.
+            </p>
+          </div>
         </motion.div>
+      </section>
+
+      <div className="glow-line max-w-5xl mx-auto" />
+
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-20">
+        <motion.div {...fadeUp} className="mb-10">
+          <div className="accent-bar mb-4" />
+          <h2 className="text-2xl font-display font-bold text-white">Research, Writing & Active Work</h2>
+          <p className="text-muted-foreground mt-2">Published research, open-source contributions, and work beyond the day-to-day.</p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {researchAndWork.map((item, i) => {
+            const Icon = item.icon;
+            return (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className={`glass-card rounded-2xl p-7 flex gap-5 bg-gradient-to-br ${item.color} border ${item.border}`}
+              >
+                <div className="p-3 rounded-xl bg-accent/10 text-accent h-fit shrink-0">
+                  <Icon className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white mb-1">{item.title}</h3>
+                  <p className="text-accent text-sm font-medium mb-3">{item.outlet}</p>
+                  <p className="text-muted-foreground text-[14px] leading-relaxed">{item.description}</p>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
       </section>
 
       <div className="glow-line max-w-5xl mx-auto" />
