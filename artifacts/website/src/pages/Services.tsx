@@ -74,10 +74,10 @@ export default function Services() {
                   ))}
                 </ul>
                 <Link
-                  href="/contact"
+                  href={svc.id === "planning" ? "/business-planning" : "/contact"}
                   className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300 group/btn"
                 >
-                  Inquire About This Service
+                  {svc.id === "planning" ? "Learn More" : "Inquire About This Service"}
                   <ArrowRight size={15} className="group-hover/btn:translate-x-1 transition-transform" />
                 </Link>
               </div>
