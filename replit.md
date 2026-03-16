@@ -1,3 +1,10 @@
+# CRITICAL: Read Before Making Any Changes
+
+**Before writing any code, all task agents must read `SITE_CONSTRAINTS.md` at the project root.**
+It documents: which third-party services are actually in use (Calendly, NOT Cal.com), what services this business offers (Bookkeeping + Business Plans only — no tax, Digital Handshake is add-on only), credential wording rules, and a list of common mistakes to avoid.
+
+---
+
 # Overview
 
 This project is a pnpm monorepo using TypeScript, designed for Blueprints & Bookkeeping, LLC, a remote bookkeeping, business planning, and advisory firm. The primary goal is to provide a professional online presence, automate client interactions, and manage business operations efficiently.

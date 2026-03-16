@@ -60,7 +60,7 @@ export default function Home() {
             transition={{ delay: 0.2 }}
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed"
           >
-            We transform financial complexity into scalable growth through advanced bookkeeping, investor-focused business plans, and modern digital presence.
+            Advanced bookkeeping and investor-ready business plans for founders who need clean books and a clear path forward.
           </motion.p>
 
           <motion.div

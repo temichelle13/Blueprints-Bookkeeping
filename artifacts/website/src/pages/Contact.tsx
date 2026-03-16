@@ -37,7 +37,7 @@ export default function Contact() {
               <h2 className="text-2xl font-display font-bold text-white">Book a Time Directly</h2>
             </div>
             <p className="text-muted-foreground mb-6 text-[15px] max-w-2xl">
-              Ready to get started or a returning client? Skip the form and book a video call, phone call, or async document review directly on the calendar.
+              Ready to get started or have a quick question? Skip the form and book a 30-minute discovery call directly on the calendar.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
