@@ -207,64 +207,54 @@ export default function Home() {
 
       <section className="py-28 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center text-center mb-16">
+          <div className="flex flex-col items-center text-center mb-14">
             <div className="accent-bar mb-6" />
-            <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">What Clients Say</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl">Real results from real founders — anonymized to protect client confidentiality.</p>
+            <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">Limited to 20 Active Clients</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl">
+              This isn't a volume practice. Every client gets direct access to Tea — no handoffs, no junior staff, no outsourcing.
+            </p>
           </div>
 
-          {/* TODO: Replace with real client testimonials */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             {[
               {
-                quote: "They untangled three years of messy books across four entities in under six weeks. Our lender finally approved the expansion line.",
-                name: "J.M.",
-                role: "AgriTech Founder",
+                stat: "Week 1",
+                label: "Books assessed & cleanup scoped",
+                detail: "You'll know exactly what needs to be fixed and how long it will take before committing.",
               },
               {
-                quote: "Funded on the next attempt — $250K SBA loan approved after two prior rejections. The business plan made all the difference.",
-                name: "R.K.",
-                role: "Multi-Location Retail Owner",
+                stat: "Month 1",
+                label: "Reconciled, caught up, and current",
+                detail: "Historical cleanup completed. Monthly close process established. Reports ready for lenders or investors.",
               },
               {
-                quote: "Having a dedicated bookkeeper who actually understands crypto cost-basis tracking saved me from a potential audit nightmare.",
-                name: "D.S.",
-                role: "DeFi Protocol Founder",
+                stat: "Ongoing",
+                label: "Proactive, not reactive",
+                detail: "Monthly close, cash flow monitoring, and advisory communication — not just data entry.",
               },
-              {
-                quote: "The Digital Handshake concept blew our investors away. Instead of a PDF, they got a live, interactive business plan site.",
-                name: "A.P.",
-                role: "SaaS Startup CEO",
-              },
-            ].map((t, i) => (
+            ].map((item, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="glass-card-hover rounded-2xl p-6 flex flex-col"
+                className="glass-card rounded-2xl p-7"
               >
-                <p className="text-foreground leading-relaxed text-[14px] mb-5 flex-grow italic">
-                  "{t.quote}"
-                </p>
-                <div className="flex items-center gap-2.5 pt-4 border-t border-white/[0.06]">
-                  <div className="w-8 h-8 rounded-full bg-accent/15 flex items-center justify-center text-accent font-bold text-[11px]">
-                    {t.name}
-                  </div>
-                  <span className="text-white font-semibold text-sm">{t.role}</span>
-                </div>
+                <div className="text-2xl font-display font-extrabold text-accent mb-1">{item.stat}</div>
+                <div className="font-semibold text-white mb-3 text-[15px]">{item.label}</div>
+                <p className="text-muted-foreground text-sm leading-relaxed">{item.detail}</p>
               </motion.div>
             ))}
           </div>
 
-          <div className="text-center mt-10">
+          <div className="text-center">
             <Link
-              href="/results"
-              className="inline-flex items-center gap-2 text-accent hover:text-white font-semibold text-sm transition-colors group"
+              href="/get-started"
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-accent text-white font-semibold text-sm shadow-lg shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300"
             >
-              View all case studies
-              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              See if there's a spot available
+              <ArrowRight size={16} />
             </Link>
           </div>
         </div>

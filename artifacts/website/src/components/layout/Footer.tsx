@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { Mail, Phone, MapPin, Users } from "lucide-react";
+import { Mail, Phone, MapPin, ArrowRight, CalendarDays, UserPlus, MessageSquare } from "lucide-react";
 import { FooterNewsletterSignup } from "@/components/NewsletterSignup";
 
 export function Footer() {
@@ -8,74 +8,96 @@ export function Footer() {
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
-        <div className="refer-founder-callout glass-card rounded-2xl p-8 mb-12 flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
-          <div className="p-3 bg-accent/10 rounded-xl shrink-0">
-            <Users size={28} className="text-accent" />
-          </div>
-          <div className="flex-grow text-center sm:text-left">
-            <h3 className="text-lg font-display font-bold mb-1">Know a Founder Who Needs Better Books?</h3>
-            <p className="text-muted-foreground text-sm leading-relaxed">
-              Refer a fellow founder and you'll both receive a complimentary financial health check. Great bookkeeping grows through word of mouth.
-            </p>
-          </div>
-          <a
-            href="mailto:tea@blueprintsandbookkeeping.com?subject=Founder%20Referral&body=Hi%20Tea%2C%0A%0AI'd%20like%20to%20refer%20a%20fellow%20founder%20to%20Blueprints%20%26%20Bookkeeping.%0A%0AReferral%20Name%3A%20%0AReferral%20Email%3A%20%0A%0AThanks!"
-            className="shrink-0 px-6 py-3 bg-accent/15 border border-accent/30 text-accent font-semibold rounded-lg hover:bg-accent hover:text-white hover:border-accent transition-all duration-300 text-sm whitespace-nowrap"
-          >
-            Refer a Founder
-          </a>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+
           <div className="lg:col-span-1">
             <Link href="/" className="inline-block mb-4">
-              <span className="font-display font-bold text-2xl tracking-tight">
+              <span className="font-display font-bold text-xl tracking-tight">
                 <span className="text-foreground">Blueprints &</span><br />
                 <span className="text-accent">Bookkeeping</span>
               </span>
             </Link>
             <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
-              Your Blueprint to Business Success. We transform financial complexity into scalable growth.
+              Advanced bookkeeping and business plans for founders who need clean books and a clear path forward. Based in Roseburg, OR — serving nationwide.
             </p>
             <div className="flex flex-col gap-3 text-sm">
-              <a href="mailto:tea@blueprintsandbookkeeping.com" className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-colors">
-                <Mail size={15} className="text-accent/60" aria-hidden="true" />
+              <a href="mailto:tea@blueprintsandbookkeeping.com" className="flex items-center gap-2.5 text-muted-foreground hover:text-accent transition-colors">
+                <Mail size={14} className="text-accent/60 shrink-0" aria-hidden="true" />
                 tea@blueprintsandbookkeeping.com
               </a>
-              <a href="tel:+15413198654" className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-colors">
-                <Phone size={15} className="text-accent/60" aria-hidden="true" />
+              <a href="tel:+15413198654" className="flex items-center gap-2.5 text-muted-foreground hover:text-accent transition-colors">
+                <Phone size={14} className="text-accent/60 shrink-0" aria-hidden="true" />
                 (541) 319-8654
               </a>
-              <div className="flex items-center gap-3 text-muted-foreground">
-                <MapPin size={15} className="text-accent/60" aria-hidden="true" />
+              <div className="flex items-center gap-2.5 text-muted-foreground">
+                <MapPin size={14} className="text-accent/60 shrink-0" aria-hidden="true" />
                 Roseburg, Oregon (Remote Nationwide)
               </div>
             </div>
           </div>
 
           <div>
-            <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-5">Navigate</h3>
-            <ul className="space-y-3">
+            <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-5">Take Action</h3>
+            <div className="flex flex-col gap-3">
+              <Link
+                href="/get-started"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl bg-accent text-white font-semibold text-sm hover:shadow-lg hover:shadow-accent/20 hover:-translate-y-0.5 transition-all duration-200"
+              >
+                <UserPlus size={15} aria-hidden="true" />
+                Get Started
+                <ArrowRight size={13} className="ml-auto" aria-hidden="true" />
+              </Link>
+              <a
+                href="https://calendly.com/tea-blueprintsandbookkeeping/30min"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl bg-accent/10 border border-accent/25 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-200"
+              >
+                <CalendarDays size={15} aria-hidden="true" />
+                Book a Discovery Call
+                <ArrowRight size={13} className="ml-auto" aria-hidden="true" />
+              </a>
+              <Link
+                href="/contact"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-muted-foreground font-semibold text-sm hover:bg-white/[0.08] hover:text-white transition-all duration-200"
+              >
+                <MessageSquare size={15} aria-hidden="true" />
+                Send a Message
+                <ArrowRight size={13} className="ml-auto" aria-hidden="true" />
+              </Link>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-5">Pages</h3>
+            <ul className="space-y-2.5 mb-7">
               {[
                 { label: "Services", href: "/services" },
-                { label: "Industries", href: "/industries" },
-                { label: "About Tea", href: "/about" },
                 { label: "Pricing", href: "/pricing" },
-                { label: "Portfolio", href: "/portfolio" },
+                { label: "About Tea", href: "/about" },
+                { label: "Industries", href: "/industries" },
                 { label: "Blog", href: "/blog" },
-                { label: "Contact", href: "/contact" },
-                { label: "Client Results", href: "/results" },
-                { label: "Free Templates", href: "/resources" },
+                { label: "Free Resources", href: "/resources" },
                 { label: "FAQ", href: "/faq" },
-                { label: "Tax Partner Network", href: "/tax-partners" },
-                { label: "Referral Program", href: "/referral" },
-                { label: "Book a Call", href: "/schedule" },
+                { label: "Portfolio", href: "/portfolio" },
               ].map((item) => (
                 <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="text-muted-foreground hover:text-foreground text-sm transition-colors"
-                  >
+                  <Link href={item.href} className="text-muted-foreground hover:text-foreground text-sm transition-colors">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-3">Services</h3>
+            <ul className="space-y-2.5">
+              {[
+                { label: "Advanced Bookkeeping", href: "/services/bookkeeping" },
+                { label: "Business Plans", href: "/services/business-plans" },
+                { label: "Tax Partner Network", href: "/tax-partners" },
+              ].map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} className="text-muted-foreground hover:text-foreground text-sm transition-colors">
                     {item.label}
                   </Link>
                 </li>
@@ -84,30 +106,11 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-5">Services</h3>
-            <ul className="space-y-3 text-sm text-muted-foreground">
-              <li><Link href="/services/bookkeeping" className="hover:text-white transition-colors">Advanced Bookkeeping</Link></li>
-              <li><Link href="/services/business-plans" className="hover:text-white transition-colors">Business Plans</Link></li>
-              <li><Link href="/services/digital-handshake" className="hover:text-white transition-colors">Digital Handshake</Link></li>
-              <li><Link href="/services/notary" className="hover:text-white transition-colors">Notary Services</Link></li>
-              <li><Link href="/oregon-bookkeeper" className="hover:text-white transition-colors">Oregon Bookkeeper</Link></li>
-            </ul>
-          </div>
-
-          <div>
             <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-5">Stay in the Loop</h3>
             <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
-              Get founder-focused financial tips and updates delivered to your inbox.
+              Founder-focused financial tips and updates — no spam, unsubscribe any time.
             </p>
             <FooterNewsletterSignup />
-            <div className="mt-6 pt-6 border-t border-border/50">
-              <Link
-                href="/schedule"
-                className="inline-block w-full text-center px-6 py-3 bg-accent/15 border border-accent/30 text-accent font-semibold rounded-lg hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
-              >
-                Book a Discovery Call
-              </Link>
-            </div>
           </div>
         </div>
 
@@ -115,9 +118,11 @@ export function Footer() {
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} Blueprints & Bookkeeping, LLC. All rights reserved.</p>
-          <div className="flex gap-6">
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-foreground transition-colors">Terms of Service</Link>
+            <Link href="/referral" className="hover:text-foreground transition-colors">Referral Program</Link>
+            <Link href="/client-portal" className="hover:text-foreground transition-colors">Client Portal</Link>
             <Link href="/unsubscribe" className="hover:text-foreground transition-colors">Unsubscribe</Link>
             <Link href="/feedback" className="hover:text-foreground transition-colors">Site Feedback</Link>
           </div>
