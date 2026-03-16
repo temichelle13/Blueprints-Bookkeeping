@@ -46,6 +46,22 @@ export const SubscribeNewsletterBody = zod.object({
 });
 
 /**
+ * Looks up a subscriber by unsubscribe token and marks them as inactive
+ * @summary Unsubscribe from the newsletter via token
+ */
+export const UnsubscribeNewsletterByTokenQueryParams = zod.object({
+  token: zod.coerce
+    .string()
+    .uuid()
+    .describe("The unique unsubscribe token for the subscriber"),
+});
+
+export const UnsubscribeNewsletterByTokenResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string(),
+});
+
+/**
  * Marks a subscriber as inactive
  * @summary Unsubscribe from the newsletter
  */

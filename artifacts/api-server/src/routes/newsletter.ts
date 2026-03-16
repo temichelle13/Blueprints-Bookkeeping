@@ -18,6 +18,90 @@ function getResend(): Resend | null {
 }
 
 const FROM_ADDRESS = "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+type UnsubscribeByTokenResult =
+  | { status: 200; body: { success: true; message: string } }
+  | { status: 400; body: { error: string } }
+  | { status: 404; body: { error: string } };
+
+async function unsubscribeByToken(token: unknown): Promise<UnsubscribeByTokenResult> {
+  if (!token || typeof token !== "string") {
+    return { status: 400, body: { error: "Missing or invalid token." } };
+  }
+  if (!UUID_RE.test(token)) {
+    return { status: 400, body: { error: "Invalid token format." } };
+  }
+
+  const rows = await db
+    .select()
+    .from(newsletterSubscribersTable)
+    .where(eq(newsletterSubscribersTable.unsubscribeToken, token))
+    .limit(1);
+
+  if (rows.length === 0) {
+    return { status: 404, body: { error: "Subscriber not found." } };
+  }
+
+  await db
+    .update(newsletterSubscribersTable)
+    .set({ active: false })
+    .where(eq(newsletterSubscribersTable.unsubscribeToken, token));
+
+  return { status: 200, body: { success: true, message: "You have been unsubscribed. We're sorry to see you go." } };
+}
+
+function buildWelcomeEmail(unsubscribeToken: string): { html: string; headers: Record<string, string> } {
+  const unsubscribePageUrl = `https://blueprintsandbookkeeping.com/unsubscribe?token=${unsubscribeToken}`;
+  const unsubscribeApiUrl = `https://blueprintsandbookkeeping.com/api/newsletter/unsubscribe?token=${unsubscribeToken}`;
+  const resourcesUrl = "https://blueprintsandbookkeeping.com/resources";
+  const html = `
+    <div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
+      <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
+        <h1 style="color:white;margin:0;font-size:20px;">Your free resources are ready — Blueprints & Bookkeeping</h1>
+      </div>
+      <div style="background:#f8f9ff;padding:32px;border-radius:0 0 8px 8px;border:1px solid #e2e5f0;">
+        <p>Hi there,</p>
+        <p>You're in! Here's the link to access all your free templates, checklists, and guides:</p>
+        <div style="text-align:center;margin:24px 0;">
+          <a href="${resourcesUrl}" style="display:inline-block;background:#6366f1;color:white;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:16px;">Access Your Free Resources →</a>
+        </div>
+        <p>You'll find checklists, financial worksheets, and planning guides — all free to download.</p>
+        <p>I'm Tea — founder of Blueprints & Bookkeeping LLC. I specialize in advanced bookkeeping and business planning for small businesses and growing teams.</p>
+        <p>What to expect from this newsletter:</p>
+        <ul style="line-height:1.8;">
+          <li>Practical financial insights for founders and small business owners</li>
+          <li>Real talk on bookkeeping systems, cash flow, and business planning</li>
+          <li>No fluff. No tax advice. Just actionable guidance.</li>
+        </ul>
+        <p>If you have a question or want to talk about your business, you can <a href="https://blueprintsandbookkeeping.com/schedule" style="color:#6366f1;">book a free discovery call</a> anytime.</p>
+        <p>Talk soon,</p>
+        <p style="font-weight:600;">Tea Larson-Hetrick<br><span style="font-weight:normal;color:#666;">Blueprints & Bookkeeping LLC · Roseburg, Oregon</span></p>
+        <hr style="border:none;border-top:1px solid #e2e5f0;margin:24px 0;">
+        <p style="font-size:12px;color:#999;">You're receiving this because you signed up at blueprintsandbookkeeping.com. <a href="${unsubscribePageUrl}" style="color:#6366f1;">Unsubscribe anytime.</a></p>
+      </div>
+    </div>`;
+  return {
+    html,
+    headers: {
+      "List-Unsubscribe": `<${unsubscribeApiUrl}>`,
+      "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+    },
+  };
+}
+
+async function sendWelcomeEmail(resend: Resend, email: string, unsubscribeToken: string): Promise<void> {
+  const { html, headers } = buildWelcomeEmail(unsubscribeToken);
+  await resend.emails.send({
+    from: FROM_ADDRESS,
+    to: email,
+    subject: "Your free resources are ready — Blueprints & Bookkeeping",
+    html,
+    headers,
+  }).catch((err: unknown) => {
+    console.error("[Resend] Welcome email failed for", email, "—", err instanceof Error ? err.message : String(err));
+  });
+}
 
 const router: IRouter = Router();
 
@@ -56,6 +140,11 @@ router.post("/newsletter/subscribe", async (req, res): Promise<void> => {
         .update(newsletterSubscribersTable)
         .set({ active: true, signupSource })
         .where(eq(newsletterSubscribersTable.email, email));
+
+      const resend = getResend();
+      if (resend) {
+        await sendWelcomeEmail(resend, email, existing[0].unsubscribeToken);
+      }
     }
     res.status(201).json({
       success: true,
@@ -64,49 +153,14 @@ router.post("/newsletter/subscribe", async (req, res): Promise<void> => {
     return;
   }
 
-  await db.insert(newsletterSubscribersTable).values({
+  const [inserted] = await db.insert(newsletterSubscribersTable).values({
     email,
     signupSource,
-  });
+  }).returning({ unsubscribeToken: newsletterSubscribersTable.unsubscribeToken });
 
   const resend = getResend();
   if (resend) {
-    const resourcesUrl = "https://blueprintsandbookkeeping.com/resources";
-    const welcomeHtml = `
-      <div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
-        <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
-          <h1 style="color:white;margin:0;font-size:20px;">Your free resources are ready — Blueprints & Bookkeeping</h1>
-        </div>
-        <div style="background:#f8f9ff;padding:32px;border-radius:0 0 8px 8px;border:1px solid #e2e5f0;">
-          <p>Hi there,</p>
-          <p>You're in! Here's the link to access all your free templates, checklists, and guides:</p>
-          <div style="text-align:center;margin:24px 0;">
-            <a href="${resourcesUrl}" style="display:inline-block;background:#6366f1;color:white;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:16px;">Access Your Free Resources →</a>
-          </div>
-          <p>You'll find checklists, financial worksheets, and planning guides — all free to download.</p>
-          <p>I'm Tea — founder of Blueprints & Bookkeeping LLC. I specialize in advanced bookkeeping and business planning for small businesses and growing teams.</p>
-          <p>What to expect from this newsletter:</p>
-          <ul style="line-height:1.8;">
-            <li>Practical financial insights for founders and small business owners</li>
-            <li>Real talk on bookkeeping systems, cash flow, and business planning</li>
-            <li>No fluff. No tax advice. Just actionable guidance.</li>
-          </ul>
-          <p>If you have a question or want to talk about your business, you can <a href="https://blueprintsandbookkeeping.com/schedule" style="color:#6366f1;">book a free discovery call</a> anytime.</p>
-          <p>Talk soon,</p>
-          <p style="font-weight:600;">Tea Larson-Hetrick<br><span style="font-weight:normal;color:#666;">Blueprints & Bookkeeping LLC · Roseburg, Oregon</span></p>
-          <hr style="border:none;border-top:1px solid #e2e5f0;margin:24px 0;">
-          <p style="font-size:12px;color:#999;">You're receiving this because you signed up at blueprintsandbookkeeping.com. <a href="https://blueprintsandbookkeeping.com/unsubscribe" style="color:#6366f1;">Unsubscribe anytime.</a></p>
-        </div>
-      </div>`;
-
-    await resend.emails.send({
-      from: FROM_ADDRESS,
-      to: email,
-      subject: "Your free resources are ready — Blueprints & Bookkeeping",
-      html: welcomeHtml,
-    }).catch((err: unknown) => {
-      console.error("[Resend] Welcome email failed for", email, "—", err instanceof Error ? err.message : String(err));
-    });
+    await sendWelcomeEmail(resend, email, inserted.unsubscribeToken);
   } else {
     console.warn("[Newsletter] RESEND_API_KEY not set — skipping welcome email for", email);
   }
@@ -117,7 +171,18 @@ router.post("/newsletter/subscribe", async (req, res): Promise<void> => {
   });
 });
 
+router.get("/newsletter/unsubscribe", async (req, res): Promise<void> => {
+  const result = await unsubscribeByToken(req.query.token);
+  res.status(result.status).json(result.body);
+});
+
 router.post("/newsletter/unsubscribe", async (req, res): Promise<void> => {
+  if (req.query.token) {
+    const result = await unsubscribeByToken(req.query.token);
+    res.status(result.status).json(result.body);
+    return;
+  }
+
   const parsed = UnsubscribeNewsletterBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });

@@ -284,6 +284,14 @@ export interface Booking {
   createdAt: string;
   updatedAt: string;
 }
+
+export type UnsubscribeNewsletterByTokenParams = {
+  /**
+   * The unique unsubscribe token for the subscriber
+   */
+  token: string;
+};
+
 export type BookingWebhookBodyPayload = { [key: string]: unknown };
 
 export type BookingWebhookBody = {

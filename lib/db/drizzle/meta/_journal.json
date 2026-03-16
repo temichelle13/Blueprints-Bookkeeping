@@ -8,6 +8,13 @@
       "when": 1773625506373,
       "tag": "0000_add_inquiry_status",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1773691794520,
+      "tag": "0001_add_unsubscribe_token",
+      "breakpoints": true
     }
   ]
 }

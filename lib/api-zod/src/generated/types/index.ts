@@ -44,3 +44,4 @@ export * from "./sendContractInput";
 export * from "./sendContractResponse";
 export * from "./sendOpenaiMessageBody";
 export * from "./syncResult";
+export * from "./unsubscribeNewsletterByTokenParams";

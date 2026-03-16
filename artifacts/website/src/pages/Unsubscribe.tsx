@@ -1,17 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Mail, CheckCircle, AlertCircle } from "lucide-react";
-import { useUnsubscribeNewsletter } from "@workspace/api-client-react";
+import { Mail, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import { useUnsubscribeNewsletter, unsubscribeNewsletterByToken } from "@workspace/api-client-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 
-type PageState = "form" | "success" | "error";
+type PageState = "form" | "loading" | "success" | "error";
 
 export default function Unsubscribe() {
   usePageTitle("Unsubscribe");
   const [email, setEmail] = useState("");
   const [state, setState] = useState<PageState>("form");
   const mutation = useUnsubscribeNewsletter();
+  const didAttemptToken = useRef(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    if (token && !didAttemptToken.current) {
+      didAttemptToken.current = true;
+      setState("loading");
+      unsubscribeNewsletterByToken({ token })
+        .then(() => setState("success"))
+        .catch(() => setState("error"));
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +46,17 @@ export default function Unsubscribe() {
         className="max-w-md w-full mx-auto px-4"
       >
         <div className="glass-card rounded-2xl p-8 text-center">
-          {state === "success" ? (
+          {state === "loading" ? (
+            <>
+              <Loader2 className="w-12 h-12 text-accent mx-auto mb-4 animate-spin" />
+              <h1 className="text-2xl font-display font-bold text-white mb-3">
+                Processing...
+              </h1>
+              <p className="text-muted-foreground">
+                Please wait while we unsubscribe you.
+              </p>
+            </>
+          ) : state === "success" ? (
             <>
               <CheckCircle className="w-12 h-12 text-green-400 mx-auto mb-4" />
               <h1 className="text-2xl font-display font-bold text-white mb-3">

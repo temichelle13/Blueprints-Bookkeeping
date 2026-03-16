@@ -43,6 +43,7 @@ import type {
   SendContractResponse,
   SendOpenaiMessageBody,
   SyncResult,
+  UnsubscribeNewsletterByTokenParams,
 } from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
@@ -304,6 +305,113 @@ export const useSubscribeNewsletter = <
 > => {
   return useMutation(getSubscribeNewsletterMutationOptions(options));
 };
+
+/**
+ * Looks up a subscriber by unsubscribe token and marks them as inactive
+ * @summary Unsubscribe from the newsletter via token
+ */
+export const getUnsubscribeNewsletterByTokenUrl = (
+  params: UnsubscribeNewsletterByTokenParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/newsletter/unsubscribe?${stringifiedParams}`
+    : `/api/newsletter/unsubscribe`;
+};
+
+export const unsubscribeNewsletterByToken = async (
+  params: UnsubscribeNewsletterByTokenParams,
+  options?: RequestInit,
+): Promise<NewsletterUnsubscribeResponse> => {
+  return customFetch<NewsletterUnsubscribeResponse>(
+    getUnsubscribeNewsletterByTokenUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getUnsubscribeNewsletterByTokenQueryKey = (
+  params?: UnsubscribeNewsletterByTokenParams,
+) => {
+  return [`/api/newsletter/unsubscribe`, ...(params ? [params] : [])] as const;
+};
+
+export const getUnsubscribeNewsletterByTokenQueryOptions = <
+  TData = Awaited<ReturnType<typeof unsubscribeNewsletterByToken>>,
+  TError = ErrorType<ErrorResponse>,
+>(
+  params: UnsubscribeNewsletterByTokenParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof unsubscribeNewsletterByToken>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getUnsubscribeNewsletterByTokenQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof unsubscribeNewsletterByToken>>
+  > = ({ signal }) =>
+    unsubscribeNewsletterByToken(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof unsubscribeNewsletterByToken>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type UnsubscribeNewsletterByTokenQueryResult = NonNullable<
+  Awaited<ReturnType<typeof unsubscribeNewsletterByToken>>
+>;
+export type UnsubscribeNewsletterByTokenQueryError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Unsubscribe from the newsletter via token
+ */
+
+export function useUnsubscribeNewsletterByToken<
+  TData = Awaited<ReturnType<typeof unsubscribeNewsletterByToken>>,
+  TError = ErrorType<ErrorResponse>,
+>(
+  params: UnsubscribeNewsletterByTokenParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof unsubscribeNewsletterByToken>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getUnsubscribeNewsletterByTokenQueryOptions(
+    params,
+    options,
+  );
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
 
 /**
  * Marks a subscriber as inactive
