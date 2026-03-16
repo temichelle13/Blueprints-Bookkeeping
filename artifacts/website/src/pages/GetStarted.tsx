@@ -172,8 +172,9 @@ export default function GetStarted() {
             Get Started Your Way
           </h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            No single path required. Sign up online in minutes, connect your existing QuickBooks,
-            leave your info for a callback, or book a call for complex situations.
+            {STRIPE_CONFIGURED
+              ? "No single path required. Sign up online in minutes, connect your existing QuickBooks, leave your info for a callback, or book a call for complex situations."
+              : "No single path required. Review our plans, connect your existing QuickBooks, leave your info for a callback, or book a call for complex situations."}
           </p>
         </motion.div>
 
