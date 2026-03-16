@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Send, Users, Handshake, Gift, DollarSign, ArrowDown } from "lucide-react";
 import { useContactMutation } from "@/hooks/use-contact";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { SEO } from "@/components/SEO";
 
 const referralSchema = z.object({
   referrerName: z.string().min(2, "Your name is required"),
@@ -22,6 +23,11 @@ export default function Referral() {
 
   return (
     <div className="pt-24 pb-20">
+      <SEO
+        title="Refer a Client"
+        description="Know a business owner who needs clean books or a solid business plan? Send them our way."
+        path="/referral"
+      />
       <section className="py-16 mb-16 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

@@ -19,6 +19,7 @@ import {
   Send,
 } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { SEO } from "@/components/SEO";
 import { useContactMutation } from "@/hooks/use-contact";
 import {
   taxPartners,
@@ -315,6 +316,11 @@ export default function TaxPartners() {
 
   return (
     <div className="pt-24 pb-20">
+      <SEO
+        title="CPA & Tax Referral Partners"
+        description="We don't do taxes — but we work closely with trusted CPAs and tax professionals nationwide."
+        path="/tax-partners"
+      />
       <section className="py-16 mb-8 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/8 rounded-full blur-[120px] pointer-events-none" />

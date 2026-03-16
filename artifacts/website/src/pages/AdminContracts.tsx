@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { SEO } from "@/components/SEO";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -186,6 +187,8 @@ function formatDate(dateStr: string | null) {
 export default function AdminContracts() {
   usePageTitle("Admin — Contracts");
 
+  const seo = <SEO title="Admin — Contracts" noindex />;
+
   const { toast } = useToast();
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [templates, setTemplates] = useState<ContractTemplate[]>([]);
@@ -363,6 +366,7 @@ export default function AdminContracts() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0a0e1a] flex items-center justify-center">
+        {seo}
         <RefreshCw className="w-8 h-8 text-indigo-400 animate-spin" />
       </div>
     );
@@ -371,6 +375,7 @@ export default function AdminContracts() {
   if (!authenticated) {
     return (
       <div className="min-h-screen bg-[#0a0e1a] flex items-center justify-center">
+        {seo}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -398,6 +403,7 @@ export default function AdminContracts() {
 
   return (
     <div className="min-h-screen bg-[#0a0e1a] py-12">
+      {seo}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

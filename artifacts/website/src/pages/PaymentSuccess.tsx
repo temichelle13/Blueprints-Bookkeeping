@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { CheckCircle, ArrowRight, Phone, Mail } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { SEO } from "@/components/SEO";
 
 const SERVICE_LABELS: Record<string, string> = {
   essentials: "Essentials Bookkeeping",
@@ -18,6 +19,7 @@ export default function PaymentSuccess() {
 
   return (
     <div className="pt-24 pb-20">
+      <SEO title="Payment Confirmed" noindex />
       <section className="py-16 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/5 to-transparent" />
         <div className="relative max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

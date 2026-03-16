@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { CheckCircle, ArrowRight, FileText, Upload } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { SEO } from "@/components/SEO";
 
 export default function Welcome() {
   usePageTitle("Welcome — Blueprints & Bookkeeping");
@@ -12,6 +13,7 @@ export default function Welcome() {
 
   return (
     <div className="pt-24 pb-20 min-h-screen">
+      <SEO title="Welcome" noindex />
       <section className="py-16 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

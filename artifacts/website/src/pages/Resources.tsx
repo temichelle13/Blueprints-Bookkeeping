@@ -16,6 +16,7 @@ import {
   Search,
 } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { SEO } from "@/components/SEO";
 import { useNewsletterMutation } from "@/hooks/use-newsletter";
 
 interface Template {
@@ -219,6 +220,11 @@ export default function Resources() {
 
   return (
     <div>
+      <SEO
+        title="Free Financial Templates & Tools"
+        description="Download free bookkeeping templates, financial checklists, and planning tools for small business owners."
+        path="/resources"
+      />
       <section className="relative pt-32 pb-16 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/8 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-primary/20 rounded-full blur-[100px] pointer-events-none" />

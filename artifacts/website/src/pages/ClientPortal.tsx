@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { SEO } from "@/components/SEO";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -162,7 +163,8 @@ export default function ClientPortal() {
   if (uploadComplete) {
     return (
       <div className="pt-24 pb-20 min-h-screen">
-        <div className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center" style={{ minHeight: "60vh" }}>
+        <SEO title="Secure Document Upload" noindex />
+      <div className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center" style={{ minHeight: "60vh" }}>
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -196,6 +198,7 @@ export default function ClientPortal() {
 
   return (
     <div className="pt-24 pb-20 min-h-screen">
+      <SEO title="Secure Document Upload" noindex />
       <section className="py-12 mb-8 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

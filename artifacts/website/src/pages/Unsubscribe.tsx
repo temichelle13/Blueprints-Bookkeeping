@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Mail, CheckCircle, AlertCircle } from "lucide-react";
 import { useUnsubscribeNewsletter } from "@workspace/api-client-react";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { SEO } from "@/components/SEO";
 
 type PageState = "form" | "success" | "error";
 
@@ -25,6 +26,7 @@ export default function Unsubscribe() {
 
   return (
     <div className="min-h-[60vh] flex items-center justify-center py-24">
+      <SEO title="Unsubscribe" noindex />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

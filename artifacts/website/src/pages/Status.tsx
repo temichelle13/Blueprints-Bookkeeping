@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { getApiBaseUrl } from "@workspace/api-client-react";
+import { SEO } from "@/components/SEO";
 
 interface HealthData {
   status: "ok" | "degraded";
@@ -43,6 +44,7 @@ export default function Status() {
 
   return (
     <section className="py-20 px-4 min-h-[60vh]">
+      <SEO title="System Status" noindex />
       <div className="max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">System Status</h1>
         <p className="text-gray-500 mb-8">

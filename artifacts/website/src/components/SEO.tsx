@@ -7,6 +7,7 @@ interface SEOProps {
   ogImage?: string;
   ogType?: string;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  noindex?: boolean;
 }
 
 const BASE_TITLE = "Blueprints & Bookkeeping";
@@ -74,7 +75,22 @@ function removeJsonLd() {
   if (existing) existing.remove();
 }
 
-export function SEO({ title, description, path, ogImage, ogType, jsonLd }: SEOProps) {
+function setRobotsMeta(content: string) {
+  let el = document.querySelector('meta[name="robots"]');
+  if (!el) {
+    el = document.createElement("meta");
+    el.setAttribute("name", "robots");
+    document.head.appendChild(el);
+  }
+  el.setAttribute("content", content);
+}
+
+function restoreRobotsMeta() {
+  const el = document.querySelector('meta[name="robots"]');
+  if (el) el.setAttribute("content", "index, follow");
+}
+
+export function SEO({ title, description, path, ogImage, ogType, jsonLd, noindex }: SEOProps) {
   const fullTitle = title ? `${title} | ${BASE_TITLE}` : BASE_TITLE;
   const url = path ? `${BASE_URL}${path}` : BASE_URL;
   const image = ogImage || DEFAULT_OG_IMAGE;
@@ -83,6 +99,12 @@ export function SEO({ title, description, path, ogImage, ogType, jsonLd }: SEOPr
 
   useEffect(() => {
     document.title = fullTitle;
+
+    if (noindex) {
+      setRobotsMeta("noindex, nofollow");
+    } else {
+      setRobotsMeta("index, follow");
+    }
 
     setMeta("description", desc);
 
@@ -98,7 +120,9 @@ export function SEO({ title, description, path, ogImage, ogType, jsonLd }: SEOPr
     setMeta("twitter:description", desc);
     setMeta("twitter:image", image);
 
-    setCanonical(url);
+    if (!noindex) {
+      setCanonical(url);
+    }
 
     if (jsonLd) {
       setJsonLd(jsonLd);
@@ -107,10 +131,11 @@ export function SEO({ title, description, path, ogImage, ogType, jsonLd }: SEOPr
     return () => {
       document.title = BASE_TITLE;
       MANAGED_META_TAGS.forEach(removeMeta);
+      restoreRobotsMeta();
       removeCanonical();
       removeJsonLd();
     };
-  }, [fullTitle, desc, url, image, type, jsonLd]);
+  }, [fullTitle, desc, url, image, type, jsonLd, noindex]);
 
   return null;
 }

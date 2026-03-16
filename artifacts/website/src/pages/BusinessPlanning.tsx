@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { SEO } from "@/components/SEO";
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -162,6 +163,11 @@ export default function BusinessPlanning() {
 
   return (
     <div className="pt-24 pb-20">
+      <SEO
+        title="Business Planning Services"
+        description="Professional business plan consulting for founders who need more than a template."
+        path="/business-planning"
+      />
       <section className="py-16 mb-16 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

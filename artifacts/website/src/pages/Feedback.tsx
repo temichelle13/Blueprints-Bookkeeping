@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { MessageSquare, CheckCircle, AlertCircle, ChevronDown } from "lucide-react";
+import { SEO } from "@/components/SEO";
 
 const CATEGORIES = [
   { value: "bug", label: "Something is broken" },
@@ -81,6 +82,7 @@ export default function Feedback() {
   if (status === "success") {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
+        <SEO title="Feedback" noindex />
         <div className="text-center max-w-md">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-500/15 border border-green-500/30 mb-6">
             <CheckCircle size={32} className="text-green-400" />
@@ -103,6 +105,7 @@ export default function Feedback() {
 
   return (
     <div className="min-h-screen py-20 px-4">
+      <SEO title="Feedback" noindex />
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-accent/15 border border-accent/30 mb-5">

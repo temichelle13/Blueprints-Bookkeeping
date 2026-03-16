@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Send, CheckCircle, Building2, User, Phone, FileText, Laptop, StickyNote } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { SEO } from "@/components/SEO";
 import { useToast } from "@/hooks/use-toast";
 
 const API_BASE = import.meta.env.VITE_API_URL || "/api";
@@ -55,6 +56,7 @@ export default function Onboarding() {
   if (submitted) {
     return (
       <div className="pt-24 pb-20 min-h-screen">
+        <SEO title="Onboarding" noindex />
         <section className="py-16 relative">
           <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
           <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -82,6 +84,7 @@ export default function Onboarding() {
 
   return (
     <div className="pt-24 pb-20 min-h-screen">
+      <SEO title="Onboarding" noindex />
       <section className="py-16 mb-8 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

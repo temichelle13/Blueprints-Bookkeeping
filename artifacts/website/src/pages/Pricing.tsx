@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "wouter";
 import { Check, Shield, ArrowRight, HelpCircle, Calendar } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { SEO } from "@/components/SEO";
 
 const bookkeepingTiers = [
   {
@@ -357,6 +358,11 @@ export default function Pricing() {
 
   return (
     <div className="pt-24 pb-20">
+      <SEO
+        title="Bookkeeping & Business Plan Pricing"
+        description="Transparent, flat-rate pricing for advanced bookkeeping and professional business plans. No hourly billing, no surprises."
+        path="/pricing"
+      />
       <section className="py-16 mb-4 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

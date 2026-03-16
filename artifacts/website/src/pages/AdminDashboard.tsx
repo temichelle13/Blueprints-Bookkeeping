@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { SEO } from "@/components/SEO";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -124,6 +125,8 @@ function formatDate(dateStr: string) {
 
 export default function AdminDashboard() {
   usePageTitle("Admin Dashboard");
+
+  const seo = <SEO title="Admin Dashboard" noindex />;
 
   const [authenticated, setAuthenticated] = useState(!!getAdminToken());
   const [tokenInput, setTokenInput] = useState("");
@@ -256,6 +259,7 @@ export default function AdminDashboard() {
   if (!authenticated) {
     return (
       <div className="min-h-screen bg-[#0a0e1a] flex items-center justify-center p-4">
+        {seo}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -295,6 +299,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-[#0a0e1a] text-white">
+      {seo}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex items-center justify-between mb-8">

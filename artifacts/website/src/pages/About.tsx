@@ -1,6 +1,7 @@
 import { Award, Shield, Fingerprint, BrainCircuit, GraduationCap, BadgeCheck } from "lucide-react";
 import { Link } from "wouter";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { SEO } from "@/components/SEO";
 import { CredentialBadgeStrip } from "@/components/TrustSignals";
 
 export default function About() {
@@ -8,6 +9,11 @@ export default function About() {
 
   return (
     <div className="pt-24 pb-20">
+      <SEO
+        title="Meet Tea Larson-Hetrick"
+        description="Advanced bookkeeping and business plan consulting from a QuickBooks ProAdvisor based in Roseburg, Oregon."
+        path="/about"
+      />
       <section className="py-16 mb-16 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

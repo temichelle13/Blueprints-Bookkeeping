@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { CreditCard, UserCheck, CalendarDays, MessageSquare, ArrowRight, BookOpen, FileText, Building2, HelpCircle, Send, CheckCircle } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
+import { SEO } from "@/components/SEO";
 
 const API_BASE = import.meta.env.VITE_API_URL || "/api";
 const STRIPE_CONFIGURED = !!import.meta.env.VITE_STRIPE_PUBLIC_KEY;
@@ -158,6 +159,11 @@ export default function GetStarted() {
 
   return (
     <div className="min-h-screen py-20 px-4">
+      <SEO
+        title="Get Started"
+        description="Choose how to begin your bookkeeping or business plan engagement. Book a call, connect your QuickBooks, or leave your info."
+        path="/get-started"
+      />
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
