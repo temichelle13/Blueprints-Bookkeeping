@@ -83,8 +83,9 @@ export function Footer() {
                 { label: "Credentials", href: "/portfolio" },
               ].map((item) => (
                 <li key={item.href}>
-                  <Link href={item.href} className="text-muted-foreground hover:text-foreground text-sm transition-colors">
+                  <Link href={item.href} className="text-muted-foreground hover:text-accent text-sm transition-colors inline-flex items-center gap-1 group">
                     {item.label}
+                    <ArrowRight size={11} className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                   </Link>
                 </li>
               ))}
@@ -94,11 +95,13 @@ export function Footer() {
               {[
                 { label: "Advanced Bookkeeping", href: "/services/bookkeeping" },
                 { label: "Business Plans", href: "/services/business-plans" },
+                { label: "Digital Handshake", href: "/services/digital-handshake" },
                 { label: "Tax Partner Network", href: "/tax-partners" },
               ].map((item) => (
                 <li key={item.href}>
-                  <Link href={item.href} className="text-muted-foreground hover:text-foreground text-sm transition-colors">
+                  <Link href={item.href} className="text-muted-foreground hover:text-accent text-sm transition-colors inline-flex items-center gap-1 group">
                     {item.label}
+                    <ArrowRight size={11} className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                   </Link>
                 </li>
               ))}
