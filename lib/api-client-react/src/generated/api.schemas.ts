@@ -230,6 +230,60 @@ export interface AdobeSignStatus {
   message: string;
 }
 
+export type CalWebhookPayloadTriggerEvent =
+  (typeof CalWebhookPayloadTriggerEvent)[keyof typeof CalWebhookPayloadTriggerEvent];
+
+export const CalWebhookPayloadTriggerEvent = {
+  BOOKING_CREATED: "BOOKING_CREATED",
+  BOOKING_RESCHEDULED: "BOOKING_RESCHEDULED",
+  BOOKING_CANCELLED: "BOOKING_CANCELLED",
+} as const;
+
+export type CalWebhookPayloadPayload = { [key: string]: unknown };
+
+export interface CalWebhookPayload {
+  triggerEvent: CalWebhookPayloadTriggerEvent;
+  payload: CalWebhookPayloadPayload;
+}
+
+export interface CalWebhookResponse {
+  success: boolean;
+  bookingId: number;
+}
+
+export type BookingMeetingType =
+  (typeof BookingMeetingType)[keyof typeof BookingMeetingType];
+
+export const BookingMeetingType = {
+  video: "video",
+  phone: "phone",
+  async: "async",
+} as const;
+
+export type BookingStatus = (typeof BookingStatus)[keyof typeof BookingStatus];
+
+export const BookingStatus = {
+  confirmed: "confirmed",
+  cancelled: "cancelled",
+  rescheduled: "rescheduled",
+} as const;
+
+export interface Booking {
+  id: number;
+  calBookingId: string;
+  /** @nullable */
+  calEventTypeId?: string | null;
+  clientName: string;
+  clientEmail: string;
+  /** @nullable */
+  clientPhone?: string | null;
+  meetingType: BookingMeetingType;
+  startTime: string;
+  endTime: string;
+  status: BookingStatus;
+  createdAt: string;
+  updatedAt: string;
+}
 export type BookingWebhookBodyPayload = { [key: string]: unknown };
 
 export type BookingWebhookBody = {

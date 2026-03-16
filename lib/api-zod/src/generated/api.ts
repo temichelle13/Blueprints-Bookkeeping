@@ -362,3 +362,21 @@ export const GetAdobeSignStatusResponse = zod.object({
   configured: zod.boolean(),
   message: zod.string(),
 });
+
+/**
+ * Receives booking events from Cal.com (created, rescheduled, cancelled). Verifies HMAC signature, upserts booking record, and triggers notifications.
+ * @summary Cal.com booking webhook
+ */
+export const CalWebhookBody = zod.object({
+  triggerEvent: zod.enum([
+    "BOOKING_CREATED",
+    "BOOKING_RESCHEDULED",
+    "BOOKING_CANCELLED",
+  ]),
+  payload: zod.object({}).passthrough(),
+});
+
+export const CalWebhookResponse = zod.object({
+  success: zod.boolean(),
+  bookingId: zod.number(),
+});

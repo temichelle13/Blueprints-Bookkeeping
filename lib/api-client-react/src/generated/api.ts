@@ -20,6 +20,8 @@ import type {
   AdobeSignStatus,
   BookingWebhook201,
   BookingWebhookBody,
+  CalWebhookPayload,
+  CalWebhookResponse,
   ContactFormInput,
   ContactFormResponse,
   Contract,
@@ -1981,3 +1983,90 @@ export function useGetAdobeSignStatus<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * Receives booking events from Cal.com (created, rescheduled, cancelled). Verifies HMAC signature, upserts booking record, and triggers notifications.
+ * @summary Cal.com booking webhook
+ */
+export const getCalWebhookUrl = () => {
+  return `/api/webhooks/cal`;
+};
+
+export const calWebhook = async (
+  calWebhookPayload: CalWebhookPayload,
+  options?: RequestInit,
+): Promise<CalWebhookResponse> => {
+  return customFetch<CalWebhookResponse>(getCalWebhookUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(calWebhookPayload),
+  });
+};
+
+export const getCalWebhookMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof calWebhook>>,
+    TError,
+    { data: BodyType<CalWebhookPayload> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof calWebhook>>,
+  TError,
+  { data: BodyType<CalWebhookPayload> },
+  TContext
+> => {
+  const mutationKey = ["calWebhook"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof calWebhook>>,
+    { data: BodyType<CalWebhookPayload> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return calWebhook(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CalWebhookMutationResult = NonNullable<
+  Awaited<ReturnType<typeof calWebhook>>
+>;
+export type CalWebhookMutationBody = BodyType<CalWebhookPayload>;
+export type CalWebhookMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Cal.com booking webhook
+ */
+export const useCalWebhook = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof calWebhook>>,
+    TError,
+    { data: BodyType<CalWebhookPayload> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof calWebhook>>,
+  TError,
+  { data: BodyType<CalWebhookPayload> },
+  TContext
+> => {
+  return useMutation(getCalWebhookMutationOptions(options));
+};

@@ -29,6 +29,15 @@ app.use(
   express.raw({ type: "application/json" }),
 );
 
+app.use(
+  "/api/webhooks/cal",
+  express.json({
+    verify: (req: any, _res, buf) => {
+      req.rawBody = buf;
+    },
+  }),
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

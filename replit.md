@@ -65,6 +65,7 @@ The project is structured as a pnpm monorepo, separating deployable applications
 - **Framework**: Express 5.
 - **Database ORM**: Drizzle ORM with PostgreSQL.
 - **Validation**: Zod for API request and response validation, integrated with `drizzle-zod`.
+- **API Definition**: OpenAPI 3.1.
 - **API Codegen**: Orval generates API client and Zod schemas from an OpenAPI spec.
 - **Build System**: esbuild for CJS bundling.
 - **Core Routes**:
@@ -74,6 +75,8 @@ The project is structured as a pnpm monorepo, separating deployable applications
     - `/api/documents`: Client document upload, listing, download, and secure link generation.
     - `/api/contact`: General contact form submissions with honeypot rejection and rate limiting.
     - `/api/newsletter`: Newsletter subscription (with signup source tracking) and unsubscription.
+    - `/api/webhooks/cal`: Cal.com booking webhook handling (signature verification, upsert, notifications).
+    - `/api/health`: Health checks for API and database.
 - **Spam Protection**: Server-side honeypot rejection in contact and newsletter routes.
 - **Self-Service Subscriptions (Stripe)**:
     - One-time deposit payments for Bookkeeping and Business Plan services via Stripe Checkout.
@@ -83,10 +86,40 @@ The project is structured as a pnpm monorepo, separating deployable applications
     - Footer newsletter signup.
     - Home page lead magnet ("Financial Readiness Checklist" PDF gated by email).
     - Unsubscribe functionality.
-- **Database Schema**: PostgreSQL with Drizzle ORM, including tables for `contact_inquiries`, `newsletter_subscribers`, `contracts`, `contract_templates`, `subscriptions`, `onboarding_submissions`, and `client_documents`.
+- **File Uploads**: Handles secure client document uploads to Adobe Creative Cloud Storage.
+- **Database Schema**: PostgreSQL with Drizzle ORM, including tables for `contact_inquiries`, `newsletter_subscribers`, `contracts`, `contract_templates`, `subscriptions`, `onboarding_submissions`, `client_documents`, and `bookings`.
 - **Adobe Acrobat Sign Integration**:
     - Automates contract sending based on form submissions or service bookings (e.g., Mutual NDA, Engagement Letter).
     - Supports Client Engagement Letter, Mutual NDA, Data Processing Agreement, Scope Change/Add-On.
+
+## Database
+
+- **ORM**: Drizzle ORM.
+- **Database**: PostgreSQL.
+- **Key Tables**:
+    - `contact_inquiries`: Stores contact form submissions.
+    - `newsletter_subscribers`: Manages newsletter subscriptions.
+    - `contracts`: Tracks contract records, statuses, and Adobe Sign integration details.
+    - `contract_templates`: Stores references to Adobe Sign templates.
+    - `subscriptions`: Records Stripe subscription details.
+    - `onboarding_submissions`: Stores client intake form data.
+    - `client_documents`: Manages uploaded client documents.
+    - `bookings`: Cal.com booking records (calBookingId, clientName, clientEmail, meetingType, startTime, endTime, status, rawPayload).
+
+## Cal.com Scheduling Integration
+
+- **Schedule page** (`/schedule`): Cal.com inline embed showing live availability with three meeting types (Video Call 45 min, Phone Call 30 min, Document-Only Async)
+- **Contact page** (`/contact`): "Book a Time Directly" CTA section above the intake forms linking to `/schedule`
+- **Webhook**: `POST /api/webhooks/cal` — verifies `X-Cal-Signature-256` HMAC, upserts bookings to `bookings` table, triggers email (Resend) + SMS (Twilio) notifications to owner
+- **Environment secrets**: `CAL_WEBHOOK_SECRET`, `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`, `OWNER_PHONE_NUMBER`, `OWNER_EMAIL`, `RESEND_API_KEY`
+- **Setup guide**: See `README-SCHEDULING.md` in repo root
+- **CTA routing**: All "Get a Quote", "Start Your Blueprint", "Book Your Consultation", "Schedule a Consultation" buttons site-wide now link to `/schedule`
+
+## Contract Automation
+
+- **Integration**: Adobe Acrobat Sign API v6.
+- **Functionality**:
+    - Automatic contract generation and sending based on form submissions or service bookings (e.g., Mutual NDA, Engagement Letter, Data Processing Agreement, Scope Change).
     - Scheduled reminders for unsigned contracts and auto-expiration.
     - Archival of signed PDFs to Adobe Creative Cloud Storage.
     - Admin dashboard for contract management.

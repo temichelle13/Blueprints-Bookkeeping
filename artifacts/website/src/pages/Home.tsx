@@ -285,7 +285,7 @@ export default function Home() {
             Secure your financial infrastructure and map out a profitable future today.
           </p>
           <Link
-            href="/contact"
+            href="/schedule"
             className="inline-flex items-center gap-2 px-8 py-4 bg-accent text-white font-bold text-lg rounded-xl shadow-xl shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300"
           >
             Book Your Consultation

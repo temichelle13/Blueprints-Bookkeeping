@@ -1,9 +1,117 @@
 import { usePageTitle } from "@/hooks/use-page-title";
 import { Link } from "wouter";
-import { Clock, CheckCircle2, Calendar } from "lucide-react";
+import { Clock, Video, Phone, FileText, CheckCircle2, Calendar, ArrowRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+
+const CAL_USERNAME = "blueprintsandbookkeeping";
+
+const meetingTypes = [
+  {
+    icon: <Video className="w-5 h-5" />,
+    title: "Video Call",
+    duration: "45 min",
+    description: "Face-to-face over Google Meet or Zoom. Best for new clients who want to discuss their situation in depth.",
+    slug: "video-call",
+  },
+  {
+    icon: <Phone className="w-5 h-5" />,
+    title: "Phone Call",
+    duration: "30 min",
+    description: "Quick and focused. Ideal for follow-ups, pricing questions, or clients on the go.",
+    slug: "phone-call",
+  },
+  {
+    icon: <FileText className="w-5 h-5" />,
+    title: "Document-Only (Async)",
+    duration: "No meeting",
+    description: "Upload your documents and we'll review them asynchronously. Perfect for returning clients or document handoffs.",
+    slug: "document-review",
+  },
+];
+
+function CalEmbed() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const initialized = useRef(false);
+  const [embedLoaded, setEmbedLoaded] = useState(false);
+  const [embedError, setEmbedError] = useState(false);
+
+  useEffect(() => {
+    if (initialized.current) return;
+    initialized.current = true;
+
+    const script = document.createElement("script");
+    script.src = "https://app.cal.com/embed/embed.js";
+    script.async = true;
+    script.onerror = () => setEmbedError(true);
+    script.onload = () => {
+      try {
+        const Cal = (window as any).Cal;
+        if (Cal && containerRef.current) {
+          Cal("init", { origin: "https://app.cal.com" });
+          Cal("inline", {
+            calLink: CAL_USERNAME,
+            elementOrSelector: containerRef.current,
+            config: { theme: "dark" },
+          });
+          Cal("ui", {
+            theme: "dark",
+            styles: { branding: { brandColor: "#6366f1" } },
+          });
+          setEmbedLoaded(true);
+        }
+      } catch {
+        setEmbedError(true);
+      }
+    };
+    document.head.appendChild(script);
+  }, []);
+
+  if (embedError) {
+    return (
+      <div className="flex flex-col items-center justify-center p-12 text-center" style={{ minHeight: "400px" }}>
+        <Calendar className="w-12 h-12 text-accent/40 mb-4" />
+        <h3 className="text-lg font-bold text-white mb-2">Calendar Loading</h3>
+        <p className="text-muted-foreground text-sm max-w-md mb-6">
+          The scheduling calendar is being set up. In the meantime, you can reach out directly to book your appointment.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <a
+            href="mailto:tea@blueprintsandbookkeeping.com"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-accent text-white font-semibold text-sm hover:shadow-lg hover:shadow-accent/20 transition-all"
+          >
+            Email Us
+          </a>
+          <a
+            href="tel:+15413198654"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white transition-all"
+          >
+            Call (541) 319-8654
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative" style={{ minHeight: "650px" }}>
+      {!embedLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-8 h-8 border-2 border-accent/30 border-t-accent rounded-full animate-spin mx-auto mb-3" />
+            <p className="text-muted-foreground text-sm">Loading calendar...</p>
+          </div>
+        </div>
+      )}
+      <div
+        ref={containerRef}
+        style={{ width: "100%", minHeight: "650px", overflow: "auto" }}
+      />
+    </div>
+  );
+}
 
 export default function Schedule() {
-  usePageTitle("Book a Discovery Call");
+  usePageTitle("Schedule an Appointment");
 
   return (
     <div className="pt-24 pb-20">
@@ -11,25 +119,44 @@ export default function Schedule() {
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="accent-bar mx-auto mb-6" />
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-6">Book a Discovery Call</h1>
+          <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-6">Schedule an Appointment</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            A free 30-minute call to understand your situation, answer your questions, and figure out if we're the right fit — no pressure, no sales pitch.
+            Pick the format that works for you — video, phone, or async document review. All slots show real-time availability.
           </p>
         </div>
       </section>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-12">
+          {meetingTypes.map((mt) => (
+            <div key={mt.slug} className="glass-card-hover rounded-2xl p-6 group">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-lg bg-accent/10 text-accent group-hover:bg-accent group-hover:text-white transition-all duration-500">
+                  {mt.icon}
+                </div>
+                <div>
+                  <h3 className="font-bold text-white text-[15px]">{mt.title}</h3>
+                  <span className="text-xs text-muted-foreground font-mono">{mt.duration}</span>
+                </div>
+              </div>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                {mt.description}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-10">
           <div className="space-y-5">
             <div className="glass-card rounded-2xl p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 rounded-lg bg-accent/10 text-accent">
                   <Clock className="w-5 h-5" />
                 </div>
-                <h3 className="font-bold text-white text-[15px]">30 Minutes, Free</h3>
+                <h3 className="font-bold text-white text-[15px]">Free & No Pressure</h3>
               </div>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                No commitment. Just a conversation to understand what you need and whether we're the right match.
+                Every first meeting is complimentary. No sales pitch — just an honest conversation about what you need.
               </p>
             </div>
 
@@ -57,28 +184,18 @@ export default function Schedule() {
 
             <div className="glass-card rounded-2xl p-6">
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Prefer to reach out first?{" "}
+                Prefer to share details first?{" "}
                 <Link href="/contact" className="text-accent hover:underline">
-                  Send us a message
+                  Fill out the intake form
                 </Link>{" "}
-                and we'll be in touch within one business day.
+                and we'll review before your call.
               </p>
             </div>
           </div>
 
-          <div className="lg:col-span-2">
-            <div className="glass-card rounded-2xl overflow-hidden" style={{ minHeight: "600px" }}>
-              <div className="w-full h-full min-h-[600px]">
-                <iframe
-                  src="https://calendly.com/tea-blueprintsandbookkeeping/30min"
-                  width="100%"
-                  height="650"
-                  frameBorder="0"
-                  title="Schedule a discovery call"
-                  className="w-full"
-                  style={{ background: "transparent" }}
-                />
-              </div>
+          <div className="lg:col-span-3">
+            <div className="glass-card rounded-2xl overflow-hidden" style={{ minHeight: "650px" }}>
+              <CalEmbed />
             </div>
             <p className="text-xs text-muted-foreground text-center mt-3">
               Don't see times that work?{" "}
@@ -86,6 +203,17 @@ export default function Schedule() {
               and we'll find something.
             </p>
           </div>
+        </div>
+
+        <div className="glass-card rounded-2xl p-10 text-center max-w-3xl mx-auto">
+          <h3 className="text-2xl font-bold text-white mb-3">Not ready to book yet?</h3>
+          <p className="text-muted-foreground mb-6">Send us a message or fill out the discovery intake form and we'll reach out within one business day.</p>
+          <Link
+            href="/contact"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-accent text-white font-semibold text-sm hover:shadow-xl hover:shadow-accent/20 transition-all duration-300"
+          >
+            Go to Contact Page <ArrowRight size={15} />
+          </Link>
         </div>
       </div>
     </div>

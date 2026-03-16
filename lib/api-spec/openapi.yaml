@@ -17,6 +17,8 @@ tags:
     description: OpenAI AI chat operations
   - name: contracts
     description: Contract management and Adobe Acrobat Sign operations
+  - name: scheduling
+    description: Cal.com scheduling and booking operations
 paths:
   /healthz:
     get:
@@ -471,6 +473,31 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AdobeSignStatus"
+  /webhooks/cal:
+    post:
+      operationId: calWebhook
+      tags: [scheduling]
+      summary: Cal.com booking webhook
+      description: Receives booking events from Cal.com (created, rescheduled, cancelled). Verifies HMAC signature, upserts booking record, and triggers notifications.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CalWebhookPayload"
+      responses:
+        "200":
+          description: Webhook processed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CalWebhookResponse"
+        "401":
+          description: Invalid signature
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -835,3 +862,68 @@ components:
       required:
         - configured
         - message
+    CalWebhookPayload:
+      type: object
+      properties:
+        triggerEvent:
+          type: string
+          enum: [BOOKING_CREATED, BOOKING_RESCHEDULED, BOOKING_CANCELLED]
+        payload:
+          type: object
+      required:
+        - triggerEvent
+        - payload
+    CalWebhookResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        bookingId:
+          type: integer
+      required:
+        - success
+        - bookingId
+    Booking:
+      type: object
+      properties:
+        id:
+          type: integer
+        calBookingId:
+          type: string
+        calEventTypeId:
+          type: ["string", "null"]
+        clientName:
+          type: string
+        clientEmail:
+          type: string
+        clientPhone:
+          type: ["string", "null"]
+        meetingType:
+          type: string
+          enum: [video, phone, async]
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [confirmed, cancelled, rescheduled]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - calBookingId
+        - clientName
+        - clientEmail
+        - meetingType
+        - startTime
+        - endTime
+        - status
+        - createdAt
+        - updatedAt

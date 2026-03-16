@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Calendar } from "lucide-react";
+import { Link } from "wouter";
 import {
   useContactMutation,
   quickContactSchema,
@@ -22,8 +23,43 @@ export default function Contact() {
           <div className="accent-bar mx-auto mb-6" />
           <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-6">Let's Talk Strategy</h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Choose the path that fits your timeline. Send a quick note or give us the details for a tailored discovery call.
+            Choose the path that fits your timeline. Book a call directly, send a quick note, or give us the details for a tailored discovery session.
           </p>
+        </div>
+      </section>
+
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <div className="glass-card rounded-2xl p-8 md:p-10 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-accent/5 to-transparent pointer-events-none" />
+          <div className="relative">
+            <div className="flex items-center gap-3 mb-2">
+              <Calendar size={22} className="text-accent" />
+              <h2 className="text-2xl font-display font-bold text-white">Book a Time Directly</h2>
+            </div>
+            <p className="text-muted-foreground mb-6 text-[15px] max-w-2xl">
+              Ready to get started or a returning client? Skip the form and book a video call, phone call, or async document review directly on the calendar.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/schedule"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-accent text-white font-semibold text-sm hover:shadow-xl hover:shadow-accent/20 transition-all duration-300"
+              >
+                <Calendar size={16} />
+                View Calendar & Book
+              </Link>
+              <span className="text-muted-foreground text-sm self-center">
+                Free discovery call &mdash; no commitment required
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
+        <div className="flex items-center gap-4 mb-8">
+          <div className="h-px flex-grow bg-white/[0.06]" />
+          <span className="text-xs font-mono font-medium tracking-widest text-muted-foreground uppercase">Or send us a message</span>
+          <div className="h-px flex-grow bg-white/[0.06]" />
         </div>
       </section>
 
@@ -66,7 +102,7 @@ export default function Contact() {
 
           <div className="lg:col-span-8 glass-card rounded-2xl p-8 md:p-10">
             <h2 className="text-2xl font-display font-bold text-white mb-2">Discovery Intake Form</h2>
-            <p className="text-muted-foreground mb-8 text-[15px]">Ready to dive in? Provide context about your operations so we can hit the ground running on our first call.</p>
+            <p className="text-muted-foreground mb-8 text-[15px]">New to us? Provide context about your operations so we can hit the ground running on our first call.</p>
             <DetailedIntakeForm />
           </div>
         </div>

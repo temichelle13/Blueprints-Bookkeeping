@@ -253,7 +253,7 @@ function BookkeepingTierCard({
             <SubscribeButton planKey={tier.planKey} interval={billingInterval} />
           )}
           <Link
-            href="/contact"
+            href="/schedule"
             className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
           >
             {tier.cta} <ArrowRight size={15} />
@@ -306,7 +306,7 @@ function BookkeepingTierCard({
           <SubscribeButton planKey={tier.planKey} interval={billingInterval} />
         )}
         <Link
-          href="/contact"
+          href="/schedule"
           className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
         >
           {tier.cta}
@@ -355,7 +355,7 @@ function TierCard({
         <div className="relative space-y-2">
           <DepositButton serviceKey={tier.depositKey} label="Pay Deposit & Get Started" />
           <Link
-            href="/contact"
+            href="/schedule"
             className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
           >
             {tier.cta} <ArrowRight size={15} />
@@ -394,7 +394,7 @@ function TierCard({
       <div className="space-y-2">
         <DepositButton serviceKey={tier.depositKey} label="Pay Deposit & Get Started" />
         <Link
-          href="/contact"
+          href="/schedule"
           className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
         >
           {tier.cta}
