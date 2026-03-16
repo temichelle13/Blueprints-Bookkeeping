@@ -506,6 +506,14 @@ export default function TaxPartners() {
               <PartnerCard key={partner.id} partner={partner} index={index} />
             ))}
           </div>
+        ) : taxPartners.length === 0 ? (
+          <div className="glass-card rounded-2xl p-12 text-center">
+            <Handshake size={40} className="text-muted-foreground mx-auto mb-4 opacity-40" />
+            <h3 className="text-lg font-bold text-white mb-2">Network Building</h3>
+            <p className="text-muted-foreground mb-4 max-w-sm mx-auto">
+              We're carefully vetting licensed CPA and EA partners. Use the form below to apply — qualified firms will be listed here once verified.
+            </p>
+          </div>
         ) : (
           <div className="glass-card rounded-2xl p-12 text-center">
             <Search size={40} className="text-muted-foreground mx-auto mb-4 opacity-40" />

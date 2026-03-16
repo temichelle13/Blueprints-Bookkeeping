@@ -66,7 +66,7 @@ export default function Schedule() {
           <div className="accent-bar mx-auto mb-6" />
           <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-6">Schedule an Appointment</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Pick the format that works for you — video, phone, or async document review. All slots show real-time availability.
+            Pick the format that works for you — video call, phone call, or just leave your details and Tea will reach out.
           </p>
         </div>
       </section>

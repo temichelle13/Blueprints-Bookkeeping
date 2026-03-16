@@ -26,7 +26,7 @@ function BlogCardSkeleton() {
 }
 
 export default function Blog() {
-  usePageTitle("Blog & Resources");
+  usePageTitle("Blog");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function Blog() {
   return (
     <div className="pt-24 pb-20">
       <SEO
-        title="Blog & Resources"
+        title="Blog"
         description="Insights on bookkeeping, business planning, and financial strategy for complex, high-growth operations. Expert articles from Blueprints & Bookkeeping."
         path="/blog"
       />
@@ -45,7 +45,7 @@ export default function Blog() {
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="accent-bar mx-auto mb-6" />
-          <h1 className="text-4xl md:text-5xl font-display font-bold mb-6">Blog & Resources</h1>
+          <h1 className="text-4xl md:text-5xl font-display font-bold mb-6">Blog</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Insights on bookkeeping, business planning, and financial strategy for complex, high-growth operations.
           </p>
