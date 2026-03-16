@@ -50,10 +50,10 @@ export default function GetStarted() {
       title: "Sign Up Online",
       subtitle: "For Essentials or Growth bookkeeping",
       description:
-        "Choose your tier, complete checkout, and submit your onboarding intake form — all in one visit. Contracts are sent automatically and you'll have access to the client portal immediately.",
+        "Review our plans and pricing, then reach out to get started. Contracts are sent after your discovery call and you'll have access to the client portal right away.",
       steps: [
-        "Pick Essentials ($500/mo) or Growth ($900/mo)",
-        "Checkout securely via Stripe",
+        "Review Essentials ($500/mo) or Growth ($900/mo)",
+        "Book a quick discovery call or send your info",
         "Complete your intake form",
         "Receive & sign contracts",
         "Upload your first documents",

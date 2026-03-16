@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { Link } from "wouter";
@@ -6,7 +6,18 @@ import { cn } from "@/lib/utils";
 import { SEO } from "@/components/SEO";
 import { faqPageSchema } from "@/lib/seo-schemas";
 
-const faqs = [
+interface FAQItemData {
+  id?: string;
+  q: string;
+  a: string;
+}
+
+interface FAQSection {
+  category: string;
+  items: FAQItemData[];
+}
+
+const faqs: FAQSection[] = [
   {
     category: "Bookkeeping",
     items: [
@@ -15,6 +26,7 @@ const faqs = [
         a: "Every bookkeeping engagement includes monthly transaction categorization and reconciliation, monthly close procedures, financial statement preparation (P&L, balance sheet, cash flow), and proactive communication on anything unusual. We also set up rule-based automation in QuickBooks Online to reduce manual entry and errors."
       },
       {
+        id: "taxes",
         q: "Do you do taxes or tax preparation?",
         a: "No — and that's intentional. We focus exclusively on bookkeeping and financial planning year-round, which means we're always available and never disappear during tax season. Your CPA handles taxes; we make sure your books are clean and accurate so that handoff is seamless."
       },
@@ -76,14 +88,38 @@ const faqs = [
   },
 ];
 
-function FAQItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
+function FAQItem({ id, q, a }: { id?: string; q: string; a: string }) {
+  const hashMatch = typeof window !== "undefined" && id && window.location.hash === `#${id}`;
+  const [open, setOpen] = useState(hashMatch);
+  const contentId = id ? `${id}-content` : undefined;
+  const buttonId = id ? `${id}-trigger` : undefined;
+
+  useEffect(() => {
+    if (!id) return;
+    const onHashChange = () => {
+      if (window.location.hash === `#${id}`) {
+        setOpen(true);
+        const el = document.getElementById(id);
+        if (el) {
+          setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "center" }), 100);
+        }
+      }
+    };
+    if (hashMatch) onHashChange();
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, [id, hashMatch]);
+
   return (
     <div
+      id={id}
       className="border-b border-white/[0.06] last:border-0"
     >
       <button
+        id={buttonId}
         onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        aria-controls={contentId}
         className="w-full flex items-start justify-between gap-4 py-5 text-left group"
       >
         <span className={cn("text-[15px] font-medium transition-colors", open ? "text-white" : "text-foreground group-hover:text-white")}>
@@ -91,12 +127,15 @@ function FAQItem({ q, a }: { q: string; a: string }) {
         </span>
         <ChevronDown
           className={cn("w-4 h-4 text-accent shrink-0 mt-0.5 transition-transform duration-300", open && "rotate-180")}
+          aria-hidden="true"
         />
       </button>
       {open && (
-        <p className="text-muted-foreground text-[14px] leading-relaxed pb-5">
-          {a}
-        </p>
+        <div id={contentId} role="region" aria-labelledby={buttonId}>
+          <p className="text-muted-foreground text-[14px] leading-relaxed pb-5">
+            {a}
+          </p>
+        </div>
       )}
     </div>
   );
@@ -141,7 +180,7 @@ export default function FAQ() {
             </div>
             <div className="glass-card rounded-2xl px-6 divide-y divide-white/[0.06]">
               {section.items.map((item) => (
-                <FAQItem key={item.q} q={item.q} a={item.a} />
+                <FAQItem key={item.q} id={item.id} q={item.q} a={item.a} />
               ))}
             </div>
           </div>
