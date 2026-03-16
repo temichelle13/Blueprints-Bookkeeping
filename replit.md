@@ -4,6 +4,14 @@ This project is a pnpm monorepo using TypeScript, designed for Blueprints & Book
 
 The project includes a React-based frontend with a dark theme and glassmorphism elements, an Express API server, and integrations with external services like Stripe for subscriptions and Adobe Acrobat Sign for e-signatures. It aims to streamline operations for the firm, enhance client experience, and manage business growth efficiently. The firm is capped at 20 active clients, emphasizing scarcity and exclusivity.
 
+Key capabilities include:
+- A public-facing website detailing services, pricing, and client portfolio.
+- Secure client portal for document uploads and onboarding.
+- Automated contract generation and management via Adobe Sign.
+- Stripe integration for self-service subscription payments.
+- SEO optimization for discoverability.
+- Newsletter and lead magnet functionality for client engagement.
+
 # User Preferences
 
 - Does NOT offer tax preparation — never include tax prep content.
@@ -73,6 +81,14 @@ The project is organized as a pnpm workspace monorepo with separate `artifacts` 
 - **Storage**: Files uploaded to Adobe Creative Cloud Storage.
 - **Notifications**: Email confirmations to clients and notifications to admins.
 - **Admin Features**: Listing, downloading, and secure link generation for client uploads.
+
+## Newsletter & Lead Magnet
+
+- **Footer Newsletter Signup**: Email + subscribe button in footer "Stay in the Loop" section.
+- **Lead Magnet**: Gated "Financial Readiness Checklist" PDF download on the home page with email capture.
+- **Subscriber Management**: Stores subscribers with signup source tracking (footer vs lead_magnet).
+- **Unsubscribe**: Dedicated /unsubscribe page marks subscribers as inactive.
+- **PDF Resource**: `scripts/generate-checklist-pdf.mjs` generates the lead magnet PDF.
 
 ## TypeScript Configuration
 
