@@ -67,8 +67,18 @@ export default function Privacy() {
           </section>
 
           <section>
-            <h2 className="text-white font-bold text-lg mb-3">8. Your Rights</h2>
-            <p>You have the right to access, correct, or delete the personal information we hold about you. To exercise any of these rights, contact us at <a href="mailto:tea@blueprintsandbookkeeping.com" className="text-accent hover:underline">tea@blueprintsandbookkeeping.com</a>.</p>
+            <h2 className="text-white font-bold text-lg mb-3">8. Your Rights Under Oregon Law</h2>
+            <p className="mb-3">Under the Oregon Consumer Privacy Act (OCPA), Oregon residents have specific rights regarding their personal data. As an Oregon-based business, we respect and uphold these rights. You have the right to:</p>
+            <ul className="list-disc list-inside space-y-2 pl-2">
+              <li><span className="text-white font-medium">Right to Know / Access</span> — Confirm whether we are processing your personal data and obtain a copy of it.</li>
+              <li><span className="text-white font-medium">Right to Correct</span> — Request correction of inaccurate personal data we hold about you.</li>
+              <li><span className="text-white font-medium">Right to Delete</span> — Request deletion of personal data you have provided to us or that we have obtained about you.</li>
+              <li><span className="text-white font-medium">Right to Data Portability</span> — Obtain a copy of your personal data in a portable and readily usable format, to the extent technically feasible.</li>
+              <li><span className="text-white font-medium">Right to Opt Out</span> — Opt out of the processing of your personal data for purposes of sale, targeted advertising, or certain types of profiling.</li>
+              <li><span className="text-white font-medium">Right to Appeal</span> — Appeal a decision we make regarding your privacy rights request.</li>
+            </ul>
+            <p className="mt-4">To exercise any of these rights, please contact us at <a href="mailto:tea@blueprintsandbookkeeping.com" className="text-accent hover:underline">tea@blueprintsandbookkeeping.com</a>. We will respond to your request within 45 days. If we need additional time, we will notify you and may extend the response period by an additional 45 days.</p>
+            <p className="mt-3">If we deny your request, you may appeal the decision by contacting us at the same email address. We will respond to your appeal within 45 days.</p>
           </section>
 
           <section>
