@@ -16,7 +16,7 @@ export const blogPosts: BlogPost[] = [
     category: "Bookkeeping",
     date: "2026-03-10",
     readTime: "6 min read",
-    content: `If your bookkeeper is great at data entry but struggles with multi-entity reconciliation, crypto transactions, or SBA-ready financial statements — you've hit what we call the "complexity ceiling."
+    content: `If your bookkeeper is great at data entry but struggles with multi-entity reconciliation, crypto transactions, or producing clear, accurate financial statements — you've hit what we call the "complexity ceiling."
 
 **What is the Complexity Ceiling?**
 
@@ -24,13 +24,13 @@ The complexity ceiling is the point where a generalist bookkeeper's skill set no
 
 - You operate multiple LLCs, holding companies, or DBA structures
 - You have revenue streams involving cryptocurrency, DeFi, or digital assets
-- You need financial statements formatted for bank underwriting or investor review
+- You need clean, accurate financial statements for a bank conversation or partner review
 - Your transaction volume exceeds what manual reconciliation can handle accurately
 - You operate in a regulated or niche industry (cannabis, timber, agriculture)
 
 **The Real Cost of Staying Below the Ceiling**
 
-The danger isn't that your books are "wrong" — it's that they're incomplete. Generalist bookkeepers often categorize complex transactions into catch-all accounts, creating a misleading picture of your financial health. When it's time to apply for a loan, bring on investors, or make strategic decisions, those gaps become expensive.
+The danger isn't that your books are "wrong" — it's that they're incomplete. Generalist bookkeepers often categorize complex transactions into catch-all accounts, creating a misleading picture of your financial health. When it's time to apply for a loan, bring on a partner, or make strategic decisions, those gaps become expensive.
 
 **How to Break Through**
 
@@ -44,41 +44,41 @@ Breaking through the complexity ceiling requires a bookkeeper who understands yo
 The right financial infrastructure doesn't just track your money — it gives you the clarity to make decisions that grow your business.`
   },
   {
-    slug: "sba-loan-business-plan-requirements",
-    title: "What Banks Actually Want: SBA Loan Business Plan Requirements",
-    excerpt: "The difference between a business plan that gets funded and one that gets filed away often comes down to formatting, financial rigor, and strategic narrative. Here's what lenders look for.",
+    slug: "what-makes-a-strong-business-plan",
+    title: "What Makes a Business Plan Actually Work",
+    excerpt: "Most business plans fail not because the idea is bad — but because the financials don't hold up and the narrative doesn't land. Here's what separates a strong plan from a weak one.",
     category: "Business Plans",
     date: "2026-03-05",
     readTime: "8 min read",
-    content: `Getting an SBA loan isn't just about having a good business idea. Lenders evaluate your business plan with the precision of an auditor. Here's what actually matters.
+    content: `A business plan is only as strong as the thinking behind it. Whether you're presenting to a bank, sharing with a partner, or using it to guide your own decisions — the same fundamentals apply.
 
-**The Three Pillars of a Fundable Plan**
+**The Three Pillars of a Strong Plan**
 
 1. **Financial Projections That Withstand Scrutiny**
 
-Your 3-to-5-year financial forecast needs to be defensible. That means every revenue assumption ties back to market data, every expense is categorized correctly, and your cash flow projections account for seasonal variation. Banks don't want optimistic guesses — they want conservative, well-documented projections.
+Your 3-to-5-year financial forecast needs to be defensible. That means every revenue assumption ties back to market data, every expense is categorized correctly, and your cash flow projections account for seasonal variation. Nobody wants optimistic guesses — they want conservative, well-documented projections.
 
-2. **SBA-Ready Formatting**
+2. **Professional, Thorough Documentation**
 
-The SBA has specific documentation requirements. Your plan needs to include:
-- Executive summary with clear use of funds
+A complete business plan includes:
+- Executive summary with a clear description of the business and its goals
 - Detailed market analysis with TAM/SAM/SOM breakdown
 - Management team qualifications
 - Historical financial statements (if applicable)
 - Monthly cash flow projections for Year 1, annual for Years 2-5
-- Collateral documentation
+- Clear explanation of how capital will be deployed
 
 3. **A Compelling But Honest Narrative**
 
-The narrative section is where many plans fail. Bankers can spot inflated claims instantly. Your story needs to be ambitious but grounded — showing you understand your market, your competition, and the risks involved.
+The narrative section is where many plans fail. Reviewers can spot inflated claims instantly. Your story needs to be ambitious but grounded — showing you understand your market, your competition, and the risks involved.
 
-**Common Mistakes That Kill Applications**
+**Common Mistakes That Weaken Business Plans**
 
-- Using templates that don't match SBA formatting standards
+- Using generic templates that don't reflect your actual business
 - Projecting hockey-stick growth without supporting data
 - Ignoring competitor analysis entirely
 - Submitting financial statements with unexplained discrepancies
-- Failing to clearly state how loan proceeds will be used
+- Failing to clearly explain how capital will be used
 
 **The Digital Handshake Advantage**
 
@@ -117,7 +117,7 @@ If you're earning yield through staking, liquidity provision, or lending protoco
 
 **Getting Organized**
 
-The single best thing you can do is establish a clean accounting framework now, before you need it for a loan application, investor review, or audit. This means:
+The single best thing you can do is establish a clean accounting framework now, before you need it for a loan application, partner review, or audit. This means:
 
 1. Consolidating your transaction history across all platforms
 2. Establishing consistent categorization rules
@@ -129,7 +129,7 @@ Don't wait for a compliance issue to force the conversation. Proactive crypto ac
   {
     slug: "digital-handshake-business-plan-website",
     title: "The Digital Handshake: Why Your Business Plan Deserves a Website",
-    excerpt: "A 40-page PDF is how business plans have been delivered for decades. But in 2026, there's a better way to demonstrate competence and command investor attention.",
+    excerpt: "A 40-page PDF is how business plans have been delivered for decades. But in 2026, there's a better way to demonstrate competence and make a lasting impression.",
     category: "Digital Presence",
     date: "2026-02-20",
     readTime: "5 min read",
@@ -154,7 +154,7 @@ A Digital Handshake is your business plan delivered as a custom-built static web
 
 **Why It Works**
 
-When a loan officer or investor opens your Digital Handshake, they immediately see something different. Before they've read a single word of your plan, you've demonstrated:
+When whoever reviews your plan opens your Digital Handshake, they immediately see something different. Before they've read a single word of your plan, you've demonstrated:
 
 1. Technical sophistication
 2. Attention to detail

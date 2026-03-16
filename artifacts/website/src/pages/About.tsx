@@ -40,7 +40,7 @@ export default function About() {
             <div className="glass-card rounded-xl p-6 group hover:border-accent/20 transition-all">
               <BrainCircuit className="w-7 h-7 text-accent mb-4" />
               <h3 className="font-bold text-white mb-2 text-[15px]">Technical Depth</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">Comfortably managing crypto-assets, multi-location structures, and SBA-ready forecasts.</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">Comfortably managing crypto-assets, multi-location structures, and complex financial forecasts.</p>
             </div>
             <div className="glass-card rounded-xl p-6 group hover:border-accent/20 transition-all">
               <Fingerprint className="w-7 h-7 text-accent mb-4" />

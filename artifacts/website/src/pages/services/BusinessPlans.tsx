@@ -10,7 +10,7 @@ export default function BusinessPlans() {
   const jsonLd = [
     serviceSchema({
       name: "Business Plans & Financial Forecasting",
-      description: "Investor-grade and SBA-ready business plans with rigorous 3-to-5-year financial forecasting, market analysis, and strategic narrative development.",
+      description: "Comprehensive, professionally written business plans with rigorous 3-to-5-year financial forecasting, market analysis, and strategic narrative development.",
       url: `${BASE_URL}/services/business-plans`
     }),
     breadcrumbSchema([
@@ -24,7 +24,7 @@ export default function BusinessPlans() {
     <div className="pt-24 pb-20">
       <SEO
         title="Business Plans & Financial Forecasting"
-        description="SBA-ready and investor-grade business plans with rigorous 3-to-5-year financial forecasting, deep market analysis, and strategic narratives built to survive underwriting."
+        description="Comprehensive business plans with rigorous 3-to-5-year financial forecasting, deep market analysis, and strategic narratives built for any audience."
         path="/services/business-plans"
         jsonLd={jsonLd}
       />
@@ -45,7 +45,7 @@ export default function BusinessPlans() {
           </div>
           <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-6">Business Plans & Financial Forecasting</h1>
           <p className="text-xl text-muted-foreground max-w-3xl leading-relaxed">
-            Bridge the gap between your current operations and future funding. We build institutional-grade plans that survive bank underwriting and investor due diligence.
+            We write comprehensive business plans that give your business a clear direction — from startup roadmaps to detailed strategic forecasts.
           </p>
         </div>
       </section>
@@ -83,14 +83,14 @@ export default function BusinessPlans() {
               <div className="p-2.5 rounded-lg bg-accent/10 text-accent">
                 <Briefcase className="w-5 h-5" />
               </div>
-              <span className="text-[11px] font-mono font-medium tracking-widest text-accent">SBA / INVESTOR PACKAGE</span>
+              <span className="text-[11px] font-mono font-medium tracking-widest text-accent">FULL PLAN PACKAGE</span>
             </div>
-            <h3 className="text-xl font-bold text-white mb-3">SBA / Investor Package</h3>
-            <p className="text-muted-foreground text-[15px] mb-5">Full institutional-grade document built to survive SBA underwriting and investor scrutiny.</p>
+            <h3 className="text-xl font-bold text-white mb-3">Full Plan Package</h3>
+            <p className="text-muted-foreground text-[15px] mb-5">Comprehensive, in-depth document built for any audience — banks, partners, or strategic planning.</p>
             <ul className="space-y-3 flex-grow">
               {[
                 "5-year rigorous financial modeling",
-                "SBA-formatted documentation",
+                "Professional plan formatting",
                 "Deep competitor analysis",
                 "Complete strategic narrative",
                 "Burn rate and cash runway analysis",
@@ -116,8 +116,8 @@ export default function BusinessPlans() {
             },
             {
               icon: <FileBarChart className="w-5 h-5" />,
-              title: "Lender-Ready Format",
-              desc: "SBA 7(a) and 504 loan formatting that bank underwriters expect, with the financial detail they need to approve funding."
+              title: "Professional Format",
+              desc: "Structured, thorough documentation built to professional standards — ready for banks, partners, or your own strategic clarity."
             },
             {
               icon: <PieChart className="w-5 h-5" />,
@@ -141,7 +141,7 @@ export default function BusinessPlans() {
         <div className="glass-card rounded-2xl p-8">
           <div className="space-y-6">
             {[
-              { step: "1", title: "Discovery Call", desc: "We learn about your business, goals, and funding requirements during a free 30-minute call." },
+              { step: "1", title: "Discovery Call", desc: "We learn about your business, goals, and what the plan needs to accomplish during a free 30-minute call." },
               { step: "2", title: "Data Collection", desc: "We gather your financial history, industry data, competitive landscape, and operational details." },
               { step: "3", title: "Model & Draft", desc: "We build your financial model and draft the full narrative, reviewing key assumptions with you along the way." },
               { step: "4", title: "Review & Refine", desc: "You review the draft; we refine based on your feedback until the document meets your exact requirements." },
@@ -168,7 +168,7 @@ export default function BusinessPlans() {
           <div className="relative p-8 text-center">
             <h2 className="text-2xl font-display font-bold text-white mb-4">Ready to Build Your Business Plan?</h2>
             <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
-              Book a free discovery call and we'll scope the right plan for your funding goals and timeline.
+              Book a free discovery call and we'll scope the right plan for your business goals and timeline.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link

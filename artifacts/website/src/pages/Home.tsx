@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <div>
       <SEO
-        description="Your Blueprint to Business Success. Advanced bookkeeping, investor-focused business plans, and modern digital presence for complex, high-growth businesses. Based in Roseburg, Oregon — serving nationwide."
+        description="Your Blueprint to Business Success. Advanced bookkeeping and professional business plans for complex, high-growth businesses. Based in Roseburg, Oregon — serving nationwide."
         path="/"
         jsonLd={localBusinessSchema()}
       />
@@ -60,7 +60,7 @@ export default function Home() {
             transition={{ delay: 0.2 }}
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed"
           >
-            Advanced bookkeeping and investor-ready business plans for founders who need clean books and a clear path forward.
+            Advanced bookkeeping and professional business plans for founders who need clean books and a clear path forward.
           </motion.p>
 
           <motion.div
@@ -112,9 +112,9 @@ export default function Home() {
               {
                 icon: <BookOpen className="w-6 h-6" />,
                 title: "Business Plans",
-                description: "3-to-5-year financial forecasting built to survive bank underwriting and institutional due diligence.",
+                description: "Professionally written business plans with 3-to-5-year financial forecasting, market analysis, and strategic narrative.",
                 tag: "PROJECT",
-                features: ["Rigorous 3-to-5 year forecasting", "SBA-ready documentation", "Market research & competitive analysis"]
+                features: ["Rigorous 3-to-5 year forecasting", "Comprehensive documentation", "Market research & competitive analysis"]
               }
             ].map((pillar, i) => (
               <div key={i} className="glass-card-hover rounded-2xl p-8 group">
@@ -225,7 +225,7 @@ export default function Home() {
               {
                 stat: "Month 1",
                 label: "Reconciled, caught up, and current",
-                detail: "Historical cleanup completed. Monthly close process established. Reports ready for lenders or investors.",
+                detail: "Historical cleanup completed. Monthly close process established. Reports ready for any stakeholder.",
               },
               {
                 stat: "Ongoing",

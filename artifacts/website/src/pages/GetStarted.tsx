@@ -109,7 +109,7 @@ export default function GetStarted() {
       title: "Book a Discovery Call",
       subtitle: "30 minutes, free, no obligation",
       description:
-        "Best for Advanced bookkeeping, Business Plans, or complex situations (multi-entity, crypto, SBA). We'll look at your books together and build a custom scope and quote.",
+        "Best for Advanced bookkeeping, Business Plans, or complex situations (multi-entity, crypto). We'll learn about your business together and build a custom scope and quote.",
       steps: [
         "Pick a time that works for you",
         "30-min video or phone call with Tea",

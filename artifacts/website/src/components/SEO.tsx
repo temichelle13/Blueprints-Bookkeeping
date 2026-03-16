@@ -12,7 +12,7 @@ interface SEOProps {
 const BASE_TITLE = "Blueprints & Bookkeeping";
 const BASE_URL = "https://blueprintsandbookkeeping.com";
 const DEFAULT_OG_IMAGE = `${BASE_URL}/opengraph.jpg`;
-const DEFAULT_DESCRIPTION = "Your Blueprint to Business Success. Advanced bookkeeping, investor-focused business plans, and modern digital presence.";
+const DEFAULT_DESCRIPTION = "Your Blueprint to Business Success. Advanced bookkeeping and professional business plans for complex, high-growth businesses.";
 
 const MANAGED_META_TAGS = [
   "description",

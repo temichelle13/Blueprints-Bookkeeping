@@ -37,19 +37,19 @@ const faqs = [
     items: [
       {
         q: "What's the difference between your Business Plan tiers?",
-        a: "The Startup Roadmap is ideal for early-stage businesses seeking internal clarity or initial bank conversations — it includes a 3-year forecast, market overview, and executive summary. The SBA/Investor Package is a full institutional-grade document with 5-year rigorous modeling, SBA formatting, deep competitor analysis, and a complete narrative built to survive underwriting scrutiny."
+        a: "The Startup Roadmap is ideal for early-stage businesses — it includes a 3-year forecast, market overview, and executive summary. The Full Plan Package is a comprehensive, in-depth document with 5-year rigorous modeling, deep competitor analysis, and a complete strategic narrative."
       },
       {
         q: "How long does a business plan take?",
         a: "Most plans are delivered within 2 to 4 weeks from the time we receive your input documents and complete the onboarding call. Turnaround depends on how quickly we can gather your financial history, industry data, and goals — the more prepared you are, the faster we move."
       },
       {
-        q: "Will my plan work for an SBA loan?",
-        a: "Yes. Our SBA/Investor Package is specifically formatted to meet SBA lender requirements, including the financial projections format most underwriters expect. We've worked with clients securing SBA 7(a) and 504 loans and know what reviewers look for."
+        q: "Who is the business plan written for?",
+        a: "That depends on your goals. We discuss the purpose of the plan during our discovery call — whether it's for a bank conversation, a partner presentation, an internal roadmap, or something else entirely — and tailor the content and format accordingly."
       },
       {
-        q: "Can I use the business plan for investors, not just banks?",
-        a: "Absolutely. We tailor the narrative and financial model to your audience. Investor-facing plans emphasize growth potential, return metrics, and equity story. Bank-facing plans emphasize debt service coverage, collateral, and repayment capacity. We can prepare for both."
+        q: "Can the plan be used for different purposes?",
+        a: "Yes. A well-written business plan can serve multiple purposes — presenting to a bank, sharing with a potential partner, guiding internal decisions, or supporting a loan application. We make sure the document is clear, thorough, and professional regardless of who reads it."
       },
     ]
   },

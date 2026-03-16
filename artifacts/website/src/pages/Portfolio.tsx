@@ -60,7 +60,7 @@ const education = [
 
 const continuingEd = [
   "Advanced financial modeling and forecasting",
-  "SBA loan documentation and underwriting requirements",
+  "Business plan structure and financial documentation standards",
   "Multi-entity tax structure and consolidation",
   "Agriculture & timber accounting (Schedule F)",
   "Cybersecurity for financial data and cloud infrastructure",

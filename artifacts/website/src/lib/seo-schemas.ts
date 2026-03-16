@@ -6,7 +6,7 @@ export function localBusinessSchema() {
     "@type": "LocalBusiness",
     "@id": `${BASE_URL}/#business`,
     name: "Blueprints & Bookkeeping, LLC",
-    description: "Advanced bookkeeping, investor-focused business plans, and modern digital presence for complex, high-growth businesses.",
+    description: "Advanced bookkeeping and professional business plans for complex, high-growth businesses.",
     url: BASE_URL,
     telephone: "+1-541-319-8654",
     email: "tea@blueprintsandbookkeeping.com",

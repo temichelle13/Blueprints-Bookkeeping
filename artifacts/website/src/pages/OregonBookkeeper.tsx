@@ -9,7 +9,7 @@ export default function OregonBookkeeper() {
   const jsonLd = [
     {
       ...localBusinessSchema(),
-      description: "Professional bookkeeper in Roseburg, Oregon serving Southern Oregon businesses. Advanced bookkeeping, historical cleanup, multi-entity structuring, and SBA-ready business plans.",
+      description: "Professional bookkeeper in Roseburg, Oregon serving Southern Oregon businesses. Advanced bookkeeping, historical cleanup, multi-entity structuring, and professional business plans.",
       areaServed: [
         { "@type": "City", name: "Roseburg", containedInPlace: { "@type": "State", name: "Oregon" } },
         { "@type": "AdministrativeArea", name: "Douglas County" },
@@ -31,7 +31,7 @@ export default function OregonBookkeeper() {
     <div className="pt-24 pb-20">
       <SEO
         title="Bookkeeper in Roseburg, Oregon — Southern Oregon Bookkeeping"
-        description="Professional bookkeeping services in Roseburg, Oregon. Serving Douglas County and Southern Oregon with advanced bookkeeping, historical cleanup, multi-entity structuring, and SBA-ready business plans."
+        description="Professional bookkeeping services in Roseburg, Oregon. Serving Douglas County and Southern Oregon with advanced bookkeeping, historical cleanup, multi-entity structuring, and professional business plans."
         path="/oregon-bookkeeper"
         jsonLd={jsonLd}
       />
@@ -105,7 +105,7 @@ export default function OregonBookkeeper() {
             </div>
             <h3 className="text-lg font-bold text-white mb-2 group-hover:text-accent transition-colors">Business Plans</h3>
             <p className="text-muted-foreground text-[14px] leading-relaxed mb-4">
-              SBA-ready and investor-grade business plans with rigorous financial forecasting and deep market analysis.
+              Comprehensive, professionally written business plans with rigorous financial forecasting and deep market analysis.
             </p>
             <span className="text-accent text-sm font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
               Learn more <ArrowRight size={14} />

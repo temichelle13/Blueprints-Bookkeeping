@@ -4,7 +4,7 @@ import { Link } from "wouter";
 
 const RESOURCE_HIGHLIGHTS = [
   { icon: BookOpen, text: "Checklists for monthly close, expense categorization, and financial readiness" },
-  { icon: Calculator, text: "SBA loan prep, financial projections, and business plan templates" },
+  { icon: Calculator, text: "Financial projections, business plan templates, and startup planning checklists" },
   { icon: Bitcoin, text: "Crypto transaction logs and digital asset tax organizers" },
   { icon: Briefcase, text: "Entity setup guides, contractor classification, and cash flow forecasting" },
 ];

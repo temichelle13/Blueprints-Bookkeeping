@@ -26,24 +26,24 @@ const services = [
     icon: <Lightbulb className="w-6 h-6" />,
     title: "Startup Business Plans",
     description:
-      "For founders launching a new venture. We build a comprehensive plan covering your business model, market analysis, operations strategy, and financial projections — formatted for lenders, investors, or personal clarity.",
+      "For founders launching a new venture. We build a comprehensive plan covering your business model, market analysis, operations strategy, and financial projections — professionally formatted and ready to share.",
     features: [
       "Executive summary & company overview",
       "Market research & competitive landscape",
       "3-to-5-year financial projections",
-      "SBA-ready formatting for loan applications",
+      "Professional plan formatting",
     ],
   },
   {
     icon: <TrendingUp className="w-6 h-6" />,
-    title: "Investor-Ready Plans",
+    title: "Full Plan Package",
     description:
-      "Designed to raise capital. These plans go deeper on market sizing, unit economics, and growth strategy — built to withstand investor scrutiny and due diligence.",
+      "For businesses that need a comprehensive, in-depth plan. Goes deeper on market sizing, unit economics, and growth strategy with a complete 5-year financial model.",
     features: [
       "Detailed unit economics & burn-rate analysis",
       "Revenue model validation",
       "Use-of-funds breakdown",
-      "Pitch-ready narrative and financials",
+      "Complete strategic narrative and financials",
     ],
   },
   {
@@ -77,7 +77,7 @@ const processSteps = [
     step: "01",
     title: "Discovery Call",
     description:
-      "We learn about your business, goals, and what the plan needs to accomplish — whether it's securing funding, guiding strategy, or both.",
+      "We learn about your business, goals, and what the plan needs to accomplish — who it's for and what purpose it serves.",
   },
   {
     step: "02",
@@ -95,7 +95,7 @@ const processSteps = [
     step: "04",
     title: "Delivery & Support",
     description:
-      "Your finalized plan is delivered in your chosen format — PDF, LivePlan dashboard, or custom website. We're available for follow-up revisions and lender Q&A support.",
+      "Your finalized plan is delivered in your chosen format — PDF, LivePlan dashboard, or custom website. We're available for follow-up revisions and questions.",
   },
 ];
 
@@ -116,14 +116,14 @@ const faqs = [
       "We've written plans across agriculture, cannabis, construction, e-commerce, food & beverage, professional services, and more. Our financial modeling expertise applies to virtually any industry.",
   },
   {
-    question: "Can you help me get SBA funding?",
+    question: "Who is the business plan for?",
     answer:
-      "We create SBA-ready business plans formatted to meet lender requirements. While we can't guarantee funding approval, our plans are built to give you the strongest possible application.",
+      "That depends on your goals — we discuss this during the discovery call. Plans can be written for internal planning, bank conversations, partner presentations, or any other purpose. We tailor the content and format to fit your specific situation.",
   },
   {
     question: "What is the 'Plan-as-a-Website' option?",
     answer:
-      "Instead of a traditional PDF, we deliver your business plan as a custom-built static website. It includes interactive financial charts, clean navigation, and can be password-protected. It's a modern, impressive way to share your plan with investors or partners.",
+      "Instead of a traditional PDF, we deliver your business plan as a custom-built static website. It includes interactive financial charts, clean navigation, and can be password-protected. It's a modern, professional way to share your plan with anyone who needs to see it.",
   },
   {
     question: "What does LivePlan Certified Advisor mean?",
@@ -171,8 +171,8 @@ export default function BusinessPlanning() {
               Business Planning Services
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-              From startup blueprints to investor-ready financial models — we build
-              business plans that open doors, secure funding, and guide growth.
+              From startup blueprints to comprehensive financial models — we build
+              business plans that clarify your direction and communicate your vision.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
@@ -259,8 +259,8 @@ export default function BusinessPlanning() {
                   <strong className="text-foreground">LivePlan Certified Advisor</strong>{" "}
                   — part of a select network of financial professionals trusted by the
                   leading business planning platform. LivePlan is used by over 1 million
-                  entrepreneurs and is recommended by the SBA, SCORE, and thousands of
-                  lenders nationwide.
+                  entrepreneurs and is recommended by SCORE and business advisors
+                  nationwide.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
                   {[
@@ -281,7 +281,7 @@ export default function BusinessPlanning() {
                   When you work with us, you get the power of LivePlan's
                   professional-grade software combined with hands-on advisory from a real
                   financial expert. We handle the heavy lifting — you get a plan that's
-                  ready for lenders, investors, and your own strategic clarity.
+                  ready for banks, partners, and your own strategic clarity.
                 </p>
                 <div className="flex flex-wrap gap-4">
                   <a
@@ -370,8 +370,8 @@ export default function BusinessPlanning() {
               Ready to Build Your Business Plan?
             </h2>
             <p className="text-muted-foreground mb-8">
-              Whether you're seeking funding, planning a launch, or charting your next
-              phase of growth — let's build a plan that gets you there.
+              Whether you're planning a launch, charting your next phase of growth, or
+              just need a clear picture of where you're going — let's build a plan that gets you there.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link

@@ -6,7 +6,7 @@ const SERVICE_LABELS: Record<string, string> = {
   essentials: "Essentials Bookkeeping",
   growth: "Growth Bookkeeping",
   startup_roadmap: "Startup Roadmap",
-  sba_investor: "SBA / Investor Package",
+  sba_investor: "Full Plan Package",
 };
 
 export default function PaymentSuccess() {

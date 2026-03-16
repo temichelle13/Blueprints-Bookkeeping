@@ -147,7 +147,7 @@ export default function DigitalHandshake() {
           </p>
           <ul className="space-y-3">
             {[
-              "You complete your Business Plan (Startup Roadmap or SBA/Investor Package)",
+              "You complete your Business Plan (Startup Roadmap or Full Plan Package)",
               "We design a branded, single-purpose website featuring your plan content",
               "Interactive financial models are built using your approved projections",
               "The site is deployed on secure, high-performance static hosting",

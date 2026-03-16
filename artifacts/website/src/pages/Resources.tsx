@@ -39,7 +39,7 @@ const TEMPLATES: Template[] = [
   {
     id: "financial-readiness",
     title: "Financial Readiness Checklist",
-    description: "The same checklist our team applies when onboarding new founder clients — covering revenue tracking, key financial ratios, common red flags, and lender-readiness timelines.",
+    description: "The same checklist our team applies when onboarding new founder clients — covering revenue tracking, key financial ratios, common red flags, and financial readiness milestones.",
     category: "bookkeeping",
     pageCount: 2,
     filename: "financial-readiness-checklist.pdf",
@@ -70,8 +70,8 @@ const TEMPLATES: Template[] = [
   },
   {
     id: "sba-loan-prep",
-    title: "SBA Loan Application Prep Checklist",
-    description: "Every document and data point you need before applying for an SBA loan — organized by personal, business, financial projections, and collateral documentation.",
+    title: "Bank Financing Prep Checklist",
+    description: "Every document and data point you need before a bank financing conversation — organized by personal, business, financial projections, and collateral documentation.",
     category: "planning",
     pageCount: 2,
     filename: "sba-loan-prep-checklist.pdf",
@@ -87,7 +87,7 @@ const TEMPLATES: Template[] = [
   {
     id: "business-plan",
     title: "Business Plan Outline Template",
-    description: "Section-by-section outline matching SBA and lender expectations — with writing prompts for executive summary, market analysis, financials, and more.",
+    description: "Section-by-section outline covering all the components of a professional business plan — with writing prompts for executive summary, market analysis, financials, and more.",
     category: "planning",
     pageCount: 2,
     filename: "business-plan-outline.pdf",
@@ -234,7 +234,7 @@ export default function Resources() {
           </motion.h1>
 
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Professionally designed checklists, worksheets, and guides to help you organize your finances, prepare for funding, and grow your business.
+            Professionally designed checklists, worksheets, and guides to help you organize your finances, plan your next move, and grow your business.
           </motion.p>
         </div>
       </section>
@@ -441,7 +441,7 @@ export default function Resources() {
             Need Personalized Help?
           </h2>
           <p className="text-muted-foreground mb-8 leading-relaxed">
-            These templates are a great starting point, but every business is unique. If you need expert bookkeeping, a lender-ready business plan, or help organizing your finances, we're here to help.
+            These templates are a great starting point, but every business is unique. If you need expert bookkeeping, a professionally written business plan, or help organizing your finances, we're here to help.
           </p>
           <a
             href="/schedule"

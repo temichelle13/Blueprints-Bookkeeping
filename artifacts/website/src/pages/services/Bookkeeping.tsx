@@ -61,7 +61,7 @@ export default function Bookkeeping() {
             {
               icon: <RefreshCw className="w-5 h-5" />,
               title: "Historical Cleanup",
-              desc: "Untangle months or years of disorganized books. We reconcile, reclassify, and correct records to restore accuracy and lender confidence."
+              desc: "Untangle months or years of disorganized books. We reconcile, reclassify, and correct records to restore full accuracy."
             },
             {
               icon: <Shield className="w-5 h-5" />,
@@ -104,7 +104,7 @@ export default function Bookkeeping() {
             {[
               "Founders operating multiple LLCs, holding companies, or DBA structures",
               "Businesses with crypto, DeFi, or digital asset revenue streams",
-              "Companies needing financial statements formatted for SBA loan underwriting",
+              "Companies needing clean, accurate financial statements for any purpose",
               "Operations exceeding what manual reconciliation can handle accurately",
               "Agriculture, timber, and resource-based businesses with complex seasonal cycles",
               "E-commerce sellers reconciling across Stripe, PayPal, Shopify, and Amazon"

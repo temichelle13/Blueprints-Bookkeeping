@@ -14,7 +14,7 @@ export default function Results() {
     <div>
       <SEO
         title="Client Results"
-        description="Real outcomes from real founders. Blueprints & Bookkeeping helps complex businesses get clean books, funded business plans, and financial clarity."
+        description="Real outcomes from real founders. Blueprints & Bookkeeping helps complex businesses get clean books, professional business plans, and financial clarity."
         path="/results"
       />
       <section className="pt-32 pb-20 relative">

@@ -50,8 +50,8 @@ export default function Industries() {
     {
       icon: <Rocket className="w-5 h-5" />,
       title: "Tech Founders & Startups",
-      focus: "Investor-Ready",
-      desc: "Deep burn rate analysis, operational cost tracking, and forecasting models required by VC and angel investors."
+      focus: "High-Growth",
+      desc: "Deep burn rate analysis, operational cost tracking, and forecasting models for complex, high-growth businesses."
     }
   ];
 

@@ -17,7 +17,7 @@ export default function Services() {
     }),
     serviceSchema({
       name: "Business Plans & Financial Forecasting",
-      description: "SBA-ready and investor-grade business plans with rigorous 3-to-5-year financial modeling.",
+      description: "Comprehensive, professionally written business plans with rigorous 3-to-5-year financial modeling.",
       url: `${BASE_URL}/services`
     })
   ];
@@ -41,11 +41,11 @@ export default function Services() {
       id: "planning",
       icon: <BookOpen className="w-5 h-5" />,
       title: "Business Plans",
-      desc: "Bridge the gap between your current operations and future funding.",
+      desc: "A complete roadmap for where your business is going — built to professional standards.",
       tag: "PROJECT",
       features: [
         "Rigorous 3-to-5-year financial forecasting",
-        "SBA-ready documentation formatting",
+        "Professional plan formatting",
         "Deep market analysis & competitive positioning",
         "Burn rate analysis for startups",
         "Strategic narrative development"
@@ -57,7 +57,7 @@ export default function Services() {
     <div className="pt-24 pb-20">
       <SEO
         title="Services"
-        description="Advanced bookkeeping, SBA-ready business plans, Digital Handshake web presentations, and notary services. Beyond simple data entry — robust financial infrastructure for ambitious founders."
+        description="Advanced bookkeeping and professional business plans. Beyond simple data entry — robust financial infrastructure for ambitious founders."
         path="/services"
         jsonLd={jsonLd}
       />
