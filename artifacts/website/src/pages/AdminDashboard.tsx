@@ -23,6 +23,13 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
   Users,
   Mail,
   ArrowUpDown,
@@ -46,6 +53,9 @@ import {
   Play,
   ExternalLink,
   Save,
+  ShieldBan,
+  Plus,
+  Trash2,
 } from "lucide-react";
 
 const API_BASE = import.meta.env.VITE_API_URL || "/api";
@@ -90,6 +100,13 @@ interface Subscriber {
   signupSource: string;
   active: boolean;
   subscribedAt: string;
+}
+
+interface SuppressionEntry {
+  id: number;
+  email: string;
+  reason: string;
+  createdAt: string;
 }
 
 interface Stats {
@@ -180,15 +197,20 @@ export default function AdminDashboard() {
   const [editThreshold, setEditThreshold] = useState("");
   const [editWarning, setEditWarning] = useState("");
   const [runningCheck, setRunningCheck] = useState(false);
+  const [suppressionList, setSuppressionList] = useState<SuppressionEntry[]>([]);
+  const [showAddSuppression, setShowAddSuppression] = useState(false);
+  const [newSuppressionEmail, setNewSuppressionEmail] = useState("");
+  const [suppressionSearch, setSuppressionSearch] = useState("");
   const { toast } = useToast();
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [inqRes, nlRes, statsRes] = await Promise.all([
+      const [inqRes, nlRes, statsRes, suppRes] = await Promise.all([
         fetch(`${API_BASE}/admin/inquiries`, { headers: adminHeaders() }),
         fetch(`${API_BASE}/admin/newsletter`, { headers: adminHeaders() }),
         fetch(`${API_BASE}/admin/stats`, { headers: adminHeaders() }),
+        fetch(`${API_BASE}/admin/suppression`, { headers: adminHeaders() }),
       ]);
 
       if (inqRes.status === 401 || nlRes.status === 401 || statsRes.status === 401) {
@@ -203,6 +225,7 @@ export default function AdminDashboard() {
         setSubscribers(nlData.subscribers);
       }
       if (statsRes.ok) setStats(await statsRes.json());
+      if (suppRes.ok) setSuppressionList(await suppRes.json());
     } catch {
       toast({ title: "Error", description: "Failed to load data", variant: "destructive" });
     } finally {
@@ -317,6 +340,60 @@ export default function AdminDashboard() {
       toast({ title: "Error", description: "Failed to update status", variant: "destructive" });
     }
   };
+
+  const handleAddSuppression = async () => {
+    if (!newSuppressionEmail.trim()) return;
+    try {
+      const res = await fetch(`${API_BASE}/admin/suppression`, {
+        method: "POST",
+        headers: adminHeaders(),
+        body: JSON.stringify({ email: newSuppressionEmail.trim(), reason: "manual" }),
+      });
+      if (res.status === 401) {
+        sessionStorage.removeItem("admin_token");
+        setAuthenticated(false);
+        return;
+      }
+      if (res.ok) {
+        const entry = await res.json();
+        setSuppressionList((prev) => {
+          const exists = prev.some((e) => e.id === entry.id);
+          return exists ? prev : [entry, ...prev];
+        });
+        setNewSuppressionEmail("");
+        setShowAddSuppression(false);
+        toast({ title: "Email suppressed", description: `${entry.email} added to suppression list` });
+      }
+    } catch {
+      toast({ title: "Error", description: "Failed to add suppression entry", variant: "destructive" });
+    }
+  };
+
+  const handleRemoveSuppression = async (id: number, email: string) => {
+    try {
+      const res = await fetch(`${API_BASE}/admin/suppression/${id}`, {
+        method: "DELETE",
+        headers: adminHeaders(),
+      });
+      if (res.status === 401) {
+        sessionStorage.removeItem("admin_token");
+        setAuthenticated(false);
+        return;
+      }
+      if (res.ok) {
+        setSuppressionList((prev) => prev.filter((e) => e.id !== id));
+        toast({ title: "Entry removed", description: `${email} removed from suppression list` });
+      }
+    } catch {
+      toast({ title: "Error", description: "Failed to remove suppression entry", variant: "destructive" });
+    }
+  };
+
+  const filteredSuppressionList = suppressionList.filter((entry) => {
+    if (!suppressionSearch) return true;
+    const q = suppressionSearch.toLowerCase();
+    return entry.email.toLowerCase().includes(q) || entry.reason.toLowerCase().includes(q);
+  });
 
   const handleExportCSV = () => {
     const token = getAdminToken();
@@ -472,6 +549,9 @@ export default function AdminDashboard() {
               <TabsTrigger value="nexus" className="data-[state=active]:bg-indigo-600">
                 <MapPin className="w-4 h-4 mr-1" />
                 State Nexus
+              </TabsTrigger>
+              <TabsTrigger value="suppression" className="data-[state=active]:bg-indigo-600">
+                Suppression List
               </TabsTrigger>
             </TabsList>
 
@@ -647,6 +727,28 @@ export default function AdminDashboard() {
                     {runningCheck ? "Running..." : "Run Check Now"}
                   </Button>
                 </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="suppression" className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="relative flex-1 max-w-sm">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                  <Input
+                    placeholder="Search by email or reason..."
+                    value={suppressionSearch}
+                    onChange={(e) => setSuppressionSearch(e.target.value)}
+                    className="pl-10 bg-[#111827] border-white/10 text-white"
+                  />
+                </div>
+                <Button
+                  size="sm"
+                  onClick={() => setShowAddSuppression(true)}
+                  className="bg-indigo-600 hover:bg-indigo-700"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Email
+                </Button>
               </div>
 
               <div className="bg-[#111827] border border-white/10 rounded-xl overflow-hidden">
@@ -846,6 +948,92 @@ export default function AdminDashboard() {
                 </div>
               )}
             </TabsContent>
+
+            <TabsContent value="suppression" className="space-y-4">
+              <div className="bg-[#111827] border border-white/10 rounded-xl overflow-hidden">
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-white/10 hover:bg-transparent">
+                        <TableHead className="text-gray-400">Email</TableHead>
+                        <TableHead className="text-gray-400">Reason</TableHead>
+                        <TableHead className="text-gray-400">Date Added</TableHead>
+                        <TableHead className="text-gray-400 w-16"></TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredSuppressionList.length === 0 && (
+                        <TableRow>
+                          <TableCell colSpan={4} className="text-center text-gray-500 py-12">
+                            {loading ? "Loading suppression list..." : "No suppressed emails"}
+                          </TableCell>
+                        </TableRow>
+                      )}
+                      {filteredSuppressionList.map((entry) => (
+                        <TableRow key={entry.id} className="border-white/10 hover:bg-white/5">
+                          <TableCell className="text-white font-medium">{entry.email}</TableCell>
+                          <TableCell>
+                            <Badge
+                              variant="outline"
+                              className={getReasonColor(entry.reason)}
+                            >
+                              {formatReason(entry.reason)}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-gray-400">{formatDate(entry.createdAt)}</TableCell>
+                          <TableCell>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleRemoveSuppression(entry.id, entry.email)}
+                              className="h-8 w-8 p-0 text-gray-500 hover:text-red-400"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+                <div className="px-4 py-3 border-t border-white/10 text-sm text-gray-500">
+                  {filteredSuppressionList.length} suppressed email{filteredSuppressionList.length !== 1 ? "s" : ""}
+                </div>
+              </div>
+
+              <Dialog open={showAddSuppression} onOpenChange={setShowAddSuppression}>
+                <DialogContent className="bg-[#111827] border-white/10 text-white">
+                  <DialogHeader>
+                    <DialogTitle className="flex items-center gap-2">
+                      <ShieldBan className="w-5 h-5 text-indigo-400" />
+                      Add to Suppression List
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 py-2">
+                    <Input
+                      placeholder="Email address to suppress"
+                      value={newSuppressionEmail}
+                      onChange={(e) => setNewSuppressionEmail(e.target.value)}
+                      className="bg-[#0a0e1a] border-white/10 text-white"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") handleAddSuppression();
+                      }}
+                    />
+                    <p className="text-sm text-gray-400">
+                      This email will no longer receive any outbound emails from the system.
+                    </p>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setShowAddSuppression(false)} className="border-white/10 text-gray-300">
+                      Cancel
+                    </Button>
+                    <Button onClick={handleAddSuppression} className="bg-indigo-600 hover:bg-indigo-700">
+                      Suppress Email
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </TabsContent>
           </Tabs>
         </motion.div>
       </div>
@@ -1033,6 +1221,36 @@ function InquiryRow({
       )}
     </>
   );
+}
+
+function getReasonColor(reason: string) {
+  switch (reason) {
+    case "unsubscribed":
+      return "bg-amber-500/20 text-amber-300 border-amber-500/30";
+    case "bounced":
+      return "bg-red-500/20 text-red-300 border-red-500/30";
+    case "spam_complaint":
+      return "bg-rose-500/20 text-rose-300 border-rose-500/30";
+    case "manual":
+      return "bg-gray-500/20 text-gray-300 border-gray-500/30";
+    default:
+      return "bg-gray-500/20 text-gray-300 border-gray-500/30";
+  }
+}
+
+function formatReason(reason: string) {
+  switch (reason) {
+    case "unsubscribed":
+      return "Unsubscribed";
+    case "bounced":
+      return "Bounced";
+    case "spam_complaint":
+      return "Spam Complaint";
+    case "manual":
+      return "Manual";
+    default:
+      return reason;
+  }
 }
 
 function DetailItem({ label, value }: { label: string; value: string }) {

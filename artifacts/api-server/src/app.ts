@@ -1,7 +1,11 @@
-import express, { type Express } from "express";
+import express, { type Express, type Request } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import router from "./routes";
+
+interface RawBodyRequest extends Request {
+  rawBody?: Buffer;
+}
 
 const app: Express = express();
 
@@ -39,6 +43,15 @@ app.use(
   "/api/webhooks/cal",
   express.json({
     verify: (req: any, _res, buf) => {
+      req.rawBody = buf;
+    },
+  }),
+);
+
+app.use(
+  "/api/webhooks/resend",
+  express.json({
+    verify: (req: RawBodyRequest, _res, buf) => {
       req.rawBody = buf;
     },
   }),

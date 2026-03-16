@@ -7,3 +7,4 @@ export * from "./subscriptions";
 export * from "./clientDocuments";
 export * from "./bookings";
 export * from "./stateNexus";
+export * from "./emailSuppressionList";

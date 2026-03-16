@@ -3,6 +3,7 @@ import { db, newsletterSubscribersTable } from "@workspace/db";
 import { SubscribeNewsletterBody, UnsubscribeNewsletterBody } from "@workspace/api-zod";
 import { eq } from "drizzle-orm";
 import { Resend } from "resend";
+import { isEmailSuppressed, addToSuppressionList } from "../lib/email-suppression";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_EMAIL_LENGTH = 320;
@@ -47,6 +48,8 @@ async function unsubscribeByToken(token: unknown): Promise<UnsubscribeByTokenRes
     .update(newsletterSubscribersTable)
     .set({ active: false })
     .where(eq(newsletterSubscribersTable.unsubscribeToken, token));
+
+  await addToSuppressionList(rows[0].email, "unsubscribed");
 
   return { status: 200, body: { success: true, message: "You have been unsubscribed. We're sorry to see you go." } };
 }
@@ -141,9 +144,14 @@ router.post("/newsletter/subscribe", async (req, res): Promise<void> => {
         .set({ active: true, signupSource })
         .where(eq(newsletterSubscribersTable.email, email));
 
-      const resend = getResend();
-      if (resend) {
-        await sendWelcomeEmail(resend, email, existing[0].unsubscribeToken);
+      const suppressed = await isEmailSuppressed(email);
+      if (suppressed) {
+        console.warn("[Newsletter] Skipping welcome email for reactivated subscriber — address is suppressed:", email);
+      } else {
+        const resend = getResend();
+        if (resend) {
+          await sendWelcomeEmail(resend, email, existing[0].unsubscribeToken);
+        }
       }
     }
     res.status(201).json({
@@ -157,6 +165,16 @@ router.post("/newsletter/subscribe", async (req, res): Promise<void> => {
     email,
     signupSource,
   }).returning({ unsubscribeToken: newsletterSubscribersTable.unsubscribeToken });
+
+  const suppressed = await isEmailSuppressed(email);
+  if (suppressed) {
+    console.warn("[Newsletter] Skipping welcome email — address is suppressed:", email);
+    res.status(201).json({
+      success: true,
+      message: "You're subscribed! Thank you for signing up.",
+    });
+    return;
+  }
 
   const resend = getResend();
   if (resend) {
@@ -200,6 +218,8 @@ router.post("/newsletter/unsubscribe", async (req, res): Promise<void> => {
     .update(newsletterSubscribersTable)
     .set({ active: false })
     .where(eq(newsletterSubscribersTable.email, email));
+
+  await addToSuppressionList(email, "unsubscribed");
 
   res.status(200).json({
     success: true,

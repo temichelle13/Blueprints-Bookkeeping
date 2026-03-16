@@ -3,6 +3,7 @@ import Stripe from "stripe";
 import { db, subscriptionsTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { Resend } from "resend";
+import { isEmailSuppressed } from "../lib/email-suppression";
 
 const router: IRouter = Router();
 
@@ -233,21 +234,31 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session): Promis
   const resend = getResend();
   if (resend && customerEmail) {
     const planLabel = PLAN_CONFIG[plan]?.name || plan;
+    const suppressed = await isEmailSuppressed(customerEmail);
 
-    await Promise.allSettled([
-      resend.emails.send({
-        from: FROM_ADDRESS,
-        to: customerEmail,
-        subject: `Welcome to Blueprints & Bookkeeping — ${planLabel} Plan`,
-        html: buildClientConfirmationEmail(customerName, planLabel, billingInterval),
-      }),
+    const emailPromises: Promise<unknown>[] = [
       resend.emails.send({
         from: FROM_ADDRESS,
         to: OWNER_EMAIL,
         subject: `New Self-Service Subscriber: ${customerName} — ${planLabel}`,
         html: buildAdminNotificationEmail(customerName, customerEmail, planLabel, billingInterval),
       }),
-    ]);
+    ];
+
+    if (suppressed) {
+      console.warn("[Payments] Skipping subscription welcome email — address is suppressed:", customerEmail);
+    } else {
+      emailPromises.push(
+        resend.emails.send({
+          from: FROM_ADDRESS,
+          to: customerEmail,
+          subject: `Welcome to Blueprints & Bookkeeping — ${planLabel} Plan`,
+          html: buildClientConfirmationEmail(customerName, planLabel, billingInterval),
+        }),
+      );
+    }
+
+    await Promise.allSettled(emailPromises);
   }
 }
 
@@ -261,24 +272,31 @@ async function handleDepositCompleted(session: Stripe.Checkout.Session): Promise
 
   const resend = getResend();
   if (resend) {
-    await Promise.allSettled([
-      ...(customerEmail
-        ? [
-            resend.emails.send({
-              from: FROM_ADDRESS,
-              to: customerEmail,
-              subject: `Deposit Received — ${serviceName}`,
-              html: buildDepositClientEmail(customerName || "Client", serviceName, amountPaid),
-            }),
-          ]
-        : []),
+    const suppressed = customerEmail ? await isEmailSuppressed(customerEmail) : false;
+
+    const emailPromises: Promise<unknown>[] = [
       resend.emails.send({
         from: FROM_ADDRESS,
         to: OWNER_EMAIL,
         subject: `Deposit Received: ${customerName || customerEmail || "Unknown"} — ${serviceName}`,
         html: buildDepositAdminEmail(customerName, customerEmail, serviceName, amountPaid),
       }),
-    ]);
+    ];
+
+    if (customerEmail && !suppressed) {
+      emailPromises.push(
+        resend.emails.send({
+          from: FROM_ADDRESS,
+          to: customerEmail,
+          subject: `Deposit Received — ${serviceName}`,
+          html: buildDepositClientEmail(customerName || "Client", serviceName, amountPaid),
+        }),
+      );
+    } else if (customerEmail && suppressed) {
+      console.warn("[Payments] Skipping deposit confirmation email — address is suppressed:", customerEmail);
+    }
+
+    await Promise.allSettled(emailPromises);
   }
 }
 
@@ -298,13 +316,9 @@ async function handlePaymentFailed(invoice: Stripe.Invoice): Promise<void> {
 
   const resend = getResend();
   if (resend && customerEmail) {
-    await Promise.allSettled([
-      resend.emails.send({
-        from: FROM_ADDRESS,
-        to: customerEmail,
-        subject: "Payment Failed — Blueprints & Bookkeeping",
-        html: buildPaymentFailedEmail(customerName || "Client"),
-      }),
+    const suppressed = await isEmailSuppressed(customerEmail);
+
+    const emailPromises: Promise<unknown>[] = [
       resend.emails.send({
         from: FROM_ADDRESS,
         to: OWNER_EMAIL,
@@ -319,7 +333,22 @@ async function handlePaymentFailed(invoice: Stripe.Invoice): Promise<void> {
           </div>
         </div>`,
       }),
-    ]);
+    ];
+
+    if (suppressed) {
+      console.warn("[Payments] Skipping payment failed email — address is suppressed:", customerEmail);
+    } else {
+      emailPromises.push(
+        resend.emails.send({
+          from: FROM_ADDRESS,
+          to: customerEmail,
+          subject: "Payment Failed — Blueprints & Bookkeeping",
+          html: buildPaymentFailedEmail(customerName || "Client"),
+        }),
+      );
+    }
+
+    await Promise.allSettled(emailPromises);
   }
 }
 
@@ -340,24 +369,9 @@ async function handleSubscriptionCanceled(subscription: Stripe.Subscription): Pr
 
   const resend = getResend();
   if (resend && sub) {
-    await Promise.allSettled([
-      resend.emails.send({
-        from: FROM_ADDRESS,
-        to: sub.clientEmail,
-        subject: "Subscription Canceled — Blueprints & Bookkeeping",
-        html: `<div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
-          <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
-            <h1 style="color:white;margin:0;font-size:20px;">Subscription Canceled</h1>
-          </div>
-          <div style="background:#f8f9ff;padding:32px;border-radius:0 0 8px 8px;border:1px solid #e2e5f0;">
-            <p>Hi ${sub.clientName},</p>
-            <p>Your subscription has been canceled. You'll continue to have access until the end of your current billing period.</p>
-            <p>If you change your mind, you can resubscribe anytime at <a href="${SITE_URL}/pricing" style="color:#6366f1;">our pricing page</a>.</p>
-            <p>Thank you for being a client.</p>
-            <p style="font-weight:600;">Tea Larson-Hetrick<br><span style="font-weight:normal;color:#666;">Blueprints & Bookkeeping LLC</span></p>
-          </div>
-        </div>`,
-      }),
+    const suppressed = await isEmailSuppressed(sub.clientEmail);
+
+    const emailPromises: Promise<unknown>[] = [
       resend.emails.send({
         from: FROM_ADDRESS,
         to: OWNER_EMAIL,
@@ -371,7 +385,33 @@ async function handleSubscriptionCanceled(subscription: Stripe.Subscription): Pr
           </div>
         </div>`,
       }),
-    ]);
+    ];
+
+    if (suppressed) {
+      console.warn("[Payments] Skipping subscription canceled email — address is suppressed:", sub.clientEmail);
+    } else {
+      emailPromises.push(
+        resend.emails.send({
+          from: FROM_ADDRESS,
+          to: sub.clientEmail,
+          subject: "Subscription Canceled — Blueprints & Bookkeeping",
+          html: `<div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
+          <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
+            <h1 style="color:white;margin:0;font-size:20px;">Subscription Canceled</h1>
+          </div>
+          <div style="background:#f8f9ff;padding:32px;border-radius:0 0 8px 8px;border:1px solid #e2e5f0;">
+            <p>Hi ${sub.clientName},</p>
+            <p>Your subscription has been canceled. You'll continue to have access until the end of your current billing period.</p>
+            <p>If you change your mind, you can resubscribe anytime at <a href="${SITE_URL}/pricing" style="color:#6366f1;">our pricing page</a>.</p>
+            <p>Thank you for being a client.</p>
+            <p style="font-weight:600;">Tea Larson-Hetrick<br><span style="font-weight:normal;color:#666;">Blueprints & Bookkeeping LLC</span></p>
+          </div>
+        </div>`,
+        }),
+      );
+    }
+
+    await Promise.allSettled(emailPromises);
   }
 }
 

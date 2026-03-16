@@ -1,6 +1,8 @@
 import { Router, type IRouter, type Request, type Response, type NextFunction } from "express";
-import { db, contactInquiriesTable, newsletterSubscribersTable, INQUIRY_STATUSES } from "@workspace/db";
+import { db, contactInquiriesTable, newsletterSubscribersTable, emailSuppressionListTable, INQUIRY_STATUSES, SUPPRESSION_REASONS } from "@workspace/db";
+import type { SuppressionReason } from "@workspace/db";
 import { desc, eq, sql, count } from "drizzle-orm";
+import { addToSuppressionList } from "../lib/email-suppression";
 
 const router: IRouter = Router();
 
@@ -114,6 +116,63 @@ router.get("/admin/stats", async (_req, res): Promise<void> => {
       active: subscriberStats?.active ?? 0,
     },
   });
+});
+
+router.get("/admin/suppression", async (_req, res): Promise<void> => {
+  const entries = await db
+    .select()
+    .from(emailSuppressionListTable)
+    .orderBy(desc(emailSuppressionListTable.createdAt));
+
+  res.json(entries);
+});
+
+router.post("/admin/suppression", async (req, res): Promise<void> => {
+  const { email, reason } = req.body;
+
+  if (!email || typeof email !== "string") {
+    res.status(400).json({ error: "Email is required" });
+    return;
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email.trim())) {
+    res.status(400).json({ error: "Please provide a valid email address" });
+    return;
+  }
+
+  const finalReason: SuppressionReason = SUPPRESSION_REASONS.includes(reason) ? reason : "manual";
+
+  await addToSuppressionList(email, finalReason);
+
+  const [entry] = await db
+    .select()
+    .from(emailSuppressionListTable)
+    .where(eq(emailSuppressionListTable.email, email.trim().toLowerCase()))
+    .limit(1);
+
+  res.status(201).json(entry);
+});
+
+router.delete("/admin/suppression/:id", async (req, res): Promise<void> => {
+  const id = parseInt(req.params.id, 10);
+
+  if (isNaN(id)) {
+    res.status(400).json({ error: "Invalid ID" });
+    return;
+  }
+
+  const [deleted] = await db
+    .delete(emailSuppressionListTable)
+    .where(eq(emailSuppressionListTable.id, id))
+    .returning();
+
+  if (!deleted) {
+    res.status(404).json({ error: "Entry not found" });
+    return;
+  }
+
+  res.json({ success: true, deleted });
 });
 
 export default router;

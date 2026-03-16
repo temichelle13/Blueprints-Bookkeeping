@@ -4,6 +4,7 @@ import { db, contactInquiriesTable } from "@workspace/db";
 import { SubmitContactFormBody } from "@workspace/api-zod";
 import { Resend } from "resend";
 import * as contractService from "../lib/contract-service";
+import { isEmailSuppressed } from "../lib/email-suppression";
 
 const router: IRouter = Router();
 
@@ -60,6 +61,8 @@ router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
     })
     .returning();
 
+  const suppressed = await isEmailSuppressed(data.email);
+
   const resend = getResend();
   if (resend) {
     const servicesLabel =
@@ -113,7 +116,7 @@ router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
         </div>
       </div>`;
 
-    await Promise.allSettled([
+    const emailPromises: Promise<unknown>[] = [
       resend.emails.send({
         from: FROM_ADDRESS,
         to: OWNER_EMAIL,
@@ -121,13 +124,22 @@ router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
         subject: `New Inquiry: ${data.name}${data.businessName ? ` — ${data.businessName}` : ""}`,
         html: notifyHtml,
       }),
-      resend.emails.send({
-        from: FROM_ADDRESS,
-        to: data.email,
-        subject: "We received your message — Blueprints & Bookkeeping",
-        html: confirmHtml,
-      }),
-    ]);
+    ];
+
+    if (suppressed) {
+      console.warn("[Contact] Skipping confirmation email — address is suppressed:", data.email);
+    } else {
+      emailPromises.push(
+        resend.emails.send({
+          from: FROM_ADDRESS,
+          to: data.email,
+          subject: "We received your message — Blueprints & Bookkeeping",
+          html: confirmHtml,
+        }),
+      );
+    }
+
+    await Promise.allSettled(emailPromises);
   }
 
   contractService

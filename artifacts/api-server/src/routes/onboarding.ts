@@ -4,6 +4,7 @@ import { db, onboardingSubmissionsTable, contactInquiriesTable, subscriptionsTab
 import { eq } from "drizzle-orm";
 import { Resend } from "resend";
 import * as contractService from "../lib/contract-service";
+import { isEmailSuppressed } from "../lib/email-suppression";
 
 const router: IRouter = Router();
 
@@ -155,7 +156,8 @@ router.post("/onboarding", async (req, res): Promise<void> => {
 
     const resend = getResend();
     if (resend) {
-      await Promise.allSettled([
+      const suppressed = await isEmailSuppressed(clientEmail);
+      const emailPromises: Promise<unknown>[] = [
         resend.emails.send({
           from: FROM_ADDRESS,
           to: OWNER_EMAIL,
@@ -163,13 +165,22 @@ router.post("/onboarding", async (req, res): Promise<void> => {
           subject: `Onboarding Form Submitted: ${clientName} — ${businessName}`,
           html: buildAdminOnboardingEmail(clientName, clientEmail, businessName, ownerName, phone, einBusinessType, currentBookkeepingSoftware, notes, plan),
         }),
-        resend.emails.send({
-          from: FROM_ADDRESS,
-          to: clientEmail,
-          subject: "Onboarding Received — Blueprints & Bookkeeping",
-          html: buildClientOnboardingConfirmation(clientName, plan),
-        }),
-      ]);
+      ];
+
+      if (suppressed) {
+        console.warn("[Onboarding] Skipping client confirmation email — address is suppressed:", clientEmail);
+      } else {
+        emailPromises.push(
+          resend.emails.send({
+            from: FROM_ADDRESS,
+            to: clientEmail,
+            subject: "Onboarding Received — Blueprints & Bookkeeping",
+            html: buildClientOnboardingConfirmation(clientName, plan),
+          }),
+        );
+      }
+
+      await Promise.allSettled(emailPromises);
     }
 
     res.status(201).json({

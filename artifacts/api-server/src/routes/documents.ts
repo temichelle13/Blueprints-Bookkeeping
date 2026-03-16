@@ -4,6 +4,7 @@ import { eq, desc } from "drizzle-orm";
 import multer from "multer";
 import * as ccStorage from "../lib/adobe-cc-storage";
 import { Resend } from "resend";
+import { isEmailSuppressed } from "../lib/email-suppression";
 
 const router: IRouter = Router();
 
@@ -82,6 +83,12 @@ function getMimeTypeForFile(originalName: string): string {
 async function sendUploadConfirmation(clientName: string, clientEmail: string, fileNames: string[]): Promise<void> {
   const key = process.env["RESEND_API_KEY"];
   if (!key) return;
+
+  const suppressed = await isEmailSuppressed(clientEmail);
+  if (suppressed) {
+    console.warn("[Documents] Skipping upload confirmation email — address is suppressed:", clientEmail);
+    return;
+  }
 
   const resend = new Resend(key);
   const fileList = fileNames.map((f) => `<li style="padding:4px 0;">${f}</li>`).join("");
@@ -327,6 +334,13 @@ router.post("/documents/send-link", adminAuth, async (req: Request, res: Respons
   }
 
   try {
+    const suppressed = await isEmailSuppressed(clientEmail);
+    if (suppressed) {
+      console.warn("[Documents] Skipping upload link email — address is suppressed:", clientEmail);
+      res.json({ success: true, message: "Upload link sent" });
+      return;
+    }
+
     const resend = new Resend(key);
     await resend.emails.send({
       from: FROM_ADDRESS,
