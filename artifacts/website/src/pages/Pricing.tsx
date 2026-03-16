@@ -84,6 +84,7 @@ const businessPlanTiers = [
     period: "",
     prefix: "Starting at",
     tag: "PROJECT",
+    depositKey: "startup_roadmap",
     description: "Ideal for early-stage businesses seeking internal clarity or initial bank conversations.",
     features: [
       "3-year financial forecast",
@@ -102,6 +103,7 @@ const businessPlanTiers = [
     period: "+",
     prefix: "Starting at",
     tag: "FULL PACKAGE",
+    depositKey: "sba_investor",
     description: "Institutional-grade documentation built to survive bank underwriting and investor due diligence.",
     features: [
       "5-year rigorous financial model",
@@ -153,6 +155,43 @@ function SubscribeButton({ planKey, interval }: { planKey: string; interval: "mo
     >
       {loading ? <Loader2 size={15} className="animate-spin" /> : <CreditCard size={15} />}
       {loading ? "Redirecting..." : "Subscribe Now"}
+    </button>
+  );
+}
+
+function DepositButton({ serviceKey, label }: { serviceKey: string; label?: string }) {
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
+
+  const handleDeposit = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/payments/create-deposit-session`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ service: serviceKey }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        toast({ title: "Error", description: data.error || "Could not start checkout.", variant: "destructive" });
+        setLoading(false);
+      }
+    } catch {
+      toast({ title: "Error", description: "Could not connect to payment server.", variant: "destructive" });
+      setLoading(false);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleDeposit}
+      disabled={loading}
+      className="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-accent text-white font-semibold text-sm hover:shadow-xl hover:shadow-accent/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      {loading ? <Loader2 size={15} className="animate-spin" /> : <CreditCard size={15} />}
+      {loading ? "Redirecting..." : label || "Pay Deposit"}
     </button>
   );
 }
@@ -313,12 +352,15 @@ function TierCard({
             </li>
           ))}
         </ul>
-        <Link
-          href="/contact"
-          className="relative flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-accent text-white font-semibold text-sm hover:shadow-xl hover:shadow-accent/20 transition-all duration-300"
-        >
-          {tier.cta} <ArrowRight size={15} />
-        </Link>
+        <div className="relative space-y-2">
+          <DepositButton serviceKey={tier.depositKey} label="Pay Deposit & Get Started" />
+          <Link
+            href="/contact"
+            className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
+          >
+            {tier.cta} <ArrowRight size={15} />
+          </Link>
+        </div>
       </div>
     );
   }
@@ -349,12 +391,15 @@ function TierCard({
           </li>
         ))}
       </ul>
-      <Link
-        href="/contact"
-        className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
-      >
-        {tier.cta}
-      </Link>
+      <div className="space-y-2">
+        <DepositButton serviceKey={tier.depositKey} label="Pay Deposit & Get Started" />
+        <Link
+          href="/contact"
+          className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
+        >
+          {tier.cta}
+        </Link>
+      </div>
     </div>
   );
 }

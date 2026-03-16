@@ -1,17 +1,15 @@
 # Overview
 
-This project is a pnpm monorepo using TypeScript, designed for Blueprints & Bookkeeping, LLC, a remote bookkeeping, business planning, and advisory firm. The primary goal is to create a professional online presence, automate client onboarding, contract management, and provide secure document uploads.
-
-The project includes a React-based frontend with a dark theme and glassmorphism elements, an Express API server, and integrations with external services like Stripe for subscriptions and Adobe Acrobat Sign for e-signatures. It aims to streamline operations for the firm, enhance client experience, and manage business growth efficiently. The firm is capped at 20 active clients, emphasizing scarcity and exclusivity.
+This project is a pnpm monorepo using TypeScript, designed for Blueprints & Bookkeeping, LLC, a remote bookkeeping, business planning, and advisory firm. The primary goal is to provide a professional online presence, automate client interactions, and manage core business processes.
 
 Key capabilities include:
-- A public-facing website detailing services, pricing, and client portfolio.
-- Secure client portal for document uploads and onboarding.
-- Automated contract generation and management via Adobe Sign.
-- Stripe integration for self-service subscription payments.
-- SEO optimization for discoverability.
-- Newsletter and lead magnet functionality for client engagement.
-- Integration with a PostgreSQL database using Drizzle ORM for data persistence.
+- A public-facing website detailing services, pricing, and company information.
+- Self-service options for clients, including subscription management via Stripe, online intake forms, and a secure document upload portal.
+- Automated contract generation and management through Adobe Acrobat Sign.
+- Comprehensive SEO features to enhance online visibility.
+- A robust backend API built with Express and PostgreSQL.
+
+The project aims to streamline operations for Blueprints & Bookkeeping, LLC, enhance client experience, and support business growth.
 
 # User Preferences
 
@@ -24,8 +22,6 @@ Key capabilities include:
 
 # System Architecture
 
-## Monorepo Structure
-
 The project is organized as a pnpm workspace monorepo with separate `artifacts` (deployable applications) and `lib` (shared libraries) directories.
 - **`artifacts/api-server`**: Express API server handling business logic, database interactions, and external API integrations.
 - **`artifacts/website`**: React + Vite frontend for the Blueprints & Bookkeeping public site and client portal.
@@ -35,45 +31,39 @@ The project is organized as a pnpm workspace monorepo with separate `artifacts` 
 - **`lib/db`**: Drizzle ORM setup for PostgreSQL database interactions.
 - **`scripts`**: Contains utility scripts for various tasks.
 
-## Frontend (Website)
+**Technology Stack:**
+- **Monorepo**: pnpm workspaces
+- **Backend**: Node.js 24, Express 5, PostgreSQL, Drizzle ORM, Zod for validation.
+- **Frontend**: React, Vite, Tailwind CSS, Framer Motion.
+- **API Codegen**: Orval from OpenAPI spec.
+- **Build**: esbuild (CJS bundle).
 
-- **Technology Stack**: React, Vite, Tailwind CSS, Framer Motion.
+**UI/UX Decisions:**
+- **Brand Identity**: Primary color `#1B2A5A` (deep navy), secondary `#5B5EA6` (periwinkle/accent).
 - **Design System**: Dark theme with deep navy-black background, glassmorphism cards, gradient text, and glow accents.
-- **Branding**: Primary color: `#1B2A5A` (deep navy), Secondary color: `#5B5EA6` (periwinkle).
-- **Styling**: Custom CSS utilities for glassmorphism, glow effects, text gradients, and accent bars.
+- **CSS**: Custom `.glass-card`, `.glass-card-hover`, and Tailwind `@layer utilities` for specific effects like glow-line, glow-dot, text-gradient, and accent-bar.
 - **Typography**: Inter (bold) for display, JetBrains Mono for tags.
-- **Key Pages**: Home, About, Services, Industries, Pricing, Portfolio, Blog, Contact, Client Portal, Unsubscribe, Welcome, Onboarding, and 404.
 - **Navigation**: Header with BB icon (`public/logo-icon.png`), simplified navigation (About, Services, Industries, Pricing, Portfolio, Blog), and a "Get Started" CTA.
 - **SEO**: Comprehensive SEO meta tags (description, keywords, OG, Twitter cards, JSON-LD), `robots.txt`, `sitemap.xml`, and per-page title management.
 - **Forms**: React Hook Form with Zod for validation.
 
-## Backend (API Server)
+**Key Features and Implementations:**
 
-- **Framework**: Express 5.
-- **Data Validation**: Zod.
-- **API Definition**: OpenAPI 3.1.
-- **Core Routes**: Health checks, contact form submissions, newsletter management, contract management, payment processing (Stripe webhooks), and client onboarding.
-- **File Uploads**: Handles secure client document uploads.
-
-## Database
-
-- **ORM**: Drizzle ORM.
-- **Database**: PostgreSQL.
-- **Key Tables**:
-    - `contact_inquiries`: Stores contact form submissions.
-    - `newsletter_subscribers`: Manages newsletter subscriptions.
-    - `contracts`: Tracks contract records, statuses, and Adobe Sign integration details.
-    - `contract_templates`: Stores references to Adobe Sign templates.
-    - `subscriptions`: Records Stripe subscription details.
-    - `onboarding_submissions`: Stores client intake form data.
-    - `client_documents`: Manages uploaded client documents.
-
-## Contract Automation
-
-- **Integration**: Adobe Acrobat Sign API v6.
-- **Functionality**:
-    - Automatic contract generation and sending based on form submissions or service bookings (e.g., Mutual NDA, Engagement Letter, Data Processing Agreement, Scope Change).
-    - Scheduled reminders for unsigned contracts and auto-expiration.
+- **Website Pages**: Home, About, Services, Industries, Pricing, Portfolio, Blog, Contact, Client Portal, Unsubscribe, Welcome, Onboarding, Status, and 404.
+- **Self-Service Subscriptions (Stripe)**:
+    - API endpoints for `create-checkout-session`, `create-deposit-session`, `webhook` (handling `checkout.session.completed`, `invoice.payment_failed`, `customer.subscription.deleted`), and `onboarding`.
+    - One-time deposit payments for Bookkeeping and Business Plan services via Stripe Checkout.
+    - Email notifications for subscription and deposit events.
+    - Database tables: `subscriptions`, `onboarding_submissions`.
+- **Newsletter & Lead Magnet**:
+    - Footer newsletter signup.
+    - Home page lead magnet ("Financial Readiness Checklist" PDF gated by email).
+    - Unsubscribe functionality.
+- **Database Schema**: PostgreSQL with Drizzle ORM, including tables for `contact_inquiries`, `newsletter_subscribers`, `contracts`, `contract_templates`, `subscriptions`, `onboarding_submissions`, and `client_documents`.
+- **Adobe Acrobat Sign Integration**:
+    - Automates contract sending based on form submissions or service bookings.
+    - Supports Client Engagement Letter, Mutual NDA, Data Processing Agreement, Scope Change/Add-On.
+    - Hourly scheduler for reminders and auto-expiration.
     - Archival of signed PDFs to Adobe Creative Cloud Storage.
     - Admin dashboard for contract management.
 
@@ -81,7 +71,7 @@ The project is organized as a pnpm workspace monorepo with separate `artifacts` 
 
 - **Purpose**: Securely upload client financial documents.
 - **Features**: Drag-and-drop interface, name/email identification, progress indicators.
-- **Validation**: Supports specific file types (PDF, DOCX, XLSX, JPG, PNG, CSV) and a 25MB per-file limit (max 10 files per upload).
+- **Validation**: Supports specific file types (PDF, DOCX, XLSX, DOC, XLS, JPG, JPEG, PNG, CSV) and a 25MB per-file limit (max 10 files per upload).
 - **Storage**: Files uploaded to Adobe Creative Cloud Storage.
 - **Notifications**: Email confirmations to clients and notifications to admins.
 - **Admin Features**: Listing, downloading, and secure link generation for client uploads.
@@ -94,6 +84,16 @@ The project is organized as a pnpm workspace monorepo with separate `artifacts` 
 - **Unsubscribe**: Dedicated /unsubscribe page marks subscribers as inactive.
 - **PDF Resource**: `scripts/generate-checklist-pdf.mjs` generates the lead magnet PDF.
 
+## Monorepo Structure
+
+- **artifacts/api-server**: Express API with routes for contact, newsletter, contracts, payments, and onboarding.
+- **artifacts/website**: React frontend using react-router-dom, react-hook-form, and framer-motion.
+- **lib/db**: Drizzle ORM setup for PostgreSQL.
+- **lib/api-spec**: OpenAPI 3.1 spec and Orval config for API codegen.
+- **lib/api-zod**: Generated Zod schemas for API validation.
+- **lib/api-client-react**: Generated React Query hooks for API interaction.
+- **scripts**: Utility scripts.
+
 ## TypeScript Configuration
 
 - **Monorepo Typechecking**: `tsconfig.base.json` with `composite: true` and root `tsconfig.json` with project references ensures correct cross-package type checking and build order.
@@ -101,12 +101,12 @@ The project is organized as a pnpm workspace monorepo with separate `artifacts` 
 
 # External Dependencies
 
-- **Stripe**: For self-service subscriptions (Essentials & Growth tiers), managing checkout sessions, and webhook processing.
+- **PostgreSQL**: Primary database for all application data, managed with Drizzle ORM.
+- **Stripe**: For self-service subscriptions (Essentials & Growth tiers) and one-time deposit payments (Bookkeeping & Business Plans), managing checkout sessions, and webhook processing.
     - Environment secrets: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `SITE_URL`, `STRIPE_ESSENTIALS_MONTHLY_PRICE_ID`, `STRIPE_ESSENTIALS_ANNUAL_PRICE_ID`, `STRIPE_GROWTH_MONTHLY_PRICE_ID`, `STRIPE_GROWTH_ANNUAL_PRICE_ID`.
 - **Adobe Acrobat Sign API v6**: For e-signature workflows, contract automation, and management.
     - Environment secrets: `ADOBE_SIGN_CLIENT_ID`, `ADOBE_SIGN_CLIENT_SECRET`, `ADOBE_SIGN_REFRESH_TOKEN`.
 - **Adobe Creative Cloud Storage**: For archiving signed contracts and storing client-uploaded documents.
-- **PostgreSQL**: Primary database for all application data, managed with Drizzle ORM.
-- **Resend**: For sending email notifications (e.g., subscription events, document upload confirmations).
+- **Resend**: For sending email notifications (e.g., subscription events, deposit payments, document upload confirmations).
 - **Calendly**: Potentially integrated for booking webhooks to trigger contract automation.
 - **Google Fonts**: Inter and JetBrains Mono for typography.

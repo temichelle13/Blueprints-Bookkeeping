@@ -38,6 +38,7 @@ import Onboarding from "./pages/Onboarding";
 import ClientPortal from "./pages/ClientPortal";
 import BusinessPlanning from "./pages/BusinessPlanning";
 import Status from "./pages/Status";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 if (import.meta.env.VITE_API_URL) {
   setApiBaseUrl(import.meta.env.VITE_API_URL as string);
@@ -122,6 +123,7 @@ function Router() {
         <Route path="/client-portal" component={ClientPortal} />
         <Route path="/business-planning" component={BusinessPlanning} />
         <Route path="/status" component={Status} />
+        <Route path="/payment-success" component={PaymentSuccess} />
         <Route path="/admin/contracts" component={AdminContracts} />
         <Route component={NotFound} />
       </Switch>

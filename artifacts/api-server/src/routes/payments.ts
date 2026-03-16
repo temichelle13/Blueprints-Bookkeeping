@@ -35,6 +35,29 @@ const PLAN_CONFIG: Record<string, { name: string; monthlyPriceId: string; annual
   },
 };
 
+const DEPOSIT_CONFIG: Record<string, { name: string; amountCents: number; description: string }> = {
+  essentials: {
+    name: "Essentials Bookkeeping Deposit",
+    amountCents: 50000,
+    description: "First month deposit for the Essentials bookkeeping plan.",
+  },
+  growth: {
+    name: "Growth Bookkeeping Deposit",
+    amountCents: 90000,
+    description: "First month deposit for the Growth bookkeeping plan.",
+  },
+  startup_roadmap: {
+    name: "Startup Roadmap Deposit",
+    amountCents: 125000,
+    description: "50% deposit to begin your Startup Roadmap business plan.",
+  },
+  sba_investor: {
+    name: "SBA / Investor Package Deposit",
+    amountCents: 200000,
+    description: "50% deposit to begin your SBA / Investor Package business plan.",
+  },
+};
+
 router.post("/payments/create-checkout-session", async (req, res): Promise<void> => {
   const stripe = getStripe();
   if (!stripe) {
@@ -78,6 +101,51 @@ router.post("/payments/create-checkout-session", async (req, res): Promise<void>
   }
 });
 
+router.post("/payments/create-deposit-session", async (req, res): Promise<void> => {
+  const stripe = getStripe();
+  if (!stripe) {
+    res.status(503).json({ error: "Payment processing is not configured." });
+    return;
+  }
+
+  const { service } = req.body as { service?: string };
+
+  if (!service || !DEPOSIT_CONFIG[service]) {
+    res.status(400).json({ error: "Invalid service. Choose 'essentials', 'growth', 'startup_roadmap', or 'sba_investor'." });
+    return;
+  }
+
+  const config = DEPOSIT_CONFIG[service];
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      mode: "payment",
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: config.name,
+              description: config.description,
+            },
+            unit_amount: config.amountCents,
+          },
+          quantity: 1,
+        },
+      ],
+      success_url: `${SITE_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}&service=${service}`,
+      cancel_url: `${SITE_URL}/pricing`,
+      metadata: { service, type: "deposit" },
+    });
+
+    res.json({ url: session.url });
+  } catch (err) {
+    console.error("Stripe deposit session error:", err);
+    res.status(500).json({ error: "Failed to create deposit checkout session." });
+  }
+});
+
 router.post("/payments/webhook", async (req, res): Promise<void> => {
   const stripe = getStripe();
   if (!stripe) {
@@ -107,7 +175,11 @@ router.post("/payments/webhook", async (req, res): Promise<void> => {
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
-        await handleCheckoutCompleted(session);
+        if (session.metadata?.type === "deposit") {
+          await handleDepositCompleted(session);
+        } else {
+          await handleCheckoutCompleted(session);
+        }
         break;
       }
       case "invoice.payment_failed": {
@@ -174,6 +246,37 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session): Promis
         to: OWNER_EMAIL,
         subject: `New Self-Service Subscriber: ${customerName} — ${planLabel}`,
         html: buildAdminNotificationEmail(customerName, customerEmail, planLabel, billingInterval),
+      }),
+    ]);
+  }
+}
+
+async function handleDepositCompleted(session: Stripe.Checkout.Session): Promise<void> {
+  const service = session.metadata?.service || "unknown";
+  const customerEmail = session.customer_details?.email || "";
+  const customerName = session.customer_details?.name || "";
+  const depositConfig = DEPOSIT_CONFIG[service];
+  const serviceName = depositConfig?.name || service;
+  const amountPaid = session.amount_total ? `$${(session.amount_total / 100).toFixed(2)}` : "N/A";
+
+  const resend = getResend();
+  if (resend) {
+    await Promise.allSettled([
+      ...(customerEmail
+        ? [
+            resend.emails.send({
+              from: FROM_ADDRESS,
+              to: customerEmail,
+              subject: `Deposit Received — ${serviceName}`,
+              html: buildDepositClientEmail(customerName || "Client", serviceName, amountPaid),
+            }),
+          ]
+        : []),
+      resend.emails.send({
+        from: FROM_ADDRESS,
+        to: OWNER_EMAIL,
+        subject: `Deposit Received: ${customerName || customerEmail || "Unknown"} — ${serviceName}`,
+        html: buildDepositAdminEmail(customerName, customerEmail, serviceName, amountPaid),
       }),
     ]);
   }
@@ -322,6 +425,43 @@ function buildPaymentFailedEmail(name: string): string {
       <p>You can update your billing info through the link in your original Stripe receipt email, or contact us directly.</p>
       <p>Questions? Reply to this email or call us at <strong>(541) 319-8654</strong>.</p>
       <p style="font-weight:600;">Tea Larson-Hetrick<br><span style="font-weight:normal;color:#666;">Blueprints & Bookkeeping LLC</span></p>
+    </div>
+  </div>`;
+}
+
+function buildDepositClientEmail(name: string, service: string, amount: string): string {
+  return `<div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
+    <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
+      <h1 style="color:white;margin:0;font-size:20px;">Deposit Received</h1>
+    </div>
+    <div style="background:#f8f9ff;padding:32px;border-radius:0 0 8px 8px;border:1px solid #e2e5f0;">
+      <p>Hi ${name},</p>
+      <p>Thank you! We've received your deposit of <strong>${amount}</strong> for <strong>${service}</strong>.</p>
+      <h3 style="margin-top:24px;color:#6366f1;">What Happens Next</h3>
+      <ol style="line-height:2;">
+        <li>Tea will reach out within 1 business day to schedule your kickoff call.</li>
+        <li>You'll receive your Engagement Letter and NDA via Adobe Sign.</li>
+        <li>Complete your <a href="${SITE_URL}/onboarding" style="color:#6366f1;">onboarding intake form</a> to get started.</li>
+      </ol>
+      <p style="margin-top:24px;">Questions? Reply to this email or call us at <strong>(541) 319-8654</strong>.</p>
+      <p style="font-weight:600;">Tea Larson-Hetrick<br><span style="font-weight:normal;color:#666;">Blueprints & Bookkeeping LLC</span></p>
+    </div>
+  </div>`;
+}
+
+function buildDepositAdminEmail(name: string, email: string, service: string, amount: string): string {
+  return `<div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
+    <div style="background:#16a34a;padding:24px 32px;border-radius:8px 8px 0 0;">
+      <h1 style="color:white;margin:0;font-size:20px;">New Deposit Received!</h1>
+    </div>
+    <div style="background:#f8f9ff;padding:32px;border-radius:0 0 8px 8px;border:1px solid #e2e5f0;">
+      <table style="width:100%;border-collapse:collapse;">
+        <tr><td style="padding:8px 0;color:#666;font-size:14px;width:120px;">Name</td><td style="padding:8px 0;font-weight:600;">${name || "Not provided"}</td></tr>
+        <tr><td style="padding:8px 0;color:#666;font-size:14px;">Email</td><td style="padding:8px 0;"><a href="mailto:${email}" style="color:#6366f1;">${email || "Not provided"}</a></td></tr>
+        <tr><td style="padding:8px 0;color:#666;font-size:14px;">Service</td><td style="padding:8px 0;font-weight:600;">${service}</td></tr>
+        <tr><td style="padding:8px 0;color:#666;font-size:14px;">Amount</td><td style="padding:8px 0;font-weight:600;color:#16a34a;">${amount}</td></tr>
+      </table>
+      <p style="margin-top:20px;">Check the <a href="https://dashboard.stripe.com" style="color:#6366f1;">Stripe dashboard</a> for full details.</p>
     </div>
   </div>`;
 }
