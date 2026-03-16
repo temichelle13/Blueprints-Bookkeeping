@@ -12,6 +12,7 @@ Key capabilities include:
 - A robust backend API built with Express and PostgreSQL using Drizzle ORM for data persistence.
 - Newsletter and lead magnet functionality for client engagement.
 - Comprehensive analytics, cookie consent, and spam protection measures.
+- A lightweight CRM dashboard at `/admin` for managing contact inquiries and newsletter subscribers.
 
 The business vision is to support a growing client base with scalable and automated solutions, emphasizing the firm's expertise in specialized industries like Crypto, Agriculture/Timber, and Tech. The project is designed with a focus on a "dark theme" UI (with light mode toggle), ensuring a modern and professional brand image.
 
@@ -20,9 +21,9 @@ The business vision is to support a growing client base with scalable and automa
 - **Communication**: I prefer direct and concise language.
 - **Workflow**: I want iterative development with clear explanations of changes.
 - **Interaction**: Ask before making major architectural changes or introducing new dependencies.
-- **Content Policy**: Do NOT offer tax preparation services or include any tax-related content. Degrees listed on the "About" page should be referred to as "coursework" or "studies" only, not "completed degrees." Emphasize the 20-client cap for scarcity. Pricing should always use "starting at" ranges.
+- **Content Policy**: Do NOT offer tax preparation services or include any tax-related content. Degrees listed on the "About" page should be referred to as "coursework" or "studies" only, not "completed degrees." Professional certifications (CEH v12, QB ProAdvisor Advanced, Crypto Tax Certified, OR Notary RON) are earned. Emphasize the 20-client cap for scarcity. Pricing should always use "starting at" ranges.
 - **Coding Standards**: Ensure all code is well-documented and follows TypeScript best practices.
-- **Branding**: Do not make changes to the existing branding guidelines, including primary and secondary colors, theme, and font stack, without explicit approval.
+- **Branding**: Do not make changes to the existing branding guidelines, including primary and secondary colors (#1B2A5A deep navy, #5B5EA6 periwinkle), theme, and font stack, without explicit approval.
 - **Header**: The header should ONLY show the BB icon (`public/logo-icon.png`), without any accompanying text.
 - **Design System**: The website must adhere to the specified brand guidelines: primary color deep navy (`#1B2A5A`), secondary color periwinkle/accent (`#5B5EA6`), dark theme (with light mode toggle) with glassmorphism cards, gradient text, and glow accents.
 - **Contact Info**: The firm's contact information: tea@blueprintsandbookkeeping.com, 541-319-8654.
@@ -31,7 +32,7 @@ The business vision is to support a growing client base with scalable and automa
 
 The project is structured as a pnpm monorepo, separating deployable applications (`artifacts/`) from shared libraries (`lib/`) and utility scripts (`scripts/`).
 
-- **`artifacts/api-server`**: Express API server handling business logic, database interactions, and external API integrations.
+- **`artifacts/api-server`**: Express API server (Node.js 24, Express 5) handling business logic, database interactions, and external API integrations.
 - **`artifacts/website`**: React + Vite frontend for the Blueprints & Bookkeeping public site and client portal.
 - **`lib/api-spec`**: Manages OpenAPI specification and codegen for API clients and Zod schemas using Orval.
 - **`lib/api-client-react`**: Generated React Query hooks for frontend API interaction.
@@ -100,6 +101,18 @@ The project is structured as a pnpm monorepo, separating deployable applications
     - `lib/api-client-react`: Generated React Query hooks for API interaction.
     - `lib/api-zod`: Generated Zod schemas for request/response validation.
     - `lib/db`: Drizzle ORM setup for PostgreSQL, defining all database schemas.
+
+## Contract Automation
+
+- **Integration**: Adobe Acrobat Sign API v6.
+- **Functionality**:
+    - Automatic contract generation and sending based on form submissions or service bookings (e.g., Mutual NDA, Engagement Letter).
+    - Scheduled reminders for unsigned contracts and auto-expiration.
+    - Archival of signed PDFs to Adobe Creative Cloud Storage.
+    - Admin dashboard for contract management.
+- **Admin Dashboards**:
+    - CRM dashboard at `/admin` for viewing/managing contact form inquiries (with status tracking: New/Contacted/In Progress/Closed), newsletter subscriber management, and CSV export.
+    - Contract management dashboard.
 
 ## Client Document Upload Portal
 

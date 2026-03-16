@@ -35,6 +35,7 @@ import GetStarted from "./pages/GetStarted";
 import TaxPartners from "./pages/TaxPartners";
 import Referral from "./pages/Referral";
 import AdminContracts from "./pages/AdminContracts";
+import AdminDashboard from "./pages/AdminDashboard";
 import Welcome from "./pages/Welcome";
 import Onboarding from "./pages/Onboarding";
 import ClientPortal from "./pages/ClientPortal";
@@ -130,6 +131,7 @@ function Router() {
         <Route path="/payment-success" component={PaymentSuccess} />
         <Route path="/resources" component={Resources} />
         <Route path="/admin/contracts" component={AdminContracts} />
+        <Route path="/admin" component={AdminDashboard} />
         <Route component={NotFound} />
       </Switch>
     </Layout>

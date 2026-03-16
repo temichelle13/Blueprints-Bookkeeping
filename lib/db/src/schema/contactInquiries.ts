@@ -2,6 +2,9 @@ import { pgTable, text, serial, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
+export const INQUIRY_STATUSES = ["New", "Contacted", "In Progress", "Closed"] as const;
+export type InquiryStatus = (typeof INQUIRY_STATUSES)[number];
+
 export const contactInquiriesTable = pgTable("contact_inquiries", {
   id: serial("id").primaryKey(),
   formType: text("form_type").notNull(),
@@ -15,6 +18,7 @@ export const contactInquiriesTable = pgTable("contact_inquiries", {
   monthlyRevenueRange: text("monthly_revenue_range"),
   biggestChallenge: text("biggest_challenge"),
   preferredContactMethod: text("preferred_contact_method"),
+  status: text("status").notNull().default("New"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
