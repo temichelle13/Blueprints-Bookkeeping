@@ -1,15 +1,15 @@
 import { usePageTitle } from "@/hooks/use-page-title";
 import { Link } from "wouter";
 import { Clock, Video, Phone, FileText, CheckCircle2, Calendar, ArrowRight } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
-const CAL_USERNAME = "blueprintsandbookkeeping";
+const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
 
 const meetingTypes = [
   {
     icon: <Video className="w-5 h-5" />,
     title: "Video Call",
-    duration: "45 min",
+    duration: "30 min",
     description: "Face-to-face over Google Meet or Zoom. Best for new clients who want to discuss their situation in depth.",
     slug: "video-call",
   },
@@ -22,79 +22,19 @@ const meetingTypes = [
   },
   {
     icon: <FileText className="w-5 h-5" />,
-    title: "Document-Only (Async)",
-    duration: "No meeting",
-    description: "Upload your documents and we'll review them asynchronously. Perfect for returning clients or document handoffs.",
-    slug: "document-review",
+    title: "Not Sure?",
+    duration: "Pick what fits",
+    description: "Upload your documents through the client portal or leave your info on the contact page and Tea will reach out within one business day.",
+    slug: "async",
   },
 ];
 
-function CalEmbed() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const initialized = useRef(false);
-  const [embedLoaded, setEmbedLoaded] = useState(false);
-  const [embedError, setEmbedError] = useState(false);
-
-  useEffect(() => {
-    if (initialized.current) return;
-    initialized.current = true;
-
-    const script = document.createElement("script");
-    script.src = "https://app.cal.com/embed/embed.js";
-    script.async = true;
-    script.onerror = () => setEmbedError(true);
-    script.onload = () => {
-      try {
-        const Cal = (window as any).Cal;
-        if (Cal && containerRef.current) {
-          Cal("init", { origin: "https://app.cal.com" });
-          Cal("inline", {
-            calLink: CAL_USERNAME,
-            elementOrSelector: containerRef.current,
-            config: { theme: "dark" },
-          });
-          Cal("ui", {
-            theme: "dark",
-            styles: { branding: { brandColor: "#6366f1" } },
-          });
-          setEmbedLoaded(true);
-        }
-      } catch {
-        setEmbedError(true);
-      }
-    };
-    document.head.appendChild(script);
-  }, []);
-
-  if (embedError) {
-    return (
-      <div className="flex flex-col items-center justify-center p-12 text-center" style={{ minHeight: "400px" }}>
-        <Calendar className="w-12 h-12 text-accent/40 mb-4" />
-        <h3 className="text-lg font-bold text-white mb-2">Calendar Loading</h3>
-        <p className="text-muted-foreground text-sm max-w-md mb-6">
-          The scheduling calendar is being set up. In the meantime, you can reach out directly to book your appointment.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <a
-            href="mailto:tea@blueprintsandbookkeeping.com"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-accent text-white font-semibold text-sm hover:shadow-lg hover:shadow-accent/20 transition-all"
-          >
-            Email Us
-          </a>
-          <a
-            href="tel:+15413198654"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white transition-all"
-          >
-            Call (541) 319-8654
-          </a>
-        </div>
-      </div>
-    );
-  }
+function CalendlyEmbed() {
+  const [loaded, setLoaded] = useState(false);
 
   return (
-    <div className="relative" style={{ minHeight: "650px" }}>
-      {!embedLoaded && (
+    <div className="relative" style={{ minHeight: "700px" }}>
+      {!loaded && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
             <div className="w-8 h-8 border-2 border-accent/30 border-t-accent rounded-full animate-spin mx-auto mb-3" />
@@ -102,9 +42,14 @@ function CalEmbed() {
           </div>
         </div>
       )}
-      <div
-        ref={containerRef}
-        style={{ width: "100%", minHeight: "650px", overflow: "auto" }}
+      <iframe
+        src={`${CALENDLY_URL}?embed_type=Inline&hide_gdpr_banner=1&background_color=161b2e&text_color=d8dce4&primary_color=6366f1`}
+        width="100%"
+        height="700"
+        frameBorder="0"
+        title="Schedule a discovery call with Tea"
+        onLoad={() => setLoaded(true)}
+        style={{ borderRadius: 12, display: "block" }}
       />
     </div>
   );
@@ -194,8 +139,8 @@ export default function Schedule() {
           </div>
 
           <div className="lg:col-span-3">
-            <div className="glass-card rounded-2xl overflow-hidden" style={{ minHeight: "650px" }}>
-              <CalEmbed />
+            <div className="glass-card rounded-2xl overflow-hidden" style={{ minHeight: "700px" }}>
+              <CalendlyEmbed />
             </div>
             <p className="text-xs text-muted-foreground text-center mt-3">
               Don't see times that work?{" "}
