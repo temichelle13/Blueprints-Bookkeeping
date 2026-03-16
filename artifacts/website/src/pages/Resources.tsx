@@ -30,7 +30,7 @@ interface Template {
 const CATEGORIES = [
   { key: "all", label: "All Templates", icon: Library },
   { key: "bookkeeping", label: "Bookkeeping & Financial Organization", icon: BookOpen },
-  { key: "planning", label: "Business Planning & Funding", icon: Calculator },
+  { key: "planning", label: "Business Planning", icon: Calculator },
   { key: "crypto", label: "Crypto & Digital Assets", icon: Bitcoin },
   { key: "operations", label: "Operations & Growth", icon: Briefcase },
 ];
@@ -69,12 +69,12 @@ const TEMPLATES: Template[] = [
     filename: "expense-categorization-guide.pdf",
   },
   {
-    id: "sba-loan-prep",
-    title: "Bank Financing Prep Checklist",
-    description: "Every document and data point you need before a bank financing conversation — organized by personal, business, financial projections, and collateral documentation.",
+    id: "financial-documentation",
+    title: "Financial Documentation Checklist",
+    description: "A comprehensive checklist of financial records, statements, and supporting documents to have organized and ready — whether for planning, growth, or any business milestone.",
     category: "planning",
     pageCount: 2,
-    filename: "sba-loan-prep-checklist.pdf",
+    filename: "financial-documentation-checklist.pdf",
   },
   {
     id: "financial-projection",

@@ -71,22 +71,27 @@ router.post("/newsletter/subscribe", async (req, res): Promise<void> => {
 
   const resend = getResend();
   if (resend) {
+    const resourcesUrl = "https://blueprintsandbookkeeping.com/resources";
     const welcomeHtml = `
       <div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
         <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
-          <h1 style="color:white;margin:0;font-size:20px;">Welcome to the Blueprints & Bookkeeping newsletter.</h1>
+          <h1 style="color:white;margin:0;font-size:20px;">Your free resources are ready — Blueprints & Bookkeeping</h1>
         </div>
         <div style="background:#f8f9ff;padding:32px;border-radius:0 0 8px 8px;border:1px solid #e2e5f0;">
           <p>Hi there,</p>
-          <p>You're in. Welcome to the list.</p>
-          <p>I'm Tea — founder of Blueprints & Bookkeeping LLC. I work with ambitious founders who need more than basic data entry: multi-entity bookkeeping, institutional-grade business plans, and the financial clarity to actually grow.</p>
+          <p>You're in! Here's the link to access all your free templates, checklists, and guides:</p>
+          <div style="text-align:center;margin:24px 0;">
+            <a href="${resourcesUrl}" style="display:inline-block;background:#6366f1;color:white;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:16px;">Access Your Free Resources →</a>
+          </div>
+          <p>You'll find checklists, financial worksheets, and planning guides — all free to download.</p>
+          <p>I'm Tea — founder of Blueprints & Bookkeeping LLC. I specialize in advanced bookkeeping and business planning for small businesses and growing teams.</p>
           <p>What to expect from this newsletter:</p>
           <ul style="line-height:1.8;">
             <li>Practical financial insights for founders and small business owners</li>
-            <li>Real talk on bookkeeping systems, business planning, and securing capital</li>
+            <li>Real talk on bookkeeping systems, cash flow, and business planning</li>
             <li>No fluff. No tax advice. Just actionable guidance.</li>
           </ul>
-          <p>If you have an immediate question or want to talk about your business, you can <a href="https://blueprintsandbookkeeping.com/schedule" style="color:#6366f1;">book a free discovery call</a> anytime.</p>
+          <p>If you have a question or want to talk about your business, you can <a href="https://blueprintsandbookkeeping.com/schedule" style="color:#6366f1;">book a free discovery call</a> anytime.</p>
           <p>Talk soon,</p>
           <p style="font-weight:600;">Tea Larson-Hetrick<br><span style="font-weight:normal;color:#666;">Blueprints & Bookkeeping LLC · Roseburg, Oregon</span></p>
           <hr style="border:none;border-top:1px solid #e2e5f0;margin:24px 0;">
@@ -97,9 +102,13 @@ router.post("/newsletter/subscribe", async (req, res): Promise<void> => {
     await resend.emails.send({
       from: FROM_ADDRESS,
       to: email,
-      subject: "You're subscribed — Blueprints & Bookkeeping",
+      subject: "Your free resources are ready — Blueprints & Bookkeeping",
       html: welcomeHtml,
-    }).catch(() => {});
+    }).catch((err: unknown) => {
+      console.error("[Resend] Welcome email failed for", email, "—", err instanceof Error ? err.message : String(err));
+    });
+  } else {
+    console.warn("[Newsletter] RESEND_API_KEY not set — skipping welcome email for", email);
   }
 
   res.status(201).json({
