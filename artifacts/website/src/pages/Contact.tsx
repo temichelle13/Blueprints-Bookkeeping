@@ -14,6 +14,7 @@ const messageSchema = z.object({
   name: z.string().min(2, "Name is required"),
   email: z.string().email("Valid email required"),
   message: z.string().min(10, "Please include a message (at least 10 characters)"),
+  smsConsent: z.boolean().refine((val) => val === true, { message: "You must consent to receive text messages and phone calls" }),
   website: z.string().max(0).optional(),
 });
 type MessageValues = z.infer<typeof messageSchema>;
@@ -67,6 +68,7 @@ function MessageForm() {
       name: data.name,
       email: data.email,
       message: data.message,
+      smsConsent: data.smsConsent,
       website: data.website || "",
     });
     if (ok) {
@@ -119,6 +121,20 @@ function MessageForm() {
         />
         {errors.message && <p id="contact-message-error" role="alert" className="text-destructive text-xs mt-1">{errors.message.message}</p>}
       </div>
+
+      <div className="flex items-start gap-3">
+        <input
+          id="contact-sms-consent"
+          type="checkbox"
+          {...register("smsConsent")}
+          className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer shrink-0"
+          aria-invalid={!!errors.smsConsent}
+        />
+        <label htmlFor="contact-sms-consent" className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none">
+          I agree to receive text messages and phone calls from Blueprints &amp; Bookkeeping at my provided contact number. Message and data rates may apply. Reply STOP to opt out.
+        </label>
+      </div>
+      {errors.smsConsent && <p id="contact-sms-consent-error" role="alert" className="text-destructive text-xs -mt-2">{errors.smsConsent.message}</p>}
 
       <button
         type="submit"

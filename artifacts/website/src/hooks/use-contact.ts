@@ -8,6 +8,7 @@ export const quickContactSchema = z.object({
   name: z.string().min(2, "Name is required"),
   email: z.string().email("Valid email is required"),
   message: z.string().min(10, "Please provide a little more detail"),
+  smsConsent: z.boolean().refine((val) => val === true, { message: "You must consent to receive text messages and phone calls" }),
   website: z.string().optional(),
 });
 
@@ -22,6 +23,7 @@ export const detailedContactSchema = z.object({
   monthlyRevenueRange: z.string().optional(),
   biggestChallenge: z.string().min(10, "Please describe your challenge"),
   preferredContactMethod: z.string().optional(),
+  smsConsent: z.boolean().refine((val) => val === true, { message: "You must consent to receive text messages and phone calls" }),
   website: z.string().optional(),
 });
 

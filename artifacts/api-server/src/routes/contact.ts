@@ -56,6 +56,7 @@ router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
       monthlyRevenueRange: data.monthlyRevenueRange ?? null,
       biggestChallenge: data.biggestChallenge ?? null,
       preferredContactMethod: data.preferredContactMethod ?? null,
+      smsConsent: data.smsConsent,
     })
     .returning();
 
@@ -81,6 +82,7 @@ router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
             <tr><td style="padding:8px 0;color:#666;font-size:14px;">Services</td><td style="padding:8px 0;">${servicesLabel}</td></tr>
             ${data.monthlyRevenueRange ? `<tr><td style="padding:8px 0;color:#666;font-size:14px;">Revenue Range</td><td style="padding:8px 0;">${data.monthlyRevenueRange}</td></tr>` : ""}
             ${data.preferredContactMethod ? `<tr><td style="padding:8px 0;color:#666;font-size:14px;">Prefers</td><td style="padding:8px 0;">${data.preferredContactMethod}</td></tr>` : ""}
+            <tr><td style="padding:8px 0;color:#666;font-size:14px;">SMS/Call Consent</td><td style="padding:8px 0;font-weight:600;color:${data.smsConsent ? '#10B981' : '#EF4444'};">${data.smsConsent ? 'Yes' : 'No'}</td></tr>
           </table>
           ${data.biggestChallenge || data.message ? `
           <div style="margin-top:20px;padding:16px;background:white;border-radius:6px;border-left:3px solid #6366f1;">
