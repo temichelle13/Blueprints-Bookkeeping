@@ -90,10 +90,23 @@ export default function Onboarding() {
   const { toast } = useToast();
   const [submitted, setSubmitted] = useState(false);
 
-  const params = new URLSearchParams(window.location.search);
-  const plan = params.get("plan") || "";
-  const sessionId = params.get("session_id") || "";
+  const onboardingContext = useMemo(
+    () => getOnboardingContextFromSearch(window.location.search),
+    [],
+  );
+  const effectivePlan = onboardingContext.plan?.trim() || undefined;
+  const sessionId = onboardingContext.sessionId?.trim() || "";
   const hasSessionId = Boolean(sessionId);
+  const isMissingSessionId = !hasSessionId;
+  const onboardingRetryHref = buildOnboardingUrl({
+    plan: onboardingContext.plan,
+    service: onboardingContext.service,
+    sessionId: onboardingContext.sessionId,
+  });
+  const checkoutConfirmationHref = `/payment-success${onboardingContext.plan || onboardingContext.service ? `?${new URLSearchParams({
+    ...(onboardingContext.plan ? { plan: onboardingContext.plan } : {}),
+    ...(onboardingContext.service ? { service: onboardingContext.service } : {}),
+  }).toString()}` : ""}`;
 
   const {
     register,

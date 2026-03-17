@@ -1,5 +1,5 @@
 import { motion, useInView, useMotionValue, useTransform, animate } from "framer-motion";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, type ReactNode } from "react";
 import {
   Star,
   ExternalLink,
@@ -42,7 +42,14 @@ function AnimatedCounter({ value, suffix = "", prefix = "" }: { value: number; s
 }
 
 export function StatsProofBar() {
-  const stats = [
+  const stats: Array<{
+    icon: ReactNode;
+    value: number;
+    suffix: string;
+    prefix?: string;
+    label: string;
+    description: string;
+  }> = [
     {
       icon: <Users className="w-6 h-6" />,
       value: 20,

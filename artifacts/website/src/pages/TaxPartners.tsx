@@ -161,7 +161,7 @@ function JoinNetworkForm() {
       formType: "quick" as const,
       name: formData.contactName,
       email: formData.email,
-      message: `[Tax Partner Network Application]
+message: `[Tax Partner Network Application]
 Firm: ${formData.firmName}
 Credentials: ${formData.credentials}
 States Licensed: ${formData.statesLicensed}
@@ -169,8 +169,8 @@ Specialties: ${formData.specialties}
 Phone: ${formData.phone}
 
 Additional Info: ${formData.message}`,
-      smsConsent: formData.smsConsent,
-      website: "",
+smsConsent: formData.smsConsent,
+website: "",
     });
     if (success) {
       setSubmitted(true);
