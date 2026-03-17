@@ -128,14 +128,16 @@ function MessageForm() {
       </div>
 
       <div className="flex items-start gap-3">
-        <input
-          id="contact-sms-consent"
-          type="checkbox"
-          {...register("smsConsent")}
-          className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer shrink-0"
-          aria-invalid={!!errors.smsConsent}
-        />
-        <label htmlFor="contact-sms-consent" className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none">
+        <div className="min-h-[44px] min-w-[44px] flex items-center justify-center shrink-0">
+          <input
+            id="contact-sms-consent"
+            type="checkbox"
+            {...register("smsConsent")}
+            className="h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer"
+            aria-invalid={!!errors.smsConsent}
+          />
+        </div>
+        <label htmlFor="contact-sms-consent" className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none min-h-[44px] flex items-center">
           I agree to receive text messages and phone calls from Blueprints &amp; Bookkeeping at my provided contact number. Message and data rates may apply. Reply STOP to opt out.
         </label>
       </div>
@@ -184,8 +186,7 @@ export default function Contact() {
             const CardIcon = card.icon;
             const inner = (
               <div
-                className="glass-card rounded-2xl p-7 flex flex-col h-full group cursor-pointer transition-all duration-300 hover:border-accent/30 hover:-translate-y-1 hover:shadow-lg hover:shadow-accent/5"
-              >
+                className="glass-card rounded-2xl p-7 flex flex-col h-full min-h-[280px] group cursor-pointer transition-all duration-300..."              >
                 <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 shrink-0"
                   style={{
