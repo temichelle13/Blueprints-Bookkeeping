@@ -1,6 +1,7 @@
 import { Link, useLocation } from "wouter";
 import { Mail, Phone, MapPin, ArrowRight, CalendarDays, UserPlus, MessageSquare } from "lucide-react";
 import { FooterNewsletterSignup } from "@/components/NewsletterSignup";
+import { openCookieConsentPreferences } from "@/components/CookieConsent";
 
 export function Footer() {
   const [location] = useLocation();
@@ -67,6 +68,16 @@ export function Footer() {
                 Book a Discovery Call
                 <ArrowRight size={13} className="ml-auto" aria-hidden="true" />
               </a>
+              <a
+                href="https://quickbooks.intuit.com/partners/pap/?cid=par_blueprintsandbookkeeping"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-semibold text-sm hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition-all duration-200"
+              >
+                <ArrowRight size={15} aria-hidden="true" />
+                QuickBooks Sign Up
+                <ArrowRight size={13} className="ml-auto" aria-hidden="true" />
+              </a>
               <Link
                 href="/contact"
                 className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-muted-foreground font-semibold text-sm hover:bg-white/[0.08] hover:text-white transition-all duration-200"
@@ -75,6 +86,15 @@ export function Footer() {
                 Send a Message
                 <ArrowRight size={13} className="ml-auto" aria-hidden="true" />
               </Link>
+              <button
+                type="button"
+                onClick={openCookieConsentPreferences}
+                className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-muted-foreground font-semibold text-sm hover:bg-white/[0.08] hover:text-white transition-all duration-200 text-left"
+              >
+                <MessageSquare size={15} aria-hidden="true" />
+                Enable AI Chat Assistant
+                <ArrowRight size={13} className="ml-auto" aria-hidden="true" />
+              </button>
             </div>
           </div>
 

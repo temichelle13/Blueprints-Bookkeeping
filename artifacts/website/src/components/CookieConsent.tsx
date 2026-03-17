@@ -3,6 +3,7 @@ import { Cookie, X } from "lucide-react";
 import { initAnalytics, trackPageview } from "@/lib/analytics";
 
 const CONSENT_KEY = "bb_cookie_consent";
+const OPEN_CONSENT_EVENT = "open-cookie-consent";
 
 export type ConsentValue = "accepted" | "declined" | null;
 
@@ -14,6 +15,10 @@ export function getCookieConsent(): ConsentValue {
 
 export function hasAcceptedCookies(): boolean {
   return getCookieConsent() === "accepted";
+}
+
+export function openCookieConsentPreferences() {
+  window.dispatchEvent(new Event(OPEN_CONSENT_EVENT));
 }
 
 export default function CookieConsent() {
@@ -28,6 +33,12 @@ export default function CookieConsent() {
       const timer = setTimeout(() => setVisible(true), 1000);
       return () => clearTimeout(timer);
     }
+  }, []);
+
+  useEffect(() => {
+    const handleOpenPreferences = () => setVisible(true);
+    window.addEventListener(OPEN_CONSENT_EVENT, handleOpenPreferences);
+    return () => window.removeEventListener(OPEN_CONSENT_EVENT, handleOpenPreferences);
   }, []);
 
   const handleAccept = () => {
