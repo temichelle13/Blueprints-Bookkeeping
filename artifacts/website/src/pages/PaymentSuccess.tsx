@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { CheckCircle, ArrowRight, Phone, Mail } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
+import { buildOnboardingUrl, getOnboardingContextFromSearch } from "@/lib/onboarding-url";
 
 const SERVICE_LABELS: Record<string, string> = {
   essentials: "Essentials Bookkeeping",
@@ -13,9 +14,9 @@ const SERVICE_LABELS: Record<string, string> = {
 export default function PaymentSuccess() {
   usePageTitle("Payment Confirmed");
 
-  const params = new URLSearchParams(window.location.search);
-  const service = params.get("service") || "";
-  const serviceLabel = SERVICE_LABELS[service] || "your selected service";
+  const { service, plan, sessionId } = getOnboardingContextFromSearch(window.location.search);
+  const serviceLabel = SERVICE_LABELS[service || ""] || "your selected service";
+  const onboardingHref = buildOnboardingUrl({ service, plan, sessionId });
 
   return (
     <div className="pt-24 pb-20">
@@ -71,7 +72,7 @@ export default function PaymentSuccess() {
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
               <Link
-                href="/onboarding"
+                href={onboardingHref}
                 className="flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-accent text-white font-semibold text-sm hover:shadow-xl hover:shadow-accent/20 transition-all duration-300"
               >
                 Start Onboarding <ArrowRight size={15} />
