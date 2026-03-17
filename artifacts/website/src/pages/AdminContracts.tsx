@@ -107,6 +107,12 @@ interface AdobeStatus {
   message: string;
 }
 
+interface ApiErrorPayload {
+  message?: string;
+  error?: string;
+  details?: unknown;
+}
+
 const CONTRACT_TYPES = [
   { value: "engagement_letter", label: "Client Engagement Letter" },
   { value: "mutual_nda", label: "Mutual NDA" },
@@ -201,6 +207,9 @@ export default function AdminContracts() {
   const [templateDialogOpen, setTemplateDialogOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [documents, setDocuments] = useState<ClientDocument[]>([]);
+  const [templatesError, setTemplatesError] = useState<string | null>(null);
+  const [documentsError, setDocumentsError] = useState<string | null>(null);
+  const [adobeStatusError, setAdobeStatusError] = useState<string | null>(null);
   const [sendLinkDialogOpen, setSendLinkDialogOpen] = useState(false);
   const [sendLinkForm, setSendLinkForm] = useState({ clientName: "", clientEmail: "" });
 
@@ -237,41 +246,115 @@ export default function AdminContracts() {
     }
   }
 
+  async function parseServerErrorPayload(res: Response): Promise<ApiErrorPayload | string | null> {
+    const rawText = await res.text();
+    if (!rawText) return null;
+
+    try {
+      return JSON.parse(rawText) as ApiErrorPayload;
+    } catch {
+      return rawText;
+    }
+  }
+
+  function getErrorMessage(payload: ApiErrorPayload | string | null, fallback: string) {
+    if (!payload) return fallback;
+    if (typeof payload === "string") return payload;
+    return payload.message || payload.error || fallback;
+  }
+
   async function fetchTemplates() {
     try {
       const res = await fetch(`${API_BASE}/contracts/templates/list`, { headers: adminHeaders() });
-      if (!res.ok) return;
+
+      if (res.status === 401 || res.status === 503) {
+        setAuthenticated(false);
+        setTemplatesError("Your admin session is unavailable. Sign in again to load templates.");
+        return;
+      }
+
+      if (!res.ok) {
+        const payload = await parseServerErrorPayload(res);
+        console.error("Failed to fetch templates:", { status: res.status, payload });
+        const message = getErrorMessage(payload, "Could not load templates.");
+        setTemplatesError(message);
+        toast({ title: "Template Load Failed", description: message, variant: "destructive" });
+        return;
+      }
+
       const data = await res.json();
       setTemplates(data);
+      setTemplatesError(null);
     } catch (err) {
       console.error("Failed to fetch templates:", err);
+      const message = "Could not load templates. Please retry.";
+      setTemplatesError(message);
+      toast({ title: "Template Load Failed", description: message, variant: "destructive" });
     }
   }
 
   async function fetchDocuments() {
     try {
       const res = await fetch(`${API_BASE}/documents`, { headers: adminHeaders() });
-      if (!res.ok) return;
+
+      if (res.status === 401 || res.status === 503) {
+        setAuthenticated(false);
+        setDocumentsError("Your admin session is unavailable. Sign in again to load documents.");
+        return;
+      }
+
+      if (!res.ok) {
+        const payload = await parseServerErrorPayload(res);
+        console.error("Failed to fetch documents:", { status: res.status, payload });
+        const message = getErrorMessage(payload, "Could not load documents.");
+        setDocumentsError(message);
+        toast({ title: "Document Load Failed", description: message, variant: "destructive" });
+        return;
+      }
+
       const data = await res.json();
       setDocuments(data);
+      setDocumentsError(null);
     } catch (err) {
       console.error("Failed to fetch documents:", err);
+      const message = "Could not load documents. Please retry.";
+      setDocumentsError(message);
+      toast({ title: "Document Load Failed", description: message, variant: "destructive" });
     }
   }
 
   async function fetchAdobeStatus() {
     try {
       const res = await fetch(`${API_BASE}/contracts/adobe/status`, { headers: adminHeaders() });
-      if (!res.ok) return;
+
+      if (res.status === 401 || res.status === 503) {
+        setAuthenticated(false);
+        setAdobeStatusError("Your admin session is unavailable. Sign in again to load Adobe status.");
+        return;
+      }
+
+      if (!res.ok) {
+        const payload = await parseServerErrorPayload(res);
+        console.error("Failed to fetch Adobe status:", { status: res.status, payload });
+        const message = getErrorMessage(payload, "Could not load Adobe Sign status.");
+        setAdobeStatusError(message);
+        toast({ title: "Adobe Status Failed", description: message, variant: "destructive" });
+        return;
+      }
+
       const data = await res.json();
       setAdobeStatus(data);
+      setAdobeStatusError(null);
     } catch (err) {
       console.error("Failed to fetch Adobe status:", err);
+      const message = "Could not load Adobe Sign status. Please retry.";
+      setAdobeStatusError(message);
+      toast({ title: "Adobe Status Failed", description: message, variant: "destructive" });
     }
   }
 
   useEffect(() => {
-    Promise.all([fetchContracts(), fetchTemplates(), fetchDocuments(), fetchAdobeStatus()]).finally(
+    Promise.allSettled([fetchContracts(), fetchTemplates(), fetchDocuments(), fetchAdobeStatus()]).finally(
       () => setLoading(false),
     );
   }, []);
@@ -359,7 +442,7 @@ export default function AdminContracts() {
     setAdminToken(tokenInput.trim());
     setTokenInput("");
     setLoading(true);
-    await Promise.all([fetchContracts(), fetchTemplates(), fetchDocuments(), fetchAdobeStatus()]);
+    await Promise.allSettled([fetchContracts(), fetchTemplates(), fetchDocuments(), fetchAdobeStatus()]);
     setLoading(false);
   }
 
@@ -418,6 +501,19 @@ export default function AdminContracts() {
               </p>
             </div>
             <div className="flex items-center gap-3">
+              {adobeStatusError && (
+                <div className="flex items-center gap-2 rounded-md border border-red-500/30 bg-red-500/10 px-3 py-1.5 text-xs text-red-300">
+                  <span>{adobeStatusError}</span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={fetchAdobeStatus}
+                    className="h-7 border-red-500/40 text-red-300 hover:bg-red-500/20"
+                  >
+                    Retry
+                  </Button>
+                </div>
+              )}
               {adobeStatus && (
                 <Badge
                   className={
@@ -738,6 +834,22 @@ export default function AdminContracts() {
                 </Dialog>
               </div>
 
+              {documentsError && (
+                <div className="glass-card border border-red-500/30 bg-red-500/10 p-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <p className="text-sm text-red-300">{documentsError}</p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={fetchDocuments}
+                      className="border-red-500/40 text-red-300 hover:bg-red-500/20"
+                    >
+                      Retry
+                    </Button>
+                  </div>
+                </div>
+              )}
+
               <div className="glass-card overflow-hidden">
                 <Table>
                   <TableHeader>
@@ -897,6 +1009,22 @@ export default function AdminContracts() {
                   </DialogContent>
                 </Dialog>
               </div>
+
+              {templatesError && (
+                <div className="glass-card border border-red-500/30 bg-red-500/10 p-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <p className="text-sm text-red-300">{templatesError}</p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={fetchTemplates}
+                      className="border-red-500/40 text-red-300 hover:bg-red-500/20"
+                    >
+                      Retry
+                    </Button>
+                  </div>
+                </div>
+              )}
 
               <div className="glass-card overflow-hidden">
                 <Table>
