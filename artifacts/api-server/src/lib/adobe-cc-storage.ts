@@ -31,7 +31,7 @@ async function getAccessToken(): Promise<string> {
 
 export async function uploadToCreativeCloud(
   filePath: string,
-  fileData: ArrayBuffer,
+  fileData: ArrayBuffer | Uint8Array,
   contentType: string = "application/pdf",
 ): Promise<string> {
   const token = await getAccessToken();

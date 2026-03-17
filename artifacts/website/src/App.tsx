@@ -70,8 +70,6 @@ function PageTransition({ children }: { children: React.ReactNode }) {
         setIsVisible(true);
       }, 200);
       return () => clearTimeout(timer);
-    } else {
-      setDisplayChildren(children);
     }
 
     return undefined;
