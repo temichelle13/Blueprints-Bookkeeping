@@ -13,3 +13,6 @@ Disallow: /unsubscribe
 Disallow: /marketing-guide
 
 Sitemap: https://blueprintsandbookkeeping.com/sitemap.xml
+
+User-agent: CCBot
+Disallow: /
