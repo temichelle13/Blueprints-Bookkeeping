@@ -454,7 +454,7 @@ export default function Pricing() {
             Pair your business plan with a custom static website — an interactive, high-performance alternative to a PDF pitch. Available as an add-on to any Business Plan project.
           </div>
           <Link
-            href="/services#digital"
+            href="/services/digital-handshake"
             className="shrink-0 px-5 py-2.5 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300 whitespace-nowrap"
           >
             Learn More
