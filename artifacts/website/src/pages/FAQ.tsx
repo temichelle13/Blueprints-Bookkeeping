@@ -88,27 +88,39 @@ const faqs: FAQSection[] = [
   },
 ];
 
-function FAQItem({ id, q, a }: { id?: string; q: string; a: string }) {
-  const hashMatch = typeof window !== "undefined" && id && window.location.hash === `#${id}`;
-  const [open, setOpen] = useState(hashMatch);
+function FAQItem({
+  id,
+  q,
+  a,
+  enableHashDeepLinking = false,
+}: {
+  id?: string;
+  q: string;
+  a: string;
+  enableHashDeepLinking?: boolean;
+}) {
+  const hashMatch =
+    typeof window !== "undefined" &&
+    enableHashDeepLinking &&
+    id &&
+    window.location.hash === `#${id}`;
+  const [open, setOpen] = useState(Boolean(hashMatch));
   const contentId = id ? `${id}-content` : undefined;
   const buttonId = id ? `${id}-trigger` : undefined;
 
   useEffect(() => {
-    if (!id) return;
+    if (!id || !enableHashDeepLinking) return;
+
     const onHashChange = () => {
       if (window.location.hash === `#${id}`) {
         setOpen(true);
-        const el = document.getElementById(id);
-        if (el) {
-          setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "center" }), 100);
-        }
       }
     };
+
     if (hashMatch) onHashChange();
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
-  }, [id, hashMatch]);
+  }, [id, hashMatch, enableHashDeepLinking]);
 
   return (
     <div
@@ -180,7 +192,15 @@ export default function FAQ() {
             </div>
             <div className="glass-card rounded-2xl px-6 divide-y divide-white/[0.06]">
               {section.items.map((item) => (
-                <FAQItem key={item.q} id={item.id} q={item.q} a={item.a} />
+                <FAQItem
+                  key={item.q}
+                  id={item.id}
+                  q={item.q}
+                  a={item.a}
+                  // Deep-linking is explicit per item (for example #taxes).
+                  // Standard /faq navigation should land at the top of the page.
+                  enableHashDeepLinking={Boolean(item.id)}
+                />
               ))}
             </div>
           </div>
