@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
 @theme inline {
@@ -30,7 +29,7 @@
   --primary: 226 54% 23%;
   --primary-foreground: 0 0% 100%;
 
-  --accent: 238 50% 62%;
+  --accent: 243 75% 59%;
   --accent-foreground: 0 0% 100%;
 
   --background: 228 30% 8%;
@@ -51,8 +50,8 @@
   --destructive-foreground: 0 0% 100%;
 
   --border: 228 20% 20%;
-  --ring: 238 50% 62%;
-  --glow: 238 60% 55%;
+  --ring: 243 75% 59%;
+  --glow: 243 75% 59%;
 
   --radius: 0.75rem;
 }
@@ -61,7 +60,7 @@
   --primary: 226 54% 23%;
   --primary-foreground: 0 0% 100%;
 
-  --accent: 238 50% 52%;
+  --accent: 243 75% 59%;
   --accent-foreground: 0 0% 100%;
 
   --background: 0 0% 98%;
@@ -82,8 +81,8 @@
   --destructive-foreground: 0 0% 100%;
 
   --border: 220 13% 87%;
-  --ring: 238 50% 52%;
-  --glow: 238 60% 55%;
+  --ring: 243 75% 59%;
+  --glow: 243 75% 59%;
 }
 
 @layer base {
