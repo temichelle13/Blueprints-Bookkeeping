@@ -8,6 +8,13 @@
     "./audio": "./src/audio/index.ts"
   },
   "peerDependencies": {
-    "react": ">=18"
+    "react": ">=18",
+    "@types/react": ">=18"
+  },
+  "dependencies": {
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:"
   }
 }
