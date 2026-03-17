@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
 @theme inline {
@@ -30,7 +29,7 @@
   --primary: 226 54% 23%;
   --primary-foreground: 0 0% 100%;
 
-  --accent: 238 50% 62%;
+  --accent: 243 75% 59%;
   --accent-foreground: 0 0% 100%;
 
   --background: 228 30% 8%;
@@ -61,7 +60,7 @@
   --primary: 226 54% 23%;
   --primary-foreground: 0 0% 100%;
 
-  --accent: 238 50% 52%;
+  --accent: 243 75% 59%;
   --accent-foreground: 0 0% 100%;
 
   --background: 0 0% 98%;
