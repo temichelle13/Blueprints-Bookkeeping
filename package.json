@@ -12,7 +12,8 @@
   "devDependencies": {
     "prettier": "^3.8.1",
     "tsx": "catalog:",
-    "typescript": "~5.9.2"
+    "typescript": "~5.9.2",
+    "@types/node": "catalog:"
   },
   "dependencies": {
     "@types/adm-zip": "^0.5.7",
