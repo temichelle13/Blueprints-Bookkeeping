@@ -73,6 +73,8 @@ function PageTransition({ children }: { children: React.ReactNode }) {
     } else {
       setDisplayChildren(children);
     }
+
+    return undefined;
   }, [location, children]);
 
   return (

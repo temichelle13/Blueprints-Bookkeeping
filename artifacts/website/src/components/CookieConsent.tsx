@@ -28,6 +28,8 @@ export default function CookieConsent() {
       const timer = setTimeout(() => setVisible(true), 1000);
       return () => clearTimeout(timer);
     }
+
+    return undefined;
   }, []);
 
   const handleAccept = () => {
