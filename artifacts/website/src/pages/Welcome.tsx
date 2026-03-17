@@ -2,14 +2,14 @@ import { Link } from "wouter";
 import { CheckCircle, ArrowRight, FileText, Upload } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
+import { buildOnboardingUrl, getOnboardingContextFromSearch } from "@/lib/onboarding-url";
 
 export default function Welcome() {
   usePageTitle("Welcome — Blueprints & Bookkeeping");
 
-  const params = new URLSearchParams(window.location.search);
-  const plan = params.get("plan");
-  const sessionId = params.get("session_id") || "";
+  const { plan, service, sessionId } = getOnboardingContextFromSearch(window.location.search);
   const planLabel = plan === "growth" ? "Growth" : plan === "essentials" ? "Essentials" : "your selected";
+  const onboardingHref = buildOnboardingUrl({ plan, service, sessionId });
 
   return (
     <div className="pt-24 pb-20 min-h-screen">
@@ -60,7 +60,7 @@ export default function Welcome() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
           <Link
-            href={`/onboarding?plan=${plan || ""}${sessionId ? `&session_id=${sessionId}` : ""}`}
+            href={onboardingHref}
             className="glass-card rounded-xl p-6 flex items-center gap-4 hover:border-accent/30 transition-all group"
           >
             <div className="p-3 bg-accent/10 rounded-lg text-accent">

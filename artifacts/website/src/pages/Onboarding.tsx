@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Send, CheckCircle, Building2, User, Phone, FileText, Laptop, StickyNote, MapPin } from "lucide-react";
+import { Send, CheckCircle, Building2, User, Phone, FileText, Laptop, StickyNote, MapPin, AlertTriangle } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 import { useToast } from "@/hooks/use-toast";
+import { buildOnboardingUrl, getOnboardingContextFromSearch } from "@/lib/onboarding-url";
 
 const API_BASE = import.meta.env.VITE_API_URL || "/api";
 
@@ -44,20 +45,49 @@ export default function Onboarding() {
   const { toast } = useToast();
   const [submitted, setSubmitted] = useState(false);
 
-  const params = new URLSearchParams(window.location.search);
-  const plan = params.get("plan") || "";
-  const sessionId = params.get("session_id") || "";
+  const { plan, service, sessionId } = getOnboardingContextFromSearch(window.location.search);
+  const effectivePlan = plan || service || "";
+  const isMissingSessionId = !sessionId;
+
+  const checkoutConfirmationHref = useMemo(() => {
+    const checkoutParams = new URLSearchParams();
+
+    if (service) {
+      checkoutParams.set("service", service);
+    }
+
+    if (plan) {
+      checkoutParams.set("plan", plan);
+    }
+
+    const query = checkoutParams.toString();
+    return query ? `/payment-success?${query}` : "/pricing";
+  }, [plan, service]);
+
+  const onboardingRetryHref = useMemo(
+    () => buildOnboardingUrl({ plan, service, sessionId }),
+    [plan, service, sessionId],
+  );
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<OnboardingFormValues>();
 
   const onSubmit = async (data: OnboardingFormValues) => {
+    if (isMissingSessionId) {
+      toast({
+        title: "Missing checkout session",
+        description: "Return to your checkout confirmation page to reopen onboarding with a valid session, or contact support for a new link.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       const res = await fetch(`${API_BASE}/onboarding`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...data,
-          plan,
+          plan: effectivePlan,
           stripeSessionId: sessionId,
         }),
       });
@@ -144,6 +174,42 @@ export default function Onboarding() {
           </div>
         </div>
       </section>
+
+      {isMissingSessionId && (
+        <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+          <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-5">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="text-amber-300 shrink-0 mt-0.5" size={20} />
+              <div>
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-amber-200 mb-2">Missing checkout session</h2>
+                <p className="text-sm text-muted-foreground mb-4">
+                  We could not verify your checkout session in this link. To avoid onboarding delays, return to your checkout confirmation page and use the onboarding button there, or contact support for a fresh link.
+                </p>
+                <div className="flex flex-wrap gap-3 text-sm">
+                  <a
+                    href={checkoutConfirmationHref}
+                    className="inline-flex items-center justify-center rounded-md bg-accent px-4 py-2 font-semibold text-white hover:opacity-90 transition-opacity"
+                  >
+                    Return to checkout confirmation
+                  </a>
+                  <a
+                    href="mailto:tea@blueprintsandbookkeeping.com?subject=Need%20onboarding%20link"
+                    className="inline-flex items-center justify-center rounded-md border border-amber-300/40 px-4 py-2 font-semibold text-amber-100 hover:bg-amber-400/10 transition-colors"
+                  >
+                    Contact support
+                  </a>
+                  <a
+                    href={onboardingRetryHref}
+                    className="inline-flex items-center justify-center rounded-md border border-white/20 px-4 py-2 font-semibold text-foreground hover:bg-white/5 transition-colors"
+                  >
+                    Retry this onboarding link
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="glass-card rounded-2xl p-8 md:p-10">
