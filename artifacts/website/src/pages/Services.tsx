@@ -127,6 +127,7 @@ export default function Services() {
           </div>
         </div>
 
+        {/* Anchor target for explicit deep-links such as /services#digital from pricing CTAs. */}
         <div id="digital" className="glass-card rounded-2xl p-8 border border-dashed border-white/[0.08]">
           <div className="flex flex-col md:flex-row md:items-start gap-8">
             <div className="flex items-center gap-3 shrink-0">
