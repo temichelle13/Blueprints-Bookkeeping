@@ -31,8 +31,8 @@ export function FooterNewsletterSignup() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2">
-      <div className="absolute opacity-0 h-0 w-0 overflow-hidden" aria-hidden="true" tabIndex={-1}>
+    <form onSubmit={handleSubmit} className="relative flex gap-2">
+      <div className="pointer-events-none absolute opacity-0 h-0 w-0 overflow-hidden" aria-hidden="true" tabIndex={-1}>
         <label htmlFor="footer-nl-website">Website</label>
         <input id="footer-nl-website" type="text" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} tabIndex={-1} autoComplete="off" />
       </div>

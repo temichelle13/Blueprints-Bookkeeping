@@ -90,7 +90,7 @@ export function Header() {
             </button>
             <div className="w-px h-6 bg-border/50 mx-2" />
             <Link
-              href="/contact"
+              href="/get-started"
               className="px-5 py-2 rounded-lg bg-accent/15 border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
             >
               Get Started
@@ -133,7 +133,7 @@ export function Header() {
             </Link>
           ))}
           <Link
-            href="/contact"
+            href="/get-started"
             className="w-full mt-2 p-3 text-center rounded-lg bg-accent text-white font-semibold"
           >
             Get Started
