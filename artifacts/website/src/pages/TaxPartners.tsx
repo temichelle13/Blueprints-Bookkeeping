@@ -161,6 +161,8 @@ function JoinNetworkForm() {
       formType: "quick" as const,
       name: formData.contactName,
       email: formData.email,
+      message: `[Tax Partner Network Application]\nFirm: ${formData.firmName}\nCredentials: ${formData.credentials}\nStates Licensed: ${formData.statesLicensed}\nSpecialties: ${formData.specialties}\nPhone: ${formData.phone}\n\nAdditional Info: ${formData.message}`,
+      smsConsent: data.smsConsent,
       message: `[Tax Partner Network Application]
 Firm: ${formData.firmName}
 Credentials: ${formData.credentials}

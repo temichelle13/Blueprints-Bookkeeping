@@ -686,10 +686,15 @@ components:
           type: ["string", "null"]
         preferredContactMethod:
           type: ["string", "null"]
+        smsConsent:
+          type: boolean
+        website:
+          type: string
       required:
         - formType
         - name
         - email
+        - smsConsent
     ContactFormResponse:
       type: object
       properties:
