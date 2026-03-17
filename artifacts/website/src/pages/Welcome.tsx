@@ -9,7 +9,14 @@ export default function Welcome() {
   const params = new URLSearchParams(window.location.search);
   const plan = params.get("plan");
   const sessionId = params.get("session_id") || "";
+  const name = params.get("name") || "";
+  const email = params.get("email") || "";
   const planLabel = plan === "growth" ? "Growth" : plan === "essentials" ? "Essentials" : "your selected";
+
+  const clientPortalHref = `/client-portal${name || email ? `?${new URLSearchParams({
+    ...(name ? { name } : {}),
+    ...(email ? { email } : {}),
+  }).toString()}` : ""}`;
 
   return (
     <div className="pt-24 pb-20 min-h-screen">
@@ -74,7 +81,7 @@ export default function Welcome() {
           </Link>
 
           <Link
-            href="/contact"
+            href={clientPortalHref}
             className="glass-card rounded-xl p-6 flex items-center gap-4 hover:border-accent/30 transition-all group"
           >
             <div className="p-3 bg-accent/10 rounded-lg text-accent">
