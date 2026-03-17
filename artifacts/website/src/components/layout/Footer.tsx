@@ -72,8 +72,7 @@ export function Footer() {
   <div className="mt-8 p-4 rounded-xl bg-accent/[0.05] border border-accent/10">
     <h4 className="text-sm font-semibold text-white mb-2">Already use QuickBooks?</h4>
     <p className="text-xs text-muted-foreground leading-relaxed">
-      Invite us to your books: Add <span className="text-white font-medium select-all">tea@blueprintsandbookkeeping.com</span> as your Accountant in the "Manage Users" tab.
-    </p>
+Invite us to your books: Add <span className="text-white font-medium select-all">tea@blueprintsandbookkeeping.com</span> as your Accountant in the &quot;Manage Users&quot; tab.    </p>
   </div>
 <Link href="/contact" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-muted-foreground font-semibold text-sm hover:bg-white/[0.08] hover:text-white transition-all duration-200 text-left mt-6">
   <MessageSquare size={15} aria-hidden="true" />
