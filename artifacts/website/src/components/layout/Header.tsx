@@ -52,10 +52,10 @@ export function Header() {
             <img
               src={`${import.meta.env.BASE_URL}logo-icon.png`}
               alt="Blueprints & Bookkeeping"
-              width={36}
-              height={36}
+              width={33}
+              height={63}
               className={cn(
-                "h-9 w-auto object-contain transition-transform group-hover:scale-105",
+                "h-[63px] w-[33px] object-contain transition-transform group-hover:scale-105",
                 theme === "dark" ? "brightness-0 invert" : ""
               )}
             />
