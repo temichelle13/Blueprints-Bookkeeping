@@ -1,9 +1,18 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Mail, Phone, MapPin, ArrowRight, CalendarDays, UserPlus, MessageSquare } from "lucide-react";
 import { FooterNewsletterSignup } from "@/components/NewsletterSignup";
 import { openCookieConsentPreferences } from "@/components/CookieConsent";
 
 export function Footer() {
+  const [location] = useLocation();
+
+  const scrollToTopOnSameRoute = (href: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (location === href) {
+      event.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   return (
     <footer className="relative border-t border-border/50">
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
@@ -103,7 +112,7 @@ export function Footer() {
                 { label: "Credentials", href: "/portfolio" },
               ].map((item) => (
                 <li key={item.href}>
-                  <Link href={item.href} className="text-muted-foreground hover:text-accent text-sm transition-colors inline-flex items-center gap-1 group">
+                  <Link href={item.href} onClick={scrollToTopOnSameRoute(item.href)} className="text-muted-foreground hover:text-accent text-sm transition-colors inline-flex items-center gap-1 group">
                     {item.label}
                     <ArrowRight size={11} className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                   </Link>
@@ -119,7 +128,7 @@ export function Footer() {
                 { label: "Tax Partner Network", href: "/tax-partners" },
               ].map((item) => (
                 <li key={item.href}>
-                  <Link href={item.href} className="text-muted-foreground hover:text-accent text-sm transition-colors inline-flex items-center gap-1 group">
+                  <Link href={item.href} onClick={scrollToTopOnSameRoute(item.href)} className="text-muted-foreground hover:text-accent text-sm transition-colors inline-flex items-center gap-1 group">
                     {item.label}
                     <ArrowRight size={11} className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                   </Link>
