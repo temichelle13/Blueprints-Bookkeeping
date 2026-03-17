@@ -187,10 +187,9 @@ router.post("/documents/upload", (req: Request, res: Response, next: NextFunctio
     const storagePath = buildDocumentPath(clientName, file.originalname);
 
     try {
-      const arrayBuffer = file.buffer.buffer.slice(
-        file.buffer.byteOffset,
-        file.buffer.byteOffset + file.buffer.byteLength,
-      );
+      const bytes = new Uint8Array(file.buffer.byteLength);
+      bytes.set(file.buffer);
+      const arrayBuffer = bytes.buffer;
       const mimeType = file.mimetype || getMimeTypeForFile(file.originalname);
       await ccStorage.uploadToCreativeCloud(storagePath, arrayBuffer, mimeType);
 

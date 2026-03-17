@@ -209,7 +209,7 @@ export async function uploadTransientDocument(
 
   const formData = new FormData();
   formData.append("File-Name", fileName);
-  formData.append("File", new Blob([fileData], { type: mimeType }), fileName);
+  formData.append("File", new Blob([new Uint8Array(fileData)], { type: mimeType }), fileName);
 
   const response = await fetch(`${config.baseUrl}/transientDocuments`, {
     method: "POST",
