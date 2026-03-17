@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -14,6 +15,8 @@ const referralSchema = z.object({
   referredName: z.string().min(2, "Referred person's name is required"),
   referredContact: z.string().min(2, "Contact info is required"),
   notes: z.string().optional(),
+  smsConsent: z.boolean().refine((val) => val === true, { message: "You must consent to receive text messages and phone calls" }),
+  website: z.string().max(0).optional(),
 });
 
 type ReferralValues = z.infer<typeof referralSchema>;
@@ -173,6 +176,7 @@ export default function Referral() {
 
 function ReferralForm() {
   const { submit, isPending } = useContactMutation();
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -186,6 +190,7 @@ function ReferralForm() {
   const referrerType = watch("referrerType");
 
   const onSubmit = async (data: ReferralValues) => {
+    setSubmitError(null);
     const message = [
       `[REFERRAL SUBMISSION]`,
       `Referrer Type: ${data.referrerType}`,
@@ -196,13 +201,21 @@ function ReferralForm() {
       .filter(Boolean)
       .join("\n");
 
-    await submit({
+    const success = await submit({
       formType: "quick",
       name: data.referrerName,
       email: data.referrerEmail,
       message,
+      smsConsent: data.smsConsent,
+      website: data.website || "",
     });
-    reset();
+
+    if (success) {
+      reset();
+      return;
+    }
+
+    setSubmitError("We couldn't submit your referral. Please try again, or contact us at (541) 319-8654.");
   };
 
   const inputClass =
@@ -211,6 +224,8 @@ function ReferralForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <input type="text" {...register("website")} className="hidden" tabIndex={-1} autoComplete="off" />
+
       <div>
         <label className={labelClass}>I am a... *</label>
         <div className="grid grid-cols-2 gap-3 mt-2">
@@ -314,6 +329,20 @@ function ReferralForm() {
           className={`${inputClass} resize-none`}
         />
       </div>
+
+      <div className="flex items-start gap-3">
+        <input
+          id="referral-sms-consent"
+          type="checkbox"
+          {...register("smsConsent")}
+          className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer shrink-0"
+        />
+        <label htmlFor="referral-sms-consent" className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none">
+          I agree to receive text messages and phone calls from Blueprints &amp; Bookkeeping at my provided contact number. Message and data rates may apply. Reply STOP to opt out.
+        </label>
+      </div>
+      {errors.smsConsent && <span className="text-destructive text-xs -mt-4 block">{errors.smsConsent.message}</span>}
+      {submitError && <p className="text-destructive text-sm -mt-2">{submitError}</p>}
 
       <button
         type="submit"
