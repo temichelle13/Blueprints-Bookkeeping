@@ -54,6 +54,8 @@ export interface ContactFormInput {
   biggestChallenge?: string | null;
   /** @nullable */
   preferredContactMethod?: string | null;
+  smsConsent: boolean;
+  website?: string;
 }
 
 export interface ContactFormResponse {
@@ -285,13 +287,6 @@ export interface Booking {
   updatedAt: string;
 }
 
-export type UnsubscribeNewsletterByTokenParams = {
-  /**
-   * The unique unsubscribe token for the subscriber
-   */
-  token: string;
-};
-
 export type NexusSummaryItemRiskLevel =
   (typeof NexusSummaryItemRiskLevel)[keyof typeof NexusSummaryItemRiskLevel];
 
@@ -364,6 +359,13 @@ export interface NexusNotificationLog {
   threshold: number;
   sentAt: string;
 }
+
+export type UnsubscribeNewsletterByTokenParams = {
+  /**
+   * The unique unsubscribe token for the subscriber
+   */
+  token: string;
+};
 
 export type BookingWebhookBodyPayload = { [key: string]: unknown };
 

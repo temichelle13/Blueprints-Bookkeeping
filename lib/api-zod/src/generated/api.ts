@@ -34,6 +34,7 @@ export const SubmitContactFormBody = zod.object({
   biggestChallenge: zod.string().nullish(),
   preferredContactMethod: zod.string().nullish(),
   smsConsent: zod.boolean(),
+  website: zod.string().optional(),
 });
 
 /**

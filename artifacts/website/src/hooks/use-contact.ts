@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { useSubmitContactForm } from "@workspace/api-client-react";
+import { ContactFormInput, useSubmitContactForm } from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
 
@@ -36,8 +36,30 @@ export function useContactMutation() {
 
   const submit = async (data: QuickContactValues | DetailedContactValues): Promise<boolean> => {
     try {
-      const { website: _honeypot, ...formData } = data as any;
-      await mutation.mutateAsync({ data: { ...formData, website: _honeypot } as any });
+      const payload: ContactFormInput = data.formType === "quick"
+        ? {
+            formType: "quick",
+            name: data.name,
+            email: data.email,
+            message: data.message,
+            smsConsent: data.smsConsent,
+            website: data.website ?? "",
+          }
+        : {
+            formType: "detailed",
+            name: data.name,
+            email: data.email,
+            phone: data.phone,
+            businessName: data.businessName,
+            industry: data.industry,
+            servicesInterested: data.servicesInterested,
+            monthlyRevenueRange: data.monthlyRevenueRange,
+            biggestChallenge: data.biggestChallenge,
+            preferredContactMethod: data.preferredContactMethod,
+            smsConsent: data.smsConsent,
+            website: data.website ?? "",
+          };
+      await mutation.mutateAsync({ data: payload });
       trackEvent("Contact Form Submission", { form_type: data.formType });
       toast({
         title: "Inquiry Submitted",
