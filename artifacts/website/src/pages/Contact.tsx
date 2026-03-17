@@ -54,6 +54,7 @@ const contactCards = [
 function MessageForm() {
   const { submit: sendMessage, isPending } = useContactMutation();
   const [sent, setSent] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
     register,
@@ -63,6 +64,7 @@ function MessageForm() {
   } = useForm<MessageValues>({ resolver: zodResolver(messageSchema) });
 
   const onSubmit = async (data: MessageValues) => {
+    setSubmitError(null);
     const ok = await sendMessage({
       formType: "quick",
       name: data.name,
@@ -74,7 +76,10 @@ function MessageForm() {
     if (ok) {
       setSent(true);
       reset();
+      return;
     }
+
+    setSubmitError("We couldn't submit your message. Please try again, or contact us at (541) 319-8654.");
   };
 
   if (sent) {
@@ -135,6 +140,7 @@ function MessageForm() {
         </label>
       </div>
       {errors.smsConsent && <p id="contact-sms-consent-error" role="alert" className="text-destructive text-xs -mt-2">{errors.smsConsent.message}</p>}
+      {submitError && <p role="alert" className="text-destructive text-sm -mt-2">{submitError}</p>}
 
       <button
         type="submit"

@@ -1,4 +1,5 @@
 import { useState, useMemo, type FormEvent } from "react";
+import { z } from "zod";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import {
@@ -119,6 +120,18 @@ function PartnerCard({ partner, index }: { partner: TaxPartner; index: number })
   );
 }
 
+const joinNetworkSchema = z.object({
+  firmName: z.string().min(2, "Firm name is required"),
+  contactName: z.string().min(2, "Contact name is required"),
+  email: z.string().email("Valid email is required"),
+  phone: z.string().optional(),
+  credentials: z.string().min(2, "Credentials are required"),
+  statesLicensed: z.string().min(2, "States licensed are required"),
+  specialties: z.string().min(2, "Specialties are required"),
+  message: z.string().optional(),
+  smsConsent: z.boolean().refine((val) => val === true, { message: "You must consent to receive text messages and phone calls" }),
+});
+
 function JoinNetworkForm() {
   const { submit, isPending } = useContactMutation();
   const [formData, setFormData] = useState({
@@ -130,20 +143,41 @@ function JoinNetworkForm() {
     statesLicensed: "",
     specialties: "",
     message: "",
+    smsConsent: false,
   });
   const [submitted, setSubmitted] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const parsed = joinNetworkSchema.safeParse(formData);
+    if (!parsed.success) {
+      setFormError(parsed.error.issues[0]?.message ?? "Please review your application details and try again.");
+      return;
+    }
+
+    setFormError(null);
     const success = await submit({
       formType: "quick" as const,
       name: formData.contactName,
       email: formData.email,
-      message: `[Tax Partner Network Application]\nFirm: ${formData.firmName}\nCredentials: ${formData.credentials}\nStates Licensed: ${formData.statesLicensed}\nSpecialties: ${formData.specialties}\nPhone: ${formData.phone}\n\nAdditional Info: ${formData.message}`,
+      message: `[Tax Partner Network Application]
+Firm: ${formData.firmName}
+Credentials: ${formData.credentials}
+States Licensed: ${formData.statesLicensed}
+Specialties: ${formData.specialties}
+Phone: ${formData.phone}
+
+Additional Info: ${formData.message}`,
+      smsConsent: formData.smsConsent,
+      website: "",
     });
     if (success) {
       setSubmitted(true);
+      return;
     }
+
+    setFormError("We couldn't submit your application. Please try again, or contact us at (541) 319-8654.");
   };
 
   if (submitted) {
@@ -249,6 +283,24 @@ function JoinNetworkForm() {
           placeholder="Tell us about your practice and why you'd like to join the network..."
         />
       </div>
+      <div className="md:col-span-2">
+        <div className="flex items-start gap-3">
+          <input
+            id="tax-partner-sms-consent"
+            type="checkbox"
+            checked={formData.smsConsent}
+            onChange={(e) => {
+              setFormError(null);
+              setFormData({ ...formData, smsConsent: e.target.checked });
+            }}
+            className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer shrink-0"
+          />
+          <label htmlFor="tax-partner-sms-consent" className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none">
+            I agree to receive text messages and phone calls from Blueprints &amp; Bookkeeping at my provided contact number. Message and data rates may apply. Reply STOP to opt out.
+          </label>
+        </div>
+      </div>
+      {formError && <p className="md:col-span-2 text-destructive text-sm">{formError}</p>}
       <div className="md:col-span-2">
         <button
           type="submit"
