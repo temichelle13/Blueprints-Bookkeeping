@@ -140,6 +140,7 @@ function JoinNetworkForm() {
       name: formData.contactName,
       email: formData.email,
       message: `[Tax Partner Network Application]\nFirm: ${formData.firmName}\nCredentials: ${formData.credentials}\nStates Licensed: ${formData.statesLicensed}\nSpecialties: ${formData.specialties}\nPhone: ${formData.phone}\n\nAdditional Info: ${formData.message}`,
+      smsConsent: true,
     });
     if (success) {
       setSubmitted(true);

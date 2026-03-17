@@ -26,4 +26,6 @@ export interface ContactFormInput {
   biggestChallenge?: string | null;
   /** @nullable */
   preferredContactMethod?: string | null;
+  smsConsent: boolean;
+  website?: string;
 }

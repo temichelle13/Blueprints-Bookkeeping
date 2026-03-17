@@ -201,6 +201,7 @@ function ReferralForm() {
       name: data.referrerName,
       email: data.referrerEmail,
       message,
+      smsConsent: true,
     });
     reset();
   };
