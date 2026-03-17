@@ -46,9 +46,9 @@ export function StatsProofBar() {
     icon: ReactNode;
     value: number;
     suffix: string;
+    prefix?: string;
     label: string;
     description: string;
-    prefix?: string;
   }> = [
     {
       icon: <Users className="w-6 h-6" />,

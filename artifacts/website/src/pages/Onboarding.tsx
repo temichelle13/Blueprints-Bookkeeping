@@ -94,16 +94,19 @@ export default function Onboarding() {
     () => getOnboardingContextFromSearch(window.location.search),
     [],
   );
-  const plan = onboardingContext.plan?.trim() ?? "";
-  const sessionId = onboardingContext.sessionId?.trim() ?? "";
+  const effectivePlan = onboardingContext.plan?.trim() || undefined;
+  const sessionId = onboardingContext.sessionId?.trim() || "";
   const hasSessionId = Boolean(sessionId);
   const isMissingSessionId = !hasSessionId;
-  const effectivePlan = plan || onboardingContext.service?.trim() || "bookkeeping";
-  const checkoutConfirmationHref = import.meta.env.VITE_CHECKOUT_CONFIRMATION_URL || "/payment-success";
   const onboardingRetryHref = buildOnboardingUrl({
     plan: onboardingContext.plan,
     service: onboardingContext.service,
+    sessionId: onboardingContext.sessionId,
   });
+  const checkoutConfirmationHref = `/payment-success${onboardingContext.plan || onboardingContext.service ? `?${new URLSearchParams({
+    ...(onboardingContext.plan ? { plan: onboardingContext.plan } : {}),
+    ...(onboardingContext.service ? { service: onboardingContext.service } : {}),
+  }).toString()}` : ""}`;
 
   const {
     register,

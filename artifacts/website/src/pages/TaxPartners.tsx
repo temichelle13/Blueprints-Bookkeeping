@@ -157,21 +157,20 @@ function JoinNetworkForm() {
     }
 
     setFormError(null);
-    const message = `[Tax Partner Network Application]
+    const success = await submit({
+      formType: "quick" as const,
+      name: formData.contactName,
+      email: formData.email,
+message: `[Tax Partner Network Application]
 Firm: ${formData.firmName}
 Credentials: ${formData.credentials}
 States Licensed: ${formData.statesLicensed}
 Specialties: ${formData.specialties}
 Phone: ${formData.phone}
 
-Additional Info: ${formData.message}`;
-    const success = await submit({
-      formType: "quick" as const,
-      name: formData.contactName,
-      email: formData.email,
-      message,
-      smsConsent: formData.smsConsent,
-      website: "",
+Additional Info: ${formData.message}`,
+smsConsent: formData.smsConsent,
+website: "",
     });
     if (success) {
       setSubmitted(true);

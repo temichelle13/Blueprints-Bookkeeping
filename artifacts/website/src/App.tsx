@@ -72,7 +72,6 @@ function PageTransition({ children }: { children: React.ReactNode }) {
       return () => clearTimeout(timer);
     }
 
-    setDisplayChildren(children);
     return undefined;
   }, [location, children]);
 
