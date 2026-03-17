@@ -11,7 +11,10 @@ export function FooterNewsletterSignup() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
-    const success = await subscribe({ email: email.trim(), signupSource: "footer", website: honeypot });
+    if (honeypot.trim()) {
+      return;
+    }
+    const success = await subscribe({ email: email.trim(), signupSource: "footer" });
     if (success) {
       setSubscribed(true);
       setEmail("");
