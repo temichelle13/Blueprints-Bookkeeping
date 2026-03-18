@@ -4,8 +4,18 @@
     <script>
       (function(){var t=localStorage.getItem('theme');if(t==='light')document.documentElement.classList.add('light');})();
     </script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XYLJ9XZ2SL"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-XYLJ9XZ2SL');
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5" />
+
     <title>Blueprints & Bookkeeping | Advanced Bookkeeping, Business Plans & Advisory</title>
     <meta name="description" content="Blueprints & Bookkeeping, LLC — advanced bookkeeping, professional business plans, and advisory services for complex businesses. Based in Roseburg, Oregon, serving nationwide. Owner: Tea Larson-Hetrick." />
     <meta name="keywords" content="bookkeeping, business plans, advisory, QuickBooks, crypto accounting, remote bookkeeping, Roseburg Oregon, small business, financial planning" />
@@ -32,44 +42,6 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!--
-      ============================================================
-      GOOGLE ANALYTICS 4 (GA4) SETUP INSTRUCTIONS
-      ============================================================
-      To enable analytics tracking on this website:
-
-      TODO: Replace the placeholder GA4 Measurement ID before launch.
-
-      1. Go to https://analytics.google.com/ and sign in with a Google account.
-      2. Click "Admin" (gear icon) in the bottom-left corner.
-      3. Click "Create" > "Property" and follow the prompts to create a new GA4 property.
-      4. In "Data Streams", add a "Web" stream for your domain (e.g. blueprintsandbookkeeping.com).
-      5. Copy the "Measurement ID" — it looks like G-K04ES6VYEV.
-      6. Replace BOTH occurrences of G-K04ES6VYEV below with your real Measurement ID.
-
-      That's it! GA4 will start collecting page view data automatically.
-      The automatic page view on initial load is disabled (send_page_view: false) because
-      the usePageTracking hook in src/hooks/usePageTracking.ts handles all page views,
-      including the initial load and subsequent client-side route changes via Wouter.
-      ============================================================
-    -->
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-K04ES6VYEV"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-K04ES6VYEV', { send_page_view: false });
-    </script>
-
-    <script>
-      function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
-      o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
-      o.onload=function(){window.trackingFunctions.onLoad({appId:"69b73acda386f500112ae77b"})},
-      document.head.appendChild(o)}initApollo();
-    </script>
-
-    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
