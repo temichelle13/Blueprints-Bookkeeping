@@ -12,10 +12,20 @@ import {
   Lock,
   CloudUpload,
 } from "lucide-react";
+import { getApiRoot } from "@/lib/api";
 
-const API_BASE = import.meta.env.VITE_API_URL || "/api";
 const MAX_FILE_SIZE = 25 * 1024 * 1024;
-const ALLOWED_EXTENSIONS = [".pdf", ".docx", ".xlsx", ".doc", ".xls", ".jpg", ".jpeg", ".png", ".csv"];
+const ALLOWED_EXTENSIONS = [
+  ".pdf",
+  ".docx",
+  ".xlsx",
+  ".doc",
+  ".xls",
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".csv",
+];
 
 function formatFileSize(bytes: number): string {
   if (bytes < 1024) return bytes + " B";
@@ -56,40 +66,49 @@ export default function ClientPortal() {
   const [dragOver, setDragOver] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  const addFiles = useCallback((files: FileList | File[]) => {
-    const newFiles: SelectedFile[] = [];
-    const rejected: string[] = [];
+  const addFiles = useCallback(
+    (files: FileList | File[]) => {
+      const newFiles: SelectedFile[] = [];
+      const rejected: string[] = [];
 
-    Array.from(files).forEach((file) => {
-      if (!isAllowedFile(file)) {
-        rejected.push(file.name);
-      } else {
-        newFiles.push({ file, id: `${file.name}-${Date.now()}-${Math.random()}` });
-      }
-    });
-
-    if (rejected.length > 0) {
-      toast({
-        title: "Files Rejected",
-        description: `${rejected.join(", ")} — unsupported type or exceeds 25MB.`,
-        variant: "destructive",
+      Array.from(files).forEach((file) => {
+        if (!isAllowedFile(file)) {
+          rejected.push(file.name);
+        } else {
+          newFiles.push({
+            file,
+            id: `${file.name}-${Date.now()}-${Math.random()}`,
+          });
+        }
       });
-    }
 
-    setSelectedFiles((prev) => [...prev, ...newFiles]);
-  }, [toast]);
+      if (rejected.length > 0) {
+        toast({
+          title: "Files Rejected",
+          description: `${rejected.join(", ")} — unsupported type or exceeds 25MB.`,
+          variant: "destructive",
+        });
+      }
+
+      setSelectedFiles((prev) => [...prev, ...newFiles]);
+    },
+    [toast],
+  );
 
   const removeFile = useCallback((id: string) => {
     setSelectedFiles((prev) => prev.filter((f) => f.id !== id));
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setDragOver(false);
-    if (e.dataTransfer.files.length > 0) {
-      addFiles(e.dataTransfer.files);
-    }
-  }, [addFiles]);
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setDragOver(false);
+      if (e.dataTransfer.files.length > 0) {
+        addFiles(e.dataTransfer.files);
+      }
+    },
+    [addFiles],
+  );
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -102,12 +121,24 @@ export default function ClientPortal() {
   }, []);
 
   async function handleUpload() {
-    if (!clientName.trim() || !clientEmail.trim() || !clientEmail.includes("@")) {
-      toast({ title: "Missing Information", description: "Please enter your name and a valid email address.", variant: "destructive" });
+    if (
+      !clientName.trim() ||
+      !clientEmail.trim() ||
+      !clientEmail.includes("@")
+    ) {
+      toast({
+        title: "Missing Information",
+        description: "Please enter your name and a valid email address.",
+        variant: "destructive",
+      });
       return;
     }
     if (selectedFiles.length === 0) {
-      toast({ title: "No Files", description: "Please select at least one file to upload.", variant: "destructive" });
+      toast({
+        title: "No Files",
+        description: "Please select at least one file to upload.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -124,7 +155,7 @@ export default function ClientPortal() {
     try {
       setProgress(30);
 
-      const res = await fetch(`${API_BASE}/documents/upload`, {
+      const res = await fetch(`${getApiRoot()}/documents/upload`, {
         method: "POST",
         body: formData,
       });
@@ -152,7 +183,10 @@ export default function ClientPortal() {
       console.error("Upload error:", err);
       toast({
         title: "Upload Failed",
-        description: err instanceof Error ? err.message : "Something went wrong. Please try again.",
+        description:
+          err instanceof Error
+            ? err.message
+            : "Something went wrong. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -164,7 +198,10 @@ export default function ClientPortal() {
     return (
       <div className="pt-24 pb-20 min-h-screen">
         <SEO title="Secure Document Upload" noindex />
-      <div className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center" style={{ minHeight: "60vh" }}>
+        <div
+          className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center"
+          style={{ minHeight: "60vh" }}
+        >
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -173,12 +210,17 @@ export default function ClientPortal() {
             <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle2 className="w-8 h-8 text-emerald-400" />
             </div>
-            <h2 className="text-2xl font-display font-bold text-white mb-3">Documents Received</h2>
+            <h2 className="text-2xl font-display font-bold text-white mb-3">
+              Documents Received
+            </h2>
             <p className="text-muted-foreground mb-2">
-              {uploadedCount} file{uploadedCount !== 1 ? "s" : ""} uploaded successfully.
+              {uploadedCount} file{uploadedCount !== 1 ? "s" : ""} uploaded
+              successfully.
             </p>
             <p className="text-muted-foreground text-sm mb-8">
-              A confirmation email has been sent to <span className="text-white font-medium">{clientEmail}</span>. Our team will review your documents shortly.
+              A confirmation email has been sent to{" "}
+              <span className="text-white font-medium">{clientEmail}</span>. Our
+              team will review your documents shortly.
             </p>
             <button
               onClick={() => {
@@ -203,9 +245,12 @@ export default function ClientPortal() {
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="accent-bar mx-auto mb-6" />
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">Secure Document Portal</h1>
+          <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
+            Secure Document Portal
+          </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
-            Upload your financial documents securely — no email attachments needed.
+            Upload your financial documents securely — no email attachments
+            needed.
           </p>
           <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
             <span className="flex items-center gap-1.5">
@@ -233,7 +278,9 @@ export default function ClientPortal() {
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1.5">Your Name *</label>
+                <label className="block text-sm font-medium text-foreground mb-1.5">
+                  Your Name *
+                </label>
                 <input
                   type="text"
                   value={clientName}
@@ -243,7 +290,9 @@ export default function ClientPortal() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1.5">Your Email *</label>
+                <label className="block text-sm font-medium text-foreground mb-1.5">
+                  Your Email *
+                </label>
                 <input
                   type="email"
                   value={clientEmail}
@@ -255,7 +304,9 @@ export default function ClientPortal() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-foreground mb-1.5">Documents</label>
+              <label className="block text-sm font-medium text-foreground mb-1.5">
+                Documents
+              </label>
               <div
                 className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer ${
                   dragOver
@@ -300,7 +351,8 @@ export default function ClientPortal() {
                   className="space-y-2"
                 >
                   <p className="text-sm font-medium text-foreground">
-                    {selectedFiles.length} file{selectedFiles.length !== 1 ? "s" : ""} selected
+                    {selectedFiles.length} file
+                    {selectedFiles.length !== 1 ? "s" : ""} selected
                   </p>
                   {selectedFiles.map((sf) => (
                     <div
@@ -309,8 +361,12 @@ export default function ClientPortal() {
                     >
                       <FileText className="w-5 h-5 text-accent flex-shrink-0" />
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm text-foreground truncate">{sf.file.name}</p>
-                        <p className="text-xs text-muted-foreground">{formatFileSize(sf.file.size)}</p>
+                        <p className="text-sm text-foreground truncate">
+                          {sf.file.name}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {formatFileSize(sf.file.size)}
+                        </p>
                       </div>
                       <button
                         onClick={(e) => {
@@ -337,7 +393,9 @@ export default function ClientPortal() {
                     transition={{ duration: 0.5 }}
                   />
                 </div>
-                <p className="text-sm text-muted-foreground text-center">Uploading securely...</p>
+                <p className="text-sm text-muted-foreground text-center">
+                  Uploading securely...
+                </p>
               </div>
             )}
 
@@ -347,14 +405,17 @@ export default function ClientPortal() {
               className="w-full py-4 bg-accent text-white font-bold text-lg rounded-xl hover:shadow-xl hover:shadow-accent/20 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
             >
               <CloudUpload className="w-5 h-5" />
-              {uploading ? "Uploading..." : `Upload ${selectedFiles.length > 0 ? selectedFiles.length + " " : ""}Document${selectedFiles.length !== 1 ? "s" : ""}`}
+              {uploading
+                ? "Uploading..."
+                : `Upload ${selectedFiles.length > 0 ? selectedFiles.length + " " : ""}Document${selectedFiles.length !== 1 ? "s" : ""}`}
             </button>
           </div>
         </motion.div>
 
         <div className="mt-8 text-center">
           <p className="text-sm text-muted-foreground">
-            Your documents are encrypted and stored securely. Only authorized team members can access uploaded files.
+            Your documents are encrypted and stored securely. Only authorized
+            team members can access uploaded files.
           </p>
         </div>
       </section>
