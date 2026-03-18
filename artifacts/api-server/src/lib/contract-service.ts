@@ -45,8 +45,6 @@ const CONTRACT_TYPE_MAP: Record<string, string[]> = {
   "business_plans": ["engagement_letter"],
   "business_planning": ["engagement_letter"],
   "digital_handshake": ["engagement_letter"],
-  "remote_online_notarization": ["engagement_letter"],
-  "notarization": ["engagement_letter"],
   "web_design": ["engagement_letter"],
   "advisory": ["engagement_letter"],
   "discovery": ["mutual_nda"],
@@ -66,7 +64,6 @@ const SERVICE_ALIASES: Record<string, string> = {
   "advanced_bookkeeping": "bookkeeping",
   "business_plans": "business_planning",
   "digital_handshake": "digital_handshake",
-  "remote_online_notarization": "notarization",
   "web_design": "web_design",
 };
 
