@@ -13,6 +13,7 @@ import ChatWidget from "./components/ChatWidget";
 import CookieConsent, { hasAcceptedCookies } from "./components/CookieConsent";
 import { Footer } from "./components/layout/Footer";
 import { useRouteAnalytics } from "./hooks/use-route-analytics";
+import { useApolloPageTracking } from "./hooks/useApolloPageTracking";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -103,6 +104,7 @@ function Layout({ children }: { children: React.ReactNode }) {
 function Router() {
   usePageTracking();
   useRouteAnalytics();
+  useApolloPageTracking();
 
   return (
     <Layout>

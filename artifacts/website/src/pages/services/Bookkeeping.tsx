@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { Calculator, CheckCircle2, ArrowRight, Shield, Clock, FileText, RefreshCw, Database } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { BookkeepingDisclaimer } from "@/components/BookkeepingDisclaimer";
 import { serviceSchema, breadcrumbSchema } from "@/lib/seo-schemas";
 
 const BASE_URL = "https://blueprintsandbookkeeping.com";
@@ -51,6 +52,7 @@ export default function Bookkeeping() {
       </section>
 
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <BookkeepingDisclaimer className="mb-6" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {[
             {
