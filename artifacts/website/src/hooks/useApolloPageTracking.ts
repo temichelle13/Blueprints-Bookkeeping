@@ -4,6 +4,7 @@ import { useLocation } from "wouter";
 declare global {
   interface Window {
     trackingFunctions?: {
+      onLoad?: (options: { appId: string }) => void;
       sendPageVisitEvent?: (page: string) => Promise<void> | void;
     };
   }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Cookie, X } from "lucide-react";
-import { initAnalytics, trackPageview } from "@/lib/analytics";
+import { initAnalytics } from "@/lib/analytics";
 
 const CONSENT_KEY = "bb_cookie_consent";
 const OPEN_CONSENT_EVENT = "open-cookie-consent";
@@ -28,7 +28,6 @@ export default function CookieConsent() {
     const consent = getCookieConsent();
     if (consent === "accepted") {
       initAnalytics();
-      trackPageview();
       return undefined;
     }
 
@@ -49,7 +48,6 @@ export default function CookieConsent() {
   const handleAccept = () => {
     localStorage.setItem(CONSENT_KEY, "accepted");
     initAnalytics();
-    trackPageview();
     setVisible(false);
     window.dispatchEvent(new Event("cookie-consent-changed"));
   };

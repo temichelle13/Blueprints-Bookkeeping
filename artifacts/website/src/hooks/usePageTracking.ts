@@ -1,28 +1,38 @@
 import { useEffect, useRef } from "react";
 import { useLocation } from "wouter";
-
-declare global {
-  interface Window {
-    gtag?: (...args: unknown[]) => void;
-  }
-}
+import { hasAcceptedCookies } from "@/components/CookieConsent";
+import { initAnalytics, trackPageview } from "@/lib/analytics";
 
 export function usePageTracking() {
   const [location] = useLocation();
-  const hasTrackedInitialPage = useRef(false);
+  const lastTrackedPage = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!hasTrackedInitialPage.current) {
-      hasTrackedInitialPage.current = true;
-      return;
-    }
+    if (!hasAcceptedCookies()) return;
 
-    if (typeof window.gtag === "function") {
-      window.gtag("event", "page_view", {
-        page_path: location,
-        page_location: window.location.href,
-        page_title: document.title,
-      });
-    }
+    initAnalytics();
+
+    const pageKey = window.location.href;
+    if (lastTrackedPage.current === pageKey) return;
+
+    trackPageview();
+    lastTrackedPage.current = pageKey;
   }, [location]);
+
+  useEffect(() => {
+    const handleConsentChange = () => {
+      if (!hasAcceptedCookies()) return;
+
+      initAnalytics();
+
+      const pageKey = window.location.href;
+      if (lastTrackedPage.current === pageKey) return;
+
+      trackPageview();
+      lastTrackedPage.current = pageKey;
+    };
+
+    window.addEventListener("cookie-consent-changed", handleConsentChange);
+    return () => window.removeEventListener("cookie-consent-changed", handleConsentChange);
+  }, []);
 }
