@@ -51,7 +51,7 @@
 
 - "Advanced Crypto Accounting Certified" is the correct credential label (not "Crypto Tax Certified")
 - Degrees from Tea's education must be referred to as "coursework" or "studies" — never "degree" or "completed"
-- Earned certifications (CEH v12, QB ProAdvisor Gold, Advanced Crypto Accounting Certified, OR Notary RON) may be listed fully
+- Earned certifications (CEH v12, QB ProAdvisor Gold, Advanced Crypto Accounting Certified) may be listed fully
 - Max client count is **20** — mention as a scarcity signal where appropriate
 - Pricing always uses "starting at" phrasing — never flat/fixed rates
 
