@@ -159,7 +159,10 @@ export default function Contact() {
 
   return (
     <div className="pt-24 pb-20">
-      <SEO description="Get in touch with Blueprints & Bookkeeping. Book a free discovery call, give us a call, or send documents securely — Tea will respond within one business day." />
+      <SEO
+        path="/contact"
+        description="Get in touch with Blueprints & Bookkeeping. Book a free discovery call or send us a message to discuss your virtual bookkeeping needs."
+      />
 
       <section className="py-12 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
@@ -184,7 +187,7 @@ export default function Contact() {
             const CardIcon = card.icon;
             const inner = (
               <div
-                className="glass-card rounded-2xl p-7 flex flex-col h-full group cursor-pointer transition-all duration-300 hover:border-accent/30 hover:-translate-y-1 hover:shadow-lg hover:shadow-accent/5"
+                className="glass-card rounded-2xl p-7 flex flex-col h-full min-h-[280px] group cursor-pointer transition-all duration-300 hover:border-accent/30 hover:-translate-y-1 hover:shadow-lg hover:shadow-accent/5"
               >
                 <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 shrink-0"
