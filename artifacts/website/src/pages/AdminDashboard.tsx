@@ -57,8 +57,7 @@ import {
   Plus,
   Trash2,
 } from "lucide-react";
-
-const API_BASE = import.meta.env.VITE_API_URL || "/api";
+import { getApiRoot } from "@/lib/api";
 
 const INQUIRY_STATUSES = ["New", "Contacted", "In Progress", "Closed"] as const;
 
@@ -72,7 +71,9 @@ function setAdminToken(token: string): void {
 
 function adminHeaders(): Record<string, string> {
   const token = getAdminToken();
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
   if (token) headers["x-admin-token"] = token;
   return headers;
 }
@@ -190,14 +191,18 @@ export default function AdminDashboard() {
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
   const [nexusSummary, setNexusSummary] = useState<NexusSummaryItem[]>([]);
-  const [nexusNotifications, setNexusNotifications] = useState<NexusNotification[]>([]);
+  const [nexusNotifications, setNexusNotifications] = useState<
+    NexusNotification[]
+  >([]);
   const [nexusLoading, setNexusLoading] = useState(false);
   const [showZeroStates, setShowZeroStates] = useState(false);
   const [editingState, setEditingState] = useState<string | null>(null);
   const [editThreshold, setEditThreshold] = useState("");
   const [editWarning, setEditWarning] = useState("");
   const [runningCheck, setRunningCheck] = useState(false);
-  const [suppressionList, setSuppressionList] = useState<SuppressionEntry[]>([]);
+  const [suppressionList, setSuppressionList] = useState<SuppressionEntry[]>(
+    [],
+  );
   const [showAddSuppression, setShowAddSuppression] = useState(false);
   const [newSuppressionEmail, setNewSuppressionEmail] = useState("");
   const [suppressionSearch, setSuppressionSearch] = useState("");
@@ -207,13 +212,17 @@ export default function AdminDashboard() {
     setLoading(true);
     try {
       const [inqRes, nlRes, statsRes, suppRes] = await Promise.all([
-        fetch(`${API_BASE}/admin/inquiries`, { headers: adminHeaders() }),
-        fetch(`${API_BASE}/admin/newsletter`, { headers: adminHeaders() }),
-        fetch(`${API_BASE}/admin/stats`, { headers: adminHeaders() }),
-        fetch(`${API_BASE}/admin/suppression`, { headers: adminHeaders() }),
+        fetch(`${getApiRoot()}/admin/inquiries`, { headers: adminHeaders() }),
+        fetch(`${getApiRoot()}/admin/newsletter`, { headers: adminHeaders() }),
+        fetch(`${getApiRoot()}/admin/stats`, { headers: adminHeaders() }),
+        fetch(`${getApiRoot()}/admin/suppression`, { headers: adminHeaders() }),
       ]);
 
-      if (inqRes.status === 401 || nlRes.status === 401 || statsRes.status === 401) {
+      if (
+        inqRes.status === 401 ||
+        nlRes.status === 401 ||
+        statsRes.status === 401
+      ) {
         sessionStorage.removeItem("admin_token");
         setAuthenticated(false);
         return;
@@ -227,7 +236,11 @@ export default function AdminDashboard() {
       if (statsRes.ok) setStats(await statsRes.json());
       if (suppRes.ok) setSuppressionList(await suppRes.json());
     } catch {
-      toast({ title: "Error", description: "Failed to load data", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "Failed to load data",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -237,8 +250,12 @@ export default function AdminDashboard() {
     setNexusLoading(true);
     try {
       const [summaryRes, notifRes] = await Promise.all([
-        fetch(`${API_BASE}/admin/nexus/summary`, { headers: adminHeaders() }),
-        fetch(`${API_BASE}/admin/nexus/notifications`, { headers: adminHeaders() }),
+        fetch(`${getApiRoot()}/admin/nexus/summary`, {
+          headers: adminHeaders(),
+        }),
+        fetch(`${getApiRoot()}/admin/nexus/notifications`, {
+          headers: adminHeaders(),
+        }),
       ]);
 
       if (summaryRes.status === 401 || notifRes.status === 401) {
@@ -250,7 +267,11 @@ export default function AdminDashboard() {
       if (summaryRes.ok) setNexusSummary(await summaryRes.json());
       if (notifRes.ok) setNexusNotifications(await notifRes.json());
     } catch {
-      toast({ title: "Error", description: "Failed to load nexus data", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "Failed to load nexus data",
+        variant: "destructive",
+      });
     } finally {
       setNexusLoading(false);
     }
@@ -259,7 +280,7 @@ export default function AdminDashboard() {
   const handleRunCheck = async () => {
     setRunningCheck(true);
     try {
-      const res = await fetch(`${API_BASE}/admin/nexus/check`, {
+      const res = await fetch(`${getApiRoot()}/admin/nexus/check`, {
         method: "POST",
         headers: adminHeaders(),
       });
@@ -272,7 +293,11 @@ export default function AdminDashboard() {
         fetchNexusData();
       }
     } catch {
-      toast({ title: "Error", description: "Failed to run nexus check", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "Failed to run nexus check",
+        variant: "destructive",
+      });
     } finally {
       setRunningCheck(false);
     }
@@ -281,25 +306,40 @@ export default function AdminDashboard() {
   const handleSaveThreshold = async (stateCode: string) => {
     try {
       const body: Record<string, unknown> = {};
-      if (editThreshold) body.foreignQualificationThreshold = parseInt(editThreshold, 10);
+      if (editThreshold)
+        body.foreignQualificationThreshold = parseInt(editThreshold, 10);
       if (editWarning) body.warningThresholdPercent = parseInt(editWarning, 10);
 
-      const res = await fetch(`${API_BASE}/admin/nexus/rules/${stateCode}`, {
-        method: "PATCH",
-        headers: adminHeaders(),
-        body: JSON.stringify(body),
-      });
+      const res = await fetch(
+        `${getApiRoot()}/admin/nexus/rules/${stateCode}`,
+        {
+          method: "PATCH",
+          headers: adminHeaders(),
+          body: JSON.stringify(body),
+        },
+      );
 
       if (res.ok) {
-        toast({ title: "Updated", description: `Thresholds updated for ${stateCode}` });
+        toast({
+          title: "Updated",
+          description: `Thresholds updated for ${stateCode}`,
+        });
         setEditingState(null);
         fetchNexusData();
       } else {
         const err = await res.json();
-        toast({ title: "Error", description: err.error, variant: "destructive" });
+        toast({
+          title: "Error",
+          description: err.error,
+          variant: "destructive",
+        });
       }
     } catch {
-      toast({ title: "Error", description: "Failed to save", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "Failed to save",
+        variant: "destructive",
+      });
     }
   };
 
@@ -319,7 +359,7 @@ export default function AdminDashboard() {
 
   const handleStatusChange = async (id: number, newStatus: string) => {
     try {
-      const res = await fetch(`${API_BASE}/admin/inquiries/${id}/status`, {
+      const res = await fetch(`${getApiRoot()}/admin/inquiries/${id}/status`, {
         method: "PATCH",
         headers: adminHeaders(),
         body: JSON.stringify({ status: newStatus }),
@@ -333,21 +373,33 @@ export default function AdminDashboard() {
 
       if (res.ok) {
         const updated = await res.json();
-        setInquiries((prev) => prev.map((inq) => (inq.id === id ? updated : inq)));
-        toast({ title: "Status updated", description: `Inquiry #${id} marked as "${newStatus}"` });
+        setInquiries((prev) =>
+          prev.map((inq) => (inq.id === id ? updated : inq)),
+        );
+        toast({
+          title: "Status updated",
+          description: `Inquiry #${id} marked as "${newStatus}"`,
+        });
       }
     } catch {
-      toast({ title: "Error", description: "Failed to update status", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "Failed to update status",
+        variant: "destructive",
+      });
     }
   };
 
   const handleAddSuppression = async () => {
     if (!newSuppressionEmail.trim()) return;
     try {
-      const res = await fetch(`${API_BASE}/admin/suppression`, {
+      const res = await fetch(`${getApiRoot()}/admin/suppression`, {
         method: "POST",
         headers: adminHeaders(),
-        body: JSON.stringify({ email: newSuppressionEmail.trim(), reason: "manual" }),
+        body: JSON.stringify({
+          email: newSuppressionEmail.trim(),
+          reason: "manual",
+        }),
       });
       if (res.status === 401) {
         sessionStorage.removeItem("admin_token");
@@ -362,16 +414,23 @@ export default function AdminDashboard() {
         });
         setNewSuppressionEmail("");
         setShowAddSuppression(false);
-        toast({ title: "Email suppressed", description: `${entry.email} added to suppression list` });
+        toast({
+          title: "Email suppressed",
+          description: `${entry.email} added to suppression list`,
+        });
       }
     } catch {
-      toast({ title: "Error", description: "Failed to add suppression entry", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "Failed to add suppression entry",
+        variant: "destructive",
+      });
     }
   };
 
   const handleRemoveSuppression = async (id: number, email: string) => {
     try {
-      const res = await fetch(`${API_BASE}/admin/suppression/${id}`, {
+      const res = await fetch(`${getApiRoot()}/admin/suppression/${id}`, {
         method: "DELETE",
         headers: adminHeaders(),
       });
@@ -382,22 +441,32 @@ export default function AdminDashboard() {
       }
       if (res.ok) {
         setSuppressionList((prev) => prev.filter((e) => e.id !== id));
-        toast({ title: "Entry removed", description: `${email} removed from suppression list` });
+        toast({
+          title: "Entry removed",
+          description: `${email} removed from suppression list`,
+        });
       }
     } catch {
-      toast({ title: "Error", description: "Failed to remove suppression entry", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "Failed to remove suppression entry",
+        variant: "destructive",
+      });
     }
   };
 
   const filteredSuppressionList = suppressionList.filter((entry) => {
     if (!suppressionSearch) return true;
     const q = suppressionSearch.toLowerCase();
-    return entry.email.toLowerCase().includes(q) || entry.reason.toLowerCase().includes(q);
+    return (
+      entry.email.toLowerCase().includes(q) ||
+      entry.reason.toLowerCase().includes(q)
+    );
   });
 
   const handleExportCSV = () => {
     const token = getAdminToken();
-    fetch(`${API_BASE}/admin/newsletter/export`, {
+    fetch(`${getApiRoot()}/admin/newsletter/export`, {
       headers: { "x-admin-token": token || "" },
     })
       .then((res) => res.blob())
@@ -410,7 +479,11 @@ export default function AdminDashboard() {
         URL.revokeObjectURL(url);
       })
       .catch(() => {
-        toast({ title: "Error", description: "Failed to export CSV", variant: "destructive" });
+        toast({
+          title: "Error",
+          description: "Failed to export CSV",
+          variant: "destructive",
+        });
       });
   };
 
@@ -462,7 +535,9 @@ export default function AdminDashboard() {
             </div>
             <div>
               <h1 className="text-xl font-bold text-white">Admin Dashboard</h1>
-              <p className="text-sm text-gray-400">Enter your admin token to continue</p>
+              <p className="text-sm text-gray-400">
+                Enter your admin token to continue
+              </p>
             </div>
           </div>
           <form
@@ -479,7 +554,10 @@ export default function AdminDashboard() {
               onChange={(e) => setTokenInput(e.target.value)}
               className="bg-[#0a0e1a] border-white/10 text-white"
             />
-            <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700">
+            <Button
+              type="submit"
+              className="w-full bg-indigo-600 hover:bg-indigo-700"
+            >
               Sign In
             </Button>
           </form>
@@ -492,11 +570,16 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-[#0a0e1a] text-white">
       {seo}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
           <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="text-2xl font-bold">Lead Management</h1>
-              <p className="text-gray-400 mt-1">Track inquiries and manage your pipeline</p>
+              <p className="text-gray-400 mt-1">
+                Track inquiries and manage your pipeline
+              </p>
             </div>
             <Button
               variant="outline"
@@ -525,7 +608,10 @@ export default function AdminDashboard() {
               />
               <StatCard
                 label="In Progress"
-                value={(stats.inquiries.byStatus["Contacted"] ?? 0) + (stats.inquiries.byStatus["In Progress"] ?? 0)}
+                value={
+                  (stats.inquiries.byStatus["Contacted"] ?? 0) +
+                  (stats.inquiries.byStatus["In Progress"] ?? 0)
+                }
                 icon={<BarChart3 className="w-5 h-5" />}
                 color="purple"
               />
@@ -540,17 +626,29 @@ export default function AdminDashboard() {
 
           <Tabs defaultValue="inquiries" className="space-y-6">
             <TabsList className="bg-[#111827] border border-white/10">
-              <TabsTrigger value="inquiries" className="data-[state=active]:bg-indigo-600">
+              <TabsTrigger
+                value="inquiries"
+                className="data-[state=active]:bg-indigo-600"
+              >
                 Inquiries
               </TabsTrigger>
-              <TabsTrigger value="subscribers" className="data-[state=active]:bg-indigo-600">
+              <TabsTrigger
+                value="subscribers"
+                className="data-[state=active]:bg-indigo-600"
+              >
                 Newsletter
               </TabsTrigger>
-              <TabsTrigger value="nexus" className="data-[state=active]:bg-indigo-600">
+              <TabsTrigger
+                value="nexus"
+                className="data-[state=active]:bg-indigo-600"
+              >
                 <MapPin className="w-4 h-4 mr-1" />
                 State Nexus
               </TabsTrigger>
-              <TabsTrigger value="suppression" className="data-[state=active]:bg-indigo-600">
+              <TabsTrigger
+                value="suppression"
+                className="data-[state=active]:bg-indigo-600"
+              >
                 Suppression List
               </TabsTrigger>
             </TabsList>
@@ -587,17 +685,37 @@ export default function AdminDashboard() {
                   <Table>
                     <TableHeader>
                       <TableRow className="border-white/10 hover:bg-transparent">
-                        <SortableHead field="createdAt" current={sortField} dir={sortDir} onSort={toggleSort}>
+                        <SortableHead
+                          field="createdAt"
+                          current={sortField}
+                          dir={sortDir}
+                          onSort={toggleSort}
+                        >
                           Date
                         </SortableHead>
-                        <SortableHead field="name" current={sortField} dir={sortDir} onSort={toggleSort}>
+                        <SortableHead
+                          field="name"
+                          current={sortField}
+                          dir={sortDir}
+                          onSort={toggleSort}
+                        >
                           Name
                         </SortableHead>
                         <TableHead className="text-gray-400">Contact</TableHead>
-                        <SortableHead field="formType" current={sortField} dir={sortDir} onSort={toggleSort}>
+                        <SortableHead
+                          field="formType"
+                          current={sortField}
+                          dir={sortDir}
+                          onSort={toggleSort}
+                        >
                           Service
                         </SortableHead>
-                        <SortableHead field="status" current={sortField} dir={sortDir} onSort={toggleSort}>
+                        <SortableHead
+                          field="status"
+                          current={sortField}
+                          dir={sortDir}
+                          onSort={toggleSort}
+                        >
                           Status
                         </SortableHead>
                         <TableHead className="text-gray-400 w-10"></TableHead>
@@ -606,8 +724,13 @@ export default function AdminDashboard() {
                     <TableBody>
                       {filteredInquiries.length === 0 && (
                         <TableRow>
-                          <TableCell colSpan={6} className="text-center text-gray-500 py-12">
-                            {loading ? "Loading inquiries..." : "No inquiries found"}
+                          <TableCell
+                            colSpan={6}
+                            className="text-center text-gray-500 py-12"
+                          >
+                            {loading
+                              ? "Loading inquiries..."
+                              : "No inquiries found"}
                           </TableCell>
                         </TableRow>
                       )}
@@ -616,7 +739,11 @@ export default function AdminDashboard() {
                           key={inq.id}
                           inquiry={inq}
                           expanded={expandedRow === inq.id}
-                          onToggle={() => setExpandedRow(expandedRow === inq.id ? null : inq.id)}
+                          onToggle={() =>
+                            setExpandedRow(
+                              expandedRow === inq.id ? null : inq.id,
+                            )
+                          }
                           onStatusChange={handleStatusChange}
                         />
                       ))}
@@ -624,7 +751,8 @@ export default function AdminDashboard() {
                   </Table>
                 </div>
                 <div className="px-4 py-3 border-t border-white/10 text-sm text-gray-500">
-                  Showing {filteredInquiries.length} of {inquiries.length} inquiries
+                  Showing {filteredInquiries.length} of {inquiries.length}{" "}
+                  inquiries
                 </div>
               </div>
             </TabsContent>
@@ -634,7 +762,8 @@ export default function AdminDashboard() {
                 <div className="text-gray-400">
                   {stats && (
                     <span>
-                      {stats.newsletter.active} active / {stats.newsletter.total} total subscribers
+                      {stats.newsletter.active} active /{" "}
+                      {stats.newsletter.total} total subscribers
                     </span>
                   )}
                 </div>
@@ -657,21 +786,35 @@ export default function AdminDashboard() {
                         <TableHead className="text-gray-400">Email</TableHead>
                         <TableHead className="text-gray-400">Source</TableHead>
                         <TableHead className="text-gray-400">Status</TableHead>
-                        <TableHead className="text-gray-400">Subscribed</TableHead>
+                        <TableHead className="text-gray-400">
+                          Subscribed
+                        </TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {subscribers.length === 0 && (
                         <TableRow>
-                          <TableCell colSpan={4} className="text-center text-gray-500 py-12">
-                            {loading ? "Loading subscribers..." : "No subscribers yet"}
+                          <TableCell
+                            colSpan={4}
+                            className="text-center text-gray-500 py-12"
+                          >
+                            {loading
+                              ? "Loading subscribers..."
+                              : "No subscribers yet"}
                           </TableCell>
                         </TableRow>
                       )}
                       {subscribers.map((sub) => (
-                        <TableRow key={sub.id} className="border-white/10 hover:bg-white/5">
-                          <TableCell className="text-white font-medium">{sub.email}</TableCell>
-                          <TableCell className="text-gray-400">{sub.signupSource}</TableCell>
+                        <TableRow
+                          key={sub.id}
+                          className="border-white/10 hover:bg-white/5"
+                        >
+                          <TableCell className="text-white font-medium">
+                            {sub.email}
+                          </TableCell>
+                          <TableCell className="text-gray-400">
+                            {sub.signupSource}
+                          </TableCell>
                           <TableCell>
                             <Badge
                               variant="outline"
@@ -684,7 +827,9 @@ export default function AdminDashboard() {
                               {sub.active ? "Active" : "Unsubscribed"}
                             </Badge>
                           </TableCell>
-                          <TableCell className="text-gray-400">{formatDate(sub.subscribedAt)}</TableCell>
+                          <TableCell className="text-gray-400">
+                            {formatDate(sub.subscribedAt)}
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -697,12 +842,20 @@ export default function AdminDashboard() {
               <div className="flex items-center justify-between">
                 <div className="text-gray-400">
                   {(() => {
-                    const alertCount = nexusSummary.filter((s) => s.riskLevel === "alert").length;
-                    const warningCount = nexusSummary.filter((s) => s.riskLevel === "warning").length;
-                    const withClients = nexusSummary.filter((s) => s.clientCount > 0).length;
+                    const alertCount = nexusSummary.filter(
+                      (s) => s.riskLevel === "alert",
+                    ).length;
+                    const warningCount = nexusSummary.filter(
+                      (s) => s.riskLevel === "warning",
+                    ).length;
+                    const withClients = nexusSummary.filter(
+                      (s) => s.clientCount > 0,
+                    ).length;
                     return (
                       <span>
-                        {withClients} states with clients · {alertCount} alert{alertCount !== 1 ? "s" : ""} · {warningCount} warning{warningCount !== 1 ? "s" : ""}
+                        {withClients} states with clients · {alertCount} alert
+                        {alertCount !== 1 ? "s" : ""} · {warningCount} warning
+                        {warningCount !== 1 ? "s" : ""}
                       </span>
                     );
                   })()}
@@ -758,12 +911,20 @@ export default function AdminDashboard() {
                       <TableRow className="border-white/10 hover:bg-transparent">
                         <TableHead className="text-gray-400">State</TableHead>
                         <TableHead className="text-gray-400">Clients</TableHead>
-                        <TableHead className="text-gray-400">Threshold</TableHead>
-                        <TableHead className="text-gray-400">Warning %</TableHead>
+                        <TableHead className="text-gray-400">
+                          Threshold
+                        </TableHead>
+                        <TableHead className="text-gray-400">
+                          Warning %
+                        </TableHead>
                         <TableHead className="text-gray-400">Risk</TableHead>
                         <TableHead className="text-gray-400">License</TableHead>
-                        <TableHead className="text-gray-400">Last Notification</TableHead>
-                        <TableHead className="text-gray-400">Requirements</TableHead>
+                        <TableHead className="text-gray-400">
+                          Last Notification
+                        </TableHead>
+                        <TableHead className="text-gray-400">
+                          Requirements
+                        </TableHead>
                         <TableHead className="text-gray-400 w-10"></TableHead>
                       </TableRow>
                     </TableHeader>
@@ -772,28 +933,45 @@ export default function AdminDashboard() {
                         .filter((s) => showZeroStates || s.clientCount > 0)
                         .sort((a, b) => {
                           const riskOrder = { alert: 0, warning: 1, safe: 2 };
-                          if (riskOrder[a.riskLevel] !== riskOrder[b.riskLevel]) {
-                            return riskOrder[a.riskLevel] - riskOrder[b.riskLevel];
+                          if (
+                            riskOrder[a.riskLevel] !== riskOrder[b.riskLevel]
+                          ) {
+                            return (
+                              riskOrder[a.riskLevel] - riskOrder[b.riskLevel]
+                            );
                           }
                           return b.clientCount - a.clientCount;
                         })
                         .map((item) => (
-                          <TableRow key={item.stateCode} className="border-white/10 hover:bg-white/5">
+                          <TableRow
+                            key={item.stateCode}
+                            className="border-white/10 hover:bg-white/5"
+                          >
                             <TableCell>
-                              <div className="font-medium text-white">{item.stateName}</div>
-                              <div className="text-xs text-gray-500">{item.stateCode}</div>
+                              <div className="font-medium text-white">
+                                {item.stateName}
+                              </div>
+                              <div className="text-xs text-gray-500">
+                                {item.stateCode}
+                              </div>
                             </TableCell>
-                            <TableCell className="text-white font-bold text-lg">{item.clientCount}</TableCell>
+                            <TableCell className="text-white font-bold text-lg">
+                              {item.clientCount}
+                            </TableCell>
                             <TableCell>
                               {editingState === item.stateCode ? (
                                 <Input
                                   type="number"
                                   value={editThreshold}
-                                  onChange={(e) => setEditThreshold(e.target.value)}
+                                  onChange={(e) =>
+                                    setEditThreshold(e.target.value)
+                                  }
                                   className="w-20 h-8 bg-[#0a0e1a] border-white/10 text-white text-sm"
                                 />
                               ) : (
-                                <span className="text-gray-300">{item.foreignQualificationThreshold}</span>
+                                <span className="text-gray-300">
+                                  {item.foreignQualificationThreshold}
+                                </span>
                               )}
                             </TableCell>
                             <TableCell>
@@ -801,11 +979,15 @@ export default function AdminDashboard() {
                                 <Input
                                   type="number"
                                   value={editWarning}
-                                  onChange={(e) => setEditWarning(e.target.value)}
+                                  onChange={(e) =>
+                                    setEditWarning(e.target.value)
+                                  }
                                   className="w-20 h-8 bg-[#0a0e1a] border-white/10 text-white text-sm"
                                 />
                               ) : (
-                                <span className="text-gray-300">{item.warningThresholdPercent}%</span>
+                                <span className="text-gray-300">
+                                  {item.warningThresholdPercent}%
+                                </span>
                               )}
                             </TableCell>
                             <TableCell>
@@ -815,8 +997,8 @@ export default function AdminDashboard() {
                                   item.riskLevel === "alert"
                                     ? "bg-red-500/20 text-red-300 border-red-500/30"
                                     : item.riskLevel === "warning"
-                                    ? "bg-amber-500/20 text-amber-300 border-amber-500/30"
-                                    : "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
+                                      ? "bg-amber-500/20 text-amber-300 border-amber-500/30"
+                                      : "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
                                 }
                               >
                                 {item.riskLevel === "alert" ? (
@@ -826,23 +1008,33 @@ export default function AdminDashboard() {
                                 ) : (
                                   <ShieldCheck className="w-3 h-3 mr-1" />
                                 )}
-                                {item.riskLevel.charAt(0).toUpperCase() + item.riskLevel.slice(1)}
+                                {item.riskLevel.charAt(0).toUpperCase() +
+                                  item.riskLevel.slice(1)}
                               </Badge>
                             </TableCell>
                             <TableCell>
                               {item.bookkeepingLicenseRequired ? (
-                                <Badge variant="outline" className="bg-purple-500/20 text-purple-300 border-purple-500/30">
+                                <Badge
+                                  variant="outline"
+                                  className="bg-purple-500/20 text-purple-300 border-purple-500/30"
+                                >
                                   Required
                                 </Badge>
                               ) : (
-                                <span className="text-gray-500 text-sm">No</span>
+                                <span className="text-gray-500 text-sm">
+                                  No
+                                </span>
                               )}
                             </TableCell>
                             <TableCell className="text-gray-400 text-sm">
                               {item.lastNotificationSent ? (
                                 <div>
-                                  <div>{formatDate(item.lastNotificationSent)}</div>
-                                  <div className="text-xs text-gray-500">{item.lastNotificationType}</div>
+                                  <div>
+                                    {formatDate(item.lastNotificationSent)}
+                                  </div>
+                                  <div className="text-xs text-gray-500">
+                                    {item.lastNotificationType}
+                                  </div>
                                 </div>
                               ) : (
                                 <span className="text-gray-600">—</span>
@@ -850,7 +1042,9 @@ export default function AdminDashboard() {
                             </TableCell>
                             <TableCell className="text-gray-400 text-sm max-w-[200px]">
                               <div className="flex items-start gap-1">
-                                <span className="truncate">{item.notes || "Standard nexus rules"}</span>
+                                <span className="truncate">
+                                  {item.notes || "Standard nexus rules"}
+                                </span>
                                 {item.authorityUrl && (
                                   <a
                                     href={item.authorityUrl}
@@ -871,7 +1065,9 @@ export default function AdminDashboard() {
                                     size="sm"
                                     variant="outline"
                                     className="h-7 w-7 p-0 border-emerald-500/30 text-emerald-400"
-                                    onClick={() => handleSaveThreshold(item.stateCode)}
+                                    onClick={() =>
+                                      handleSaveThreshold(item.stateCode)
+                                    }
                                   >
                                     <Save className="w-3.5 h-3.5" />
                                   </Button>
@@ -891,8 +1087,14 @@ export default function AdminDashboard() {
                                   className="h-7 w-7 p-0 text-gray-500 hover:text-white"
                                   onClick={() => {
                                     setEditingState(item.stateCode);
-                                    setEditThreshold(String(item.foreignQualificationThreshold));
-                                    setEditWarning(String(item.warningThresholdPercent));
+                                    setEditThreshold(
+                                      String(
+                                        item.foreignQualificationThreshold,
+                                      ),
+                                    );
+                                    setEditWarning(
+                                      String(item.warningThresholdPercent),
+                                    );
                                   }}
                                 >
                                   ✎
@@ -901,10 +1103,17 @@ export default function AdminDashboard() {
                             </TableCell>
                           </TableRow>
                         ))}
-                      {nexusSummary.filter((s) => showZeroStates || s.clientCount > 0).length === 0 && (
+                      {nexusSummary.filter(
+                        (s) => showZeroStates || s.clientCount > 0,
+                      ).length === 0 && (
                         <TableRow>
-                          <TableCell colSpan={9} className="text-center text-gray-500 py-12">
-                            {nexusLoading ? "Loading nexus data..." : "No states with active clients"}
+                          <TableCell
+                            colSpan={9}
+                            className="text-center text-gray-500 py-12"
+                          >
+                            {nexusLoading
+                              ? "Loading nexus data..."
+                              : "No states with active clients"}
                           </TableCell>
                         </TableRow>
                       )}
@@ -936,12 +1145,16 @@ export default function AdminDashboard() {
                           >
                             {n.notificationType}
                           </Badge>
-                          <span className="text-white text-sm font-medium">{n.stateCode}</span>
+                          <span className="text-white text-sm font-medium">
+                            {n.stateCode}
+                          </span>
                           <span className="text-gray-400 text-sm">
                             {n.clientCount} / {n.threshold} clients
                           </span>
                         </div>
-                        <span className="text-gray-500 text-xs">{formatDate(n.sentAt)}</span>
+                        <span className="text-gray-500 text-xs">
+                          {formatDate(n.sentAt)}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -957,21 +1170,33 @@ export default function AdminDashboard() {
                       <TableRow className="border-white/10 hover:bg-transparent">
                         <TableHead className="text-gray-400">Email</TableHead>
                         <TableHead className="text-gray-400">Reason</TableHead>
-                        <TableHead className="text-gray-400">Date Added</TableHead>
+                        <TableHead className="text-gray-400">
+                          Date Added
+                        </TableHead>
                         <TableHead className="text-gray-400 w-16"></TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {filteredSuppressionList.length === 0 && (
                         <TableRow>
-                          <TableCell colSpan={4} className="text-center text-gray-500 py-12">
-                            {loading ? "Loading suppression list..." : "No suppressed emails"}
+                          <TableCell
+                            colSpan={4}
+                            className="text-center text-gray-500 py-12"
+                          >
+                            {loading
+                              ? "Loading suppression list..."
+                              : "No suppressed emails"}
                           </TableCell>
                         </TableRow>
                       )}
                       {filteredSuppressionList.map((entry) => (
-                        <TableRow key={entry.id} className="border-white/10 hover:bg-white/5">
-                          <TableCell className="text-white font-medium">{entry.email}</TableCell>
+                        <TableRow
+                          key={entry.id}
+                          className="border-white/10 hover:bg-white/5"
+                        >
+                          <TableCell className="text-white font-medium">
+                            {entry.email}
+                          </TableCell>
                           <TableCell>
                             <Badge
                               variant="outline"
@@ -980,12 +1205,16 @@ export default function AdminDashboard() {
                               {formatReason(entry.reason)}
                             </Badge>
                           </TableCell>
-                          <TableCell className="text-gray-400">{formatDate(entry.createdAt)}</TableCell>
+                          <TableCell className="text-gray-400">
+                            {formatDate(entry.createdAt)}
+                          </TableCell>
                           <TableCell>
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => handleRemoveSuppression(entry.id, entry.email)}
+                              onClick={() =>
+                                handleRemoveSuppression(entry.id, entry.email)
+                              }
                               className="h-8 w-8 p-0 text-gray-500 hover:text-red-400"
                             >
                               <Trash2 className="w-4 h-4" />
@@ -997,11 +1226,15 @@ export default function AdminDashboard() {
                   </Table>
                 </div>
                 <div className="px-4 py-3 border-t border-white/10 text-sm text-gray-500">
-                  {filteredSuppressionList.length} suppressed email{filteredSuppressionList.length !== 1 ? "s" : ""}
+                  {filteredSuppressionList.length} suppressed email
+                  {filteredSuppressionList.length !== 1 ? "s" : ""}
                 </div>
               </div>
 
-              <Dialog open={showAddSuppression} onOpenChange={setShowAddSuppression}>
+              <Dialog
+                open={showAddSuppression}
+                onOpenChange={setShowAddSuppression}
+              >
                 <DialogContent className="bg-[#111827] border-white/10 text-white">
                   <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
@@ -1020,14 +1253,22 @@ export default function AdminDashboard() {
                       }}
                     />
                     <p className="text-sm text-gray-400">
-                      This email will no longer receive any outbound emails from the system.
+                      This email will no longer receive any outbound emails from
+                      the system.
                     </p>
                   </div>
                   <DialogFooter>
-                    <Button variant="outline" onClick={() => setShowAddSuppression(false)} className="border-white/10 text-gray-300">
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowAddSuppression(false)}
+                      className="border-white/10 text-gray-300"
+                    >
                       Cancel
                     </Button>
-                    <Button onClick={handleAddSuppression} className="bg-indigo-600 hover:bg-indigo-700">
+                    <Button
+                      onClick={handleAddSuppression}
+                      className="bg-indigo-600 hover:bg-indigo-700"
+                    >
                       Suppress Email
                     </Button>
                   </DialogFooter>
@@ -1061,7 +1302,11 @@ function StatCard({
   return (
     <div className="bg-[#111827] border border-white/10 rounded-xl p-4">
       <div className="flex items-center gap-3 mb-2">
-        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${colorMap[color]}`}>{icon}</div>
+        <div
+          className={`w-8 h-8 rounded-lg flex items-center justify-center ${colorMap[color]}`}
+        >
+          {icon}
+        </div>
         <span className="text-sm text-gray-400">{label}</span>
       </div>
       <p className="text-2xl font-bold">{value}</p>
@@ -1119,7 +1364,10 @@ function InquiryRow({
 
   return (
     <>
-      <TableRow className="border-white/10 hover:bg-white/5 cursor-pointer" onClick={onToggle}>
+      <TableRow
+        className="border-white/10 hover:bg-white/5 cursor-pointer"
+        onClick={onToggle}
+      >
         <TableCell className="text-gray-400 text-sm whitespace-nowrap">
           <div className="flex items-center gap-2">
             <Calendar className="w-3.5 h-3.5" />
@@ -1146,8 +1394,13 @@ function InquiryRow({
         </TableCell>
         <TableCell className="text-gray-300 text-sm">{services}</TableCell>
         <TableCell onClick={(e) => e.stopPropagation()}>
-          <Select value={inquiry.status} onValueChange={(val) => onStatusChange(inquiry.id, val)}>
-            <SelectTrigger className={`w-[130px] h-8 text-xs border ${getStatusColor(inquiry.status)} bg-transparent`}>
+          <Select
+            value={inquiry.status}
+            onValueChange={(val) => onStatusChange(inquiry.id, val)}
+          >
+            <SelectTrigger
+              className={`w-[130px] h-8 text-xs border ${getStatusColor(inquiry.status)} bg-transparent`}
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-[#111827] border-white/10">
@@ -1160,7 +1413,9 @@ function InquiryRow({
           </Select>
         </TableCell>
         <TableCell>
-          <Eye className={`w-4 h-4 transition-colors ${expanded ? "text-indigo-400" : "text-gray-600"}`} />
+          <Eye
+            className={`w-4 h-4 transition-colors ${expanded ? "text-indigo-400" : "text-gray-600"}`}
+          />
         </TableCell>
       </TableRow>
       {expanded && (
@@ -1176,10 +1431,16 @@ function InquiryRow({
                   <DetailItem label="Industry" value={inquiry.industry} />
                 )}
                 {inquiry.monthlyRevenueRange && (
-                  <DetailItem label="Monthly Revenue" value={inquiry.monthlyRevenueRange} />
+                  <DetailItem
+                    label="Monthly Revenue"
+                    value={inquiry.monthlyRevenueRange}
+                  />
                 )}
                 {inquiry.preferredContactMethod && (
-                  <DetailItem label="Preferred Contact" value={inquiry.preferredContactMethod} />
+                  <DetailItem
+                    label="Preferred Contact"
+                    value={inquiry.preferredContactMethod}
+                  />
                 )}
                 {inquiry.formType && (
                   <DetailItem label="Form Type" value={inquiry.formType} />
@@ -1187,7 +1448,9 @@ function InquiryRow({
               </div>
               {(inquiry.message || inquiry.biggestChallenge) && (
                 <div className="bg-[#0a0e1a] rounded-lg p-4 border border-white/5">
-                  <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">Message</p>
+                  <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">
+                    Message
+                  </p>
                   <p className="text-gray-300 text-sm leading-relaxed">
                     {inquiry.biggestChallenge || inquiry.message}
                   </p>
@@ -1198,7 +1461,9 @@ function InquiryRow({
                   size="sm"
                   variant="outline"
                   className="border-white/10 text-gray-300 hover:text-white text-xs h-7"
-                  onClick={() => window.open(`mailto:${inquiry.email}`, "_blank")}
+                  onClick={() =>
+                    window.open(`mailto:${inquiry.email}`, "_blank")
+                  }
                 >
                   <Mail className="w-3 h-3 mr-1" />
                   Email
@@ -1208,7 +1473,9 @@ function InquiryRow({
                     size="sm"
                     variant="outline"
                     className="border-white/10 text-gray-300 hover:text-white text-xs h-7"
-                    onClick={() => window.open(`tel:${inquiry.phone}`, "_blank")}
+                    onClick={() =>
+                      window.open(`tel:${inquiry.phone}`, "_blank")
+                    }
                   >
                     <Phone className="w-3 h-3 mr-1" />
                     Call
@@ -1256,7 +1523,9 @@ function formatReason(reason: string) {
 function DetailItem({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <span className="text-gray-500 text-xs uppercase tracking-wider">{label}</span>
+      <span className="text-gray-500 text-xs uppercase tracking-wider">
+        {label}
+      </span>
       <p className="text-gray-300 mt-0.5">{value}</p>
     </div>
   );

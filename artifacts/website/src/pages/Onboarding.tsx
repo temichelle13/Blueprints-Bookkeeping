@@ -15,9 +15,11 @@ import {
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 import { useToast } from "@/hooks/use-toast";
-import { buildOnboardingUrl, getOnboardingContextFromSearch } from "@/lib/onboarding-url";
-
-const API_BASE = import.meta.env.VITE_API_URL || "/api";
+import {
+  buildOnboardingUrl,
+  getOnboardingContextFromSearch,
+} from "@/lib/onboarding-url";
+import { getApiRoot } from "@/lib/api";
 
 const US_STATES = [
   { code: "AL", name: "Alabama" },
@@ -103,10 +105,16 @@ export default function Onboarding() {
     service: onboardingContext.service,
     sessionId: onboardingContext.sessionId,
   });
-  const checkoutConfirmationHref = `/payment-success${onboardingContext.plan || onboardingContext.service ? `?${new URLSearchParams({
-    ...(onboardingContext.plan ? { plan: onboardingContext.plan } : {}),
-    ...(onboardingContext.service ? { service: onboardingContext.service } : {}),
-  }).toString()}` : ""}`;
+  const checkoutConfirmationHref = `/payment-success${
+    onboardingContext.plan || onboardingContext.service
+      ? `?${new URLSearchParams({
+          ...(onboardingContext.plan ? { plan: onboardingContext.plan } : {}),
+          ...(onboardingContext.service
+            ? { service: onboardingContext.service }
+            : {}),
+        }).toString()}`
+      : ""
+  }`;
 
   const {
     register,
@@ -118,14 +126,15 @@ export default function Onboarding() {
     if (isMissingSessionId) {
       toast({
         title: "Missing checkout session",
-        description: "Return to your checkout confirmation page to reopen onboarding with a valid session, or contact support for a new link.",
+        description:
+          "Return to your checkout confirmation page to reopen onboarding with a valid session, or contact support for a new link.",
         variant: "destructive",
       });
       return;
     }
 
     try {
-      const res = await fetch(`${API_BASE}/onboarding`, {
+      const res = await fetch(`${getApiRoot()}/onboarding`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -258,11 +267,19 @@ export default function Onboarding() {
         <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
           <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-5">
             <div className="flex items-start gap-3">
-              <AlertTriangle className="text-amber-300 shrink-0 mt-0.5" size={20} />
+              <AlertTriangle
+                className="text-amber-300 shrink-0 mt-0.5"
+                size={20}
+              />
               <div>
-                <h2 className="text-sm font-semibold uppercase tracking-wide text-amber-200 mb-2">Missing checkout session</h2>
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-amber-200 mb-2">
+                  Missing checkout session
+                </h2>
                 <p className="text-sm text-muted-foreground mb-4">
-                  We could not verify your checkout session in this link. To avoid onboarding delays, return to your checkout confirmation page and use the onboarding button there, or contact support for a fresh link.
+                  We could not verify your checkout session in this link. To
+                  avoid onboarding delays, return to your checkout confirmation
+                  page and use the onboarding button there, or contact support
+                  for a fresh link.
                 </p>
                 <div className="flex flex-wrap gap-3 text-sm">
                   <a

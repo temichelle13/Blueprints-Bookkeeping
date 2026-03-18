@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { getApiBaseUrl } from "@workspace/api-client-react";
+import { getApiRoot } from "@/lib/api";
 import { SEO } from "@/components/SEO";
 
 interface HealthData {
@@ -18,9 +18,7 @@ export default function Status() {
 
   const fetchHealth = useCallback(async () => {
     try {
-      const baseUrl = getApiBaseUrl();
-      const url = baseUrl ? `${baseUrl}/api/healthz` : `/api/healthz`;
-      const res = await fetch(url);
+      const res = await fetch(`${getApiRoot()}/healthz`);
       const data = await res.json();
       setHealth(data);
       setError(false);
@@ -40,7 +38,11 @@ export default function Status() {
   }, [fetchHealth]);
 
   const formatTime = (date: Date) =>
-    date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
 
   return (
     <section className="py-20 px-4 min-h-[60vh]">
@@ -52,14 +54,24 @@ export default function Status() {
         </p>
 
         {loading && !health && !error && (
-          <div className="text-center py-12 text-gray-400">Checking services...</div>
+          <div className="text-center py-12 text-gray-400">
+            Checking services...
+          </div>
         )}
 
         {!loading && (
           <div className="space-y-4">
             <ServiceCard
               name="API Server"
-              status={error ? "error" : health?.status === "ok" ? "ok" : health?.status === "degraded" ? "degraded" : "error"}
+              status={
+                error
+                  ? "error"
+                  : health?.status === "ok"
+                    ? "ok"
+                    : health?.status === "degraded"
+                      ? "degraded"
+                      : "error"
+              }
             />
             <ServiceCard
               name="Database"
@@ -73,11 +85,21 @@ export default function Status() {
             <div className="flex items-center justify-between text-sm text-gray-500">
               <span>
                 Overall:{" "}
-                <span className={health.status === "ok" ? "text-green-600 font-semibold" : "text-yellow-600 font-semibold"}>
-                  {health.status === "ok" ? "All Systems Operational" : "Degraded"}
+                <span
+                  className={
+                    health.status === "ok"
+                      ? "text-green-600 font-semibold"
+                      : "text-yellow-600 font-semibold"
+                  }
+                >
+                  {health.status === "ok"
+                    ? "All Systems Operational"
+                    : "Degraded"}
                 </span>
               </span>
-              {lastChecked && <span>Last checked: {formatTime(lastChecked)}</span>}
+              {lastChecked && (
+                <span>Last checked: {formatTime(lastChecked)}</span>
+              )}
             </div>
           </div>
         )}
@@ -86,7 +108,11 @@ export default function Status() {
           <div className="mt-6 p-4 bg-red-50 rounded-lg border border-red-200">
             <div className="flex items-center justify-between text-sm text-red-600">
               <span className="font-semibold">Unable to reach the API</span>
-              {lastChecked && <span className="text-red-400">Last checked: {formatTime(lastChecked)}</span>}
+              {lastChecked && (
+                <span className="text-red-400">
+                  Last checked: {formatTime(lastChecked)}
+                </span>
+              )}
             </div>
           </div>
         )}
@@ -95,18 +121,38 @@ export default function Status() {
   );
 }
 
-function ServiceCard({ name, status }: { name: string; status: "ok" | "degraded" | "error" }) {
+function ServiceCard({
+  name,
+  status,
+}: {
+  name: string;
+  status: "ok" | "degraded" | "error";
+}) {
   const colorMap = {
-    ok: { badge: "bg-green-100 text-green-700", dot: "bg-green-500", label: "Operational" },
-    degraded: { badge: "bg-yellow-100 text-yellow-700", dot: "bg-yellow-500", label: "Degraded" },
-    error: { badge: "bg-red-100 text-red-700", dot: "bg-red-500", label: "Down" },
+    ok: {
+      badge: "bg-green-100 text-green-700",
+      dot: "bg-green-500",
+      label: "Operational",
+    },
+    degraded: {
+      badge: "bg-yellow-100 text-yellow-700",
+      dot: "bg-yellow-500",
+      label: "Degraded",
+    },
+    error: {
+      badge: "bg-red-100 text-red-700",
+      dot: "bg-red-500",
+      label: "Down",
+    },
   };
   const style = colorMap[status];
 
   return (
     <div className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
       <span className="text-gray-900 font-medium">{name}</span>
-      <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${style.badge}`}>
+      <span
+        className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${style.badge}`}
+      >
         <span className={`w-2 h-2 rounded-full ${style.dot}`} />
         {style.label}
       </span>

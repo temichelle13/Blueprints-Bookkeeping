@@ -45,8 +45,7 @@ import {
   Link2,
   Copy,
 } from "lucide-react";
-
-const API_BASE = import.meta.env.VITE_API_URL || "/api";
+import { getApiRoot } from "@/lib/api";
 
 function getAdminToken(): string | null {
   return sessionStorage.getItem("admin_token");
@@ -58,7 +57,9 @@ function setAdminToken(token: string): void {
 
 function adminHeaders(): Record<string, string> {
   const token = getAdminToken();
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
   if (token) headers["x-admin-token"] = token;
   return headers;
 }
@@ -211,7 +212,10 @@ export default function AdminContracts() {
   const [documentsError, setDocumentsError] = useState<string | null>(null);
   const [adobeStatusError, setAdobeStatusError] = useState<string | null>(null);
   const [sendLinkDialogOpen, setSendLinkDialogOpen] = useState(false);
-  const [sendLinkForm, setSendLinkForm] = useState({ clientName: "", clientEmail: "" });
+  const [sendLinkForm, setSendLinkForm] = useState({
+    clientName: "",
+    clientEmail: "",
+  });
 
   const [sendForm, setSendForm] = useState({
     clientName: "",
@@ -232,7 +236,9 @@ export default function AdminContracts() {
 
   async function fetchContracts() {
     try {
-      const res = await fetch(`${API_BASE}/contracts`, { headers: adminHeaders() });
+      const res = await fetch(`${getApiRoot()}/contracts`, {
+        headers: adminHeaders(),
+      });
       if (res.status === 401 || res.status === 503) {
         setAuthenticated(false);
         setLoading(false);
@@ -246,7 +252,9 @@ export default function AdminContracts() {
     }
   }
 
-  async function parseServerErrorPayload(res: Response): Promise<ApiErrorPayload | string | null> {
+  async function parseServerErrorPayload(
+    res: Response,
+  ): Promise<ApiErrorPayload | string | null> {
     const rawText = await res.text();
     if (!rawText) return null;
 
@@ -257,7 +265,10 @@ export default function AdminContracts() {
     }
   }
 
-  function getErrorMessage(payload: ApiErrorPayload | string | null, fallback: string) {
+  function getErrorMessage(
+    payload: ApiErrorPayload | string | null,
+    fallback: string,
+  ) {
     if (!payload) return fallback;
     if (typeof payload === "string") return payload;
     return payload.message || payload.error || fallback;
@@ -265,20 +276,31 @@ export default function AdminContracts() {
 
   async function fetchTemplates() {
     try {
-      const res = await fetch(`${API_BASE}/contracts/templates/list`, { headers: adminHeaders() });
+      const res = await fetch(`${getApiRoot()}/contracts/templates/list`, {
+        headers: adminHeaders(),
+      });
 
       if (res.status === 401 || res.status === 503) {
         setAuthenticated(false);
-        setTemplatesError("Your admin session is unavailable. Sign in again to load templates.");
+        setTemplatesError(
+          "Your admin session is unavailable. Sign in again to load templates.",
+        );
         return;
       }
 
       if (!res.ok) {
         const payload = await parseServerErrorPayload(res);
-        console.error("Failed to fetch templates:", { status: res.status, payload });
+        console.error("Failed to fetch templates:", {
+          status: res.status,
+          payload,
+        });
         const message = getErrorMessage(payload, "Could not load templates.");
         setTemplatesError(message);
-        toast({ title: "Template Load Failed", description: message, variant: "destructive" });
+        toast({
+          title: "Template Load Failed",
+          description: message,
+          variant: "destructive",
+        });
         return;
       }
 
@@ -289,26 +311,41 @@ export default function AdminContracts() {
       console.error("Failed to fetch templates:", err);
       const message = "Could not load templates. Please retry.";
       setTemplatesError(message);
-      toast({ title: "Template Load Failed", description: message, variant: "destructive" });
+      toast({
+        title: "Template Load Failed",
+        description: message,
+        variant: "destructive",
+      });
     }
   }
 
   async function fetchDocuments() {
     try {
-      const res = await fetch(`${API_BASE}/documents`, { headers: adminHeaders() });
+      const res = await fetch(`${getApiRoot()}/documents`, {
+        headers: adminHeaders(),
+      });
 
       if (res.status === 401 || res.status === 503) {
         setAuthenticated(false);
-        setDocumentsError("Your admin session is unavailable. Sign in again to load documents.");
+        setDocumentsError(
+          "Your admin session is unavailable. Sign in again to load documents.",
+        );
         return;
       }
 
       if (!res.ok) {
         const payload = await parseServerErrorPayload(res);
-        console.error("Failed to fetch documents:", { status: res.status, payload });
+        console.error("Failed to fetch documents:", {
+          status: res.status,
+          payload,
+        });
         const message = getErrorMessage(payload, "Could not load documents.");
         setDocumentsError(message);
-        toast({ title: "Document Load Failed", description: message, variant: "destructive" });
+        toast({
+          title: "Document Load Failed",
+          description: message,
+          variant: "destructive",
+        });
         return;
       }
 
@@ -319,26 +356,44 @@ export default function AdminContracts() {
       console.error("Failed to fetch documents:", err);
       const message = "Could not load documents. Please retry.";
       setDocumentsError(message);
-      toast({ title: "Document Load Failed", description: message, variant: "destructive" });
+      toast({
+        title: "Document Load Failed",
+        description: message,
+        variant: "destructive",
+      });
     }
   }
 
   async function fetchAdobeStatus() {
     try {
-      const res = await fetch(`${API_BASE}/contracts/adobe/status`, { headers: adminHeaders() });
+      const res = await fetch(`${getApiRoot()}/contracts/adobe/status`, {
+        headers: adminHeaders(),
+      });
 
       if (res.status === 401 || res.status === 503) {
         setAuthenticated(false);
-        setAdobeStatusError("Your admin session is unavailable. Sign in again to load Adobe status.");
+        setAdobeStatusError(
+          "Your admin session is unavailable. Sign in again to load Adobe status.",
+        );
         return;
       }
 
       if (!res.ok) {
         const payload = await parseServerErrorPayload(res);
-        console.error("Failed to fetch Adobe status:", { status: res.status, payload });
-        const message = getErrorMessage(payload, "Could not load Adobe Sign status.");
+        console.error("Failed to fetch Adobe status:", {
+          status: res.status,
+          payload,
+        });
+        const message = getErrorMessage(
+          payload,
+          "Could not load Adobe Sign status.",
+        );
         setAdobeStatusError(message);
-        toast({ title: "Adobe Status Failed", description: message, variant: "destructive" });
+        toast({
+          title: "Adobe Status Failed",
+          description: message,
+          variant: "destructive",
+        });
         return;
       }
 
@@ -349,20 +404,30 @@ export default function AdminContracts() {
       console.error("Failed to fetch Adobe status:", err);
       const message = "Could not load Adobe Sign status. Please retry.";
       setAdobeStatusError(message);
-      toast({ title: "Adobe Status Failed", description: message, variant: "destructive" });
+      toast({
+        title: "Adobe Status Failed",
+        description: message,
+        variant: "destructive",
+      });
     }
   }
 
   useEffect(() => {
-    Promise.allSettled([fetchContracts(), fetchTemplates(), fetchDocuments(), fetchAdobeStatus()]).finally(
-      () => setLoading(false),
-    );
+    Promise.allSettled([
+      fetchContracts(),
+      fetchTemplates(),
+      fetchDocuments(),
+      fetchAdobeStatus(),
+    ]).finally(() => setLoading(false));
   }, []);
 
   async function handleSyncAll() {
     setSyncing(true);
     try {
-      const res = await fetch(`${API_BASE}/contracts/sync-all`, { method: "POST", headers: adminHeaders() });
+      const res = await fetch(`${getApiRoot()}/contracts/sync-all`, {
+        method: "POST",
+        headers: adminHeaders(),
+      });
       const data = await res.json();
       toast({
         title: "Sync Complete",
@@ -370,20 +435,32 @@ export default function AdminContracts() {
       });
       await fetchContracts();
     } catch (err) {
-      toast({ title: "Sync Failed", description: "Could not sync contracts.", variant: "destructive" });
+      toast({
+        title: "Sync Failed",
+        description: "Could not sync contracts.",
+        variant: "destructive",
+      });
     } finally {
       setSyncing(false);
     }
   }
 
   async function handleSendContract() {
-    if (!sendForm.clientName || !sendForm.clientEmail || !sendForm.contractType) {
-      toast({ title: "Missing Fields", description: "Name, email, and contract type are required.", variant: "destructive" });
+    if (
+      !sendForm.clientName ||
+      !sendForm.clientEmail ||
+      !sendForm.contractType
+    ) {
+      toast({
+        title: "Missing Fields",
+        description: "Name, email, and contract type are required.",
+        variant: "destructive",
+      });
       return;
     }
 
     try {
-      const res = await fetch(`${API_BASE}/contracts/send`, {
+      const res = await fetch(`${getApiRoot()}/contracts/send`, {
         method: "POST",
         headers: adminHeaders(),
         body: JSON.stringify(sendForm),
@@ -391,23 +468,45 @@ export default function AdminContracts() {
 
       if (!res.ok) throw new Error("Send failed");
 
-      toast({ title: "Contract Sent", description: `Contract sent to ${sendForm.clientEmail}.` });
+      toast({
+        title: "Contract Sent",
+        description: `Contract sent to ${sendForm.clientEmail}.`,
+      });
       setSendDialogOpen(false);
-      setSendForm({ clientName: "", clientEmail: "", contractType: "", serviceType: "", pricingTier: "", startDate: "" });
+      setSendForm({
+        clientName: "",
+        clientEmail: "",
+        contractType: "",
+        serviceType: "",
+        pricingTier: "",
+        startDate: "",
+      });
       await fetchContracts();
     } catch (err) {
-      toast({ title: "Send Failed", description: "Could not send contract.", variant: "destructive" });
+      toast({
+        title: "Send Failed",
+        description: "Could not send contract.",
+        variant: "destructive",
+      });
     }
   }
 
   async function handleCreateTemplate() {
-    if (!templateForm.name || !templateForm.contractType || !templateForm.triggerCondition) {
-      toast({ title: "Missing Fields", description: "Name, type, and trigger are required.", variant: "destructive" });
+    if (
+      !templateForm.name ||
+      !templateForm.contractType ||
+      !templateForm.triggerCondition
+    ) {
+      toast({
+        title: "Missing Fields",
+        description: "Name, type, and trigger are required.",
+        variant: "destructive",
+      });
       return;
     }
 
     try {
-      const res = await fetch(`${API_BASE}/contracts/templates`, {
+      const res = await fetch(`${getApiRoot()}/contracts/templates`, {
         method: "POST",
         headers: adminHeaders(),
         body: JSON.stringify(templateForm),
@@ -415,12 +514,25 @@ export default function AdminContracts() {
 
       if (!res.ok) throw new Error("Create failed");
 
-      toast({ title: "Template Created", description: `Template "${templateForm.name}" created.` });
+      toast({
+        title: "Template Created",
+        description: `Template "${templateForm.name}" created.`,
+      });
       setTemplateDialogOpen(false);
-      setTemplateForm({ name: "", contractType: "", adobeTemplateId: "", triggerCondition: "", description: "" });
+      setTemplateForm({
+        name: "",
+        contractType: "",
+        adobeTemplateId: "",
+        triggerCondition: "",
+        description: "",
+      });
       await fetchTemplates();
     } catch (err) {
-      toast({ title: "Create Failed", description: "Could not create template.", variant: "destructive" });
+      toast({
+        title: "Create Failed",
+        description: "Could not create template.",
+        variant: "destructive",
+      });
     }
   }
 
@@ -442,7 +554,12 @@ export default function AdminContracts() {
     setAdminToken(tokenInput.trim());
     setTokenInput("");
     setLoading(true);
-    await Promise.allSettled([fetchContracts(), fetchTemplates(), fetchDocuments(), fetchAdobeStatus()]);
+    await Promise.allSettled([
+      fetchContracts(),
+      fetchTemplates(),
+      fetchDocuments(),
+      fetchAdobeStatus(),
+    ]);
     setLoading(false);
   }
 
@@ -465,7 +582,9 @@ export default function AdminContracts() {
           className="glass-card p-8 max-w-md w-full mx-4"
         >
           <h1 className="text-2xl font-bold text-white mb-2">Admin Access</h1>
-          <p className="text-gray-400 mb-6">Enter the admin token to access the contract dashboard.</p>
+          <p className="text-gray-400 mb-6">
+            Enter the admin token to access the contract dashboard.
+          </p>
           <div className="space-y-4">
             <Input
               type="password"
@@ -475,7 +594,10 @@ export default function AdminContracts() {
               onKeyDown={(e) => e.key === "Enter" && handleLogin()}
               className="bg-[#0a0e1a] border-indigo-500/20"
             />
-            <Button onClick={handleLogin} className="w-full bg-indigo-600 hover:bg-indigo-700">
+            <Button
+              onClick={handleLogin}
+              className="w-full bg-indigo-600 hover:bg-indigo-700"
+            >
               Sign In
             </Button>
           </div>
@@ -495,7 +617,9 @@ export default function AdminContracts() {
         >
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-white">Contract Management</h1>
+              <h1 className="text-3xl font-bold text-white">
+                Contract Management
+              </h1>
               <p className="text-gray-400 mt-1">
                 Manage contracts via Adobe Acrobat Sign
               </p>
@@ -523,7 +647,9 @@ export default function AdminContracts() {
                   }
                 >
                   <AlertCircle className="w-3 h-3 mr-1" />
-                  {adobeStatus.configured ? "Adobe Sign Connected" : "Adobe Sign Not Connected"}
+                  {adobeStatus.configured
+                    ? "Adobe Sign Connected"
+                    : "Adobe Sign Not Connected"}
                 </Badge>
               )}
               <Button
@@ -533,7 +659,9 @@ export default function AdminContracts() {
                 disabled={syncing}
                 className="border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10"
               >
-                <RefreshCw className={`w-4 h-4 mr-2 ${syncing ? "animate-spin" : ""}`} />
+                <RefreshCw
+                  className={`w-4 h-4 mr-2 ${syncing ? "animate-spin" : ""}`}
+                />
                 Sync All
               </Button>
               <Dialog open={sendDialogOpen} onOpenChange={setSendDialogOpen}>
@@ -552,7 +680,12 @@ export default function AdminContracts() {
                       <Label>Client Name *</Label>
                       <Input
                         value={sendForm.clientName}
-                        onChange={(e) => setSendForm((p) => ({ ...p, clientName: e.target.value }))}
+                        onChange={(e) =>
+                          setSendForm((p) => ({
+                            ...p,
+                            clientName: e.target.value,
+                          }))
+                        }
                         className="bg-[#0a0e1a] border-indigo-500/20"
                       />
                     </div>
@@ -561,7 +694,12 @@ export default function AdminContracts() {
                       <Input
                         type="email"
                         value={sendForm.clientEmail}
-                        onChange={(e) => setSendForm((p) => ({ ...p, clientEmail: e.target.value }))}
+                        onChange={(e) =>
+                          setSendForm((p) => ({
+                            ...p,
+                            clientEmail: e.target.value,
+                          }))
+                        }
                         className="bg-[#0a0e1a] border-indigo-500/20"
                       />
                     </div>
@@ -569,7 +707,9 @@ export default function AdminContracts() {
                       <Label>Contract Type *</Label>
                       <Select
                         value={sendForm.contractType}
-                        onValueChange={(v) => setSendForm((p) => ({ ...p, contractType: v }))}
+                        onValueChange={(v) =>
+                          setSendForm((p) => ({ ...p, contractType: v }))
+                        }
                       >
                         <SelectTrigger className="bg-[#0a0e1a] border-indigo-500/20">
                           <SelectValue placeholder="Select type" />
@@ -587,7 +727,12 @@ export default function AdminContracts() {
                       <Label>Service Type</Label>
                       <Input
                         value={sendForm.serviceType}
-                        onChange={(e) => setSendForm((p) => ({ ...p, serviceType: e.target.value }))}
+                        onChange={(e) =>
+                          setSendForm((p) => ({
+                            ...p,
+                            serviceType: e.target.value,
+                          }))
+                        }
                         className="bg-[#0a0e1a] border-indigo-500/20"
                         placeholder="e.g. Advanced Bookkeeping"
                       />
@@ -597,7 +742,12 @@ export default function AdminContracts() {
                         <Label>Pricing Tier</Label>
                         <Input
                           value={sendForm.pricingTier}
-                          onChange={(e) => setSendForm((p) => ({ ...p, pricingTier: e.target.value }))}
+                          onChange={(e) =>
+                            setSendForm((p) => ({
+                              ...p,
+                              pricingTier: e.target.value,
+                            }))
+                          }
                           className="bg-[#0a0e1a] border-indigo-500/20"
                           placeholder="e.g. $500/mo"
                         />
@@ -607,12 +757,20 @@ export default function AdminContracts() {
                         <Input
                           type="date"
                           value={sendForm.startDate}
-                          onChange={(e) => setSendForm((p) => ({ ...p, startDate: e.target.value }))}
+                          onChange={(e) =>
+                            setSendForm((p) => ({
+                              ...p,
+                              startDate: e.target.value,
+                            }))
+                          }
                           className="bg-[#0a0e1a] border-indigo-500/20"
                         />
                       </div>
                     </div>
-                    <Button onClick={handleSendContract} className="w-full bg-indigo-600 hover:bg-indigo-700">
+                    <Button
+                      onClick={handleSendContract}
+                      className="w-full bg-indigo-600 hover:bg-indigo-700"
+                    >
                       <Send className="w-4 h-4 mr-2" />
                       Send Contract
                     </Button>
@@ -624,15 +782,24 @@ export default function AdminContracts() {
 
           <Tabs defaultValue="contracts" className="space-y-6">
             <TabsList className="bg-[#121830] border border-indigo-500/20">
-              <TabsTrigger value="contracts" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
+              <TabsTrigger
+                value="contracts"
+                className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white"
+              >
                 <FileText className="w-4 h-4 mr-2" />
                 Contracts ({counts.all})
               </TabsTrigger>
-              <TabsTrigger value="documents" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
+              <TabsTrigger
+                value="documents"
+                className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white"
+              >
                 <Upload className="w-4 h-4 mr-2" />
                 Client Documents ({documents.length})
               </TabsTrigger>
-              <TabsTrigger value="templates" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
+              <TabsTrigger
+                value="templates"
+                className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white"
+              >
                 <Settings className="w-4 h-4 mr-2" />
                 Templates ({templates.length})
               </TabsTrigger>
@@ -640,21 +807,24 @@ export default function AdminContracts() {
 
             <TabsContent value="contracts" className="space-y-4">
               <div className="flex gap-2 flex-wrap">
-                {(["all", "sent", "signed", "expired", "draft"] as const).map((s) => (
-                  <Button
-                    key={s}
-                    variant={statusFilter === s ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setStatusFilter(s)}
-                    className={
-                      statusFilter === s
-                        ? "bg-indigo-600 text-white"
-                        : "border-indigo-500/20 text-gray-400 hover:bg-indigo-500/10"
-                    }
-                  >
-                    {s.charAt(0).toUpperCase() + s.slice(1)} ({counts[s] ?? 0})
-                  </Button>
-                ))}
+                {(["all", "sent", "signed", "expired", "draft"] as const).map(
+                  (s) => (
+                    <Button
+                      key={s}
+                      variant={statusFilter === s ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setStatusFilter(s)}
+                      className={
+                        statusFilter === s
+                          ? "bg-indigo-600 text-white"
+                          : "border-indigo-500/20 text-gray-400 hover:bg-indigo-500/10"
+                      }
+                    >
+                      {s.charAt(0).toUpperCase() + s.slice(1)} ({counts[s] ?? 0}
+                      )
+                    </Button>
+                  ),
+                )}
               </div>
 
               <div className="glass-card overflow-hidden">
@@ -673,7 +843,10 @@ export default function AdminContracts() {
                   <TableBody>
                     {filteredContracts.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={7} className="text-center text-gray-500 py-12">
+                        <TableCell
+                          colSpan={7}
+                          className="text-center text-gray-500 py-12"
+                        >
                           No contracts found.
                         </TableCell>
                       </TableRow>
@@ -685,14 +858,20 @@ export default function AdminContracts() {
                         >
                           <TableCell>
                             <div>
-                              <p className="text-white font-medium">{contract.clientName}</p>
-                              <p className="text-gray-500 text-sm">{contract.clientEmail}</p>
+                              <p className="text-white font-medium">
+                                {contract.clientName}
+                              </p>
+                              <p className="text-gray-500 text-sm">
+                                {contract.clientEmail}
+                              </p>
                             </div>
                           </TableCell>
                           <TableCell className="text-gray-300">
                             {getContractTypeLabel(contract.contractType)}
                           </TableCell>
-                          <TableCell>{getStatusBadge(contract.status)}</TableCell>
+                          <TableCell>
+                            {getStatusBadge(contract.status)}
+                          </TableCell>
                           <TableCell className="text-gray-400 text-sm">
                             {formatDate(contract.sentAt)}
                           </TableCell>
@@ -705,23 +884,31 @@ export default function AdminContracts() {
                           <TableCell>
                             {contract.status === "signed" ? (
                               <a
-                                href={`${API_BASE}/contracts/${contract.id}/document`}
+                                href={`${getApiRoot()}/contracts/${contract.id}/document`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-1 text-indigo-400 hover:text-indigo-300 text-sm"
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  const url = `${API_BASE}/contracts/${contract.id}/document`;
+                                  const url = `${getApiRoot()}/contracts/${contract.id}/document`;
                                   fetch(url, { headers: adminHeaders() })
-                                    .then(r => {
-                                      if (!r.ok) throw new Error("Failed to fetch document");
+                                    .then((r) => {
+                                      if (!r.ok)
+                                        throw new Error(
+                                          "Failed to fetch document",
+                                        );
                                       return r.blob();
                                     })
-                                    .then(blob => {
+                                    .then((blob) => {
                                       const blobUrl = URL.createObjectURL(blob);
                                       window.open(blobUrl, "_blank");
                                     })
-                                    .catch(err => console.error("Document download error:", err));
+                                    .catch((err) =>
+                                      console.error(
+                                        "Document download error:",
+                                        err,
+                                      ),
+                                    );
                                 }}
                               >
                                 <Eye className="w-3.5 h-3.5" />
@@ -750,7 +937,10 @@ export default function AdminContracts() {
                   <RefreshCw className="w-4 h-4 mr-2" />
                   Refresh
                 </Button>
-                <Dialog open={sendLinkDialogOpen} onOpenChange={setSendLinkDialogOpen}>
+                <Dialog
+                  open={sendLinkDialogOpen}
+                  onOpenChange={setSendLinkDialogOpen}
+                >
                   <DialogTrigger asChild>
                     <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
                       <Link2 className="w-4 h-4 mr-2" />
@@ -766,7 +956,12 @@ export default function AdminContracts() {
                         <Label>Client Name *</Label>
                         <Input
                           value={sendLinkForm.clientName}
-                          onChange={(e) => setSendLinkForm((p) => ({ ...p, clientName: e.target.value }))}
+                          onChange={(e) =>
+                            setSendLinkForm((p) => ({
+                              ...p,
+                              clientName: e.target.value,
+                            }))
+                          }
                           className="bg-[#0a0e1a] border-indigo-500/20"
                         />
                       </div>
@@ -775,7 +970,12 @@ export default function AdminContracts() {
                         <Input
                           type="email"
                           value={sendLinkForm.clientEmail}
-                          onChange={(e) => setSendLinkForm((p) => ({ ...p, clientEmail: e.target.value }))}
+                          onChange={(e) =>
+                            setSendLinkForm((p) => ({
+                              ...p,
+                              clientEmail: e.target.value,
+                            }))
+                          }
                           className="bg-[#0a0e1a] border-indigo-500/20"
                         />
                       </div>
@@ -784,20 +984,29 @@ export default function AdminContracts() {
                         <div className="flex gap-2">
                           <Input
                             readOnly
-                            value={sendLinkForm.clientName && sendLinkForm.clientEmail
-                              ? `${window.location.origin}/client-portal?name=${encodeURIComponent(sendLinkForm.clientName)}&email=${encodeURIComponent(sendLinkForm.clientEmail)}`
-                              : "Enter name and email to generate link"}
+                            value={
+                              sendLinkForm.clientName &&
+                              sendLinkForm.clientEmail
+                                ? `${window.location.origin}/client-portal?name=${encodeURIComponent(sendLinkForm.clientName)}&email=${encodeURIComponent(sendLinkForm.clientEmail)}`
+                                : "Enter name and email to generate link"
+                            }
                             className="bg-[#0a0e1a] border-indigo-500/20 text-sm"
                           />
                           <Button
                             variant="outline"
                             size="sm"
-                            disabled={!sendLinkForm.clientName || !sendLinkForm.clientEmail}
+                            disabled={
+                              !sendLinkForm.clientName ||
+                              !sendLinkForm.clientEmail
+                            }
                             className="border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10 flex-shrink-0"
                             onClick={() => {
                               const link = `${window.location.origin}/client-portal?name=${encodeURIComponent(sendLinkForm.clientName)}&email=${encodeURIComponent(sendLinkForm.clientEmail)}`;
                               navigator.clipboard.writeText(link);
-                              toast({ title: "Link Copied", description: "Upload link copied to clipboard." });
+                              toast({
+                                title: "Link Copied",
+                                description: "Upload link copied to clipboard.",
+                              });
                             }}
                           >
                             <Copy className="w-4 h-4" />
@@ -806,23 +1015,38 @@ export default function AdminContracts() {
                       </div>
                       <Button
                         className="w-full bg-indigo-600 hover:bg-indigo-700"
-                        disabled={!sendLinkForm.clientName || !sendLinkForm.clientEmail}
+                        disabled={
+                          !sendLinkForm.clientName || !sendLinkForm.clientEmail
+                        }
                         onClick={async () => {
                           try {
-                            const res = await fetch(`${API_BASE}/documents/send-link`, {
-                              method: "POST",
-                              headers: adminHeaders(),
-                              body: JSON.stringify({
-                                clientName: sendLinkForm.clientName,
-                                clientEmail: sendLinkForm.clientEmail,
-                              }),
-                            });
+                            const res = await fetch(
+                              `${getApiRoot()}/documents/send-link`,
+                              {
+                                method: "POST",
+                                headers: adminHeaders(),
+                                body: JSON.stringify({
+                                  clientName: sendLinkForm.clientName,
+                                  clientEmail: sendLinkForm.clientEmail,
+                                }),
+                              },
+                            );
                             if (!res.ok) throw new Error("Send failed");
-                            toast({ title: "Link Sent", description: `Upload link emailed to ${sendLinkForm.clientEmail}.` });
+                            toast({
+                              title: "Link Sent",
+                              description: `Upload link emailed to ${sendLinkForm.clientEmail}.`,
+                            });
                             setSendLinkDialogOpen(false);
-                            setSendLinkForm({ clientName: "", clientEmail: "" });
+                            setSendLinkForm({
+                              clientName: "",
+                              clientEmail: "",
+                            });
                           } catch {
-                            toast({ title: "Send Failed", description: "Could not send upload link email.", variant: "destructive" });
+                            toast({
+                              title: "Send Failed",
+                              description: "Could not send upload link email.",
+                              variant: "destructive",
+                            });
                           }
                         }}
                       >
@@ -865,7 +1089,10 @@ export default function AdminContracts() {
                   <TableBody>
                     {documents.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={6} className="text-center text-gray-500 py-12">
+                        <TableCell
+                          colSpan={6}
+                          className="text-center text-gray-500 py-12"
+                        >
                           No documents uploaded yet.
                         </TableCell>
                       </TableRow>
@@ -877,8 +1104,12 @@ export default function AdminContracts() {
                         >
                           <TableCell>
                             <div>
-                              <p className="text-white font-medium">{doc.clientName}</p>
-                              <p className="text-gray-500 text-sm">{doc.clientEmail}</p>
+                              <p className="text-white font-medium">
+                                {doc.clientName}
+                              </p>
+                              <p className="text-gray-500 text-sm">
+                                {doc.clientEmail}
+                              </p>
                             </div>
                           </TableCell>
                           <TableCell className="text-gray-300 text-sm">
@@ -887,7 +1118,8 @@ export default function AdminContracts() {
                           <TableCell className="text-gray-400 text-sm">
                             {doc.fileSize < 1024 * 1024
                               ? (doc.fileSize / 1024).toFixed(1) + " KB"
-                              : (doc.fileSize / (1024 * 1024)).toFixed(1) + " MB"}
+                              : (doc.fileSize / (1024 * 1024)).toFixed(1) +
+                                " MB"}
                           </TableCell>
                           <TableCell className="text-gray-400 text-sm">
                             {doc.mimeType.split("/").pop()?.toUpperCase()}
@@ -899,10 +1131,11 @@ export default function AdminContracts() {
                             <button
                               className="inline-flex items-center gap-1 text-indigo-400 hover:text-indigo-300 text-sm"
                               onClick={() => {
-                                const url = `${API_BASE}/documents/${doc.id}/download`;
+                                const url = `${getApiRoot()}/documents/${doc.id}/download`;
                                 fetch(url, { headers: adminHeaders() })
                                   .then((r) => {
-                                    if (!r.ok) throw new Error("Download failed");
+                                    if (!r.ok)
+                                      throw new Error("Download failed");
                                     return r.blob();
                                   })
                                   .then((blob) => {
@@ -913,7 +1146,9 @@ export default function AdminContracts() {
                                     a.click();
                                     URL.revokeObjectURL(blobUrl);
                                   })
-                                  .catch((err) => console.error("Download error:", err));
+                                  .catch((err) =>
+                                    console.error("Download error:", err),
+                                  );
                               }}
                             >
                               <Download className="w-3.5 h-3.5" />
@@ -930,7 +1165,10 @@ export default function AdminContracts() {
 
             <TabsContent value="templates" className="space-y-4">
               <div className="flex justify-end">
-                <Dialog open={templateDialogOpen} onOpenChange={setTemplateDialogOpen}>
+                <Dialog
+                  open={templateDialogOpen}
+                  onOpenChange={setTemplateDialogOpen}
+                >
                   <DialogTrigger asChild>
                     <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
                       Add Template
@@ -945,7 +1183,12 @@ export default function AdminContracts() {
                         <Label>Template Name *</Label>
                         <Input
                           value={templateForm.name}
-                          onChange={(e) => setTemplateForm((p) => ({ ...p, name: e.target.value }))}
+                          onChange={(e) =>
+                            setTemplateForm((p) => ({
+                              ...p,
+                              name: e.target.value,
+                            }))
+                          }
                           className="bg-[#0a0e1a] border-indigo-500/20"
                         />
                       </div>
@@ -953,7 +1196,9 @@ export default function AdminContracts() {
                         <Label>Contract Type *</Label>
                         <Select
                           value={templateForm.contractType}
-                          onValueChange={(v) => setTemplateForm((p) => ({ ...p, contractType: v }))}
+                          onValueChange={(v) =>
+                            setTemplateForm((p) => ({ ...p, contractType: v }))
+                          }
                         >
                           <SelectTrigger className="bg-[#0a0e1a] border-indigo-500/20">
                             <SelectValue placeholder="Select type" />
@@ -971,7 +1216,12 @@ export default function AdminContracts() {
                         <Label>Trigger Condition *</Label>
                         <Select
                           value={templateForm.triggerCondition}
-                          onValueChange={(v) => setTemplateForm((p) => ({ ...p, triggerCondition: v }))}
+                          onValueChange={(v) =>
+                            setTemplateForm((p) => ({
+                              ...p,
+                              triggerCondition: v,
+                            }))
+                          }
                         >
                           <SelectTrigger className="bg-[#0a0e1a] border-indigo-500/20">
                             <SelectValue placeholder="Select trigger" />
@@ -989,7 +1239,12 @@ export default function AdminContracts() {
                         <Label>Adobe Template ID</Label>
                         <Input
                           value={templateForm.adobeTemplateId}
-                          onChange={(e) => setTemplateForm((p) => ({ ...p, adobeTemplateId: e.target.value }))}
+                          onChange={(e) =>
+                            setTemplateForm((p) => ({
+                              ...p,
+                              adobeTemplateId: e.target.value,
+                            }))
+                          }
                           className="bg-[#0a0e1a] border-indigo-500/20"
                           placeholder="From Adobe Sign library"
                         />
@@ -998,11 +1253,19 @@ export default function AdminContracts() {
                         <Label>Description</Label>
                         <Input
                           value={templateForm.description}
-                          onChange={(e) => setTemplateForm((p) => ({ ...p, description: e.target.value }))}
+                          onChange={(e) =>
+                            setTemplateForm((p) => ({
+                              ...p,
+                              description: e.target.value,
+                            }))
+                          }
                           className="bg-[#0a0e1a] border-indigo-500/20"
                         />
                       </div>
-                      <Button onClick={handleCreateTemplate} className="w-full bg-indigo-600 hover:bg-indigo-700">
+                      <Button
+                        onClick={handleCreateTemplate}
+                        className="w-full bg-indigo-600 hover:bg-indigo-700"
+                      >
                         Create Template
                       </Button>
                     </div>
@@ -1041,8 +1304,12 @@ export default function AdminContracts() {
                   <TableBody>
                     {templates.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={6} className="text-center text-gray-500 py-12">
-                          No templates configured. Add a template to get started.
+                        <TableCell
+                          colSpan={6}
+                          className="text-center text-gray-500 py-12"
+                        >
+                          No templates configured. Add a template to get
+                          started.
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -1051,15 +1318,21 @@ export default function AdminContracts() {
                           key={t.id}
                           className="border-indigo-500/10 hover:bg-indigo-500/5"
                         >
-                          <TableCell className="text-white font-medium">{t.name}</TableCell>
+                          <TableCell className="text-white font-medium">
+                            {t.name}
+                          </TableCell>
                           <TableCell className="text-gray-300">
                             {getContractTypeLabel(t.contractType)}
                           </TableCell>
                           <TableCell className="text-gray-300">
-                            {TRIGGER_CONDITIONS.find((tc) => tc.value === t.triggerCondition)?.label || t.triggerCondition}
+                            {TRIGGER_CONDITIONS.find(
+                              (tc) => tc.value === t.triggerCondition,
+                            )?.label || t.triggerCondition}
                           </TableCell>
                           <TableCell className="text-gray-400 text-sm font-mono">
-                            {t.adobeTemplateId ? t.adobeTemplateId.slice(0, 12) + "..." : "—"}
+                            {t.adobeTemplateId
+                              ? t.adobeTemplateId.slice(0, 12) + "..."
+                              : "—"}
                           </TableCell>
                           <TableCell>
                             <Badge
