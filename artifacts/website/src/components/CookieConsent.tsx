@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Cookie, X } from "lucide-react";
+import { Cookie } from "lucide-react";
 import { initAnalytics, trackPageview } from "@/lib/analytics";
 
 const CONSENT_KEY = "bb_cookie_consent";
@@ -63,52 +63,50 @@ export default function CookieConsent() {
   if (!visible) return null;
 
   return (
-    <div
-      role="dialog"
-      aria-label="Cookie consent"
-      className="fixed bottom-0 left-0 right-0 z-[60] p-4 sm:p-6"
-    >
-      <div className="max-w-3xl mx-auto glass-card rounded-2xl border border-white/[0.08] p-5 sm:p-6 shadow-2xl">
-        <div className="flex items-start gap-4">
-          <div className="p-2 rounded-lg bg-accent/10 text-accent shrink-0 mt-0.5" aria-hidden="true">
-            <Cookie size={20} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <h2 className="text-white font-semibold text-sm mb-1">We value your privacy</h2>
-            <p className="text-muted-foreground text-sm leading-relaxed">
-              We use privacy-friendly analytics to understand how visitors use our site and optional cookies for our AI chatbot assistant.
-              No personal data is shared with third parties.
-              Essential cookies required for site functionality are always active.
-              You can change your preference at any time.{" "}
-              <a href={`${import.meta.env.BASE_URL}privacy`} className="text-accent hover:underline">
-                Privacy Policy
-              </a>
-            </p>
-          </div>
-          <button
-            onClick={handleDecline}
-            className="shrink-0 p-1.5 text-muted-foreground hover:text-white transition-colors rounded-lg"
-            aria-label="Dismiss cookie banner"
-          >
-            <X size={16} />
-          </button>
-        </div>
+    <>
+      <div aria-hidden="true" className="h-40 sm:h-32 lg:h-0" />
+      <div
+        role="dialog"
+        aria-label="Cookie consent"
+        aria-modal="false"
+        data-cookie-banner
+        className="cookie-banner pointer-events-none fixed inset-x-0 bottom-0 z-[45] px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-4 md:px-6"
+      >
+        <div className="mx-auto max-w-md lg:mx-6 lg:max-w-lg lg:ml-auto">
+          <div className="pointer-events-auto glass-card rounded-2xl border border-white/[0.08] p-4 shadow-2xl shadow-black/30 sm:p-5">
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5 shrink-0 rounded-xl bg-accent/12 p-2 text-accent" aria-hidden="true">
+                <Cookie size={18} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h2 className="mb-1 text-sm font-semibold text-white">Cookies, kept simple</h2>
+                <p className="text-sm leading-6 text-muted-foreground">
+                  Allow analytics and chat cookies, or keep only essential site cookies. You can update this anytime in our{" "}
+                  <a href={`${import.meta.env.BASE_URL}privacy`} className="text-accent hover:underline">
+                    Privacy Policy
+                  </a>
+                  .
+                </p>
+              </div>
+            </div>
 
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-4 sm:ml-12">
-          <button
-            onClick={handleAccept}
-            className="px-6 py-3 bg-[#4F46E5] text-white font-semibold text-sm rounded-lg hover:shadow-lg hover:shadow-accent/20 transition-all"
-          >
-            Accept All
-          </button>
-          <button
-            onClick={handleDecline}
-            className="px-5 py-2.5 bg-white/[0.04] border border-white/10 text-muted-foreground font-medium text-sm rounded-lg hover:text-white hover:bg-white/[0.08] transition-all"
-          >
-            Decline Optional
-          </button>
+            <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
+              <button
+                onClick={handleAccept}
+                className="min-h-11 rounded-xl bg-[#4F46E5] px-4 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-[#5B53F6] hover:shadow-lg hover:shadow-accent/25"
+              >
+                Accept analytics & chat
+              </button>
+              <button
+                onClick={handleDecline}
+                className="min-h-11 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-medium text-muted-foreground transition-all hover:border-white/20 hover:bg-white/[0.08] hover:text-white"
+              >
+                Essential only
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
