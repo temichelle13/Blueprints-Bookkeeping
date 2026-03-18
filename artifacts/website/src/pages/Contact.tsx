@@ -163,7 +163,7 @@ export default function Contact() {
     <div className="pt-24 pb-20">
       <SEO
         path="/contact"
-        description="Get in touch with Blueprints & Bookkeeping. Book a free discovery call, give us a call, or send documents securely — Tea will respond within one business day."
+        description="Get in touch with Blueprints & Bookkeeping. Book a free discovery call or send us a message to discuss your virtual bookkeeping needs."
       />
 
       <section className="py-12 relative">
