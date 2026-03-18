@@ -4,6 +4,7 @@ import { usePageTitle } from "@/hooks/use-page-title";
 import { Link } from "wouter";
 import { cn } from "@/lib/utils";
 import { SEO } from "@/components/SEO";
+import { BookkeepingDisclaimer } from "@/components/BookkeepingDisclaimer";
 import { faqPageSchema } from "@/lib/seo-schemas";
 
 interface FAQItemData {
@@ -186,6 +187,7 @@ export default function FAQ() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         {faqs.map((section) => (
           <div key={section.category}>
+            {section.category === "Bookkeeping" && <BookkeepingDisclaimer className="mb-4" />}
             <div className="flex items-center gap-3 mb-2">
               <div className="accent-bar" />
               <h2 className="text-xs font-mono font-semibold tracking-widest text-accent uppercase">{section.category}</h2>

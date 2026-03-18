@@ -6,7 +6,7 @@ The project features a React-based frontend and an Express API backend, integrat
 
 Key capabilities include:
 - A public-facing website detailing services, pricing, client portfolio, and company information.
-- Individual service landing pages for Bookkeeping, Business Plans, Digital Handshake, and Notary services, with local SEO targeting.
+- Individual service landing pages for Bookkeeping, Business Plans, and Digital Handshake services, with local SEO targeting.
 - Self-service options for clients, including subscription management via Stripe, online intake forms, and a secure document upload portal.
 - Automated contract generation and management through Adobe Acrobat Sign.
 - Comprehensive SEO infrastructure with JSON-LD schemas, Open Graph, Twitter Cards, and canonical URLs.
@@ -22,7 +22,7 @@ The business vision is to support a growing client base with scalable and automa
 - **Communication**: I prefer direct and concise language.
 - **Workflow**: I want iterative development with clear explanations of changes.
 - **Interaction**: Ask before making major architectural changes or introducing new dependencies.
-- **Content Policy**: Do NOT offer tax preparation services or include any tax-related content. Degrees listed on the "About" page should be referred to as "coursework" or "studies" only, not "completed degrees." Professional certifications (CEH v12, QB ProAdvisor Advanced, Crypto Tax Certified, OR Notary RON) are earned. Emphasize the 20-client cap for scarcity. Pricing should always use "starting at" ranges.
+- **Content Policy**: Do NOT offer tax preparation services or include any tax-related content. Degrees listed on the "About" page should be referred to as "coursework" or "studies" only, not "completed degrees." Professional certifications (CEH v12, QB ProAdvisor Advanced, Crypto Tax Certified) are earned. Emphasize the 20-client cap for scarcity. Pricing should always use "starting at" ranges.
 - **Coding Standards**: Ensure all code is well-documented and follows TypeScript best practices.
 - **Branding**: Do not make changes to the existing branding guidelines, including primary and secondary colors (#1B2A5A deep navy, #5B5EA6 periwinkle), theme, and font stack, without explicit approval.
 - **Header**: The header should ONLY show the BB icon (`public/logo-icon.png`), without any accompanying text. Nav: About, Services, Industries, Pricing, Portfolio, Blog, Resources + "Get Started" CTA.

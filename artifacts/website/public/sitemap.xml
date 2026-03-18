@@ -37,12 +37,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://blueprintsandbookkeeping.com/services/notary</loc>
-    <lastmod>2026-03-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://blueprintsandbookkeeping.com/industries</loc>
     <lastmod>2026-03-16</lastmod>
     <changefreq>monthly</changefreq>
@@ -86,19 +80,19 @@
   </url>
   <url>
     <loc>https://blueprintsandbookkeeping.com/blog/what-makes-a-strong-business-plan</loc>
-    <lastmod>2026-03-10</lastmod>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://blueprintsandbookkeeping.com/blog/crypto-accounting-basics-business-owners</loc>
-    <lastmod>2026-03-10</lastmod>
+    <lastmod>2026-02-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://blueprintsandbookkeeping.com/blog/digital-handshake-business-plan-website</loc>
-    <lastmod>2026-03-10</lastmod>
+    <lastmod>2026-02-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
