@@ -68,6 +68,7 @@ The project is structured as a pnpm monorepo, separating deployable applications
 - **Validation**: Zod for API request/response validation.
 - **API Definition**: OpenAPI 3.1, with Orval for client and schema generation.
 - **Security**: Helmet middleware, rate limiting, tightened CORS, and server-side honeypot protection.
+- **Production CORS config**: `CORS_ORIGIN` must be a comma-separated list of full website origins with scheme and no path, for example `https://blueprintsandbookkeeping.com` or `https://blueprintsandbookkeeping.com,https://www.blueprintsandbookkeeping.com`. For launch, this repo consistently points the public frontend at `https://blueprintsandbookkeeping.com`, so that hostname must be included in production.
 - **Core Routes**:
     - `/api/healthz`: Health check.
     - `/api/payments`: Stripe integration for checkout and webhooks.

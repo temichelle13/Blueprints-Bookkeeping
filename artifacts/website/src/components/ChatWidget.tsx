@@ -1,6 +1,14 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { MessageCircle, X, Send, Bot, User, Loader2, ChevronDown } from "lucide-react";
-import { getApiBaseUrl } from "@workspace/api-client-react";
+import {
+  MessageCircle,
+  X,
+  Send,
+  Bot,
+  User,
+  Loader2,
+  ChevronDown,
+} from "lucide-react";
+import { getApiRoot } from "@/lib/api";
 import ReactMarkdown from "react-markdown";
 
 interface Message {
@@ -18,7 +26,7 @@ export default function ChatWidget() {
   const [hasNewMessage, setHasNewMessage] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const apiBase = getApiBaseUrl() || "/api";
+  const apiBase = getApiRoot();
 
   useEffect(() => {
     if (open) {
@@ -68,7 +76,7 @@ export default function ChatWidget() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ content: text }),
-        }
+        },
       );
 
       if (!res.ok || !res.body) {
@@ -168,13 +176,13 @@ export default function ChatWidget() {
   return (
     <>
       {open && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setOpen(false)}
-        />
+        <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
       )}
 
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3" data-chat-widget>
+      <div
+        className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3"
+        data-chat-widget
+      >
         {open && (
           <div
             className="flex flex-col overflow-hidden"
@@ -197,7 +205,9 @@ export default function ChatWidget() {
                 justifyContent: "space-between",
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
                 <div
                   style={{
                     width: 36,
@@ -212,7 +222,14 @@ export default function ChatWidget() {
                   <Bot size={18} color="white" />
                 </div>
                 <div>
-                  <div style={{ color: "white", fontWeight: 600, fontSize: 15, fontFamily: "Outfit, sans-serif" }}>
+                  <div
+                    style={{
+                      color: "white",
+                      fontWeight: 600,
+                      fontSize: 15,
+                      fontFamily: "Outfit, sans-serif",
+                    }}
+                  >
                     Aria
                   </div>
                   <div style={{ color: "rgba(255,255,255,0.8)", fontSize: 12 }}>
@@ -235,8 +252,12 @@ export default function ChatWidget() {
                   cursor: "pointer",
                   transition: "background 0.15s",
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.25)")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.15)")}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.background = "rgba(255,255,255,0.25)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.background = "rgba(255,255,255,0.15)")
+                }
               >
                 <ChevronDown size={16} color="white" />
               </button>
@@ -287,9 +308,9 @@ export default function ChatWidget() {
                     }}
                   >
                     <p style={{ margin: "0 0 8px" }}>
-                      Hi! I'm <strong>Aria</strong>, Tea's assistant. I can answer
-                      questions about our services, give you a price estimate, or
-                      help you book a free discovery call.
+                      Hi! I'm <strong>Aria</strong>, Tea's assistant. I can
+                      answer questions about our services, give you a price
+                      estimate, or help you book a free discovery call.
                     </p>
                     <p style={{ margin: 0, color: "#8B91A0", fontSize: 13 }}>
                       What brings you in today?
@@ -322,7 +343,8 @@ export default function ChatWidget() {
                       justifyContent: "center",
                       flexShrink: 0,
                       marginTop: 2,
-                      border: msg.role === "user" ? "1px solid #252B3D" : "none",
+                      border:
+                        msg.role === "user" ? "1px solid #252B3D" : "none",
                     }}
                   >
                     {msg.role === "user" ? (
@@ -346,10 +368,37 @@ export default function ChatWidget() {
                     }}
                   >
                     {!msg.content && msg.streaming ? (
-                      <span style={{ display: "flex", gap: 4, alignItems: "center" }}>
-                        <span style={{ animation: "pulse 1s infinite", opacity: 0.6 }}>●</span>
-                        <span style={{ animation: "pulse 1s infinite 0.2s", opacity: 0.6 }}>●</span>
-                        <span style={{ animation: "pulse 1s infinite 0.4s", opacity: 0.6 }}>●</span>
+                      <span
+                        style={{
+                          display: "flex",
+                          gap: 4,
+                          alignItems: "center",
+                        }}
+                      >
+                        <span
+                          style={{
+                            animation: "pulse 1s infinite",
+                            opacity: 0.6,
+                          }}
+                        >
+                          ●
+                        </span>
+                        <span
+                          style={{
+                            animation: "pulse 1s infinite 0.2s",
+                            opacity: 0.6,
+                          }}
+                        >
+                          ●
+                        </span>
+                        <span
+                          style={{
+                            animation: "pulse 1s infinite 0.4s",
+                            opacity: 0.6,
+                          }}
+                        >
+                          ●
+                        </span>
                       </span>
                     ) : msg.role === "assistant" ? (
                       <div className="chat-markdown">
@@ -369,7 +418,9 @@ export default function ChatWidget() {
                         )}
                       </div>
                     ) : (
-                      <span style={{ whiteSpace: "pre-wrap" }}>{msg.content}</span>
+                      <span style={{ whiteSpace: "pre-wrap" }}>
+                        {msg.content}
+                      </span>
                     )}
                   </div>
                 </div>
@@ -388,7 +439,9 @@ export default function ChatWidget() {
                 background: "#161B2E",
               }}
             >
-              <label htmlFor="chat-input" className="sr-only">Chat message</label>
+              <label htmlFor="chat-input" className="sr-only">
+                Chat message
+              </label>
               <textarea
                 ref={inputRef}
                 id="chat-input"
@@ -555,7 +608,8 @@ export default function ChatWidget() {
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = "scale(1.08)";
-            e.currentTarget.style.boxShadow = "0 12px 40px rgba(99,102,241,0.55)";
+            e.currentTarget.style.boxShadow =
+              "0 12px 40px rgba(99,102,241,0.55)";
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.transform = "scale(1)";
