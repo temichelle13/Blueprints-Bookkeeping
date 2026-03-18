@@ -1,13 +1,22 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { CalendarDays, CreditCard, BookOpen, ArrowRight, HelpCircle, Send, CheckCircle } from "lucide-react";
+import {
+  CalendarDays,
+  CreditCard,
+  BookOpen,
+  ArrowRight,
+  HelpCircle,
+  Send,
+  CheckCircle,
+} from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
+import { getApiRoot } from "@/lib/api";
 
-const API_BASE = import.meta.env.VITE_API_URL || "/api";
 const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
-const QB_PROADVISOR_URL = "https://quickbooks.intuit.com/partners/pap/?cid=par_blueprintsandbookkeeping";
+const QB_PROADVISOR_URL =
+  "https://quickbooks.intuit.com/partners/pap/?cid=par_blueprintsandbookkeeping";
 
 interface BasePath {
   icon: typeof CalendarDays;
@@ -48,7 +57,7 @@ export default function GetStarted() {
     setSubmitting(true);
     setError("");
     try {
-      const res = await fetch(`${API_BASE}/feedback`, {
+      const res = await fetch(`${getApiRoot()}/feedback`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -62,7 +71,9 @@ export default function GetStarted() {
       if (!res.ok) throw new Error("Failed");
       setSubmitted(true);
     } catch {
-      setError("Something went wrong — please email tea@blueprintsandbookkeeping.com directly.");
+      setError(
+        "Something went wrong — please email tea@blueprintsandbookkeeping.com directly.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -74,7 +85,8 @@ export default function GetStarted() {
       icon: CalendarDays,
       color: "#8B5CF6",
       title: "Let's Talk First",
-      subtitle: "Book a free discovery call to discuss your needs and get a tailored quote.",
+      subtitle:
+        "Book a free discovery call to discuss your needs and get a tailored quote.",
       cta: "Book a Free Call",
       href: CALENDLY_URL,
       external: true,
@@ -84,7 +96,8 @@ export default function GetStarted() {
       icon: CreditCard,
       color: "#6366F1",
       title: "I Know What I Need",
-      subtitle: "I'm ready to review plans, pick a tier, and get started right away.",
+      subtitle:
+        "I'm ready to review plans, pick a tier, and get started right away.",
       cta: "View Plans & Pricing",
       href: "/pricing",
       external: false,
@@ -94,7 +107,8 @@ export default function GetStarted() {
       icon: BookOpen,
       color: "#10B981",
       title: "Just Need QuickBooks",
-      subtitle: "I want a QuickBooks Online subscription through Blueprints & Bookkeeping.",
+      subtitle:
+        "I want a QuickBooks Online subscription through Blueprints & Bookkeeping.",
       cta: "Get QuickBooks",
       href: QB_PROADVISOR_URL,
       external: true,
@@ -181,8 +195,12 @@ export default function GetStarted() {
           <Icon size={26} style={{ color: path.color }} />
         </div>
 
-        <h2 className="text-xl font-display font-bold text-white mb-2">{path.title}</h2>
-        <p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">{path.subtitle}</p>
+        <h2 className="text-xl font-display font-bold text-white mb-2">
+          {path.title}
+        </h2>
+        <p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
+          {path.subtitle}
+        </p>
 
         {path.kind === "quickbooks" && (
           <div
@@ -194,7 +212,14 @@ export default function GetStarted() {
               marginBottom: 16,
             }}
           >
-            <p style={{ fontSize: 12, color: path.color, lineHeight: 1.5, margin: 0 }}>
+            <p
+              style={{
+                fontSize: 12,
+                color: path.color,
+                lineHeight: 1.5,
+                margin: 0,
+              }}
+            >
               {path.note}
             </p>
           </div>
@@ -291,7 +316,11 @@ export default function GetStarted() {
     }
 
     return (
-      <Link key={index} href={path.href} style={{ textDecoration: "none", display: "block" }}>
+      <Link
+        key={index}
+        href={path.href}
+        style={{ textDecoration: "none", display: "block" }}
+      >
         {cardBody}
       </Link>
     );
@@ -318,7 +347,8 @@ export default function GetStarted() {
             How Would You Like to Begin?
           </h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Pick the option that fits where you are right now. No wrong answer — every path leads to the same great service.
+            Pick the option that fits where you are right now. No wrong answer —
+            every path leads to the same great service.
           </p>
         </motion.div>
 
@@ -359,9 +389,12 @@ export default function GetStarted() {
               <HelpCircle size={18} className="text-muted-foreground" />
             </div>
             <div>
-              <h2 className="text-lg font-display font-bold text-white mb-0.5">Not sure? Leave your info</h2>
+              <h2 className="text-lg font-display font-bold text-white mb-0.5">
+                Not sure? Leave your info
+              </h2>
               <p className="text-sm text-muted-foreground">
-                Drop your name, email, and what you're working on — Tea will reach out within one business day. No pressure.
+                Drop your name, email, and what you're working on — Tea will
+                reach out within one business day. No pressure.
               </p>
             </div>
           </div>
@@ -377,7 +410,9 @@ export default function GetStarted() {
             <form onSubmit={handleFallbackSubmit} className="space-y-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label htmlFor="gs-name" className="sr-only">Your name</label>
+                  <label htmlFor="gs-name" className="sr-only">
+                    Your name
+                  </label>
                   <input
                     id="gs-name"
                     type="text"
@@ -386,12 +421,18 @@ export default function GetStarted() {
                     onChange={(e) => setFallbackName(e.target.value)}
                     className={inputClass}
                     style={inputStyle}
-                    onFocus={(e) => Object.assign(e.currentTarget.style, inputFocusStyle)}
-                    onBlur={(e) => Object.assign(e.currentTarget.style, inputStyle)}
+                    onFocus={(e) =>
+                      Object.assign(e.currentTarget.style, inputFocusStyle)
+                    }
+                    onBlur={(e) =>
+                      Object.assign(e.currentTarget.style, inputStyle)
+                    }
                   />
                 </div>
                 <div>
-                  <label htmlFor="gs-email" className="sr-only">Your email</label>
+                  <label htmlFor="gs-email" className="sr-only">
+                    Your email
+                  </label>
                   <input
                     id="gs-email"
                     type="email"
@@ -400,12 +441,18 @@ export default function GetStarted() {
                     onChange={(e) => setFallbackEmail(e.target.value)}
                     className={inputClass}
                     style={inputStyle}
-                    onFocus={(e) => Object.assign(e.currentTarget.style, inputFocusStyle)}
-                    onBlur={(e) => Object.assign(e.currentTarget.style, inputStyle)}
+                    onFocus={(e) =>
+                      Object.assign(e.currentTarget.style, inputFocusStyle)
+                    }
+                    onBlur={(e) =>
+                      Object.assign(e.currentTarget.style, inputStyle)
+                    }
                   />
                 </div>
               </div>
-              <label htmlFor="gs-message" className="sr-only">Your message</label>
+              <label htmlFor="gs-message" className="sr-only">
+                Your message
+              </label>
               <textarea
                 id="gs-message"
                 placeholder="Tell us a bit about your business and what you need help with…"
@@ -415,10 +462,19 @@ export default function GetStarted() {
                 required
                 className={inputClass}
                 style={{ ...inputStyle, resize: "vertical" }}
-                onFocus={(e) => Object.assign(e.currentTarget.style, { ...inputStyle, ...inputFocusStyle })}
+                onFocus={(e) =>
+                  Object.assign(e.currentTarget.style, {
+                    ...inputStyle,
+                    ...inputFocusStyle,
+                  })
+                }
                 onBlur={(e) => Object.assign(e.currentTarget.style, inputStyle)}
               />
-              {error && <p role="alert" className="text-red-400 text-xs">{error}</p>}
+              {error && (
+                <p role="alert" className="text-red-400 text-xs">
+                  {error}
+                </p>
+              )}
               <button
                 type="submit"
                 disabled={submitting || !fallbackMessage.trim()}
@@ -428,12 +484,18 @@ export default function GetStarted() {
                   gap: 8,
                   padding: "11px 22px",
                   borderRadius: 10,
-                  background: submitting || !fallbackMessage.trim() ? "rgba(99,102,241,0.3)" : "#6366F1",
+                  background:
+                    submitting || !fallbackMessage.trim()
+                      ? "rgba(99,102,241,0.3)"
+                      : "#6366F1",
                   border: "none",
                   color: "white",
                   fontWeight: 600,
                   fontSize: 14,
-                  cursor: submitting || !fallbackMessage.trim() ? "not-allowed" : "pointer",
+                  cursor:
+                    submitting || !fallbackMessage.trim()
+                      ? "not-allowed"
+                      : "pointer",
                   transition: "opacity 0.15s",
                 }}
               >
