@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "wouter";
-import { Mail, Phone, MapPin, ArrowRight, CalendarDays, UserPlus, MessageSquare } from "lucide-react";
+import { Mail, Phone, MapPin, ArrowRight, MessageSquare } from "lucide-react";
 import { FooterNewsletterSignup } from "@/components/NewsletterSignup";
 import { openCookieConsentPreferences } from "@/components/CookieConsent";
 
@@ -17,11 +17,9 @@ export function Footer() {
   return (
     <footer className="relative border-t border-border/50">
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
-
+          
           <div className="lg:col-span-1">
             <Link href="/" className="inline-block mb-4">
               <span className="font-display font-bold text-xl tracking-tight">
@@ -48,46 +46,45 @@ export function Footer() {
             </div>
           </div>
 
-         <div>
-  <h3 className="font-display font-semibold text-white mb-6">Take Action</h3>
-  <ul className="space-y-4">
-    <li>
-      <Link href="/get-started" className="text-muted-foreground hover:text-accent transition-colors">
-        Get Started
-      </Link>
-    </li>
-    <li>
-      <Link href="/contact" className="text-muted-foreground hover:text-accent transition-colors">
-        Book a Discovery Call
-      </Link>
-    </li>
-    <li>
-      <Link href="/contact" className="text-muted-foreground hover:text-accent transition-colors">
-        Send a Message
-      </Link>
-    </li>
-  </ul>
+          <div>
+            <h3 className="font-display font-semibold text-white mb-6">Take Action</h3>
+            <ul className="space-y-4">
+              <li>
+                <Link href="/get-started" className="text-muted-foreground hover:text-accent transition-colors">
+                  Get Started
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="text-muted-foreground hover:text-accent transition-colors">
+                  Book a Discovery Call
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="text-muted-foreground hover:text-accent transition-colors">
+                  Send a Message
+                </Link>
+              </li>
+            </ul>
+            <div className="mt-8 p-4 rounded-xl bg-accent/[0.05] border border-accent/10">
+              <h4 className="text-sm font-semibold text-white mb-2">Already use QuickBooks?</h4>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Invite us to your books: Add <span className="text-white font-medium select-all">tea@blueprintsandbookkeeping.com</span> as your Accountant in the &quot;Manage Users&quot; tab.
+              </p>
+            </div>
+            <Link href="/contact" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-muted-foreground font-semibold text-sm hover:bg-white/[0.08] hover:text-white transition-all duration-200 text-left mt-6">
+              <MessageSquare size={15} aria-hidden="true" />
+              Send a Message
+              <ArrowRight size={13} className="ml-auto" aria-hidden="true" />
+            </Link>
+            <button
+              type="button"
+              onClick={openCookieConsentPreferences}
+              className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-muted-foreground font-semibold text-sm hover:bg-white/[0.08] hover:text-white transition-all duration-200 text-left mt-4 w-full"
+            >
+              Cookie Preferences
+            </button>
+          </div>
 
-  {/* ProAdvisor Invite Instructions */}
-  <div className="mt-8 p-4 rounded-xl bg-accent/[0.05] border border-accent/10">
-    <h4 className="text-sm font-semibold text-white mb-2">Already use QuickBooks?</h4>
-    <p className="text-xs text-muted-foreground leading-relaxed">
-      Invite us to your books: Add <span className="text-white font-medium select-all">tea@blueprintsandbookkeeping.com</span> as your Accountant in the "Manage Users" tab.
-    </p>
-  </div>
-<Link href="/contact" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-muted-foreground font-semibold text-sm hover:bg-white/[0.08] hover:text-white transition-all duration-200 text-left mt-6">
-  <MessageSquare size={15} aria-hidden="true" />
-  Send a Message
-  <ArrowRight size={13} className="ml-auto" aria-hidden="true" />
-</Link>
-
-<button
-  type="button"
-  onClick={openCookieConsentPreferences}
-  className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-muted-foreground font-semibold text-sm hover:bg-white/[0.08] hover:text-white transition-all duration-200 text-left mt-4 w-full"
->
-  Cookie Preferences
-</button>
           <div>
             <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-5">Pages</h3>
             <ul className="space-y-2.5 mb-7">
@@ -133,17 +130,15 @@ export function Footer() {
             </p>
             <FooterNewsletterSignup />
           </div>
+
         </div>
-
         <div className="glow-line mb-6" />
-
         <p className="text-xs text-muted-foreground/60 text-center mb-4 leading-relaxed max-w-3xl mx-auto">
-          <span className="font-semibold"></span> Blueprints &amp; Bookkeeping LLC is not a licensed CPA firm and does not provide tax preparation, tax filing, legal advice, or licensed investment counsel. References to tax forms (e.g., Schedule F, Schedule C) describe bookkeeping and record-keeping contexts only — not tax preparation services. All services are bookkeeping and business planning only. For tax and legal matters, please consult a licensed professional.{" "}
+          Blueprints &amp; Bookkeeping LLC is not a licensed CPA firm and does not provide tax preparation, tax filing, legal advice, or licensed investment counsel. References to tax forms describe bookkeeping contexts only. For tax and legal matters, please consult a licensed professional.{" "}
           <Link href="/faq" className="underline underline-offset-2 hover:text-muted-foreground transition-colors">Learn more in our FAQ</Link>
           {" "}or review our{" "}
           <Link href="/terms" className="underline underline-offset-2 hover:text-muted-foreground transition-colors">Terms of Service</Link>.
         </p>
-
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground">
           <div className="flex items-center gap-4">
             <p>&copy; {new Date().getFullYear()} Blueprints & Bookkeeping, LLC. All rights reserved.</p>
