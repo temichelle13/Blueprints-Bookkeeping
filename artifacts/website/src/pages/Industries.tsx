@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { TreePine, Bitcoin, ShoppingBag, Building2, Rocket, ArrowRight } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
+import { BookkeepingDisclaimer } from "@/components/BookkeepingDisclaimer";
 import { serviceSchema } from "@/lib/seo-schemas";
 
 
@@ -76,6 +77,7 @@ export default function Industries() {
       </section>
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <BookkeepingDisclaimer className="mb-6" />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {industries.map((ind, idx) => (
             <div key={idx} className="glass-card-hover rounded-2xl p-8 group">
