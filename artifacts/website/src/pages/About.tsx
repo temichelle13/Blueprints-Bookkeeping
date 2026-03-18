@@ -65,16 +65,17 @@ export default function About() {
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
               {[
-                { name: "Cybersecurity Fundamentals", img: `${import.meta.env.BASE_URL}images/badge-ibm-cybersecurity.png`, url: "https://www.credly.com/badges/44179f58-1ad3-4b02-9f5d-6bf2258a3c49/public_url" },
-                { name: "Cybersecurity with Capstone", img: `${import.meta.env.BASE_URL}images/badge-ibm-cybersecurity-capstone.png`, url: "https://www.credly.com/badges/abc7661b-7147-4ccf-8fce-926ac6d32572/public_url" },
-                { name: "IBM Granite Data Classification", img: `${import.meta.env.BASE_URL}images/badge-ibm-granite.png`, url: "https://www.credly.com/badges/e428bd41-b6fa-4a0e-9c90-4a6cbbc2d128/public_url" },
-                { name: "Google AI Essentials", img: `${import.meta.env.BASE_URL}images/badge-google-ai.png`, url: "https://www.credly.com/badges/97b2b906-189e-4921-ba7c-30f4f3334c8f/public_url" },
+                { name: "Cybersecurity Fundamentals", issuer: "IBM", img: `${import.meta.env.BASE_URL}images/badge-ibm-cybersecurity.png`, url: "https://www.credly.com/badges/44179f58-1ad3-4b02-9f5d-6bf2258a3c49/public_url" },
+                { name: "Cybersecurity with Capstone", issuer: "IBM", img: `${import.meta.env.BASE_URL}images/badge-ibm-cybersecurity-capstone.png`, url: "https://www.credly.com/badges/abc7661b-7147-4ccf-8fce-926ac6d32572/public_url" },
+                { name: "IBM Granite Data Classification", issuer: "IBM", img: `${import.meta.env.BASE_URL}images/badge-ibm-granite.png`, url: "https://www.credly.com/badges/e428bd41-b6fa-4a0e-9c90-4a6cbbc2d128/public_url" },
+                { name: "Google AI Essentials", issuer: "Google", img: `${import.meta.env.BASE_URL}images/badge-google-ai.png`, url: "https://www.credly.com/badges/97b2b906-189e-4921-ba7c-30f4f3334c8f/public_url" },
               ].map((badge) => (
                 <a key={badge.name} href={badge.url} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center text-center group">
                   <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-600/20 to-blue-800/20 border border-white/[0.06] flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
                     <img src={badge.img} alt={badge.name} width={56} height={56} loading="lazy" className="w-14 h-14 object-contain" />
                   </div>
                   <span className="text-xs text-muted-foreground font-medium group-hover:text-accent transition-colors">{badge.name}</span>
+                  <span className="text-[11px] text-muted-foreground/80">Issued by {badge.issuer}</span>
                 </a>
               ))}
             </div>
@@ -110,24 +111,31 @@ export default function About() {
               {[
                 {
                   name: "QuickBooks ProAdvisor Gold",
+                  issuer: "Intuit",
                   img: "/images/proadvisor-gold-badge.png",
                   fallbackColor: "from-green-600/20 to-green-800/20",
-                  url: "https://quickbooks.intuit.com/find-an-accountant/"
+                  verificationNote: "Verification available on request"
                 },
                 {
                   name: "CEH v12 Certified",
+                  issuer: "EC-Council",
                   img: "",
                   fallbackColor: "from-red-600/20 to-red-800/20",
-                  url: "https://www.eccouncil.org/programs/certified-ethical-hacker-ceh/"
+                  verificationNote: "Verification available on request"
                 },
                 {
+<<<<<<< codex/update-about.tsx-credential-information
+                  name: "Advanced Crypto Accounting Certified",
+=======
                   name: "Crypto Accounting Certified",
+                  issuer: "Crypto Accounting Academy",
+>>>>>>> master
                   img: "",
                   fallbackColor: "from-orange-600/20 to-orange-800/20",
-                  url: "https://cryptoaccountingacademy.com/"
+                  verificationNote: "Verification available on request"
                 },
               ].map((badge, i) => (
-                <a key={i} href={badge.url} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center text-center group">
+                <div key={i} className="flex flex-col items-center text-center group">
                   <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${badge.fallbackColor} border border-white/[0.06] flex items-center justify-center mb-3 group-hover:scale-105 transition-transform`}>
                     {badge.img ? (
                       <img src={badge.img} alt={badge.name} width={56} height={56} loading="lazy" className="w-14 h-14 object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).nextElementSibling && ((e.target as HTMLImageElement).nextElementSibling as HTMLElement).classList.remove('hidden'); }} />
@@ -135,7 +143,13 @@ export default function About() {
                     <Shield className={`w-8 h-8 text-accent ${badge.img ? 'hidden' : ''}`} />
                   </div>
                   <span className="text-xs text-muted-foreground font-medium group-hover:text-accent transition-colors">{badge.name}</span>
+<<<<<<< codex/update-about.tsx-credential-information
+                  <span className="text-[11px] text-muted-foreground/80 mt-1">{badge.verificationNote}</span>
+                </div>
+=======
+                  <span className="text-[11px] text-muted-foreground/80">Issued by {badge.issuer}</span>
                 </a>
+>>>>>>> master
               ))}
             </div>
           </div>

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 
 declare global {
@@ -9,8 +9,14 @@ declare global {
 
 export function usePageTracking() {
   const [location] = useLocation();
+  const hasTrackedInitialPage = useRef(false);
 
   useEffect(() => {
+    if (!hasTrackedInitialPage.current) {
+      hasTrackedInitialPage.current = true;
+      return;
+    }
+
     if (typeof window.gtag === "function") {
       window.gtag("event", "page_view", {
         page_path: location,
