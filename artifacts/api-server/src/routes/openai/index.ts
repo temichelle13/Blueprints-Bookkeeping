@@ -15,6 +15,8 @@ function getResend(): Resend | null {
 
 const OWNER_EMAIL = "tea@blueprintsandbookkeeping.com";
 const FROM_ADDRESS = "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
+const CHAT_MODEL = process.env["OPENAI_CHAT_MODEL"] || "gpt-4.1-mini";
+const isOpenAiConfigured = Boolean(openai);
 
 const SYSTEM_PROMPT = `You are Aria, the friendly AI assistant for Blueprints & Bookkeeping, LLC — a premium remote financial services firm founded by Tea Larson-Hetrick in Roseburg, Oregon.
 
@@ -231,10 +233,27 @@ router.post("/openai/conversations/:id/messages", async (req, res): Promise<void
 
   let fullResponse = "";
 
+  if (!isOpenAiConfigured || !openai) {
+    const fallback = "Aria is temporarily offline right now. Please use the contact form, email tea@blueprintsandbookkeeping.com, or book a discovery call and Tea will follow up personally.";
+    res.write(`data: ${JSON.stringify({ content: fallback })}
+
+`);
+    await db.insert(messages).values({
+      conversationId: id,
+      role: "assistant",
+      content: fallback,
+    });
+    res.write(`data: ${JSON.stringify({ done: true })}
+
+`);
+    res.end();
+    return;
+  }
+
   try {
     const stream = await openai.chat.completions.create({
-      model: "gpt-5.2",
-      max_completion_tokens: 8192,
+      model: CHAT_MODEL,
+      max_completion_tokens: 4096,
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
         ...chatMessages,

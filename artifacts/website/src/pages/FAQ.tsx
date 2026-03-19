@@ -187,7 +187,6 @@ export default function FAQ() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         {faqs.map((section) => (
           <div key={section.category}>
-            {section.category === "Bookkeeping" && <BookkeepingDisclaimer className="mb-4" />}
             <div className="flex items-center gap-3 mb-2">
               <div className="accent-bar" />
               <h2 className="text-xs font-mono font-semibold tracking-widest text-accent uppercase">{section.category}</h2>
@@ -209,7 +208,11 @@ export default function FAQ() {
         ))}
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 space-y-4">
+        <BookkeepingDisclaimer
+          compact
+          title="Quick compliance note"
+        />
         <div className="glass-card rounded-2xl p-8 text-center">
           <h3 className="text-xl font-bold text-white mb-3">Still have questions?</h3>
           <p className="text-muted-foreground text-sm mb-6">Book a free 30-minute discovery call or send us a message — we'll get back to you within one business day.</p>

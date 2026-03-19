@@ -10,7 +10,7 @@ import { usePageTracking } from "./hooks/usePageTracking";
 import { ThemeProvider } from "./hooks/use-theme";
 import { Header } from "./components/layout/Header";
 import ChatWidget from "./components/ChatWidget";
-import CookieConsent, { hasAcceptedCookies } from "./components/CookieConsent";
+import CookieConsent from "./components/CookieConsent";
 import { Footer } from "./components/layout/Footer";
 
 import Home from "./pages/Home";
@@ -141,19 +141,6 @@ function Router() {
   );
 }
 
-function ConsentAwareChatWidget() {
-  const [allowed, setAllowed] = useState(hasAcceptedCookies());
-
-  useEffect(() => {
-    const handler = () => setAllowed(hasAcceptedCookies());
-    window.addEventListener("cookie-consent-changed", handler);
-    return () => window.removeEventListener("cookie-consent-changed", handler);
-  }, []);
-
-  if (!allowed) return null;
-  return <ChatWidget />;
-}
-
 function App() {
   return (
     <ThemeProvider>
@@ -163,7 +150,7 @@ function App() {
             <Router />
           </WouterRouter>
           <Toaster />
-          <ConsentAwareChatWidget />
+          <ChatWidget />
           <CookieConsent />
         </TooltipProvider>
       </QueryClientProvider>
