@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { Calculator, BookOpen, MonitorPlay, Stamp, CheckCircle2, ArrowRight } from "lucide-react";
+import { Calculator, BookOpen, CheckCircle2, ArrowRight } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 import { serviceSchema } from "@/lib/seo-schemas";
@@ -127,48 +127,6 @@ export default function Services() {
           </div>
         </div>
 
-        {/* Anchor target for explicit deep-links such as /services#digital from pricing CTAs. */}
-        <div id="digital" className="glass-card rounded-2xl p-8 border border-dashed border-white/[0.08]">
-          <div className="flex flex-col md:flex-row md:items-start gap-8">
-            <div className="flex items-center gap-3 shrink-0">
-              <div className="p-3 rounded-xl bg-accent/10 text-accent">
-                <MonitorPlay className="w-6 h-6" />
-              </div>
-              <span className="text-[11px] font-mono font-medium tracking-widest text-muted-foreground">ADD-ON</span>
-            </div>
-            <div className="flex-grow">
-              <h3 className="text-xl font-bold text-white mb-2">The Digital Handshake</h3>
-              <p className="text-muted-foreground text-[15px] mb-5">
-                An optional enhancement for Business Plan clients — your plan delivered as a custom static website instead of a PDF. Interactive financials, instant loading, zero ongoing maintenance.
-              </p>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-6">
-                {[
-                  "Business plan as a custom static website",
-                  "Modern alternative to a standard PDF pitch",
-                  "High-performance, secure digital hosting",
-                  "Interactive financial models for reviewers",
-                  "No database or server maintenance required",
-                  "Password-protected or invite-only access"
-                ].map((feat, i) => (
-                  <li key={i} className="flex items-start gap-2 text-[14px] text-muted-foreground">
-                    <CheckCircle2 className="w-4 h-4 text-accent/60 shrink-0 mt-0.5" />
-                    {feat}
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href="/services/digital-handshake"
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300 group/btn"
-              >
-                Learn More
-                <ArrowRight size={15} className="group-hover/btn:translate-x-1 transition-transform" />
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        <div className="glass-card rounded-2xl p-8 mt-6 border border-white/[0.06]">
-        </div>
       </section>
     </div>
   );
