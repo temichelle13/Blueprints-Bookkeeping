@@ -37,13 +37,11 @@ import AdminContracts from "./pages/AdminContracts";
 import AdminDashboard from "./pages/AdminDashboard";
 import Welcome from "./pages/Welcome";
 import Onboarding from "./pages/Onboarding";
-import ClientPortal from "./pages/ClientPortal";
 import BusinessPlanning from "./pages/BusinessPlanning";
 import Status from "./pages/Status";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import ServiceBookkeeping from "./pages/services/Bookkeeping";
 import ServiceBusinessPlans from "./pages/services/BusinessPlans";
-import ServiceDigitalHandshake from "./pages/services/DigitalHandshake";
 import OregonBookkeeper from "./pages/OregonBookkeeper";
 import Resources from "./pages/Resources";
 
@@ -129,13 +127,11 @@ function Router() {
         <Route path="/unsubscribe" component={Unsubscribe} />
         <Route path="/welcome" component={Welcome} />
         <Route path="/onboarding" component={Onboarding} />
-        <Route path="/client-portal" component={ClientPortal} />
         <Route path="/business-planning" component={BusinessPlanning} />
         <Route path="/status" component={Status} />
         <Route path="/payment-success" component={PaymentSuccess} />
         <Route path="/services/bookkeeping" component={ServiceBookkeeping} />
         <Route path="/services/business-plans" component={ServiceBusinessPlans} />
-        <Route path="/services/digital-handshake" component={ServiceDigitalHandshake} />
         <Route path="/oregon-bookkeeper" component={OregonBookkeeper} />
         <Route path="/admin/contracts" component={AdminContracts} />
         <Route path="/admin" component={AdminDashboard} />

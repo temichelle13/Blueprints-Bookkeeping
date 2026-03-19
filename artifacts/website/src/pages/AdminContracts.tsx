@@ -42,8 +42,6 @@ import {
   Settings,
   Upload,
   Download,
-  Link2,
-  Copy,
 } from "lucide-react";
 import { getApiRoot } from "@/lib/api";
 
@@ -211,11 +209,6 @@ export default function AdminContracts() {
   const [templatesError, setTemplatesError] = useState<string | null>(null);
   const [documentsError, setDocumentsError] = useState<string | null>(null);
   const [adobeStatusError, setAdobeStatusError] = useState<string | null>(null);
-  const [sendLinkDialogOpen, setSendLinkDialogOpen] = useState(false);
-  const [sendLinkForm, setSendLinkForm] = useState({
-    clientName: "",
-    clientEmail: "",
-  });
 
   const [sendForm, setSendForm] = useState({
     clientName: "",
@@ -937,125 +930,9 @@ export default function AdminContracts() {
                   <RefreshCw className="w-4 h-4 mr-2" />
                   Refresh
                 </Button>
-                <Dialog
-                  open={sendLinkDialogOpen}
-                  onOpenChange={setSendLinkDialogOpen}
-                >
-                  <DialogTrigger asChild>
-                    <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
-                      <Link2 className="w-4 h-4 mr-2" />
-                      Send Upload Link
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="bg-[#121830] border-indigo-500/20 text-white">
-                    <DialogHeader>
-                      <DialogTitle>Send Secure Upload Link</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4 mt-4">
-                      <div className="space-y-2">
-                        <Label>Client Name *</Label>
-                        <Input
-                          value={sendLinkForm.clientName}
-                          onChange={(e) =>
-                            setSendLinkForm((p) => ({
-                              ...p,
-                              clientName: e.target.value,
-                            }))
-                          }
-                          className="bg-[#0a0e1a] border-indigo-500/20"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Client Email *</Label>
-                        <Input
-                          type="email"
-                          value={sendLinkForm.clientEmail}
-                          onChange={(e) =>
-                            setSendLinkForm((p) => ({
-                              ...p,
-                              clientEmail: e.target.value,
-                            }))
-                          }
-                          className="bg-[#0a0e1a] border-indigo-500/20"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Upload Link</Label>
-                        <div className="flex gap-2">
-                          <Input
-                            readOnly
-                            value={
-                              sendLinkForm.clientName &&
-                              sendLinkForm.clientEmail
-                                ? `${window.location.origin}/client-portal?name=${encodeURIComponent(sendLinkForm.clientName)}&email=${encodeURIComponent(sendLinkForm.clientEmail)}`
-                                : "Enter name and email to generate link"
-                            }
-                            className="bg-[#0a0e1a] border-indigo-500/20 text-sm"
-                          />
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            disabled={
-                              !sendLinkForm.clientName ||
-                              !sendLinkForm.clientEmail
-                            }
-                            className="border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10 flex-shrink-0"
-                            onClick={() => {
-                              const link = `${window.location.origin}/client-portal?name=${encodeURIComponent(sendLinkForm.clientName)}&email=${encodeURIComponent(sendLinkForm.clientEmail)}`;
-                              navigator.clipboard.writeText(link);
-                              toast({
-                                title: "Link Copied",
-                                description: "Upload link copied to clipboard.",
-                              });
-                            }}
-                          >
-                            <Copy className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                      <Button
-                        className="w-full bg-indigo-600 hover:bg-indigo-700"
-                        disabled={
-                          !sendLinkForm.clientName || !sendLinkForm.clientEmail
-                        }
-                        onClick={async () => {
-                          try {
-                            const res = await fetch(
-                              `${getApiRoot()}/documents/send-link`,
-                              {
-                                method: "POST",
-                                headers: adminHeaders(),
-                                body: JSON.stringify({
-                                  clientName: sendLinkForm.clientName,
-                                  clientEmail: sendLinkForm.clientEmail,
-                                }),
-                              },
-                            );
-                            if (!res.ok) throw new Error("Send failed");
-                            toast({
-                              title: "Link Sent",
-                              description: `Upload link emailed to ${sendLinkForm.clientEmail}.`,
-                            });
-                            setSendLinkDialogOpen(false);
-                            setSendLinkForm({
-                              clientName: "",
-                              clientEmail: "",
-                            });
-                          } catch {
-                            toast({
-                              title: "Send Failed",
-                              description: "Could not send upload link email.",
-                              variant: "destructive",
-                            });
-                          }
-                        }}
-                      >
-                        <Send className="w-4 h-4 mr-2" />
-                        Email Upload Link
-                      </Button>
-                    </div>
-                  </DialogContent>
-                </Dialog>
+                <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 px-4 py-3 text-sm text-indigo-100">
+                  Public upload-link sharing has been retired. Continue using this dashboard for internal document review only.
+                </div>
               </div>
 
               {documentsError && (

@@ -63,7 +63,6 @@
 - Phone: 541-319-8654
 - Location: Roseburg, OR (serving nationwide)
 - Calendly: https://calendly.com/tea-blueprintsandbookkeeping/30min
-- Client portal: /client-portal
 - Admin: /admin (token-protected)
 
 ---

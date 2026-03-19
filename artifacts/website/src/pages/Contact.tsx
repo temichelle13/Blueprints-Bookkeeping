@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Link } from "wouter";
-import { Mail, Phone, Send, Loader2, CheckCircle2, Video, FileUp, ArrowRight, Globe } from "lucide-react";
+import { Mail, Phone, Send, Loader2, CheckCircle2, Video, ArrowRight, Globe } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 import { useContactMutation } from "@/hooks/use-contact";
@@ -39,15 +38,6 @@ const contactCards = [
     href: "tel:+15413198654",
     external: true,
     newTab: false,
-  },
-  {
-    icon: FileUp,
-    color: "#F59E0B",
-    title: "Send Documents Securely",
-    description: "Upload financial statements, receipts, or records through our encrypted client portal.",
-    cta: "Open Document Portal",
-    href: "/client-portal",
-    external: false,
   },
 ];
 
@@ -172,7 +162,7 @@ export default function Contact() {
           <div className="accent-bar mx-auto mb-6" />
           <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">Get in Touch</h1>
           <p className="text-lg text-muted-foreground">
-            Three easy ways to connect — pick whichever works best for you.
+            Two easy ways to connect — pick whichever works best for you.
           </p>
         </div>
       </section>
@@ -214,23 +204,15 @@ export default function Contact() {
               </div>
             );
 
-            if (card.external) {
-              return (
-                <a
-                  key={card.title}
-                  href={card.href}
-                  {...(card.newTab ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  className="no-underline"
-                >
-                  {inner}
-                </a>
-              );
-            }
-
             return (
-              <Link key={card.title} href={card.href} className="no-underline">
+              <a
+                key={card.title}
+                href={card.href}
+                {...(card.newTab ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                className="no-underline"
+              >
                 {inner}
-              </Link>
+              </a>
             );
           })}
         </div>

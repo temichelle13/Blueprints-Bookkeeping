@@ -233,7 +233,7 @@ function buildClientOnboardingConfirmation(name: string, plan?: string): string 
       <ol style="line-height:2;">
         <li>You'll receive your <strong>Engagement Letter</strong> and <strong>NDA</strong> via Adobe Sign — please review and sign promptly</li>
         <li>Once signed, we'll begin setting up your accounts</li>
-        <li>You can upload documents anytime via our <a href="${SITE_URL}/client-portal" style="color:#6366f1;">secure portal</a></li>
+        <li>If we need records from you, we'll send secure file-sharing instructions separately</li>
       </ol>
       <p>Need anything? Reply to this email or call <strong>(541) 319-8654</strong>.</p>
       <p style="font-weight:600;">Tea Larson-Hetrick<br><span style="font-weight:normal;color:#666;">Blueprints & Bookkeeping LLC</span></p>

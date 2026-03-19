@@ -87,7 +87,7 @@ The project is structured as a pnpm monorepo, separating deployable applications
 
 **Contract Automation & Admin Dashboards**:
 - **Integration**: Adobe Acrobat Sign API v6 for automatic contract generation, sending, and archiving to Adobe Creative Cloud Storage.
-- **Document Portal**: Secure drag-and-drop interface for financial documents.
+- **Document Collection**: Client records are requested through secure file-sharing instructions outside the public website.
 - **Admin Dashboards**: CRM dashboard at `/admin` for inquiries, newsletter subscribers, contract management, and state nexus monitoring.
 - **State Nexus Monitoring**: Tracks client counts by U.S. state, compares against Foreign Qualification thresholds, sends email alerts via Resend when warning/alert levels are reached. Admin can edit thresholds per-state and trigger manual checks. Daily scheduled check at 8 AM Pacific.
 
