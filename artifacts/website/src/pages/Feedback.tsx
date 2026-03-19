@@ -21,7 +21,7 @@ const PAGES = [
   "Services",
   "Pricing",
   "Industries",
-  "Portfolio",
+  "Credentials",
   "Client Results",
   "Blog",
   "FAQ",

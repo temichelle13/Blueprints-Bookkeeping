@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { Mail, Phone, MapPin, ArrowRight, MessageSquare } from "lucide-react";
 import { FooterNewsletterSignup } from "@/components/NewsletterSignup";
 import { openCookieConsentPreferences } from "@/components/CookieConsent";
+import { footerCredentialBadges } from "@/data/credentials";
 
 export function Footer() {
   const [location] = useLocation();
@@ -96,7 +97,7 @@ export function Footer() {
                 { label: "Blog", href: "/blog" },
                 { label: "Free Resources", href: "/resources" },
                 { label: "FAQ", href: "/faq" },
-                { label: "Credentials", href: "/portfolio" },
+                { label: "Credentials", href: "/about/credentials" },
               ].map((item) => (
                 <li key={item.href}>
                   <Link href={item.href} onClick={scrollToTopOnSameRoute(item.href)} className="text-muted-foreground hover:text-accent text-sm transition-colors inline-flex items-center gap-1 group">
@@ -143,13 +144,9 @@ export function Footer() {
           <div className="flex items-center gap-4">
             <p>&copy; {new Date().getFullYear()} Blueprints & Bookkeeping, LLC. All rights reserved.</p>
             <div className="flex items-center gap-2">
-              {[
-                { src: `${import.meta.env.BASE_URL}images/badge-qb-level2.png`, alt: "QuickBooks ProAdvisor Level 2", url: "https://www.credly.com/badges/76acb9d5-763f-4768-acf5-5d7bdff90313/public_url" },
-                { src: `${import.meta.env.BASE_URL}images/badge-qb-payroll.png`, alt: "QuickBooks Payroll Certification", url: "https://www.credly.com/badges/5adba910-e07f-4ad7-ba97-2ffe67a76118/public_url" },
-                { src: `${import.meta.env.BASE_URL}images/badge-intuit-bookkeeping.png`, alt: "Intuit Bookkeeping Certification", url: "https://www.credly.com/badges/e2823194-36dc-4ab3-ab1d-155b9189714f/public_url" },
-              ].map((badge) => (
-                <a key={badge.alt} href={badge.url} target="_blank" rel="noopener noreferrer" className="shrink-0 hover:scale-110 transition-transform">
-                  <img src={badge.src} alt={badge.alt} className="w-8 h-8 object-contain" loading="lazy" />
+              {footerCredentialBadges.map((badge) => (
+                <a key={badge.name} href={badge.url} target="_blank" rel="noopener noreferrer" className="shrink-0 hover:scale-110 transition-transform">
+                  <img src={badge.badge} alt={badge.name} className="w-8 h-8 object-contain" loading="lazy" />
                 </a>
               ))}
             </div>
