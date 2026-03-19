@@ -1,6 +1,12 @@
 import { useState } from "react";
-import { MessageSquare, CheckCircle, AlertCircle, ChevronDown } from "lucide-react";
+import {
+  MessageSquare,
+  CheckCircle,
+  AlertCircle,
+  ChevronDown,
+} from "lucide-react";
 import { SEO } from "@/components/SEO";
+import { getApiRoot } from "@/lib/api";
 
 const CATEGORIES = [
   { value: "bug", label: "Something is broken" },
@@ -59,15 +65,16 @@ export default function Feedback() {
     setErrorMsg("");
 
     try {
-      const base = (import.meta as any).env?.VITE_API_URL || "/api";
-      const res = await fetch(`${base}/feedback`, {
+      const res = await fetch(`${getApiRoot()}/feedback`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || "Something went wrong. Please try again.");
+        throw new Error(
+          data.error || "Something went wrong. Please try again.",
+        );
       }
       setStatus("success");
     } catch (err: any) {
@@ -87,10 +94,12 @@ export default function Feedback() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-500/15 border border-green-500/30 mb-6">
             <CheckCircle size={32} className="text-green-400" />
           </div>
-          <h1 className="text-2xl font-display font-bold text-white mb-3">Got it, thanks!</h1>
+          <h1 className="text-2xl font-display font-bold text-white mb-3">
+            Got it, thanks!
+          </h1>
           <p className="text-muted-foreground mb-8">
-            Your feedback has been sent to Tea. If you left your email, she may follow up
-            to let you know when it's resolved.
+            Your feedback has been sent to Tea. If you left your email, she may
+            follow up to let you know when it's resolved.
           </p>
           <a
             href="/"
@@ -115,8 +124,8 @@ export default function Feedback() {
             Site Feedback
           </h1>
           <p className="text-muted-foreground max-w-md mx-auto">
-            Spotted a broken link, an error, or something that just doesn't look right?
-            Let us know and we'll get it fixed.
+            Spotted a broken link, an error, or something that just doesn't look
+            right? Let us know and we'll get it fixed.
           </p>
         </div>
 
@@ -129,8 +138,15 @@ export default function Feedback() {
           }}
         >
           {status === "error" && (
-            <div role="alert" className="flex items-start gap-3 mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20">
-              <AlertCircle size={18} className="text-red-400 shrink-0 mt-0.5" aria-hidden="true" />
+            <div
+              role="alert"
+              className="flex items-start gap-3 mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20"
+            >
+              <AlertCircle
+                size={18}
+                className="text-red-400 shrink-0 mt-0.5"
+                aria-hidden="true"
+              />
               <p className="text-red-300 text-sm">{errorMsg}</p>
             </div>
           )}
@@ -138,8 +154,12 @@ export default function Feedback() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <label htmlFor="feedback-name" className="block text-sm font-medium text-muted-foreground mb-2">
-                  Your Name <span className="text-muted-foreground/50">(optional)</span>
+                <label
+                  htmlFor="feedback-name"
+                  className="block text-sm font-medium text-muted-foreground mb-2"
+                >
+                  Your Name{" "}
+                  <span className="text-muted-foreground/50">(optional)</span>
                 </label>
                 <input
                   id="feedback-name"
@@ -151,8 +171,12 @@ export default function Feedback() {
                 />
               </div>
               <div>
-                <label htmlFor="feedback-email" className="block text-sm font-medium text-muted-foreground mb-2">
-                  Email <span className="text-muted-foreground/50">(optional)</span>
+                <label
+                  htmlFor="feedback-email"
+                  className="block text-sm font-medium text-muted-foreground mb-2"
+                >
+                  Email{" "}
+                  <span className="text-muted-foreground/50">(optional)</span>
                 </label>
                 <input
                   id="feedback-email"
@@ -166,7 +190,10 @@ export default function Feedback() {
             </div>
 
             <div>
-              <label htmlFor="feedback-category" className="block text-sm font-medium text-muted-foreground mb-2">
+              <label
+                htmlFor="feedback-category"
+                className="block text-sm font-medium text-muted-foreground mb-2"
+              >
                 What type of feedback is this?
               </label>
               <div className="relative">
@@ -191,8 +218,12 @@ export default function Feedback() {
             </div>
 
             <div>
-              <label htmlFor="feedback-page" className="block text-sm font-medium text-muted-foreground mb-2">
-                Which page or area? <span className="text-muted-foreground/50">(optional)</span>
+              <label
+                htmlFor="feedback-page"
+                className="block text-sm font-medium text-muted-foreground mb-2"
+              >
+                Which page or area?{" "}
+                <span className="text-muted-foreground/50">(optional)</span>
               </label>
               <div className="relative">
                 <select
@@ -216,7 +247,10 @@ export default function Feedback() {
             </div>
 
             <div>
-              <label htmlFor="feedback-description" className="block text-sm font-medium text-muted-foreground mb-2">
+              <label
+                htmlFor="feedback-description"
+                className="block text-sm font-medium text-muted-foreground mb-2"
+              >
                 Describe the issue
               </label>
               <textarea
