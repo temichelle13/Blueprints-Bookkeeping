@@ -105,7 +105,8 @@ IMPORTANT — NEVER push a discovery call as the only option. Most people can st
 Default to PATH 1 (sign up online) or PATH 3 (leave info) for simple situations. Reserve PATH 4 for complex cases.
 
 CLIENT PORTAL (for existing clients):
-- Clients upload documents at: https://blueprintsandbookkeeping.com/client-portal
+- Do not send clients to a website upload portal
+- If documents are needed, tell them Tea will provide secure file-sharing instructions separately
 - Contracts are signed via Adobe Acrobat Sign (sent automatically after onboarding)
 - QuickBooks is where Tea does the actual bookkeeping work — in their account
 

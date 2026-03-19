@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { CheckCircle, ArrowRight, FileText, Upload } from "lucide-react";
+import { CheckCircle, ArrowRight, FileText, Mail } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 import { buildOnboardingUrl, getOnboardingContextFromSearch } from "@/lib/onboarding-url";
@@ -7,17 +7,11 @@ import { buildOnboardingUrl, getOnboardingContextFromSearch } from "@/lib/onboar
 export default function Welcome() {
   usePageTitle("Welcome — Blueprints & Bookkeeping");
 
-const { plan, service, sessionId } = getOnboardingContextFromSearch(window.location.search);
-const params = new URLSearchParams(window.location.search);
-const name = params.get("name") || "";
-const email = params.get("email") || "";
+  const { plan, service, sessionId } = getOnboardingContextFromSearch(
+    window.location.search,
+  );
   const planLabel = plan === "growth" ? "Growth" : plan === "essentials" ? "Essentials" : "your selected";
   const onboardingHref = buildOnboardingUrl({ plan, service, sessionId });
-
-  const clientPortalHref = `/client-portal${name || email ? `?${new URLSearchParams({
-    ...(name ? { name } : {}),
-    ...(email ? { email } : {}),
-  }).toString()}` : ""}`;
 
   return (
     <div className="pt-24 pb-20 min-h-screen">
@@ -59,8 +53,8 @@ const email = params.get("email") || "";
             <div className="flex gap-4">
               <div className="flex-shrink-0 w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold">3</div>
               <div>
-                <h3 className="text-white font-semibold mb-1">Upload Your Documents</h3>
-                <p className="text-muted-foreground text-sm">Securely share bank statements, prior financials, and access credentials through our document portal.</p>
+                <h3 className="text-white font-semibold mb-1">Watch for Next-Step Instructions</h3>
+                <p className="text-muted-foreground text-sm">If we need records from you, we’ll send secure file-sharing instructions separately instead of using the website.</p>
               </div>
             </div>
           </div>
@@ -81,19 +75,19 @@ const email = params.get("email") || "";
             <ArrowRight className="text-accent opacity-0 group-hover:opacity-100 transition-opacity" size={20} />
           </Link>
 
-          <Link
-            href={clientPortalHref}
+          <a
+            href="mailto:tea@blueprintsandbookkeeping.com"
             className="glass-card rounded-xl p-6 flex items-center gap-4 hover:border-accent/30 transition-all group"
           >
             <div className="p-3 bg-accent/10 rounded-lg text-accent">
-              <Upload size={24} />
+              <Mail size={24} />
             </div>
             <div className="flex-grow">
-              <h4 className="text-white font-semibold">Document Portal</h4>
-              <p className="text-sm text-muted-foreground">Upload securely</p>
+              <h4 className="text-white font-semibold">Questions or Files?</h4>
+              <p className="text-sm text-muted-foreground">We’ll send secure sharing instructions as needed</p>
             </div>
             <ArrowRight className="text-accent opacity-0 group-hover:opacity-100 transition-opacity" size={20} />
-          </Link>
+          </a>
         </div>
 
         <div className="glass-card rounded-xl p-6 text-center">

@@ -3,7 +3,6 @@ Disallow:
 
 Disallow: /admin
 Disallow: /admin/
-Disallow: /client-portal
 Disallow: /onboarding
 Disallow: /welcome
 Disallow: /payment-success
