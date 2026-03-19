@@ -52,7 +52,6 @@ export default function Bookkeeping() {
       </section>
 
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-        <BookkeepingDisclaimer className="mb-6" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {[
             {
@@ -120,7 +119,12 @@ export default function Bookkeeping() {
         </div>
       </section>
 
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <BookkeepingDisclaimer
+          compact
+          title="Compliance note"
+          className="max-w-3xl"
+        />
         <div className="relative rounded-2xl overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-accent/15 to-primary/20" />
           <div className="absolute inset-[1px] rounded-2xl bg-card" />
