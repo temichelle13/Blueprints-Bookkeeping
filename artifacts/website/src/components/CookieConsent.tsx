@@ -79,7 +79,7 @@ export default function CookieConsent() {
               <div className="min-w-0 flex-1">
                 <h2 className="mb-1 text-sm font-semibold text-white">Cookies, kept simple</h2>
                 <p className="text-sm leading-6 text-muted-foreground">
-                  Allow analytics and chat cookies, or keep only essential site cookies. You can update this anytime in our{" "}
+                  Allow analytics cookies, or keep only essential site cookies. You can update this anytime in our{" "}
                   <a href={`${import.meta.env.BASE_URL}privacy`} className="text-accent hover:underline">
                     Privacy Policy
                   </a>
@@ -93,7 +93,7 @@ export default function CookieConsent() {
                 onClick={handleAccept}
                 className="min-h-11 rounded-xl bg-[#4F46E5] px-4 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-[#5B53F6] hover:shadow-lg hover:shadow-accent/25"
               >
-                Accept analytics & chat
+                Accept analytics
               </button>
               <button
                 onClick={handleDecline}
