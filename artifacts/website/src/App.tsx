@@ -37,7 +37,6 @@ import AdminContracts from "./pages/AdminContracts";
 import AdminDashboard from "./pages/AdminDashboard";
 import Welcome from "./pages/Welcome";
 import Onboarding from "./pages/Onboarding";
-import ClientPortal from "./pages/ClientPortal";
 import BusinessPlanning from "./pages/BusinessPlanning";
 import Status from "./pages/Status";
 import PaymentSuccess from "./pages/PaymentSuccess";
@@ -129,7 +128,6 @@ function Router() {
         <Route path="/unsubscribe" component={Unsubscribe} />
         <Route path="/welcome" component={Welcome} />
         <Route path="/onboarding" component={Onboarding} />
-        <Route path="/client-portal" component={ClientPortal} />
         <Route path="/business-planning" component={BusinessPlanning} />
         <Route path="/status" component={Status} />
         <Route path="/payment-success" component={PaymentSuccess} />
