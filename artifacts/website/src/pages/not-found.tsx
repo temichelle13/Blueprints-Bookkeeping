@@ -38,7 +38,7 @@ export default function NotFound() {
           <Link href="/services" className="hover:text-accent transition-colors">Services</Link>
           <Link href="/pricing" className="hover:text-accent transition-colors">Pricing</Link>
           <Link href="/faq" className="hover:text-accent transition-colors">FAQ</Link>
-          <Link href="/resources" className="hover:text-accent transition-colors">Resources</Link>
+          <Link href="/blog" className="hover:text-accent transition-colors">Blog</Link>
         </div>
       </div>
     </div>
