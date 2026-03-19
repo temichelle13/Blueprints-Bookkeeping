@@ -95,7 +95,6 @@ export function Footer() {
                 { label: "About Tea", href: "/about" },
                 { label: "Industries", href: "/industries" },
                 { label: "Blog", href: "/blog" },
-                { label: "Free Resources", href: "/resources" },
                 { label: "FAQ", href: "/faq" },
                 { label: "Credentials", href: "/about/credentials" },
               ].map((item) => (

@@ -43,7 +43,6 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import ServiceBookkeeping from "./pages/services/Bookkeeping";
 import ServiceBusinessPlans from "./pages/services/BusinessPlans";
 import OregonBookkeeper from "./pages/OregonBookkeeper";
-import Resources from "./pages/Resources";
 
 if (import.meta.env.VITE_API_URL) {
   setApiBaseUrl(import.meta.env.VITE_API_URL as string);
@@ -113,7 +112,6 @@ function Router() {
         <Route path="/results" component={Results} />
         <Route path="/blog/:slug" component={BlogPost} />
         <Route path="/blog" component={Blog} />
-        <Route path="/resources" component={Resources} />
         <Route path="/contact" component={Contact} />
         <Route path="/faq" component={FAQ} />
         <Route path="/schedule" component={Schedule} />

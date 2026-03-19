@@ -57,19 +57,14 @@ async function unsubscribeByToken(token: unknown): Promise<UnsubscribeByTokenRes
 function buildWelcomeEmail(unsubscribeToken: string): { html: string; headers: Record<string, string> } {
   const unsubscribePageUrl = `https://blueprintsandbookkeeping.com/unsubscribe?token=${unsubscribeToken}`;
   const unsubscribeApiUrl = `https://blueprintsandbookkeeping.com/api/newsletter/unsubscribe?token=${unsubscribeToken}`;
-  const resourcesUrl = "https://blueprintsandbookkeeping.com/resources";
   const html = `
     <div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
       <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
-        <h1 style="color:white;margin:0;font-size:20px;">Your free resources are ready — Blueprints & Bookkeeping</h1>
+        <h1 style="color:white;margin:0;font-size:20px;">Welcome to Blueprints & Bookkeeping</h1>
       </div>
       <div style="background:#f8f9ff;padding:32px;border-radius:0 0 8px 8px;border:1px solid #e2e5f0;">
         <p>Hi there,</p>
-        <p>You're in! Here's the link to access all your free templates, checklists, and guides:</p>
-        <div style="text-align:center;margin:24px 0;">
-          <a href="${resourcesUrl}" style="display:inline-block;background:#6366f1;color:white;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:16px;">Access Your Free Resources →</a>
-        </div>
-        <p>You'll find checklists, financial worksheets, and planning guides — all free to download.</p>
+        <p>Thanks for subscribing. You're on the list for founder-focused bookkeeping insights, business planning guidance, and practical updates from Blueprints &amp; Bookkeeping.</p>
         <p>I'm Tea — founder of Blueprints & Bookkeeping LLC. I specialize in advanced bookkeeping and business planning for small businesses and growing teams.</p>
         <p>What to expect from this newsletter:</p>
         <ul style="line-height:1.8;">
@@ -98,7 +93,7 @@ async function sendWelcomeEmail(resend: Resend, email: string, unsubscribeToken:
   await resend.emails.send({
     from: FROM_ADDRESS,
     to: email,
-    subject: "Your free resources are ready — Blueprints & Bookkeeping",
+    subject: "Welcome to Blueprints & Bookkeeping",
     html,
     headers,
   }).catch((err: unknown) => {
