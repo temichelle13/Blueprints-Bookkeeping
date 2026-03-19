@@ -12,6 +12,7 @@ import adminRouter from "./admin";
 import calWebhookRouter from "./cal-webhook";
 import nexusRouter from "./nexus";
 import resendWebhookRouter from "./resend-webhook";
+import downloadsRouter from "./downloads";
 
 const router: IRouter = Router();
 
@@ -28,5 +29,6 @@ router.use(adminRouter);
 router.use(calWebhookRouter);
 router.use(nexusRouter);
 router.use(resendWebhookRouter);
+router.use(downloadsRouter);
 
 export default router;
