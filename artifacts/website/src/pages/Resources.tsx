@@ -18,6 +18,7 @@ import {
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 import { useNewsletterMutation } from "@/hooks/use-newsletter";
+import { getApiRoot } from "@/lib/api";
 
 interface Template {
   id: string;
@@ -197,12 +198,22 @@ function setStoredPendingDownload(filename: string | null) {
 }
 
 function getDownloadUrl(filename: string) {
-  return `${import.meta.env.BASE_URL}downloads/${filename}`;
+  return `${getApiRoot()}/downloads/${filename}`;
 }
 
-function triggerDownload(filename: string) {
+function triggerDownload(
+  filename: string,
+  options?: { preferNavigation?: boolean },
+) {
+  const url = getDownloadUrl(filename);
+
+  if (options?.preferNavigation) {
+    window.location.assign(url);
+    return;
+  }
+
   const link = document.createElement("a");
-  link.href = getDownloadUrl(filename);
+  link.href = url;
   link.download = filename;
   link.rel = "noopener";
   link.style.display = "none";
@@ -260,7 +271,7 @@ export default function Resources() {
       setShowModal(true);
 
       if (pendingDownload) {
-        triggerDownload(pendingDownload);
+        triggerDownload(pendingDownload, { preferNavigation: true });
       }
     }
   };
