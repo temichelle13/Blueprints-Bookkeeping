@@ -52,7 +52,7 @@ const caseStudies = [
     timeframe: "Plan delivered in 5 weeks; financing closed in under 4 months",
     serviceLinks: [
       { href: "/services/business-plans", label: "Business Plans & Forecasting" },
-      { href: "/services/digital-handshake", label: "Digital Handshake Add-On" },
+      { href: "/contact", label: "Ask About Optional Add-Ons" },
     ],
   },
 ];
