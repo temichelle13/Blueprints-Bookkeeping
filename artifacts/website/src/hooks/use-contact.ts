@@ -1,5 +1,8 @@
 import { z } from "zod";
-import { ContactFormInput, useSubmitContactForm } from "@workspace/api-client-react";
+import {
+  ContactFormInput,
+  useSubmitContactForm,
+} from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
 
@@ -8,7 +11,11 @@ export const quickContactSchema = z.object({
   name: z.string().min(2, "Name is required"),
   email: z.string().email("Valid email is required"),
   message: z.string().min(10, "Please provide a little more detail"),
-  smsConsent: z.boolean().refine((val) => val === true, { message: "You must consent to receive text messages and phone calls" }),
+  smsConsent: z
+    .boolean()
+    .refine((val) => val === true, {
+      message: "You must consent to receive text messages and phone calls",
+    }),
   website: z.string().optional(),
 });
 
@@ -23,42 +30,85 @@ export const detailedContactSchema = z.object({
   monthlyRevenueRange: z.string().optional(),
   biggestChallenge: z.string().min(10, "Please describe your challenge"),
   preferredContactMethod: z.string().optional(),
-  smsConsent: z.boolean().refine((val) => val === true, { message: "You must consent to receive text messages and phone calls" }),
+  smsConsent: z
+    .boolean()
+    .refine((val) => val === true, {
+      message: "You must consent to receive text messages and phone calls",
+    }),
+  website: z.string().optional(),
+});
+
+export const bookkeeperIntakeSchema = z.object({
+  formType: z.literal("bookkeeper-intake"),
+  name: z.string().min(2, "Name is required"),
+  email: z.string().email("Valid email is required"),
+  businessName: z.string().optional(),
+  servicesWanted: z.array(z.string()).min(1, "Select at least one service"),
+  budgetRange: z.string().optional(),
+  budgetUnknown: z.boolean().default(false),
+  deadlinePressure: z.string().min(2, "Please select your timeline"),
+  additionalComments: z
+    .string()
+    .min(10, "Please include a few details so Tea can review your request"),
   website: z.string().optional(),
 });
 
 export type QuickContactValues = z.infer<typeof quickContactSchema>;
 export type DetailedContactValues = z.infer<typeof detailedContactSchema>;
+export type BookkeeperIntakeValues = z.infer<typeof bookkeeperIntakeSchema>;
 
 export function useContactMutation() {
   const { toast } = useToast();
   const mutation = useSubmitContactForm();
 
-  const submit = async (data: QuickContactValues | DetailedContactValues): Promise<boolean> => {
+  const submit = async (
+    data: QuickContactValues | DetailedContactValues | BookkeeperIntakeValues,
+  ): Promise<boolean> => {
     try {
-      const payload: ContactFormInput = data.formType === "quick"
-        ? {
-            formType: "quick",
-            name: data.name,
-            email: data.email,
-            message: data.message,
-            smsConsent: data.smsConsent,
-            website: data.website ?? "",
-          }
-        : {
-            formType: "detailed",
-            name: data.name,
-            email: data.email,
-            phone: data.phone,
-            businessName: data.businessName,
-            industry: data.industry,
-            servicesInterested: data.servicesInterested,
-            monthlyRevenueRange: data.monthlyRevenueRange,
-            biggestChallenge: data.biggestChallenge,
-            preferredContactMethod: data.preferredContactMethod,
-            smsConsent: data.smsConsent,
-            website: data.website ?? "",
-          };
+      const payload: ContactFormInput =
+        data.formType === "quick"
+          ? {
+              formType: "quick",
+              name: data.name,
+              email: data.email,
+              message: data.message,
+              smsConsent: data.smsConsent,
+              website: data.website ?? "",
+            }
+          : data.formType === "bookkeeper-intake"
+            ? {
+                formType: "detailed",
+                name: data.name,
+                email: data.email,
+                businessName: data.businessName?.trim() || undefined,
+                industry: "Bookkeeper Intake",
+                servicesInterested: data.servicesWanted,
+                monthlyRevenueRange: data.budgetUnknown
+                  ? "Budget not decided yet"
+                  : data.budgetRange?.trim() || undefined,
+                biggestChallenge: [
+                  `Deadline pressure: ${data.deadlinePressure}`,
+                  "",
+                  "Additional comments:",
+                  data.additionalComments,
+                ].join("\n"),
+                smsConsent: false,
+                website: data.website ?? "",
+              }
+            : {
+                formType: "detailed",
+                name: data.name,
+                email: data.email,
+                phone: data.phone,
+                businessName: data.businessName,
+                industry: data.industry,
+                servicesInterested: data.servicesInterested,
+                monthlyRevenueRange: data.monthlyRevenueRange,
+                biggestChallenge: data.biggestChallenge,
+                preferredContactMethod: data.preferredContactMethod,
+                smsConsent: data.smsConsent,
+                website: data.website ?? "",
+              };
       await mutation.mutateAsync({ data: payload });
       trackEvent("Contact Form Submission", { form_type: data.formType });
       toast({
@@ -69,7 +119,8 @@ export function useContactMutation() {
     } catch (error) {
       toast({
         title: "Submission Failed",
-        description: "There was an error submitting your inquiry. Please try again.",
+        description:
+          "There was an error submitting your inquiry. Please try again.",
         variant: "destructive",
       });
       return false;

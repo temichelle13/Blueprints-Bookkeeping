@@ -40,6 +40,7 @@ import Onboarding from "./pages/Onboarding";
 import BusinessPlanning from "./pages/BusinessPlanning";
 import Status from "./pages/Status";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import BookkeeperIntake from "./pages/BookkeeperIntake";
 import ServiceBookkeeping from "./pages/services/Bookkeeping";
 import ServiceBusinessPlans from "./pages/services/BusinessPlans";
 import OregonBookkeeper from "./pages/OregonBookkeeper";
@@ -128,8 +129,12 @@ function Router() {
         <Route path="/business-planning" component={BusinessPlanning} />
         <Route path="/status" component={Status} />
         <Route path="/payment-success" component={PaymentSuccess} />
+        <Route path="/add-me-as-your-bookkeeper" component={BookkeeperIntake} />
         <Route path="/services/bookkeeping" component={ServiceBookkeeping} />
-        <Route path="/services/business-plans" component={ServiceBusinessPlans} />
+        <Route
+          path="/services/business-plans"
+          component={ServiceBusinessPlans}
+        />
         <Route path="/oregon-bookkeeper" component={OregonBookkeeper} />
         <Route path="/admin/contracts" component={AdminContracts} />
         <Route path="/admin" component={AdminDashboard} />
