@@ -155,10 +155,16 @@ export default function BlogPost() {
             }
 
             const rendered = trimmed
-              .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold">$1</strong>');
+              .split(/(\*\*.+?\*\*)/)
+              .map((part, idx) => {
+                if (part.startsWith('**') && part.endsWith('**')) {
+                  return <strong key={idx} className="font-semibold">{part.slice(2, -2)}</strong>;
+                }
+                return part;
+              });
 
             return (
-              <p key={i} className="text-foreground leading-relaxed text-[15px]" dangerouslySetInnerHTML={{ __html: rendered }} />
+              <p key={i} className="text-foreground leading-relaxed text-[15px]">{rendered}</p>
             );
           })}
         </div>

@@ -16,6 +16,7 @@ import { SEO } from "@/components/SEO";
 import { getApiRoot } from "@/lib/api";
 
 const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
+const QB_PROADVISOR_URL = "https://quickbooks.intuit.com/accountants/products-solutions/bookkeeping/";
 
 interface BasePath {
   icon: typeof CalendarDays;
@@ -26,6 +27,10 @@ interface BasePath {
   href: string;
   external: boolean;
   newTab?: boolean;
+  kind?: "primary" | "secondary" | "quickbooks";
+  note?: string;
+  secondaryCta?: string;
+  secondaryHref?: string;
 }
 
 type PathCard = BasePath;
@@ -100,6 +105,7 @@ export default function GetStarted() {
       cta: "Need QuickBooks Subscription?",
       href: QB_PROADVISOR_URL,
       external: true,
+      kind: "quickbooks",
       note: "Start the intake first if you want Tea added as your bookkeeper. Firm ID and invitation details are sent privately only after review, if still appropriate.",
       secondaryCta: "Start Intake",
       secondaryHref: "/contact?intent=bookkeeper-intake",
@@ -263,7 +269,7 @@ export default function GetStarted() {
                 <ArrowRight size={16} />
               </Link>
             )}
-            {path.secondaryHref.startsWith("http") ? (
+            {path.secondaryHref && (path.secondaryHref.startsWith("http") ? (
               <a
                 href={path.secondaryHref}
                 target="_blank"
@@ -311,7 +317,7 @@ export default function GetStarted() {
               >
                 {path.secondaryCta}
               </Link>
-            )}
+            ))}
           </div>
         ) : (
           <div
