@@ -20,6 +20,9 @@ run = "pnpm --filter @workspace/website run dev"
 [services.env]
 PORT = "19161"
 BASE_PATH = "/"
+# Set VITE_API_URL to the API server URL if frontend and backend are on different origins
+# Leave empty for same-origin deployments (defaults to /api relative path)
+VITE_API_URL = ""
 
 [services.production]
 build = ["pnpm", "--filter", "@workspace/website", "run", "build"]

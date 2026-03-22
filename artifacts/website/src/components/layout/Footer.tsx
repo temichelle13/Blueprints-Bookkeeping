@@ -22,31 +22,28 @@ const contactLinks = [
   {
     label: "Book a discovery call",
     href: SCHEDULE_PATH,
-    description: "Use the live calendar to choose a time that works for you.",
+    description: "Choose a time that works for you.",
     icon: CalendarDays,
     isExternal: false,
   },
   {
     label: "Start the intake",
     href: GET_STARTED_PATH,
-    description:
-      "Share your business details and we will map out the next steps.",
+    description: "Share your details and get started.",
     icon: ClipboardList,
     isExternal: false,
   },
   {
     label: BOOKKEEPER_EMAIL,
     href: `mailto:${BOOKKEEPER_EMAIL}`,
-    description:
-      "Email Tea directly for questions about bookkeeping, pricing, or fit.",
+    description: "Email Tea for questions about services.",
     icon: Mail,
     isExternal: true,
   },
   {
     label: BUSINESS_PHONE,
     href: BUSINESS_PHONE_HREF,
-    description:
-      "Call or text for scheduling help, questions, or client support.",
+    description: "Call or text for support.",
     icon: Phone,
     isExternal: true,
   },
