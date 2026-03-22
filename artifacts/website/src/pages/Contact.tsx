@@ -23,7 +23,10 @@ import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
 
 const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
-const BOOKKEEPER_INTENT = "bookkeeper-intake";
+const PHONE_DISPLAY = "(541) 319-8654";
+const PHONE_HREF = "tel:+15413198654";
+const SMS_HREF = "sms:+15413198654";
+const EMAIL_ADDRESS = "tea@blueprintsandbookkeeping.com";
 
 const messageSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -31,11 +34,9 @@ const messageSchema = z.object({
   message: z
     .string()
     .min(10, "Please include a message (at least 10 characters)"),
-  smsConsent: z
-    .boolean()
-    .refine((val) => val === true, {
-      message: "You must consent to receive text messages and phone calls",
-    }),
+  smsConsent: z.boolean().refine((val) => val === true, {
+    message: "You must consent to receive text messages and phone calls",
+  }),
   website: z.string().max(0).optional(),
 });
 
@@ -141,9 +142,27 @@ const contactCards = [
     external: true,
     newTab: false,
   },
+  {
+    icon: Mail,
+    color: "#F59E0B",
+    title: "Email",
+    description:
+      "Reach out by email if you want to share details or documents before talking.",
+    cta: `Email ${EMAIL_ADDRESS}`,
+    href: `mailto:${EMAIL_ADDRESS}`,
+    external: true,
+    newTab: false,
+  },
+] as const;
+
+const quickbooksSetupSteps = [
+  "In QuickBooks Online, open the gear icon and go to Manage users or Users.",
+  "Choose the option to add an accountant or invite an accounting professional.",
+  `Enter ${EMAIL_ADDRESS} and send the invitation from QuickBooks.`,
+  "Email Tea after you send it so she can confirm the invite, review your setup, and tell you what to send next.",
 ];
 
-function MessageForm() {
+function MessageForm({ defaultMessage = "" }: { defaultMessage?: string }) {
   const { submit: sendMessage, isPending } = useContactMutation();
   const [sent, setSent] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -153,7 +172,12 @@ function MessageForm() {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<MessageValues>({ resolver: zodResolver(messageSchema) });
+  } = useForm<MessageValues>({
+    resolver: zodResolver(messageSchema),
+    defaultValues: {
+      message: defaultMessage,
+    },
+  });
 
   const onSubmit = async (data: MessageValues) => {
     setSubmitError(null);
@@ -167,7 +191,13 @@ function MessageForm() {
     });
     if (ok) {
       setSent(true);
-      reset();
+      reset({
+        name: "",
+        email: "",
+        message: defaultMessage,
+        smsConsent: false,
+        website: "",
+      });
       return;
     }
 
@@ -744,7 +774,7 @@ export default function Contact() {
         </div>
       </section>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-3 rounded-xl border border-accent/20 bg-accent/[0.06] px-5 py-4 mb-10">
           <Globe size={20} className="text-accent shrink-0" />
           <p className="text-sm text-muted-foreground leading-relaxed">
@@ -806,7 +836,9 @@ export default function Contact() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        {showBookkeeperSetup && <QuickBooksSetupNotice />}
+
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
           <div className="lg:col-span-3">
             <div className="flex items-center gap-3 mb-3">
               <div className="accent-bar" />
