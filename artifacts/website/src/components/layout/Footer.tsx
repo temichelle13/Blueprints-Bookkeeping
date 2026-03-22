@@ -36,7 +36,7 @@ const contactLinks = [
   {
     label: BOOKKEEPER_EMAIL,
     href: `mailto:${BOOKKEEPER_EMAIL}`,
-    description: "Email Tea for questions about services.",
+    description: "Email for questions about services.",
     icon: Mail,
     isExternal: true,
   },
