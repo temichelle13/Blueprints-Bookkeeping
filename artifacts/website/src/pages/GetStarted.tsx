@@ -108,13 +108,13 @@ export default function GetStarted() {
       color: "#10B981",
       title: "Add Me as Your Bookkeeper",
       subtitle:
-        "I already have books or QuickBooks and want Tea to review my situation before sending the right next-step access instructions.",
-      cta: "Start Intake",
-      href: "/add-me-as-your-bookkeeper",
-      external: false,
-      note: "Firm ID and invitation details stay off the public page and are sent manually by email only if they are still the right next step after review.",
-      secondaryCta: "Need QuickBooks Subscription?",
-      secondaryHref: QB_PROADVISOR_URL,
+        "I already have books or QuickBooks and want Tea to review my situation before any accountant invite instructions are shared.",
+      cta: "Need QuickBooks Subscription?",
+      href: QB_PROADVISOR_URL,
+      external: true,
+      note: "Start the intake first if you want Tea added as your bookkeeper. Firm ID and invitation details are sent privately only after review, if still appropriate.",
+      secondaryCta: "Start Intake",
+      secondaryHref: "/contact?intent=bookkeeper-intake",
     },
   ];
 

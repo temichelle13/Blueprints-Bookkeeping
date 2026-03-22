@@ -236,17 +236,25 @@ export default function Onboarding() {
                 Already have QuickBooks Online?
               </h3>
               <p className="text-muted-foreground text-sm leading-relaxed mb-3">
-                No migration is usually needed. This intake lets Tea review your
-                request first and confirm whether accountant access is the right
-                next step. Here&apos;s what happens next:
+                No migration needed. Fill out this form and Tea will send you a{" "}
+                <strong className="text-white">
+                  QuickBooks accountant invitation
+                </strong>{" "}
+                directly. Here's what happens next:
               </p>
               <ol className="space-y-1 text-sm text-muted-foreground list-decimal list-inside">
                 <li>You submit this intake form</li>
-                <li>Tea reviews your request, books, and scheduling fit</li>
-                <li>You receive an estimate either way after review</li>
                 <li>
-                  If accountant access still makes sense, Tea sends the
-                  QuickBooks accountant invite privately by email
+                  Tea reviews it and sends a QBO accountant invite to your email
+                </li>
+                <li>
+                  You open the invite and click{" "}
+                  <strong className="text-white">Accept</strong> (takes about 2
+                  minutes)
+                </li>
+                <li>
+                  Tea gets read/write access to your company file — no data
+                  export required
                 </li>
                 <li>Your engagement letter and NDA arrive via Adobe Sign</li>
               </ol>
