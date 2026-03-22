@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -11,14 +11,16 @@ import {
   Video,
   ArrowRight,
   Globe,
-  CalendarDays,
-  MessageSquare,
-  UserPlus,
+  ShieldCheck,
+  Clock3,
+  Wallet,
 } from "lucide-react";
-import { Link, useLocation } from "wouter";
+import { useSubmitContactForm } from "@workspace/api-client-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 import { useContactMutation } from "@/hooks/use-contact";
+import { useToast } from "@/hooks/use-toast";
+import { trackEvent } from "@/lib/analytics";
 
 const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
 const PHONE_DISPLAY = "(541) 319-8654";
@@ -37,39 +39,106 @@ const messageSchema = z.object({
   }),
   website: z.string().max(0).optional(),
 });
+
 type MessageValues = z.infer<typeof messageSchema>;
+
+const bookkeeperIntakeSchema = z.object({
+  name: z.string().min(2, "Name is required"),
+  email: z.string().email("Valid email required"),
+  businessName: z.string().optional(),
+  servicesWanted: z.array(z.string()).min(1, "Select at least one service"),
+  budgetRange: z.string().optional(),
+  budgetUnknown: z.boolean().default(false),
+  deadlinePressure: z.string().min(2, "Please select your timeline"),
+  additionalComments: z
+    .string()
+    .min(10, "Please include enough detail for Tea to review your request"),
+  website: z.string().max(0).optional(),
+});
+
+type BookkeeperIntakeValues = z.infer<typeof bookkeeperIntakeSchema>;
+
+const SERVICE_OPTIONS = [
+  {
+    value: "Cleanup / catch-up bookkeeping",
+    title: "Cleanup",
+    description:
+      "Books are behind, messy, or need historical correction before moving forward.",
+  },
+  {
+    value: "Ongoing monthly bookkeeping",
+    title: "Ongoing bookkeeping",
+    description:
+      "You need recurring monthly support, reconciliations, and dependable closes.",
+  },
+  {
+    value: "Financial reports / close support",
+    title: "Reports",
+    description:
+      "You want dependable statements, monthly reporting, or close support.",
+  },
+  {
+    value: "Planning / strategy support",
+    title: "Planning & strategy",
+    description:
+      "You want forward-looking financial guidance in addition to clean books.",
+  },
+  {
+    value: "Bundle / combination of services",
+    title: "Bundle",
+    description:
+      "You likely need a combination of cleanup, monthly work, reports, or planning.",
+  },
+] as const;
+
+const BUDGET_OPTIONS = [
+  "Under $500/month",
+  "$500–$1,000/month",
+  "$1,000–$2,500/month",
+  "$2,500+/month",
+  "Project-based / one-time cleanup budget",
+] as const;
+
+const DEADLINE_OPTIONS = [
+  {
+    value: "No hard deadline",
+    title: "No hard deadline",
+    description: "You want the right fit more than a rush timeline.",
+  },
+  {
+    value: "Soon, ideally within 30 days",
+    title: "Within 30 days",
+    description:
+      "You would like to get started soon if there is room in the schedule.",
+  },
+  {
+    value: "Urgent — tax time, lender, investor, or filing pressure",
+    title: "Urgent",
+    description:
+      "There is time-sensitive pressure that affects scheduling or review priority.",
+  },
+] as const;
 
 const contactCards = [
   {
-    icon: CalendarDays,
-    color: "#8B5CF6",
-    title: "Schedule",
+    icon: Video,
+    color: "#6366F1",
+    title: "Book a Free Discovery Call",
     description:
-      "Pick a time on Tea's calendar for a focused discovery conversation.",
-    cta: "Open calendar",
-    href: "/schedule",
-    external: false,
-    newTab: false,
+      "30 minutes with Tea — talk through your situation, get a custom recommendation, zero obligation.",
+    cta: "Pick a Time on Calendly",
+    href: CALENDLY_URL,
+    external: true,
+    newTab: true,
   },
   {
     icon: Phone,
     color: "#10B981",
-    title: "Call",
+    title: "Call or Text",
     description:
-      "Prefer the phone? Call Tea directly during business hours or leave a voicemail.",
-    cta: `Call ${PHONE_DISPLAY}`,
-    href: PHONE_HREF,
-    external: true,
-    newTab: false,
-  },
-  {
-    icon: MessageSquare,
-    color: "#6366F1",
-    title: "Text",
-    description:
-      "Send a text if you want a quick first touchpoint or have a simple question.",
-    cta: "Text Tea",
-    href: SMS_HREF,
+      "(541) 319-8654 — voicemail and text are both welcome. Tea will get back to you within one business day.",
+    cta: "Dial (541) 319-8654",
+    href: "tel:+15413198654",
     external: true,
     newTab: false,
   },
@@ -133,7 +202,7 @@ function MessageForm({ defaultMessage = "" }: { defaultMessage?: string }) {
     }
 
     setSubmitError(
-      `We couldn't submit your message. Please try again, or contact us at ${PHONE_DISPLAY}.`,
+      "We couldn't submit your message. Please try again, or contact us at (541) 319-8654.",
     );
   };
 
@@ -284,83 +353,410 @@ function MessageForm({ defaultMessage = "" }: { defaultMessage?: string }) {
   );
 }
 
-function QuickBooksSetupNotice() {
-  return (
-    <section className="glass-card rounded-2xl p-7 md:p-8 mb-12 border border-accent/20 bg-accent/[0.04]">
-      <div className="flex items-start gap-4">
-        <div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
-          <UserPlus size={22} className="text-accent" />
+function BookkeeperIntakeForm() {
+  const { toast } = useToast();
+  const mutation = useSubmitContactForm();
+  const [sent, setSent] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm<BookkeeperIntakeValues>({
+    resolver: zodResolver(bookkeeperIntakeSchema),
+    defaultValues: {
+      businessName: "",
+      servicesWanted: [],
+      budgetRange: "",
+      budgetUnknown: false,
+      deadlinePressure: "No hard deadline",
+      additionalComments: "",
+      website: "",
+    },
+  });
+
+  const budgetUnknown = watch("budgetUnknown");
+  const selectedBudget = watch("budgetRange");
+  const selectedDeadline = watch("deadlinePressure");
+  const selectedServices = watch("servicesWanted") || [];
+
+  useEffect(() => {
+    if (budgetUnknown && selectedBudget) {
+      setValue("budgetRange", "", { shouldValidate: false, shouldDirty: true });
+    }
+  }, [budgetUnknown, selectedBudget, setValue]);
+
+  const onSubmit = async (data: BookkeeperIntakeValues) => {
+    setSubmitError(null);
+
+    try {
+      await mutation.mutateAsync({
+        data: {
+          formType: "detailed",
+          name: data.name,
+          email: data.email,
+          businessName: data.businessName?.trim() || undefined,
+          industry: "Bookkeeper Intake",
+          servicesInterested: data.servicesWanted,
+          monthlyRevenueRange: data.budgetUnknown
+            ? "Budget not decided yet"
+            : data.budgetRange?.trim() || undefined,
+          biggestChallenge: [
+            `Deadline pressure: ${data.deadlinePressure}`,
+            "",
+            "Additional comments:",
+            data.additionalComments,
+          ].join("\n"),
+          smsConsent: false,
+          website: data.website || "",
+        },
+      });
+      trackEvent("Contact Form Submission", { form_type: BOOKKEEPER_INTENT });
+      toast({
+        title: "Inquiry Submitted",
+        description: "Thank you for reaching out. We will be in touch shortly.",
+      });
+      setSent(true);
+      reset();
+    } catch {
+      toast({
+        title: "Submission Failed",
+        description:
+          "There was an error submitting your inquiry. Please try again.",
+        variant: "destructive",
+      });
+      setSubmitError(
+        "We couldn't submit your intake. Please try again, or email tea@blueprintsandbookkeeping.com.",
+      );
+    }
+  };
+
+  const inputClass =
+    "w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-accent/50 transition-colors text-sm";
+  const labelClass =
+    "block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5";
+
+  if (sent) {
+    return (
+      <div className="flex flex-col items-center text-center gap-5 py-6">
+        <div className="w-16 h-16 rounded-full bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center">
+          <CheckCircle2 className="w-8 h-8 text-emerald-400" />
         </div>
-        <div className="flex-1">
-          <p className="text-xs font-mono font-semibold uppercase tracking-widest text-accent mb-2">
-            Add Tea as your bookkeeper
-          </p>
-          <h2 className="text-2xl font-display font-bold text-white mb-3">
-            Start with a quick note, then send the QuickBooks invite
+        <div className="space-y-3 max-w-2xl">
+          <h2 className="text-2xl font-display font-bold text-white">
+            Intake received.
           </h2>
-          <p className="text-sm md:text-base text-muted-foreground leading-relaxed mb-5">
-            Use the options above to schedule, call, text, or email Tea. If you
-            are ready to grant QuickBooks access, send the invite to{" "}
-            <a
-              href={`mailto:${EMAIL_ADDRESS}`}
-              className="text-white underline decoration-accent/50 underline-offset-4 hover:text-accent transition-colors"
-            >
-              {EMAIL_ADDRESS}
-            </a>{" "}
-            and include your business name in your message so Tea can match the
-            request promptly.
+          <p className="text-muted-foreground leading-relaxed">
+            Tea will assess your request and current books before recommending
+            the right next step.
           </p>
-
-          <ol className="space-y-3 mb-5">
-            {quickbooksSetupSteps.map((step, index) => (
-              <li
-                key={step}
-                className="flex items-start gap-3 text-sm text-muted-foreground leading-relaxed"
-              >
-                <span className="mt-0.5 flex h-6 w-6 items-center justify-center rounded-full border border-accent/30 bg-accent/10 text-xs font-semibold text-accent shrink-0">
-                  {index + 1}
-                </span>
-                <span>{step}</span>
-              </li>
-            ))}
-          </ol>
-
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-muted-foreground leading-relaxed">
-            <p className="text-white font-medium mb-1">Helpful note</p>
-            <p>
-              QuickBooks menu labels can vary slightly by subscription level and
-              interface updates. If you do not see{" "}
-              <span className="text-white">Manage users</span>, look for{" "}
-              <span className="text-white">Users</span>,{" "}
-              <span className="text-white">My Accountant</span>, or a similar
-              accountant-invite option inside settings.
+        </div>
+        <div className="w-full rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-left space-y-3">
+          <div className="flex gap-3">
+            <ArrowRight className="w-4 h-4 text-accent shrink-0 mt-1" />
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              You will receive an estimate either way after review, even if a
+              different scope or sequence makes more sense.
+            </p>
+          </div>
+          <div className="flex gap-3">
+            <Wallet className="w-4 h-4 text-accent shrink-0 mt-1" />
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Your budget helps with fit and scheduling, but it is optional and
+              will never block the review.
+            </p>
+          </div>
+          <div className="flex gap-3">
+            <Clock3 className="w-4 h-4 text-accent shrink-0 mt-1" />
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Next steps will be discussed after review, including whether
+              accountant access or a QuickBooks invitation is still the right
+              move.
+            </p>
+          </div>
+          <div className="flex gap-3">
+            <ShieldCheck className="w-4 h-4 text-accent shrink-0 mt-1" />
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              To avoid exposing access details on a public page, firm ID or
+              invitation instructions will be sent manually by email only if
+              they are appropriate after review.
             </p>
           </div>
         </div>
       </div>
-    </section>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-7">
+      <input
+        type="text"
+        {...register("website")}
+        className="hidden"
+        tabIndex={-1}
+        autoComplete="off"
+      />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label htmlFor="bookkeeper-name" className={labelClass}>
+            Your Name
+          </label>
+          <input
+            id="bookkeeper-name"
+            {...register("name")}
+            placeholder="Jane Smith"
+            className={inputClass}
+            aria-invalid={!!errors.name}
+          />
+          {errors.name && (
+            <p role="alert" className="text-destructive text-xs mt-1">
+              {errors.name.message}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor="bookkeeper-email" className={labelClass}>
+            Email Address
+          </label>
+          <input
+            id="bookkeeper-email"
+            type="email"
+            {...register("email")}
+            placeholder="jane@company.com"
+            className={inputClass}
+            aria-invalid={!!errors.email}
+          />
+          {errors.email && (
+            <p role="alert" className="text-destructive text-xs mt-1">
+              {errors.email.message}
+            </p>
+          )}
+        </div>
+      </div>
+
+      <div>
+        <label htmlFor="bookkeeper-business" className={labelClass}>
+          Business Name{" "}
+          <span className="normal-case tracking-normal font-normal">
+            (optional)
+          </span>
+        </label>
+        <input
+          id="bookkeeper-business"
+          {...register("businessName")}
+          placeholder="Acorn Studio LLC"
+          className={inputClass}
+          aria-invalid={!!errors.businessName}
+        />
+      </div>
+
+      <div>
+        <div className="flex items-center justify-between gap-3 mb-3">
+          <label className={labelClass}>What services do you want?</label>
+          <span className="text-[11px] text-muted-foreground">
+            Select all that apply
+          </span>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {SERVICE_OPTIONS.map((option) => {
+            const checked = selectedServices.includes(option.value);
+            return (
+              <label
+                key={option.value}
+                className={`rounded-2xl border p-4 cursor-pointer transition-all ${checked ? "border-accent/50 bg-accent/[0.08]" : "border-white/10 bg-white/[0.02] hover:border-white/20"}`}
+              >
+                <div className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    value={option.value}
+                    {...register("servicesWanted")}
+                    className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent"
+                  />
+                  <div>
+                    <p className="text-sm font-semibold text-white">
+                      {option.title}
+                    </p>
+                    <p className="text-xs text-muted-foreground leading-relaxed mt-1">
+                      {option.description}
+                    </p>
+                  </div>
+                </div>
+              </label>
+            );
+          })}
+        </div>
+        {errors.servicesWanted && (
+          <p role="alert" className="text-destructive text-xs mt-2">
+            {errors.servicesWanted.message}
+          </p>
+        )}
+      </div>
+
+      <div>
+        <div className="flex items-center justify-between gap-3 mb-3">
+          <label className={labelClass}>
+            Preferred budget range{" "}
+            <span className="normal-case tracking-normal font-normal">
+              (optional)
+            </span>
+          </label>
+          <span className="text-[11px] text-muted-foreground">
+            Helps with fit and scheduling
+          </span>
+        </div>
+        <div className="space-y-3">
+          <label
+            className={`flex items-start gap-3 rounded-2xl border p-4 cursor-pointer transition-all ${budgetUnknown ? "border-accent/50 bg-accent/[0.08]" : "border-white/10 bg-white/[0.02] hover:border-white/20"}`}
+          >
+            <input
+              type="checkbox"
+              {...register("budgetUnknown")}
+              className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent"
+            />
+            <div>
+              <p className="text-sm font-semibold text-white">
+                I don’t know my budget yet
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                That is completely fine — Tea can still review the request and
+                estimate the right scope.
+              </p>
+            </div>
+          </label>
+
+          <div
+            className={`grid grid-cols-1 sm:grid-cols-2 gap-3 ${budgetUnknown ? "opacity-60" : ""}`}
+          >
+            {BUDGET_OPTIONS.map((option) => {
+              const checked = selectedBudget === option;
+              return (
+                <label
+                  key={option}
+                  className={`rounded-2xl border p-4 cursor-pointer transition-all ${checked ? "border-accent/50 bg-accent/[0.08]" : "border-white/10 bg-white/[0.02] hover:border-white/20"}`}
+                >
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="radio"
+                      value={option}
+                      {...register("budgetRange")}
+                      disabled={budgetUnknown}
+                      className="h-4 w-4 border border-white/20 bg-white/[0.04] accent-accent"
+                    />
+                    <span className="text-sm text-white">{option}</span>
+                  </div>
+                </label>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <label className={labelClass}>Deadline pressure</label>
+        <div className="grid grid-cols-1 gap-3">
+          {DEADLINE_OPTIONS.map((option) => {
+            const checked = selectedDeadline === option.value;
+            return (
+              <label
+                key={option.value}
+                className={`rounded-2xl border p-4 cursor-pointer transition-all ${checked ? "border-accent/50 bg-accent/[0.08]" : "border-white/10 bg-white/[0.02] hover:border-white/20"}`}
+              >
+                <div className="flex items-start gap-3">
+                  <input
+                    type="radio"
+                    value={option.value}
+                    {...register("deadlinePressure")}
+                    className="mt-1 h-4 w-4 border border-white/20 bg-white/[0.04] accent-accent"
+                  />
+                  <div>
+                    <p className="text-sm font-semibold text-white">
+                      {option.title}
+                    </p>
+                    <p className="text-xs text-muted-foreground leading-relaxed mt-1">
+                      {option.description}
+                    </p>
+                  </div>
+                </div>
+              </label>
+            );
+          })}
+        </div>
+        {errors.deadlinePressure && (
+          <p role="alert" className="text-destructive text-xs mt-2">
+            {errors.deadlinePressure.message}
+          </p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="bookkeeper-comments" className={labelClass}>
+          Additional comments
+        </label>
+        <textarea
+          id="bookkeeper-comments"
+          rows={5}
+          {...register("additionalComments")}
+          placeholder="Tell Tea what is happening in the books, what feels urgent, and anything that would help with review."
+          className={`${inputClass} resize-none`}
+          aria-invalid={!!errors.additionalComments}
+        />
+        <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+          Include context like how far behind the books are, whether QuickBooks
+          is already set up, or any tax-time, lender, or investor pressure.
+        </p>
+        {errors.additionalComments && (
+          <p role="alert" className="text-destructive text-xs mt-2">
+            {errors.additionalComments.message}
+          </p>
+        )}
+      </div>
+
+      {submitError && (
+        <p role="alert" className="text-destructive text-sm -mt-2">
+          {submitError}
+        </p>
+      )}
+
+      <button
+        type="submit"
+        disabled={mutation.isPending}
+        className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent text-white font-semibold text-sm hover:shadow-xl hover:shadow-accent/20 transition-all duration-300 disabled:opacity-50"
+      >
+        {mutation.isPending ? (
+          <Loader2 size={16} className="animate-spin" />
+        ) : (
+          <Send size={16} />
+        )}
+        {mutation.isPending ? "Submitting intake…" : "Submit Intake"}
+      </button>
+    </form>
   );
 }
 
 export default function Contact() {
-  usePageTitle("Contact");
-  const [location] = useLocation();
+  const search = window.location.search;
+  const isBookkeeperIntent = useMemo(() => {
+    const intent = new URLSearchParams(search).get("intent");
+    return intent === BOOKKEEPER_INTENT;
+  }, [search]);
 
-  const intent = useMemo(() => {
-    if (typeof window === "undefined") return null;
-    return new URLSearchParams(window.location.search).get("intent");
-  }, [location]);
-
-  const showBookkeeperSetup = intent === "add-bookkeeper";
-  const defaultMessage = showBookkeeperSetup
-    ? "Hi Tea — I'd like to add you as my bookkeeper in QuickBooks."
-    : "";
+  usePageTitle(isBookkeeperIntent ? "Add Me as Your Bookkeeper" : "Contact");
 
   return (
     <div className="pt-24 pb-20">
       <SEO
         path="/contact"
-        description="Contact Blueprints & Bookkeeping to schedule a discovery call, call, text, email, or get help adding Tea as your bookkeeper in QuickBooks."
+        description={
+          isBookkeeperIntent
+            ? "Start the Blueprints & Bookkeeping intake flow for adding Tea as your bookkeeper."
+            : "Get in touch with Blueprints & Bookkeeping. Book a free discovery call or send us a message to discuss your virtual bookkeeping needs."
+        }
       />
 
       <section className="py-12 relative">
@@ -368,11 +764,12 @@ export default function Contact() {
         <div className="relative max-w-3xl mx-auto px-4 text-center">
           <div className="accent-bar mx-auto mb-6" />
           <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
-            Get in Touch
+            {isBookkeeperIntent ? "Add Me as Your Bookkeeper" : "Get in Touch"}
           </h1>
           <p className="text-lg text-muted-foreground">
-            Schedule, call, text, or email — choose the contact method that
-            feels easiest for you.
+            {isBookkeeperIntent
+              ? "Start with a short intake so Tea can review your books and confirm the right next step before any accountant invite is shared."
+              : "Two easy ways to connect — pick whichever works best for you."}
           </p>
         </div>
       </section>
@@ -382,19 +779,19 @@ export default function Contact() {
           <Globe size={20} className="text-accent shrink-0" />
           <p className="text-sm text-muted-foreground leading-relaxed">
             <span className="font-semibold text-white">
-              100% Virtual Practice
+              100 % Virtual Practice
             </span>{" "}
             — All meetings, consultations, and services are conducted online. No
             in-person visits or physical office location.
           </p>
         </div>
 
-        <div className="max-w-5xl mx-auto mb-14">
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 justify-center">
+        {!isBookkeeperIntent && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-14">
             {contactCards.map((card) => {
               const CardIcon = card.icon;
               const inner = (
-                <div className="glass-card rounded-2xl p-7 flex flex-col h-full min-h-[260px] group cursor-pointer transition-all duration-300 hover:border-accent/30 hover:-translate-y-1 hover:shadow-lg hover:shadow-accent/5">
+                <div className="glass-card rounded-2xl p-7 flex flex-col h-full min-h-[280px] group cursor-pointer transition-all duration-300 hover:border-accent/30 hover:-translate-y-1 hover:shadow-lg hover:shadow-accent/5">
                   <div
                     className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 shrink-0"
                     style={{
@@ -404,14 +801,12 @@ export default function Contact() {
                   >
                     <CardIcon size={22} style={{ color: card.color }} />
                   </div>
-
                   <h2 className="text-lg font-display font-bold text-white mb-2">
                     {card.title}
                   </h2>
                   <p className="text-sm text-muted-foreground leading-relaxed mb-5 flex-1">
                     {card.description}
                   </p>
-
                   <span
                     className="inline-flex items-center gap-1.5 text-sm font-semibold transition-colors"
                     style={{ color: card.color }}
@@ -425,33 +820,21 @@ export default function Contact() {
                 </div>
               );
 
-              if (card.external) {
-                return (
-                  <a
-                    key={card.title}
-                    href={card.href}
-                    {...(card.newTab
-                      ? { target: "_blank", rel: "noopener noreferrer" }
-                      : {})}
-                    className="no-underline"
-                  >
-                    {inner}
-                  </a>
-                );
-              }
-
               return (
-                <Link
+                <a
                   key={card.title}
                   href={card.href}
+                  {...(card.newTab
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {})}
                   className="no-underline"
                 >
                   {inner}
-                </Link>
+                </a>
               );
             })}
           </div>
-        </div>
+        )}
 
         {showBookkeeperSetup && <QuickBooksSetupNotice />}
 
@@ -460,11 +843,11 @@ export default function Contact() {
             <div className="flex items-center gap-3 mb-3">
               <div className="accent-bar" />
               <h2 className="text-xs font-mono font-semibold uppercase tracking-widest text-accent">
-                Send a Message
+                {isBookkeeperIntent ? "Bookkeeper Intake" : "Send a Message"}
               </h2>
             </div>
             <div className="glass-card rounded-2xl p-7">
-              <MessageForm defaultMessage={defaultMessage} />
+              {isBookkeeperIntent ? <BookkeeperIntakeForm /> : <MessageForm />}
             </div>
           </div>
 
@@ -472,88 +855,106 @@ export default function Contact() {
             <div className="flex items-center gap-3 mb-3">
               <div className="accent-bar" />
               <h2 className="text-xs font-mono font-semibold uppercase tracking-widest text-accent">
-                Direct Contact
+                {isBookkeeperIntent ? "What Happens Next" : "Direct Contact"}
               </h2>
             </div>
-            <div className="glass-card rounded-2xl p-7 space-y-6">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
-                  <Phone size={16} className="text-accent" />
+            {isBookkeeperIntent ? (
+              <div className="glass-card rounded-2xl p-7 space-y-6">
+                <div className="flex gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0 text-accent font-semibold">
+                    1
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white">
+                      Tea reviews the request and books
+                    </p>
+                    <p className="text-xs text-muted-foreground leading-relaxed mt-1">
+                      This intake replaces a public firm-ID handoff and gives
+                      room to review fit, scope, and timing first.
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-white">
-                    <a
-                      href={PHONE_HREF}
-                      className="hover:text-accent transition-colors"
-                    >
-                      {PHONE_DISPLAY}
-                    </a>
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Voice calls and voicemail welcome
+                <div className="flex gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0 text-accent font-semibold">
+                    2
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white">
+                      You receive an estimate either way
+                    </p>
+                    <p className="text-xs text-muted-foreground leading-relaxed mt-1">
+                      If the work is a fit, you will get scope and timing. If
+                      not, you will still get a clear answer after review.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0 text-accent font-semibold">
+                    3
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white">
+                      Access instructions come later, if needed
+                    </p>
+                    <p className="text-xs text-muted-foreground leading-relaxed mt-1">
+                      Firm ID or QuickBooks invitation details are sent manually
+                      by email after review if accountant access is still the
+                      right next step.
+                    </p>
+                  </div>
+                </div>
+                <div className="rounded-xl border border-accent/20 bg-accent/[0.06] px-4 py-4">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    <span className="font-semibold text-white">
+                      Why ask about budget?
+                    </span>{" "}
+                    Budget does not need to be final. It simply helps determine
+                    whether a light cleanup, ongoing monthly scope, or a bundled
+                    engagement makes the most sense.
                   </p>
                 </div>
               </div>
+            ) : (
+              <div className="glass-card rounded-2xl p-7 space-y-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
+                    <Phone size={16} className="text-accent" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white">
+                      <a
+                        href="tel:+15413198654"
+                        className="hover:text-accent transition-colors"
+                      >
+                        (541) 319-8654
+                      </a>
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Voicemail & text welcome
+                    </p>
+                  </div>
+                </div>
 
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
-                  <MessageSquare size={16} className="text-accent" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-white">
-                    <a
-                      href={SMS_HREF}
-                      className="hover:text-accent transition-colors"
-                    >
-                      Text {PHONE_DISPLAY}
-                    </a>
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Best for quick questions and follow-ups
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
-                  <Mail size={16} className="text-accent" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-white">
-                    <a
-                      href={`mailto:${EMAIL_ADDRESS}`}
-                      className="hover:text-accent transition-colors"
-                    >
-                      {EMAIL_ADDRESS}
-                    </a>
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Replies within one business day
-                  </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
+                    <Mail size={16} className="text-accent" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white">
+                      <a
+                        href="mailto:tea@blueprintsandbookkeeping.com"
+                        className="hover:text-accent transition-colors"
+                      >
+                        tea@blueprintsandbookkeeping.com
+                      </a>
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Replies within one business day
+                    </p>
+                  </div>
                 </div>
               </div>
-
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
-                  <Video size={16} className="text-accent" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-white">
-                    <a
-                      href={CALENDLY_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-accent transition-colors"
-                    >
-                      Book a video chat
-                    </a>
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Calendly will open in a new tab
-                  </p>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

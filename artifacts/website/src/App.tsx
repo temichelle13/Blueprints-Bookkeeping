@@ -129,7 +129,10 @@ function Router() {
         <Route path="/status" component={Status} />
         <Route path="/payment-success" component={PaymentSuccess} />
         <Route path="/services/bookkeeping" component={ServiceBookkeeping} />
-        <Route path="/services/business-plans" component={ServiceBusinessPlans} />
+        <Route
+          path="/services/business-plans"
+          component={ServiceBusinessPlans}
+        />
         <Route path="/oregon-bookkeeper" component={OregonBookkeeper} />
         <Route path="/admin/contracts" component={AdminContracts} />
         <Route path="/admin" component={AdminDashboard} />
