@@ -2,17 +2,12 @@ import { Router, type IRouter } from "express";
 import rateLimit from "express-rate-limit";
 import { db, contactInquiriesTable } from "@workspace/db";
 import { SubmitContactFormBody } from "@workspace/api-zod";
-import { Resend } from "resend";
 import * as contractService from "../lib/contract-service";
 import { isEmailSuppressed } from "../lib/email-suppression";
+import { getResend, getOwnerEmail, EMAIL_FROM } from "../lib/email";
+import { logger } from "../lib/logger";
 
 const router: IRouter = Router();
-
-function getResend(): Resend | null {
-  const key = process.env["RESEND_API_KEY"];
-  if (!key) return null;
-  return new Resend(key);
-}
 
 const contactLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -21,9 +16,6 @@ const contactLimiter = rateLimit({
   legacyHeaders: false,
   message: { error: "Too many submissions from this IP. Please try again later." },
 });
-
-const OWNER_EMAIL = "tea@blueprintsandbookkeeping.com";
-const FROM_ADDRESS = "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
 
 router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
   if (req.body?.website) {
@@ -118,8 +110,8 @@ router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
 
     const emailPromises: Promise<unknown>[] = [
       resend.emails.send({
-        from: FROM_ADDRESS,
-        to: OWNER_EMAIL,
+        from: EMAIL_FROM.default,
+        to: getOwnerEmail(),
         replyTo: data.email,
         subject: `New Inquiry: ${data.name}${data.businessName ? ` — ${data.businessName}` : ""}`,
         html: notifyHtml,
@@ -127,11 +119,11 @@ router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
     ];
 
     if (suppressed) {
-      console.warn("[Contact] Skipping confirmation email — address is suppressed:", data.email);
+      logger.warn("Skipping confirmation email for suppressed address", { email: data.email });
     } else {
       emailPromises.push(
         resend.emails.send({
-          from: FROM_ADDRESS,
+          from: EMAIL_FROM.default,
           to: data.email,
           subject: "We received your message — Blueprints & Bookkeeping",
           html: confirmHtml,

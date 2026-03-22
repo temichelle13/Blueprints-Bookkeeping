@@ -1,20 +1,20 @@
+import { validateEnv, getEnv } from "./config/env";
+import { logger } from "./lib/logger";
 import app from "./app";
 import { checkAndSendReminders, syncAllPendingAgreements } from "./lib/contract-service";
 import { runNexusCheck, ensureNexusRulesSeeded } from "./lib/nexus-service";
 
-const rawPort = process.env["PORT"];
-
-if (!rawPort) {
-  throw new Error(
-    "PORT environment variable is required but was not provided.",
-  );
+// Validate environment variables at startup
+try {
+  validateEnv();
+  logger.info("Environment variables validated successfully");
+} catch (error) {
+  logger.error("Failed to validate environment variables", error as Error);
+  process.exit(1);
 }
 
-const port = Number(rawPort);
-
-if (Number.isNaN(port) || port <= 0) {
-  throw new Error(`Invalid PORT value: "${rawPort}"`);
-}
+const env = getEnv();
+const port = env.PORT;
 
 const REMINDER_INTERVAL_MS = 60 * 60 * 1000;
 
@@ -22,14 +22,16 @@ function startContractScheduler() {
   async function run() {
     try {
       const syncCount = await syncAllPendingAgreements();
-      if (syncCount > 0) console.log(`Synced ${syncCount} contract statuses`);
+      if (syncCount > 0) {
+        logger.info("Contract statuses synced", { count: syncCount });
+      }
 
       const { remindersProcessed, expired } = await checkAndSendReminders();
       if (remindersProcessed > 0 || expired > 0) {
-        console.log(`Contract reminders: ${remindersProcessed} sent, ${expired} expired`);
+        logger.info("Contract reminders processed", { remindersProcessed, expired });
       }
     } catch (err) {
-      console.error("Contract scheduler error:", err);
+      logger.error("Contract scheduler error", err as Error);
     }
   }
 
@@ -42,10 +44,10 @@ function startNexusScheduler() {
     try {
       const { warnings, alerts } = await runNexusCheck();
       if (warnings > 0 || alerts > 0) {
-        console.log(`Nexus check: ${warnings} warnings, ${alerts} alerts sent`);
+        logger.info("Nexus check completed", { warnings, alerts });
       }
     } catch (err) {
-      console.error("Nexus scheduler error:", err);
+      logger.error("Nexus scheduler error", err as Error);
     }
   }
 
@@ -59,12 +61,15 @@ function startNexusScheduler() {
       target.setDate(target.getDate() + 1);
     }
 
-    return target.getTime() - pacificNow.getTime();
+    const msUntil = target.getTime() - pacificNow.getTime();
+
+    // Ensure we never return a negative value
+    return Math.max(msUntil, 0);
   }
 
   function scheduleNext() {
     const msUntil = getMsUntilNext8amPacific();
-    console.log(`Next nexus check scheduled in ${Math.round(msUntil / 60000)} minutes`);
+    logger.info("Next nexus check scheduled", { minutesUntil: Math.round(msUntil / 60000) });
     setTimeout(async () => {
       await run();
       scheduleNext();
@@ -75,12 +80,15 @@ function startNexusScheduler() {
 }
 
 app.listen(port, async () => {
-  console.log(`Server listening on port ${port}`);
+  logger.info("Server started", { port, environment: env.NODE_ENV });
+
   try {
     await ensureNexusRulesSeeded();
+    logger.info("Nexus rules seeded successfully");
   } catch (err) {
-    console.error("Failed to seed nexus rules:", err);
+    logger.error("Failed to seed nexus rules", err as Error);
   }
+
   startContractScheduler();
   startNexusScheduler();
 });
