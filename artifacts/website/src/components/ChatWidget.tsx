@@ -17,6 +17,13 @@ interface Message {
   streaming?: boolean;
 }
 
+type ChatAvailability = "unknown" | "checking" | "available" | "unavailable";
+
+const OFFLINE_NOTICE =
+  "Aria is temporarily offline right now. Please use the contact form, email tea@blueprintsandbookkeeping.com, or book a discovery call and Tea will follow up personally.";
+
+const AVAILABILITY_CHECK_TIMEOUT_MS = 8000;
+
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -24,9 +31,44 @@ export default function ChatWidget() {
   const [loading, setLoading] = useState(false);
   const [conversationId, setConversationId] = useState<number | null>(null);
   const [hasNewMessage, setHasNewMessage] = useState(false);
+  const [availability, setAvailability] = useState<ChatAvailability>("unknown");
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const apiBase = getApiRoot();
+
+  const checkAvailability = useCallback(async () => {
+    setAvailability((current) =>
+      current === "available" ? current : "checking",
+    );
+    setStatusMessage(null);
+
+    const controller = new AbortController();
+    const timeout = window.setTimeout(
+      () => controller.abort(),
+      AVAILABILITY_CHECK_TIMEOUT_MS,
+    );
+
+    try {
+      const response = await fetch(`${apiBase}/healthz`, {
+        method: "GET",
+        signal: controller.signal,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Health check failed with status ${response.status}`);
+      }
+
+      setAvailability("available");
+      return true;
+    } catch {
+      setAvailability("unavailable");
+      setStatusMessage(OFFLINE_NOTICE);
+      return false;
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  }, [apiBase]);
 
   useEffect(() => {
     if (open) {
@@ -39,6 +81,14 @@ export default function ChatWidget() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  useEffect(() => {
+    if (!open || availability === "available" || availability === "checking") {
+      return;
+    }
+
+    void checkAvailability();
+  }, [open, availability, checkAvailability]);
+
   const getOrCreateConversation = useCallback(async (): Promise<number> => {
     if (conversationId) return conversationId;
 
@@ -48,7 +98,13 @@ export default function ChatWidget() {
       body: JSON.stringify({ title: "Website Chat" }),
     });
 
-    if (!res.ok) throw new Error("Failed to create conversation");
+    if (!res.ok) {
+      if (res.status >= 500 || res.status === 404 || res.status === 405) {
+        setAvailability("unavailable");
+        setStatusMessage(OFFLINE_NOTICE);
+      }
+      throw new Error("Failed to create conversation");
+    }
     const data = await res.json();
     setConversationId(data.id);
     return data.id;
@@ -58,8 +114,18 @@ export default function ChatWidget() {
     const text = input.trim();
     if (!text || loading) return;
 
+    const isAvailable =
+      availability === "available"
+        ? true
+        : await checkAvailability();
+
+    if (!isAvailable) {
+      return;
+    }
+
     setInput("");
     setLoading(true);
+    setStatusMessage(null);
     setMessages((prev) => [...prev, { role: "user", content: text }]);
 
     try {
@@ -80,6 +146,10 @@ export default function ChatWidget() {
       );
 
       if (!res.ok || !res.body) {
+        if (res.status >= 500 || res.status === 404 || res.status === 405) {
+          setAvailability("unavailable");
+          setStatusMessage(OFFLINE_NOTICE);
+        }
         throw new Error("Failed to send message");
       }
 
@@ -125,6 +195,7 @@ export default function ChatWidget() {
               if (!open) setHasNewMessage(true);
             }
             if (json.error) {
+              setStatusMessage(json.error);
               setMessages((prev) => {
                 const updated = [...prev];
                 const last = updated[updated.length - 1];
@@ -142,6 +213,7 @@ export default function ChatWidget() {
         }
       }
     } catch {
+      setStatusMessage((current) => current ?? "Sorry, something went wrong. Please try again.");
       setMessages((prev) => {
         const updated = [...prev];
         const last = updated[updated.length - 1];
@@ -162,7 +234,15 @@ export default function ChatWidget() {
     } finally {
       setLoading(false);
     }
-  }, [input, loading, getOrCreateConversation, open, apiBase]);
+  }, [
+    input,
+    loading,
+    availability,
+    checkAvailability,
+    getOrCreateConversation,
+    open,
+    apiBase,
+  ]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -172,6 +252,8 @@ export default function ChatWidget() {
   };
 
   const GREETING = messages.length === 0 && !loading;
+  const chatUnavailable = availability === "unavailable";
+  const chatChecking = availability === "checking";
 
   return (
     <>
@@ -313,8 +395,93 @@ export default function ChatWidget() {
                       estimate, or help you book a free discovery call.
                     </p>
                     <p style={{ margin: 0, color: "#8B91A0", fontSize: 13 }}>
-                      What brings you in today?
+                      {chatUnavailable
+                        ? "I’m unavailable right now, but you can still reach Tea directly below."
+                        : chatChecking
+                          ? "Checking connection…"
+                          : "What brings you in today?"}
                     </p>
+                  </div>
+                </div>
+              )}
+
+              {chatUnavailable && (
+                <div
+                  style={{
+                    background: "rgba(239, 68, 68, 0.08)",
+                    border: "1px solid rgba(248, 113, 113, 0.35)",
+                    borderRadius: 12,
+                    padding: "14px 16px",
+                    color: "#F3F4F6",
+                  }}
+                >
+                  <p style={{ margin: "0 0 8px", fontSize: 14, lineHeight: 1.6 }}>
+                    {statusMessage ?? OFFLINE_NOTICE}
+                  </p>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: 8,
+                      marginTop: 12,
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => void checkAvailability()}
+                      style={{
+                        background: "#1E2336",
+                        color: "#F3F4F6",
+                        border: "1px solid #374151",
+                        borderRadius: 999,
+                        padding: "8px 12px",
+                        fontSize: 12,
+                        cursor: "pointer",
+                      }}
+                    >
+                      Retry chat
+                    </button>
+                    <a
+                      href="/contact"
+                      style={{
+                        background: "#6366F1",
+                        color: "#FFFFFF",
+                        borderRadius: 999,
+                        padding: "8px 12px",
+                        fontSize: 12,
+                        textDecoration: "none",
+                      }}
+                    >
+                      Contact Tea
+                    </a>
+                    <a
+                      href="mailto:tea@blueprintsandbookkeeping.com"
+                      style={{
+                        background: "#1E2336",
+                        color: "#FFFFFF",
+                        border: "1px solid #374151",
+                        borderRadius: 999,
+                        padding: "8px 12px",
+                        fontSize: 12,
+                        textDecoration: "none",
+                      }}
+                    >
+                      Email Tea
+                    </a>
+                    <a
+                      href="/schedule"
+                      style={{
+                        background: "#1E2336",
+                        color: "#FFFFFF",
+                        border: "1px solid #374151",
+                        borderRadius: 999,
+                        padding: "8px 12px",
+                        fontSize: 12,
+                        textDecoration: "none",
+                      }}
+                    >
+                      Book a call
+                    </a>
                   </div>
                 </div>
               )}
@@ -468,18 +635,18 @@ export default function ChatWidget() {
                 }}
                 onFocus={(e) => (e.currentTarget.style.borderColor = "#6366F1")}
                 onBlur={(e) => (e.currentTarget.style.borderColor = "#252B3D")}
-                disabled={loading}
+                disabled={loading || chatUnavailable || chatChecking}
               />
               <button
                 onClick={sendMessage}
-                disabled={!input.trim() || loading}
+                disabled={!input.trim() || loading || chatUnavailable || chatChecking}
                 aria-label="Send message"
                 style={{
                   width: 40,
                   height: 40,
                   borderRadius: "50%",
                   background:
-                    input.trim() && !loading
+                    input.trim() && !loading && !chatUnavailable && !chatChecking
                       ? "linear-gradient(135deg, #6366F1, #4F46E5)"
                       : "#252B3D",
                   border: "none",
