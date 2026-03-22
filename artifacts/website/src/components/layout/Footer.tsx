@@ -156,7 +156,11 @@ export function Footer() {
                         {content}
                       </a>
                     ) : (
-                      <Link href={item.href} className={linkClassName}>
+                      <Link
+                        href={item.href}
+                        className={linkClassName}
+                        onClick={scrollToTopOnSameRoute(item.href)}
+                      >
                         {content}
                       </Link>
                     )}
