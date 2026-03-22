@@ -5,9 +5,7 @@ import {
   Phone,
   MapPin,
   ArrowRight,
-  MessageSquare,
   CalendarDays,
-  Video,
   ClipboardList,
 } from "lucide-react";
 import { FooterNewsletterSignup } from "@/components/NewsletterSignup";
@@ -20,37 +18,37 @@ const BUSINESS_PHONE_HREF = "tel:+15413198654";
 const SCHEDULE_PATH = "/schedule";
 const GET_STARTED_PATH = "/get-started";
 
-const takeActionItems = [
+const contactLinks = [
   {
-    label: "Book a call",
+    label: "Book a discovery call",
     href: SCHEDULE_PATH,
-    description:
-      "Use the live calendar to grab a free discovery call time that works for you.",
+    description: "Use the live calendar to choose a time that works for you.",
     icon: CalendarDays,
     isExternal: false,
   },
   {
-    label: "Video chat",
-    href: SCHEDULE_PATH,
+    label: "Start the intake",
+    href: GET_STARTED_PATH,
     description:
-      "Prefer Zoom-style face time? Use the same calendar and choose a slot for a video conversation.",
-    icon: Video,
+      "Share your business details and we will map out the next steps.",
+    icon: ClipboardList,
     isExternal: false,
   },
   {
-    label: "Text message me",
-    href: BUSINESS_PHONE_HREF,
-    description: `${BUSINESS_PHONE} — if Tea is unavailable and you do not have a scheduled call, our receptionist will help route your message. Voicemails are welcome, and we aim to reply the same day or early the next business day.`,
-    icon: MessageSquare,
+    label: BOOKKEEPER_EMAIL,
+    href: `mailto:${BOOKKEEPER_EMAIL}`,
+    description:
+      "Email Tea directly for questions about bookkeeping, pricing, or fit.",
+    icon: Mail,
     isExternal: true,
   },
   {
-    label: "Add me as your bookkeeper",
-    href: GET_STARTED_PATH,
+    label: BUSINESS_PHONE,
+    href: BUSINESS_PHONE_HREF,
     description:
-      "Start with the short intake. After you submit it, we send your details through the next-step flow and show the firm ID, accountant email, and QuickBooks add-an-accountant instructions so you can invite us correctly. Estimates go out as soon as possible, and questions are always welcome.",
-    icon: ClipboardList,
-    isExternal: false,
+      "Call or text for scheduling help, questions, or client support.",
+    icon: Phone,
+    isExternal: true,
   },
 ] as const;
 
@@ -118,78 +116,62 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="font-display font-semibold text-white mb-6">
-              Take Action
+            <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-5">
+              Contact
             </h3>
-            <div className="space-y-3">
-              {takeActionItems.map((item) => {
+            <p className="text-sm text-muted-foreground leading-relaxed mb-5">
+              Reach out whichever way feels easiest. We keep the footer simple
+              so the rest of the site can do the talking.
+            </p>
+            <ul className="space-y-3">
+              {contactLinks.map((item) => {
                 const Icon = item.icon;
-                const cardClassName =
-                  "group flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-left transition-all duration-200 hover:border-accent/30 hover:bg-white/[0.08]";
+                const linkClassName =
+                  "group flex items-start gap-3 text-sm text-muted-foreground transition-colors hover:text-foreground";
                 const content = (
                   <>
-                    <div className="mt-0.5 rounded-lg border border-accent/15 bg-accent/[0.08] p-2 text-accent">
+                    <span className="mt-0.5 text-accent/70">
                       <Icon size={15} aria-hidden="true" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2 text-sm font-semibold text-white">
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="flex items-center gap-2 font-medium text-foreground/90 group-hover:text-foreground transition-colors">
                         <span>{item.label}</span>
                         <ArrowRight
-                          size={13}
-                          className="opacity-60 transition-transform duration-200 group-hover:translate-x-0.5"
+                          size={12}
+                          className="opacity-0 -translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
                           aria-hidden="true"
                         />
-                      </div>
-                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                      </span>
+                      <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
                         {item.description}
-                      </p>
-                    </div>
+                      </span>
+                    </span>
                   </>
                 );
 
-                if (item.isExternal) {
-                  return (
-                    <a
-                      key={item.label}
-                      href={item.href}
-                      className={cardClassName}
-                    >
-                      {content}
-                    </a>
-                  );
-                }
-
                 return (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    className={cardClassName}
-                  >
-                    {content}
-                  </Link>
+                  <li key={item.label}>
+                    {item.isExternal ? (
+                      <a href={item.href} className={linkClassName}>
+                        {content}
+                      </a>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        className={linkClassName}
+                        onClick={scrollToTopOnSameRoute(item.href)}
+                      >
+                        {content}
+                      </Link>
+                    )}
+                  </li>
                 );
               })}
-            </div>
-            <div className="mt-6 rounded-xl border border-accent/15 bg-accent/[0.05] p-4">
-              <h4 className="text-sm font-semibold text-white mb-2">
-                QuickBooks accountant access, the right way
-              </h4>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Start with the short intake first. Once we receive it, we will
-                share the next-step details — including the firm ID, the
-                accountant email{" "}
-                <span className="text-white font-medium select-all">
-                  {BOOKKEEPER_EMAIL}
-                </span>
-                , and directions for adding an accountant inside QuickBooks — so
-                your setup stays orderly and your estimate can go out as quickly
-                as possible.
-              </p>
-            </div>
+            </ul>
             <button
               type="button"
               onClick={openCookieConsentPreferences}
-              className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-muted-foreground font-semibold text-sm hover:bg-white/[0.08] hover:text-white transition-all duration-200 text-left mt-4 w-full"
+              className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-accent/30 hover:text-foreground"
             >
               Cookie Preferences
             </button>
