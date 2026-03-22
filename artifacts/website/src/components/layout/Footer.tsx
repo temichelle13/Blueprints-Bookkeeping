@@ -313,6 +313,12 @@ export function Footer() {
               Accessibility
             </Link>
             <Link
+              href="/cookies"
+              className="hover:text-foreground transition-colors"
+            >
+              Cookies
+            </Link>
+            <Link
               href="/referral"
               className="hover:text-foreground transition-colors"
             >
