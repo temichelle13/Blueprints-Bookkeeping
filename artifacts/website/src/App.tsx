@@ -29,6 +29,7 @@ import FAQ from "./pages/FAQ";
 import Schedule from "./pages/Schedule";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import Accessibility from "./pages/Accessibility";
 import Feedback from "./pages/Feedback";
 import GetStarted from "./pages/GetStarted";
 import TaxPartners from "./pages/TaxPartners";
@@ -117,6 +118,7 @@ function Router() {
         <Route path="/schedule" component={Schedule} />
         <Route path="/privacy" component={Privacy} />
         <Route path="/terms" component={Terms} />
+        <Route path="/accessibility" component={Accessibility} />
         <Route path="/feedback" component={Feedback} />
         <Route path="/get-started" component={GetStarted} />
         <Route path="/tax-partners" component={TaxPartners} />

@@ -307,6 +307,12 @@ export function Footer() {
               Terms of Service
             </Link>
             <Link
+              href="/accessibility"
+              className="hover:text-foreground transition-colors"
+            >
+              Accessibility
+            </Link>
+            <Link
               href="/referral"
               className="hover:text-foreground transition-colors"
             >
