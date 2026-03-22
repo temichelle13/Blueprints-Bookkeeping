@@ -3,8 +3,9 @@ import { Link } from "wouter";
 import { motion } from "framer-motion";
 import {
   CalendarDays,
-  CreditCard,
-  BookOpen,
+  Video,
+  MessageSquare,
+  UserPlus,
   ArrowRight,
   HelpCircle,
   Send,
@@ -15,8 +16,6 @@ import { SEO } from "@/components/SEO";
 import { getApiRoot } from "@/lib/api";
 
 const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
-const QB_PROADVISOR_URL =
-  "https://quickbooks.intuit.com/partners/pap/?cid=par_blueprintsandbookkeeping";
 
 interface BasePath {
   icon: typeof CalendarDays;
@@ -26,20 +25,10 @@ interface BasePath {
   cta: string;
   href: string;
   external: boolean;
+  newTab?: boolean;
 }
 
-interface StandardPath extends BasePath {
-  kind: "standard";
-}
-
-interface QuickBooksPath extends BasePath {
-  kind: "quickbooks";
-  note: string;
-  secondaryCta: string;
-  secondaryHref: string;
-}
-
-type PathCard = StandardPath | QuickBooksPath;
+type PathCard = BasePath;
 
 export default function GetStarted() {
   usePageTitle("Get Started — Blueprints & Bookkeeping");
@@ -81,40 +70,48 @@ export default function GetStarted() {
 
   const paths: PathCard[] = [
     {
-      kind: "standard",
       icon: CalendarDays,
       color: "#8B5CF6",
-      title: "Let's Talk First",
+      title: "Book a call",
       subtitle:
-        "Book a free discovery call to discuss your needs and get a tailored quote.",
-      cta: "Book a Free Call",
+        "Open Tea's calendar and choose a time for a discovery call that fits your schedule.",
+      cta: "Schedule now",
+      href: "/schedule",
+      external: false,
+      newTab: false,
+    },
+    {
+      icon: Video,
+      color: "#6366F1",
+      title: "Video chat",
+      subtitle:
+        "Prefer to meet face-to-face online? Jump straight to the video call booking flow.",
+      cta: "Book video chat",
       href: CALENDLY_URL,
       external: true,
+      newTab: true,
     },
     {
-      kind: "standard",
-      icon: CreditCard,
-      color: "#6366F1",
-      title: "I Know What I Need",
-      subtitle:
-        "I'm ready to review plans, pick a tier, and get started right away.",
-      cta: "View Plans & Pricing",
-      href: "/pricing",
-      external: false,
-    },
-    {
-      kind: "quickbooks",
-      icon: BookOpen,
+      icon: MessageSquare,
       color: "#10B981",
-      title: "Just Need QuickBooks",
+      title: "Text message me",
       subtitle:
-        "I want a QuickBooks Online subscription through Blueprints & Bookkeeping.",
-      cta: "Get QuickBooks",
-      href: QB_PROADVISOR_URL,
+        "Send a text to Tea for a quick first touchpoint or to ask a simple question.",
+      cta: "Send a text",
+      href: "sms:+15413198654",
       external: true,
-      note: "Contact Tea for your personalized ProAdvisor discount link",
-      secondaryCta: "Contact Tea for Discount",
-      secondaryHref: "/contact?intent=quickbooks-subscription",
+      newTab: false,
+    },
+    {
+      icon: UserPlus,
+      color: "#F59E0B",
+      title: "Add me as your bookkeeper",
+      subtitle:
+        "Start from the contact page to review the setup steps and connect with Tea directly before adding access in QuickBooks.",
+      cta: "View setup steps",
+      href: "/contact?intent=add-bookkeeper",
+      external: false,
+      newTab: false,
     },
   ];
 
@@ -142,7 +139,6 @@ export default function GetStarted() {
 
   const renderCard = (path: PathCard, index: number) => {
     const Icon = path.icon;
-    const hasSecondary = path.kind === "quickbooks";
 
     const cardBody = (
       <motion.div
@@ -157,7 +153,7 @@ export default function GetStarted() {
           height: "100%",
           position: "relative" as const,
           overflow: "hidden",
-          cursor: hasSecondary ? "default" : "pointer",
+          cursor: "pointer",
           transition: "border-color 0.2s, box-shadow 0.2s, transform 0.2s",
         }}
         whileHover={{
@@ -202,112 +198,35 @@ export default function GetStarted() {
           {path.subtitle}
         </p>
 
-        {path.kind === "quickbooks" && (
-          <div
-            style={{
-              background: `${path.color}10`,
-              border: `1px solid ${path.color}25`,
-              borderRadius: 10,
-              padding: "10px 14px",
-              marginBottom: 16,
-            }}
-          >
-            <p
-              style={{
-                fontSize: 12,
-                color: path.color,
-                lineHeight: 1.5,
-                margin: 0,
-              }}
-            >
-              {path.note}
-            </p>
-          </div>
-        )}
-
-        {path.kind === "quickbooks" ? (
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            <a
-              href={path.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 8,
-                padding: "12px 20px",
-                borderRadius: 10,
-                background: path.color,
-                color: "white",
-                fontWeight: 600,
-                fontSize: 14,
-                textDecoration: "none",
-                transition: "opacity 0.15s",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
-              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-            >
-              {path.cta}
-              <ArrowRight size={16} />
-            </a>
-            <Link
-              href={path.secondaryHref}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 8,
-                padding: "10px 20px",
-                borderRadius: 10,
-                background: `${path.color}15`,
-                border: `1px solid ${path.color}30`,
-                color: path.color,
-                fontWeight: 600,
-                fontSize: 13,
-                textDecoration: "none",
-                transition: "opacity 0.15s",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
-              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-            >
-              {path.secondaryCta}
-            </Link>
-          </div>
-        ) : (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
-              padding: "12px 20px",
-              borderRadius: 10,
-              background: path.color,
-              color: "white",
-              fontWeight: 600,
-              fontSize: 14,
-              textDecoration: "none",
-            }}
-          >
-            {path.cta}
-            <ArrowRight size={16} />
-          </div>
-        )}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 8,
+            padding: "12px 20px",
+            borderRadius: 10,
+            background: path.color,
+            color: "white",
+            fontWeight: 600,
+            fontSize: 14,
+            textDecoration: "none",
+          }}
+        >
+          {path.cta}
+          <ArrowRight size={16} />
+        </div>
       </motion.div>
     );
-
-    if (hasSecondary) {
-      return <div key={index}>{cardBody}</div>;
-    }
 
     if (path.external) {
       return (
         <a
           key={index}
           href={path.href}
-          target="_blank"
-          rel="noopener noreferrer"
+          {...(path.newTab
+            ? { target: "_blank", rel: "noopener noreferrer" }
+            : {})}
           style={{ textDecoration: "none", display: "block" }}
         >
           {cardBody}
@@ -330,7 +249,7 @@ export default function GetStarted() {
     <div className="min-h-screen py-20 px-4">
       <SEO
         title="Get Started"
-        description="Choose how to begin — book a call, sign up for a plan, or get a QuickBooks subscription through Blueprints & Bookkeeping."
+        description="Choose how to begin with Blueprints & Bookkeeping — schedule a call, book a video chat, send a text, or review the steps to add Tea as your bookkeeper."
         path="/get-started"
       />
       <div className="max-w-5xl mx-auto">
@@ -341,14 +260,14 @@ export default function GetStarted() {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/20 bg-accent/5 mb-6 text-sm font-medium text-accent">
             <span className="glow-dot" />
-            Three paths — you choose
+            Four ways to get started
           </div>
           <h1 className="text-4xl md:text-5xl font-display font-extrabold text-white mb-4">
             How Would You Like to Begin?
           </h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Pick the option that fits where you are right now. No wrong answer —
-            every path leads to the same great service.
+            Pick the option that fits how you want to connect right now. Every
+            path leads straight to Tea and the next best step for your business.
           </p>
         </motion.div>
 
@@ -356,7 +275,7 @@ export default function GetStarted() {
           variants={container}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"
+          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-12"
         >
           {paths.map((path, i) => renderCard(path, i))}
         </motion.div>
