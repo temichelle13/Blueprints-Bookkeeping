@@ -44,6 +44,36 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          // Core React libraries
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+            return 'vendor-react';
+          }
+          // Radix UI components (large UI library)
+          if (id.includes('node_modules/@radix-ui')) {
+            return 'vendor-radix';
+          }
+          // Heavy charting library
+          if (id.includes('node_modules/recharts') || id.includes('node_modules/d3-')) {
+            return 'vendor-charts';
+          }
+          // Animation library
+          if (id.includes('node_modules/framer-motion')) {
+            return 'vendor-animation';
+          }
+          // Form libraries
+          if (id.includes('node_modules/react-hook-form') || id.includes('node_modules/@hookform')) {
+            return 'vendor-forms';
+          }
+          // Other large dependencies
+          if (id.includes('node_modules/')) {
+            return 'vendor-other';
+          }
+        },
+      },
+    },
   },
   server: {
     port,
