@@ -120,16 +120,11 @@ export CORS_ORIGIN=https://blueprintsandbookkeeping.com
 
 If you want to deploy to Cloudflare instead of Replit, you'll need to:
 
-1. **Create `wrangler.toml`** in the root directory:
+1. **Create `wrangler.toml`** in the root directory (for Cloudflare Pages):
 ```toml
 name = "blueprints-bookkeeping"
-main = "artifacts/website/dist/public"
+pages_build_output_dir = "artifacts/website/dist/public"
 compatibility_date = "2024-01-01"
-
-[[routes]]
-pattern = "/api/*"
-custom_domain = true
-
 [build]
 command = "pnpm install && pnpm --filter @workspace/website run build"
 ```
