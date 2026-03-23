@@ -389,7 +389,7 @@ function BookkeeperIntakeForm() {
     if (budgetUnknown && selectedBudget) {
       setValue("budgetRange", "", { shouldValidate: false, shouldDirty: true });
     }
-  }, [budgetUnknown, selectedBudget, setValue]);
+  }, [budgetUnknown, setValue]);
 
   const onSubmit = async (data: BookkeeperIntakeValues) => {
     setSubmitError(null);

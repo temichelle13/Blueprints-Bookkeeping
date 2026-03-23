@@ -15,6 +15,9 @@ const envSchema = z.object({
   // CORS Configuration
   CORS_ORIGIN: z.string().optional(),
 
+  // Site URL
+  SITE_URL: z.string().url().optional(),
+
   // Authentication & Security
   ADMIN_TOKEN: z.string().min(32, "ADMIN_TOKEN must be at least 32 characters for security"),
 
@@ -22,25 +25,31 @@ const envSchema = z.object({
   RESEND_API_KEY: z.string().min(1, "RESEND_API_KEY is required"),
   RESEND_WEBHOOK_SECRET: z.string().optional(),
   OWNER_EMAIL: z.string().email("OWNER_EMAIL must be a valid email"),
+  OWNER_PHONE_NUMBER: z.string().optional(),
 
   // Adobe Sign
   ADOBE_SIGN_CLIENT_ID: z.string().optional(),
   ADOBE_SIGN_CLIENT_SECRET: z.string().optional(),
   ADOBE_SIGN_REFRESH_TOKEN: z.string().optional(),
   ADOBE_SIGN_REDIRECT_URI: z.string().url().optional(),
+  ADOBE_SIGN_BASE_URL: z.string().url().optional(),
 
   // Stripe
   STRIPE_SECRET_KEY: z.string().min(1, "STRIPE_SECRET_KEY is required"),
   STRIPE_WEBHOOK_SECRET: z.string().min(1, "STRIPE_WEBHOOK_SECRET is required"),
-  STRIPE_PRICE_ID_MONTHLY_LITE: z.string().optional(),
-  STRIPE_PRICE_ID_ANNUAL_LITE: z.string().optional(),
-  STRIPE_PRICE_ID_MONTHLY_STANDARD: z.string().optional(),
-  STRIPE_PRICE_ID_ANNUAL_STANDARD: z.string().optional(),
-  STRIPE_PRICE_ID_MONTHLY_PREMIUM: z.string().optional(),
-  STRIPE_PRICE_ID_ANNUAL_PREMIUM: z.string().optional(),
+  STRIPE_ESSENTIALS_MONTHLY_PRICE_ID: z.string().optional(),
+  STRIPE_ESSENTIALS_ANNUAL_PRICE_ID: z.string().optional(),
+  STRIPE_GROWTH_MONTHLY_PRICE_ID: z.string().optional(),
+  STRIPE_GROWTH_ANNUAL_PRICE_ID: z.string().optional(),
 
-  // Cal.com
+  // Cal.com / Booking
   CAL_WEBHOOK_SECRET: z.string().optional(),
+  BOOKING_WEBHOOK_SECRET: z.string().optional(),
+
+  // Twilio
+  TWILIO_ACCOUNT_SID: z.string().optional(),
+  TWILIO_AUTH_TOKEN: z.string().optional(),
+  TWILIO_FROM_NUMBER: z.string().optional(),
 
   // OpenAI
   OPENAI_API_KEY: z.string().min(1, "OPENAI_API_KEY is required"),
