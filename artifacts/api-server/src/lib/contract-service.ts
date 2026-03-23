@@ -122,7 +122,7 @@ export async function determineContractTypes(
   const activeTemplates = await db
     .select()
     .from(contractTemplatesTable)
-    .where(eq(contractTemplatesTable.active, "true"));
+    .where(eq(contractTemplatesTable.active, true));
 
   const dbTriggerMap = new Map<string, Set<string>>();
   for (const tpl of activeTemplates) {
@@ -215,7 +215,7 @@ export async function sendContract(opts: {
     .where(
       and(
         eq(contractTemplatesTable.contractType, opts.contractType),
-        eq(contractTemplatesTable.active, "true"),
+        eq(contractTemplatesTable.active, true),
       ),
     )
     .limit(1);

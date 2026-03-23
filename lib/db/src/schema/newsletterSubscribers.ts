@@ -1,6 +1,6 @@
 import { pgTable, text, serial, timestamp, boolean, uuid } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 export const newsletterSubscribersTable = pgTable("newsletter_subscribers", {
   id: serial("id").primaryKey(),
@@ -11,6 +11,6 @@ export const newsletterSubscribersTable = pgTable("newsletter_subscribers", {
   subscribedAt: timestamp("subscribed_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const insertNewsletterSubscriberSchema = createInsertSchema(newsletterSubscribersTable).omit({ id: true, subscribedAt: true, active: true, unsubscribeToken: true });
+export const insertNewsletterSubscriberSchema = createInsertSchema(newsletterSubscribersTable).omit({ id: true, subscribedAt: true, active: true, unsubscribeToken: true }) as any;
 export type InsertNewsletterSubscriber = z.infer<typeof insertNewsletterSubscriberSchema>;
 export type NewsletterSubscriber = typeof newsletterSubscribersTable.$inferSelect;
