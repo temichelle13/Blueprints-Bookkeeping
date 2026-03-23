@@ -212,12 +212,20 @@ router.get("/contracts/templates/list", async (_req, res): Promise<void> => {
   res.json(templates);
 });
 
-function validateTemplateBody(body: unknown): { name: string; contractType: string; adobeTemplateId?: string; triggerCondition: string; description?: string; prefillFields?: string[]; active?: string } | null {
+function validateTemplateBody(body: unknown): { name: string; contractType: string; adobeTemplateId?: string; triggerCondition: string; description?: string; prefillFields?: string[]; active?: boolean } | null {
   if (!body || typeof body !== "object") return null;
   const b = body as Record<string, unknown>;
   if (typeof b.name !== "string" || !b.name) return null;
   if (typeof b.contractType !== "string" || !b.contractType) return null;
   if (typeof b.triggerCondition !== "string" || !b.triggerCondition) return null;
+
+  let active: boolean | undefined = undefined;
+  if (typeof b.active === "boolean") {
+    active = b.active;
+  } else if (typeof b.active === "string") {
+    active = b.active === "true";
+  }
+
   return {
     name: b.name,
     contractType: b.contractType,
@@ -225,7 +233,7 @@ function validateTemplateBody(body: unknown): { name: string; contractType: stri
     triggerCondition: b.triggerCondition,
     description: typeof b.description === "string" ? b.description : undefined,
     prefillFields: Array.isArray(b.prefillFields) ? b.prefillFields.filter((f): f is string => typeof f === "string") : undefined,
-    active: typeof b.active === "string" ? b.active : undefined,
+    active,
   };
 }
 
@@ -245,7 +253,7 @@ router.post("/contracts/templates", async (req, res): Promise<void> => {
       triggerCondition: data.triggerCondition,
       description: data.description ?? null,
       prefillFields: data.prefillFields ?? null,
-      active: data.active ?? "true",
+      active: data.active ?? true,
     })
     .returning();
 
@@ -274,7 +282,7 @@ router.put("/contracts/templates/:id", async (req, res): Promise<void> => {
       triggerCondition: data.triggerCondition,
       description: data.description ?? null,
       prefillFields: data.prefillFields ?? null,
-      active: data.active ?? "true",
+      active: data.active ?? true,
       updatedAt: new Date(),
     })
     .where(eq(contractTemplatesTable.id, id))

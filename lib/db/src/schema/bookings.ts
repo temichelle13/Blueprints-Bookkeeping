@@ -1,6 +1,6 @@
 import { pgTable, text, serial, timestamp, jsonb, pgEnum } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 export const meetingTypeEnum = pgEnum("meeting_type", ["video", "phone", "async"]);
 export const bookingStatusEnum = pgEnum("booking_status", ["confirmed", "cancelled", "rescheduled"]);
@@ -21,6 +21,6 @@ export const bookingsTable = pgTable("bookings", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const insertBookingSchema = createInsertSchema(bookingsTable).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertBookingSchema = createInsertSchema(bookingsTable).omit({ id: true, createdAt: true, updatedAt: true }) as any;
 export type InsertBooking = z.infer<typeof insertBookingSchema>;
 export type Booking = typeof bookingsTable.$inferSelect;

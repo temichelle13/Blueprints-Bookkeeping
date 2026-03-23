@@ -1,6 +1,6 @@
 import { pgTable, text, serial, timestamp, pgEnum } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 export const SUPPRESSION_REASONS = ["unsubscribed", "bounced", "spam_complaint", "manual"] as const;
 export type SuppressionReason = (typeof SUPPRESSION_REASONS)[number];
@@ -14,6 +14,6 @@ export const emailSuppressionListTable = pgTable("email_suppression_list", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const insertEmailSuppressionSchema = createInsertSchema(emailSuppressionListTable).omit({ id: true, createdAt: true });
+export const insertEmailSuppressionSchema = createInsertSchema(emailSuppressionListTable).omit({ id: true, createdAt: true }) as any;
 export type InsertEmailSuppression = z.infer<typeof insertEmailSuppressionSchema>;
 export type EmailSuppression = typeof emailSuppressionListTable.$inferSelect;
