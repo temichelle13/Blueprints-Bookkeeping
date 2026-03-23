@@ -236,6 +236,9 @@ importers:
       svix:
         specifier: ^1.88.0
         version: 1.88.0
+      zod:
+        specifier: 'catalog:'
+        version: 3.25.76
     devDependencies:
       '@types/cookie-parser':
         specifier: ^1.4.10

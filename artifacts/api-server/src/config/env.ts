@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 
 /**
  * Environment variable schema with validation
@@ -75,9 +75,9 @@ export function validateEnv(): Env {
   try {
     cachedEnv = envSchema.parse(process.env);
     return cachedEnv;
-  } catch (error) {
+  } catch (error: unknown) {
     if (error instanceof z.ZodError) {
-      const errorMessages = error.errors.map((err) => {
+      const errorMessages = error.errors.map((err: z.ZodIssue) => {
         const path = err.path.join(".");
         return `  - ${path}: ${err.message}`;
       });

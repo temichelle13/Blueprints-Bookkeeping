@@ -1,6 +1,6 @@
 import { pgTable, text, serial, timestamp, integer, jsonb, boolean, index } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { contactInquiriesTable } from "./contactInquiries";
 
 export const contractTemplatesTable = pgTable("contract_templates", {
