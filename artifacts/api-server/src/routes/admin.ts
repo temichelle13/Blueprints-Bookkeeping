@@ -1,29 +1,14 @@
-import { Router, type IRouter, type Request, type Response, type NextFunction } from "express";
+import { Router, type IRouter } from "express";
 import { db, contactInquiriesTable, newsletterSubscribersTable, emailSuppressionListTable, INQUIRY_STATUSES, SUPPRESSION_REASONS } from "@workspace/db";
 import type { SuppressionReason } from "@workspace/db";
 import { desc, eq, sql, count } from "drizzle-orm";
 import { addToSuppressionList } from "../lib/email-suppression";
+import { adminAuth } from "../middleware/admin-auth";
 
 const router: IRouter = Router();
 
-function adminAuth(req: Request, res: Response, next: NextFunction): void {
-  const token = req.headers["x-admin-token"];
-  const expected = process.env["ADMIN_TOKEN"];
-
-  if (!expected) {
-    res.status(503).json({ error: "Admin access not configured. Set ADMIN_TOKEN environment variable." });
-    return;
-  }
-
-  if (token !== expected) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
-
-  next();
-}
-
-router.use("/admin", adminAuth);
+// Apply admin authentication to all routes in this router
+router.use(adminAuth);
 
 router.get("/admin/inquiries", async (_req, res): Promise<void> => {
   const inquiries = await db

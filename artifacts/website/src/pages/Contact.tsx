@@ -27,6 +27,7 @@ const PHONE_DISPLAY = "(541) 319-8654";
 const PHONE_HREF = "tel:+15413198654";
 const SMS_HREF = "sms:+15413198654";
 const EMAIL_ADDRESS = "tea@blueprintsandbookkeeping.com";
+const BOOKKEEPER_INTENT = "bookkeeper";
 
 const messageSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -388,7 +389,7 @@ function BookkeeperIntakeForm() {
     if (budgetUnknown && selectedBudget) {
       setValue("budgetRange", "", { shouldValidate: false, shouldDirty: true });
     }
-  }, [budgetUnknown, selectedBudget, setValue]);
+  }, [budgetUnknown, setValue]);
 
   const onSubmit = async (data: BookkeeperIntakeValues) => {
     setSubmitError(null);
@@ -835,8 +836,6 @@ export default function Contact() {
             })}
           </div>
         )}
-
-        {showBookkeeperSetup && <QuickBooksSetupNotice />}
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
           <div className="lg:col-span-3">
