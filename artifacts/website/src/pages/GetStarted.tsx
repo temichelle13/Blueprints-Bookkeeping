@@ -16,7 +16,8 @@ import { SEO } from "@/components/SEO";
 import { getApiRoot } from "@/lib/api";
 
 const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
-const QB_PROADVISOR_URL = "https://quickbooks.intuit.com/accountants/products-solutions/bookkeeping/";
+const QB_PROADVISOR_URL =
+  "https://quickbooks.intuit.com/accountants/products-solutions/bookkeeping/";
 
 interface BasePath {
   icon: typeof CalendarDays;
@@ -269,55 +270,56 @@ export default function GetStarted() {
                 <ArrowRight size={16} />
               </Link>
             )}
-            {path.secondaryHref && (path.secondaryHref.startsWith("http") ? (
-              <a
-                href={path.secondaryHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 8,
-                  padding: "10px 20px",
-                  borderRadius: 10,
-                  background: `${path.color}15`,
-                  border: `1px solid ${path.color}30`,
-                  color: path.color,
-                  fontWeight: 600,
-                  fontSize: 13,
-                  textDecoration: "none",
-                  transition: "opacity 0.15s",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
-                onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-              >
-                {path.secondaryCta}
-              </a>
-            ) : (
-              <Link
-                href={path.secondaryHref}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 8,
-                  padding: "10px 20px",
-                  borderRadius: 10,
-                  background: `${path.color}15`,
-                  border: `1px solid ${path.color}30`,
-                  color: path.color,
-                  fontWeight: 600,
-                  fontSize: 13,
-                  textDecoration: "none",
-                  transition: "opacity 0.15s",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
-                onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-              >
-                {path.secondaryCta}
-              </Link>
-            ))}
+            {path.secondaryHref &&
+              (path.secondaryHref.startsWith("http") ? (
+                <a
+                  href={path.secondaryHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 8,
+                    padding: "10px 20px",
+                    borderRadius: 10,
+                    background: `${path.color}15`,
+                    border: `1px solid ${path.color}30`,
+                    color: path.color,
+                    fontWeight: 600,
+                    fontSize: 13,
+                    textDecoration: "none",
+                    transition: "opacity 0.15s",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
+                  onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+                >
+                  {path.secondaryCta}
+                </a>
+              ) : (
+                <Link
+                  href={path.secondaryHref}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 8,
+                    padding: "10px 20px",
+                    borderRadius: 10,
+                    background: `${path.color}15`,
+                    border: `1px solid ${path.color}30`,
+                    color: path.color,
+                    fontWeight: 600,
+                    fontSize: 13,
+                    textDecoration: "none",
+                    transition: "opacity 0.15s",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
+                  onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+                >
+                  {path.secondaryCta}
+                </Link>
+              ))}
           </div>
         ) : (
           <div

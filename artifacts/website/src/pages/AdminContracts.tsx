@@ -931,7 +931,8 @@ export default function AdminContracts() {
                   Refresh
                 </Button>
                 <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 px-4 py-3 text-sm text-indigo-100">
-                  Public upload-link sharing has been retired. Continue using this dashboard for internal document review only.
+                  Public upload-link sharing has been retired. Continue using
+                  this dashboard for internal document review only.
                 </div>
               </div>
 

@@ -1,9 +1,11 @@
 import { Resend } from "resend";
 import type { Booking } from "@workspace/db";
 
-const OWNER_EMAIL = process.env["OWNER_EMAIL"] || "tea@blueprintsandbookkeeping.com";
+const OWNER_EMAIL =
+  process.env["OWNER_EMAIL"] || "tea@blueprintsandbookkeeping.com";
 const OWNER_PHONE = process.env["OWNER_PHONE_NUMBER"] || "";
-const FROM_ADDRESS = "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
+const FROM_ADDRESS =
+  "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
 
 function getResend(): Resend | null {
   const key = process.env["RESEND_API_KEY"];
@@ -25,16 +27,20 @@ function formatDate(date: Date): string {
 
 function meetingTypeLabel(type: string): string {
   switch (type) {
-    case "video": return "Video Call";
-    case "phone": return "Phone Call";
-    case "async": return "Document-Only (Async)";
-    default: return type;
+    case "video":
+      return "Video Call";
+    case "phone":
+      return "Phone Call";
+    case "async":
+      return "Document-Only (Async)";
+    default:
+      return type;
   }
 }
 
 export async function sendBookingNotifications(
   booking: Booking,
-  eventType: "created" | "rescheduled" | "cancelled"
+  eventType: "created" | "rescheduled" | "cancelled",
 ): Promise<void> {
   const promises: Promise<void>[] = [];
 
@@ -51,7 +57,7 @@ export async function sendBookingNotifications(
 
 async function sendOwnerEmail(
   booking: Booking,
-  eventType: "created" | "rescheduled" | "cancelled"
+  eventType: "created" | "rescheduled" | "cancelled",
 ): Promise<void> {
   const resend = getResend();
   if (!resend) {
@@ -99,7 +105,7 @@ async function sendOwnerEmail(
 
 async function sendOwnerSms(
   booking: Booking,
-  eventType: "created" | "rescheduled" | "cancelled"
+  eventType: "created" | "rescheduled" | "cancelled",
 ): Promise<void> {
   const accountSid = process.env["TWILIO_ACCOUNT_SID"];
   const authToken = process.env["TWILIO_AUTH_TOKEN"];

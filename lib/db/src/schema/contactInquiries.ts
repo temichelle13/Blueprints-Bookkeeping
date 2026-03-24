@@ -2,7 +2,12 @@ import { pgTable, text, serial, timestamp, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const INQUIRY_STATUSES = ["New", "Contacted", "In Progress", "Closed"] as const;
+export const INQUIRY_STATUSES = [
+  "New",
+  "Contacted",
+  "In Progress",
+  "Closed",
+] as const;
 export type InquiryStatus = (typeof INQUIRY_STATUSES)[number];
 
 export const contactInquiriesTable = pgTable("contact_inquiries", {
@@ -20,9 +25,13 @@ export const contactInquiriesTable = pgTable("contact_inquiries", {
   preferredContactMethod: text("preferred_contact_method"),
   smsConsent: boolean("sms_consent").notNull().default(false),
   status: text("status").notNull().default("New"),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 });
 
-export const insertContactInquirySchema = createInsertSchema(contactInquiriesTable).omit({ id: true, createdAt: true }) as any;
+export const insertContactInquirySchema = createInsertSchema(
+  contactInquiriesTable,
+).omit({ id: true, createdAt: true }) as any;
 export type InsertContactInquiry = z.infer<typeof insertContactInquirySchema>;
 export type ContactInquiry = typeof contactInquiriesTable.$inferSelect;

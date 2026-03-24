@@ -86,6 +86,7 @@ Shows full app info including input/output schema.
 ## Popular Apps by Category
 
 ### Image Generation
+
 - `falai/flux-dev-lora` - FLUX.2 Dev (high quality)
 - `falai/flux-2-klein-lora` - FLUX.2 Klein (fastest)
 - `infsh/sdxl` - Stable Diffusion XL
@@ -93,6 +94,7 @@ Shows full app info including input/output schema.
 - `xai/grok-imagine-image` - Grok image generation
 
 ### Video Generation
+
 - `google/veo-3-1-fast` - Veo 3.1 Fast
 - `google/veo-3` - Veo 3
 - `bytedance/seedance-1-5-pro` - Seedance 1.5 Pro
@@ -100,6 +102,7 @@ Shows full app info including input/output schema.
 - `bytedance/omnihuman-1-5` - OmniHuman avatar
 
 ### Audio
+
 - `infsh/dia-tts` - Conversational TTS
 - `infsh/kokoro-tts` - Kokoro TTS
 - `infsh/fast-whisper-large-v3` - Fast transcription

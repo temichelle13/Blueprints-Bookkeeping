@@ -6,10 +6,15 @@ import { sendBookingNotifications } from "../lib/notifications";
 
 const router: IRouter = Router();
 
-function verifyCalSignature(rawBody: Buffer, signature: string | undefined): { valid: boolean; reason?: string } {
+function verifyCalSignature(
+  rawBody: Buffer,
+  signature: string | undefined,
+): { valid: boolean; reason?: string } {
   const secret = process.env["CAL_WEBHOOK_SECRET"];
   if (!secret) {
-    console.error("CAL_WEBHOOK_SECRET not set — rejecting webhook (fail-closed)");
+    console.error(
+      "CAL_WEBHOOK_SECRET not set — rejecting webhook (fail-closed)",
+    );
     return { valid: false, reason: "Webhook secret not configured" };
   }
   if (!signature) {
@@ -35,9 +40,15 @@ function verifyCalSignature(rawBody: Buffer, signature: string | undefined): { v
   return { valid: true };
 }
 
-const VALID_TRIGGER_EVENTS = new Set(["BOOKING_CREATED", "BOOKING_RESCHEDULED", "BOOKING_CANCELLED"]);
+const VALID_TRIGGER_EVENTS = new Set([
+  "BOOKING_CREATED",
+  "BOOKING_RESCHEDULED",
+  "BOOKING_CANCELLED",
+]);
 
-function inferMeetingType(payload: Record<string, unknown>): "video" | "phone" | "async" {
+function inferMeetingType(
+  payload: Record<string, unknown>,
+): "video" | "phone" | "async" {
   const title = (
     (payload.title as string) ||
     (payload.eventTitle as string) ||
@@ -63,7 +74,9 @@ router.post("/webhooks/cal", async (req, res): Promise<void> => {
         return;
       }
     } else if (process.env["CAL_WEBHOOK_SECRET"]) {
-      console.error("Cal webhook: raw body not available for signature verification");
+      console.error(
+        "Cal webhook: raw body not available for signature verification",
+      );
       res.status(401).json({ error: "Cannot verify signature" });
       return;
     }
@@ -72,7 +85,9 @@ router.post("/webhooks/cal", async (req, res): Promise<void> => {
     const triggerEvent = body.triggerEvent as string;
 
     if (!triggerEvent || !VALID_TRIGGER_EVENTS.has(triggerEvent)) {
-      res.status(400).json({ error: `Unsupported or missing triggerEvent: ${triggerEvent}` });
+      res.status(400).json({
+        error: `Unsupported or missing triggerEvent: ${triggerEvent}`,
+      });
       return;
     }
 
@@ -83,24 +98,38 @@ router.post("/webhooks/cal", async (req, res): Promise<void> => {
       return;
     }
 
-    const bookingUid = (payload.uid as string) || (payload.bookingId as string) || "";
+    const bookingUid =
+      (payload.uid as string) || (payload.bookingId as string) || "";
     if (!bookingUid) {
       res.status(400).json({ error: "Missing booking UID" });
       return;
     }
 
-    const attendees = (payload.attendees as Array<Record<string, string>>) || [];
+    const attendees =
+      (payload.attendees as Array<Record<string, string>>) || [];
     const firstAttendee = attendees[0] || {};
 
-    const clientName = firstAttendee.name || (payload.name as string) || "Unknown";
+    const clientName =
+      firstAttendee.name || (payload.name as string) || "Unknown";
     const clientEmail = firstAttendee.email || (payload.email as string) || "";
-    const clientPhone = firstAttendee.phone || (payload.phone as string) || null;
+    const clientPhone =
+      firstAttendee.phone || (payload.phone as string) || null;
 
-    const startTime = new Date((payload.startTime as string) || (payload.start_time as string) || new Date().toISOString());
-    const endTime = new Date((payload.endTime as string) || (payload.end_time as string) || new Date().toISOString());
+    const startTime = new Date(
+      (payload.startTime as string) ||
+        (payload.start_time as string) ||
+        new Date().toISOString(),
+    );
+    const endTime = new Date(
+      (payload.endTime as string) ||
+        (payload.end_time as string) ||
+        new Date().toISOString(),
+    );
 
     const meetingType = inferMeetingType(payload);
-    const calEventTypeId = String(payload.eventTypeId || payload.eventType || "");
+    const calEventTypeId = String(
+      payload.eventTypeId || payload.eventType || "",
+    );
 
     let eventType: "created" | "rescheduled" | "cancelled";
     let status: "confirmed" | "cancelled" | "rescheduled";

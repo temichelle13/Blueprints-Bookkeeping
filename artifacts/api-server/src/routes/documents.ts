@@ -1,4 +1,10 @@
-import { Router, type IRouter, type Request, type Response, type NextFunction } from "express";
+import {
+  Router,
+  type IRouter,
+  type Request,
+  type Response,
+  type NextFunction,
+} from "express";
 import { db, clientDocumentsTable } from "@workspace/db";
 import { eq, desc } from "drizzle-orm";
 import multer from "multer";
@@ -9,7 +15,8 @@ import { isEmailSuppressed } from "../lib/email-suppression";
 const router: IRouter = Router();
 
 const OWNER_EMAIL = "tea@blueprintsandbookkeeping.com";
-const FROM_ADDRESS = "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
+const FROM_ADDRESS =
+  "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
 
 const MAX_FILE_SIZE = 25 * 1024 * 1024;
 const ALLOWED_MIME_TYPES = [
@@ -23,17 +30,34 @@ const ALLOWED_MIME_TYPES = [
   "text/csv",
 ];
 
-const ALLOWED_EXTENSIONS = [".pdf", ".docx", ".xlsx", ".doc", ".xls", ".jpg", ".jpeg", ".png", ".csv"];
+const ALLOWED_EXTENSIONS = [
+  ".pdf",
+  ".docx",
+  ".xlsx",
+  ".doc",
+  ".xls",
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".csv",
+];
 
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: MAX_FILE_SIZE },
   fileFilter: (_req, file, cb) => {
     const ext = "." + file.originalname.split(".").pop()?.toLowerCase();
-    if (ALLOWED_MIME_TYPES.includes(file.mimetype) && ALLOWED_EXTENSIONS.includes(ext)) {
+    if (
+      ALLOWED_MIME_TYPES.includes(file.mimetype) &&
+      ALLOWED_EXTENSIONS.includes(ext)
+    ) {
       cb(null, true);
     } else {
-      cb(new Error(`File type not allowed: ${file.originalname} (${file.mimetype})`));
+      cb(
+        new Error(
+          `File type not allowed: ${file.originalname} (${file.mimetype})`,
+        ),
+      );
     }
   },
 });
@@ -57,7 +81,10 @@ function adminAuth(req: Request, res: Response, next: NextFunction): void {
 
 function buildDocumentPath(clientName: string, originalName: string): string {
   const year = new Date().getFullYear();
-  const safeName = clientName.replace(/[^a-zA-Z0-9\s-]/g, "").trim().replace(/\s+/g, "_");
+  const safeName = clientName
+    .replace(/[^a-zA-Z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "_");
   const date = new Date().toISOString().split("T")[0];
   const safeFileName = originalName.replace(/[^a-zA-Z0-9._-]/g, "_");
   const uid = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
@@ -80,24 +107,34 @@ function getMimeTypeForFile(originalName: string): string {
   return mimeMap[ext || ""] || "application/octet-stream";
 }
 
-async function sendUploadConfirmation(clientName: string, clientEmail: string, fileNames: string[]): Promise<void> {
+async function sendUploadConfirmation(
+  clientName: string,
+  clientEmail: string,
+  fileNames: string[],
+): Promise<void> {
   const key = process.env["RESEND_API_KEY"];
   if (!key) return;
 
   const suppressed = await isEmailSuppressed(clientEmail);
   if (suppressed) {
-    console.warn("[Documents] Skipping upload confirmation email — address is suppressed:", clientEmail);
+    console.warn(
+      "[Documents] Skipping upload confirmation email — address is suppressed:",
+      clientEmail,
+    );
     return;
   }
 
   const resend = new Resend(key);
-  const fileList = fileNames.map((f) => `<li style="padding:4px 0;">${f}</li>`).join("");
+  const fileList = fileNames
+    .map((f) => `<li style="padding:4px 0;">${f}</li>`)
+    .join("");
 
-  await resend.emails.send({
-    from: FROM_ADDRESS,
-    to: clientEmail,
-    subject: "Document Upload Confirmation — Blueprints & Bookkeeping",
-    html: `
+  await resend.emails
+    .send({
+      from: FROM_ADDRESS,
+      to: clientEmail,
+      subject: "Document Upload Confirmation — Blueprints & Bookkeeping",
+      html: `
       <div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
         <div style="background:linear-gradient(135deg,#6366f1,#818cf8);padding:24px 32px;border-radius:8px 8px 0 0;">
           <h1 style="color:white;margin:0;font-size:20px;">Documents Received</h1>
@@ -110,23 +147,31 @@ async function sendUploadConfirmation(clientName: string, clientEmail: string, f
           <p style="margin-top:24px;color:#6b7280;font-size:13px;">— Blueprints & Bookkeeping</p>
         </div>
       </div>`,
-  }).catch((err) => {
-    console.error("Failed to send upload confirmation email:", err);
-  });
+    })
+    .catch((err) => {
+      console.error("Failed to send upload confirmation email:", err);
+    });
 }
 
-async function notifyAdminNewUpload(clientName: string, clientEmail: string, fileNames: string[]): Promise<void> {
+async function notifyAdminNewUpload(
+  clientName: string,
+  clientEmail: string,
+  fileNames: string[],
+): Promise<void> {
   const key = process.env["RESEND_API_KEY"];
   if (!key) return;
 
   const resend = new Resend(key);
-  const fileList = fileNames.map((f) => `<li style="padding:4px 0;">${f}</li>`).join("");
+  const fileList = fileNames
+    .map((f) => `<li style="padding:4px 0;">${f}</li>`)
+    .join("");
 
-  await resend.emails.send({
-    from: FROM_ADDRESS,
-    to: OWNER_EMAIL,
-    subject: `New Document Upload from ${clientName}`,
-    html: `
+  await resend.emails
+    .send({
+      from: FROM_ADDRESS,
+      to: OWNER_EMAIL,
+      subject: `New Document Upload from ${clientName}`,
+      html: `
       <div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
         <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
           <h1 style="color:white;margin:0;font-size:20px;">New Client Documents</h1>
@@ -137,154 +182,181 @@ async function notifyAdminNewUpload(clientName: string, clientEmail: string, fil
           <p style="margin-top:16px;">View and download these files from the <a href="https://blueprintsandbookkeeping.com/admin/contracts" style="color:#6366f1;">admin dashboard</a>.</p>
         </div>
       </div>`,
-  }).catch((err) => {
-    console.error("Failed to send admin upload notification:", err);
-  });
+    })
+    .catch((err) => {
+      console.error("Failed to send admin upload notification:", err);
+    });
 }
 
-router.post("/documents/upload", (req: Request, res: Response, next: NextFunction) => {
-  upload.array("files", 10)(req, res, (err: unknown) => {
-    if (err) {
-      if (err instanceof multer.MulterError) {
-        if (err.code === "LIMIT_FILE_SIZE") {
-          res.status(400).json({ error: "File exceeds the 25MB size limit" });
+router.post(
+  "/documents/upload",
+  (req: Request, res: Response, next: NextFunction) => {
+    upload.array("files", 10)(req, res, (err: unknown) => {
+      if (err) {
+        if (err instanceof multer.MulterError) {
+          if (err.code === "LIMIT_FILE_SIZE") {
+            res.status(400).json({ error: "File exceeds the 25MB size limit" });
+            return;
+          }
+          if (err.code === "LIMIT_FILE_COUNT") {
+            res.status(400).json({ error: "Maximum 10 files per upload" });
+            return;
+          }
+          res.status(400).json({ error: err.message });
           return;
         }
-        if (err.code === "LIMIT_FILE_COUNT") {
-          res.status(400).json({ error: "Maximum 10 files per upload" });
+        if (err instanceof Error) {
+          res.status(400).json({ error: err.message });
           return;
         }
-        res.status(400).json({ error: err.message });
+        res.status(400).json({ error: "File upload error" });
         return;
       }
-      if (err instanceof Error) {
-        res.status(400).json({ error: err.message });
-        return;
-      }
-      res.status(400).json({ error: "File upload error" });
+      next();
+    });
+  },
+  async (req: Request, res: Response): Promise<void> => {
+    const { clientName, clientEmail } = req.body;
+
+    if (!clientName || !clientEmail || !clientEmail.includes("@")) {
+      res
+        .status(400)
+        .json({ error: "clientName and a valid clientEmail are required" });
       return;
     }
-    next();
-  });
-}, async (req: Request, res: Response): Promise<void> => {
-  const { clientName, clientEmail } = req.body;
 
-  if (!clientName || !clientEmail || !clientEmail.includes("@")) {
-    res.status(400).json({ error: "clientName and a valid clientEmail are required" });
-    return;
-  }
+    const files = req.files as Express.Multer.File[];
+    if (!files || files.length === 0) {
+      res.status(400).json({ error: "At least one file is required" });
+      return;
+    }
 
-  const files = req.files as Express.Multer.File[];
-  if (!files || files.length === 0) {
-    res.status(400).json({ error: "At least one file is required" });
-    return;
-  }
+    const results: Array<{
+      id: number;
+      fileName: string;
+      storagePath: string;
+    }> = [];
+    const errors: string[] = [];
 
-  const results: Array<{ id: number; fileName: string; storagePath: string }> = [];
-  const errors: string[] = [];
+    for (const file of files) {
+      const storagePath = buildDocumentPath(clientName, file.originalname);
 
-  for (const file of files) {
-    const storagePath = buildDocumentPath(clientName, file.originalname);
+      try {
+        const fileBytes = new Uint8Array(file.buffer);
+        const arrayBuffer = fileBytes.buffer;
+        const mimeType = file.mimetype || getMimeTypeForFile(file.originalname);
+        await ccStorage.uploadToCreativeCloud(storagePath, fileBytes, mimeType);
+
+        const [doc] = await db
+          .insert(clientDocumentsTable)
+          .values({
+            clientName,
+            clientEmail,
+            fileName: file.originalname,
+            originalName: file.originalname,
+            fileSize: file.size,
+            mimeType: file.mimetype || getMimeTypeForFile(file.originalname),
+            storagePath,
+          })
+          .returning();
+
+        results.push({ id: doc.id, fileName: file.originalname, storagePath });
+      } catch (err) {
+        console.error(`Failed to upload ${file.originalname}:`, err);
+        errors.push(file.originalname);
+      }
+    }
+
+    if (results.length === 0) {
+      res
+        .status(500)
+        .json({ error: "All file uploads failed", failedFiles: errors });
+      return;
+    }
+
+    const uploadedNames = results.map((r) => r.fileName);
+    await Promise.all([
+      sendUploadConfirmation(clientName, clientEmail, uploadedNames),
+      notifyAdminNewUpload(clientName, clientEmail, uploadedNames),
+    ]);
+
+    res.status(201).json({
+      success: true,
+      message: `${results.length} file(s) uploaded successfully`,
+      documents: results,
+      failedFiles: errors.length > 0 ? errors : undefined,
+    });
+  },
+);
+
+router.get(
+  "/documents",
+  adminAuth,
+  async (_req: Request, res: Response): Promise<void> => {
+    const documents = await db
+      .select()
+      .from(clientDocumentsTable)
+      .orderBy(desc(clientDocumentsTable.uploadedAt));
+
+    res.json(documents);
+  },
+);
+
+router.get(
+  "/documents/:id/download",
+  adminAuth,
+  async (req: Request, res: Response): Promise<void> => {
+    const id = parseInt(req.params.id as string, 10);
+    if (isNaN(id)) {
+      res.status(400).json({ error: "Invalid document ID" });
+      return;
+    }
+
+    const results = await db
+      .select()
+      .from(clientDocumentsTable)
+      .where(eq(clientDocumentsTable.id, id))
+      .limit(1);
+
+    const doc = results[0];
+    if (!doc) {
+      res.status(404).json({ error: "Document not found" });
+      return;
+    }
 
     try {
-const fileBytes = new Uint8Array(file.buffer);
-const arrayBuffer = fileBytes.buffer;
-      const mimeType = file.mimetype || getMimeTypeForFile(file.originalname);
-      await ccStorage.uploadToCreativeCloud(storagePath, fileBytes, mimeType);
+      const token = await getAccessToken();
+      const apiKey = process.env["ADOBE_SIGN_CLIENT_ID"];
 
-      const [doc] = await db
-        .insert(clientDocumentsTable)
-        .values({
-          clientName,
-          clientEmail,
-          fileName: file.originalname,
-          originalName: file.originalname,
-          fileSize: file.size,
-          mimeType: file.mimetype || getMimeTypeForFile(file.originalname),
-          storagePath,
-        })
-        .returning();
+      const response = await fetch(
+        `https://cc-api-storage.adobe.io/v2/assets/${doc.storagePath}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "x-api-key": apiKey || "",
+          },
+        },
+      );
 
-      results.push({ id: doc.id, fileName: file.originalname, storagePath });
+      if (!response.ok) {
+        throw new Error(`CC Storage download failed: ${response.status}`);
+      }
+
+      const arrayBuffer = await response.arrayBuffer();
+      const safeFileName = doc.originalName.replace(/[^a-zA-Z0-9._-]/g, "_");
+
+      res.setHeader("Content-Type", doc.mimeType);
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="${safeFileName}"`,
+      );
+      res.send(Buffer.from(arrayBuffer));
     } catch (err) {
-      console.error(`Failed to upload ${file.originalname}:`, err);
-      errors.push(file.originalname);
+      console.error("Failed to download document:", err);
+      res.status(500).json({ error: "Failed to download document" });
     }
-  }
-
-  if (results.length === 0) {
-    res.status(500).json({ error: "All file uploads failed", failedFiles: errors });
-    return;
-  }
-
-  const uploadedNames = results.map((r) => r.fileName);
-  await Promise.all([
-    sendUploadConfirmation(clientName, clientEmail, uploadedNames),
-    notifyAdminNewUpload(clientName, clientEmail, uploadedNames),
-  ]);
-
-  res.status(201).json({
-    success: true,
-    message: `${results.length} file(s) uploaded successfully`,
-    documents: results,
-    failedFiles: errors.length > 0 ? errors : undefined,
-  });
-});
-
-router.get("/documents", adminAuth, async (_req: Request, res: Response): Promise<void> => {
-  const documents = await db
-    .select()
-    .from(clientDocumentsTable)
-    .orderBy(desc(clientDocumentsTable.uploadedAt));
-
-  res.json(documents);
-});
-
-router.get("/documents/:id/download", adminAuth, async (req: Request, res: Response): Promise<void> => {
-  const id = parseInt(req.params.id as string, 10);
-  if (isNaN(id)) {
-    res.status(400).json({ error: "Invalid document ID" });
-    return;
-  }
-
-  const results = await db
-    .select()
-    .from(clientDocumentsTable)
-    .where(eq(clientDocumentsTable.id, id))
-    .limit(1);
-
-  const doc = results[0];
-  if (!doc) {
-    res.status(404).json({ error: "Document not found" });
-    return;
-  }
-
-  try {
-    const token = await getAccessToken();
-    const apiKey = process.env["ADOBE_SIGN_CLIENT_ID"];
-
-    const response = await fetch(`https://cc-api-storage.adobe.io/v2/assets/${doc.storagePath}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "x-api-key": apiKey || "",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`CC Storage download failed: ${response.status}`);
-    }
-
-    const arrayBuffer = await response.arrayBuffer();
-    const safeFileName = doc.originalName.replace(/[^a-zA-Z0-9._-]/g, "_");
-
-    res.setHeader("Content-Type", doc.mimeType);
-    res.setHeader("Content-Disposition", `attachment; filename="${safeFileName}"`);
-    res.send(Buffer.from(arrayBuffer));
-  } catch (err) {
-    console.error("Failed to download document:", err);
-    res.status(500).json({ error: "Failed to download document" });
-  }
-});
+  },
+);
 
 async function getAccessToken(): Promise<string> {
   const clientId = process.env["ADOBE_SIGN_CLIENT_ID"];

@@ -6,7 +6,8 @@ export function localBusinessSchema() {
     "@type": "LocalBusiness",
     "@id": `${BASE_URL}/#business`,
     name: "Blueprints & Bookkeeping, LLC",
-    description: "Advanced bookkeeping and professional business plans for complex, high-growth businesses.",
+    description:
+      "Advanced bookkeeping and professional business plans for complex, high-growth businesses.",
     url: BASE_URL,
     telephone: "+1-541-319-8654",
     email: "tea@blueprintsandbookkeeping.com",
@@ -14,26 +15,26 @@ export function localBusinessSchema() {
       "@type": "PostalAddress",
       addressLocality: "Roseburg",
       addressRegion: "OR",
-      addressCountry: "US"
+      addressCountry: "US",
     },
     areaServed: [
       {
         "@type": "State",
-        name: "Oregon"
+        name: "Oregon",
       },
       {
         "@type": "Country",
-        name: "United States"
-      }
+        name: "United States",
+      },
     ],
     priceRange: "$$",
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
       dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
       opens: "09:00",
-      closes: "17:00"
+      closes: "17:00",
     },
-    sameAs: []
+    sameAs: [],
   };
 }
 
@@ -51,12 +52,12 @@ export function serviceSchema(opts: {
     provider: {
       "@type": "LocalBusiness",
       name: "Blueprints & Bookkeeping, LLC",
-      url: BASE_URL
+      url: BASE_URL,
     },
     areaServed: {
       "@type": "Country",
-      name: "United States"
-    }
+      name: "United States",
+    },
   };
 }
 
@@ -69,9 +70,9 @@ export function faqPageSchema(items: { question: string; answer: string }[]) {
       name: item.question,
       acceptedAnswer: {
         "@type": "Answer",
-        text: item.answer
-      }
-    }))
+        text: item.answer,
+      },
+    })),
   };
 }
 
@@ -83,7 +84,7 @@ export function breadcrumbSchema(items: { name: string; url: string }[]) {
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: item.url
-    }))
+      item: item.url,
+    })),
   };
 }

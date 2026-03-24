@@ -44,5 +44,5 @@ export type {
   StateNexusRule,
   SyncResult,
   UnsubscribeNewsletterByTokenParams,
-  UpdateNexusRuleInput
+  UpdateNexusRuleInput,
 } from "./generated/types";

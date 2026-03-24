@@ -29,10 +29,18 @@ export function BookkeepingDisclaimer({
             compact ? "mt-0.5 p-2" : "mt-0.5 p-2.5",
           )}
         >
-          <Info className={cn(compact ? "h-4 w-4" : "h-[18px] w-[18px]")} aria-hidden="true" />
+          <Info
+            className={cn(compact ? "h-4 w-4" : "h-[18px] w-[18px]")}
+            aria-hidden="true"
+          />
         </div>
         <div className="min-w-0">
-          <p className={cn("font-semibold text-foreground", compact ? "text-sm" : "text-sm sm:text-[15px]")}>
+          <p
+            className={cn(
+              "font-semibold text-foreground",
+              compact ? "text-sm" : "text-sm sm:text-[15px]",
+            )}
+          >
             {title}
           </p>
           <p
@@ -41,8 +49,9 @@ export function BookkeepingDisclaimer({
               compact ? "text-xs sm:text-[13px]" : "text-sm sm:text-[14px]",
             )}
           >
-            Blueprints &amp; Bookkeeping LLC provides bookkeeping and business-planning services only. Tax
-            preparation, tax filing, legal advice, and licensed investment advice stay with the appropriate
+            Blueprints &amp; Bookkeeping LLC provides bookkeeping and
+            business-planning services only. Tax preparation, tax filing, legal
+            advice, and licensed investment advice stay with the appropriate
             licensed professionals.
           </p>
         </div>

@@ -8,8 +8,10 @@ import { isEmailSuppressed } from "../lib/email-suppression";
 const router: IRouter = Router();
 
 const OWNER_EMAIL = "tea@blueprintsandbookkeeping.com";
-const FROM_ADDRESS = "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
-const SITE_URL = process.env["SITE_URL"] || "https://blueprintsandbookkeeping.com";
+const FROM_ADDRESS =
+  "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
+const SITE_URL =
+  process.env["SITE_URL"] || "https://blueprintsandbookkeeping.com";
 
 function getStripe(): Stripe | null {
   const key = process.env["STRIPE_SECRET_KEY"];
@@ -23,7 +25,10 @@ function getResend(): Resend | null {
   return new Resend(key);
 }
 
-const PLAN_CONFIG: Record<string, { name: string; monthlyPriceId: string; annualPriceId: string }> = {
+const PLAN_CONFIG: Record<
+  string,
+  { name: string; monthlyPriceId: string; annualPriceId: string }
+> = {
   essentials: {
     name: "Essentials",
     monthlyPriceId: process.env["STRIPE_ESSENTIALS_MONTHLY_PRICE_ID"] || "",
@@ -36,7 +41,10 @@ const PLAN_CONFIG: Record<string, { name: string; monthlyPriceId: string; annual
   },
 };
 
-const DEPOSIT_CONFIG: Record<string, { name: string; amountCents: number; description: string }> = {
+const DEPOSIT_CONFIG: Record<
+  string,
+  { name: string; amountCents: number; description: string }
+> = {
   essentials: {
     name: "Essentials Bookkeeping Deposit",
     amountCents: 50000,
@@ -55,97 +63,116 @@ const DEPOSIT_CONFIG: Record<string, { name: string; amountCents: number; descri
   sba_investor: {
     name: "SBA / Investor Package Deposit",
     amountCents: 200000,
-    description: "50% deposit to begin your SBA / Investor Package business plan.",
+    description:
+      "50% deposit to begin your SBA / Investor Package business plan.",
   },
 };
 
-router.post("/payments/create-checkout-session", async (req, res): Promise<void> => {
-  const stripe = getStripe();
-  if (!stripe) {
-    res.status(503).json({ error: "Payment processing is not configured." });
-    return;
-  }
+router.post(
+  "/payments/create-checkout-session",
+  async (req, res): Promise<void> => {
+    const stripe = getStripe();
+    if (!stripe) {
+      res.status(503).json({ error: "Payment processing is not configured." });
+      return;
+    }
 
-  const { plan, interval } = req.body as { plan?: string; interval?: string };
+    const { plan, interval } = req.body as { plan?: string; interval?: string };
 
-  if (!plan || !PLAN_CONFIG[plan]) {
-    res.status(400).json({ error: "Invalid plan. Choose 'essentials' or 'growth'." });
-    return;
-  }
+    if (!plan || !PLAN_CONFIG[plan]) {
+      res
+        .status(400)
+        .json({ error: "Invalid plan. Choose 'essentials' or 'growth'." });
+      return;
+    }
 
-  const billingInterval = interval === "annual" ? "annual" : "monthly";
-  const config = PLAN_CONFIG[plan];
-  const priceId = billingInterval === "annual" ? config.annualPriceId : config.monthlyPriceId;
+    const billingInterval = interval === "annual" ? "annual" : "monthly";
+    const config = PLAN_CONFIG[plan];
+    const priceId =
+      billingInterval === "annual"
+        ? config.annualPriceId
+        : config.monthlyPriceId;
 
-  if (!priceId) {
-    res.status(503).json({ error: `Stripe price not configured for ${config.name} (${billingInterval}).` });
-    return;
-  }
+    if (!priceId) {
+      res.status(503).json({
+        error: `Stripe price not configured for ${config.name} (${billingInterval}).`,
+      });
+      return;
+    }
 
-  try {
-    const session = await stripe.checkout.sessions.create({
-      mode: "subscription",
-      payment_method_types: ["card"],
-      line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${SITE_URL}/welcome?session_id={CHECKOUT_SESSION_ID}&plan=${plan}`,
-      cancel_url: `${SITE_URL}/pricing`,
-      metadata: { plan, billingInterval },
-      subscription_data: {
+    try {
+      const session = await stripe.checkout.sessions.create({
+        mode: "subscription",
+        payment_method_types: ["card"],
+        line_items: [{ price: priceId, quantity: 1 }],
+        success_url: `${SITE_URL}/welcome?session_id={CHECKOUT_SESSION_ID}&plan=${plan}`,
+        cancel_url: `${SITE_URL}/pricing`,
         metadata: { plan, billingInterval },
-      },
-    });
-
-    res.json({ url: session.url });
-  } catch (err) {
-    console.error("Stripe checkout session error:", err);
-    res.status(500).json({ error: "Failed to create checkout session." });
-  }
-});
-
-router.post("/payments/create-deposit-session", async (req, res): Promise<void> => {
-  const stripe = getStripe();
-  if (!stripe) {
-    res.status(503).json({ error: "Payment processing is not configured." });
-    return;
-  }
-
-  const { service } = req.body as { service?: string };
-
-  if (!service || !DEPOSIT_CONFIG[service]) {
-    res.status(400).json({ error: "Invalid service. Choose 'essentials', 'growth', 'startup_roadmap', or 'sba_investor'." });
-    return;
-  }
-
-  const config = DEPOSIT_CONFIG[service];
-
-  try {
-    const session = await stripe.checkout.sessions.create({
-      mode: "payment",
-      payment_method_types: ["card"],
-      line_items: [
-        {
-          price_data: {
-            currency: "usd",
-            product_data: {
-              name: config.name,
-              description: config.description,
-            },
-            unit_amount: config.amountCents,
-          },
-          quantity: 1,
+        subscription_data: {
+          metadata: { plan, billingInterval },
         },
-      ],
-      success_url: `${SITE_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}&service=${service}`,
-      cancel_url: `${SITE_URL}/pricing`,
-      metadata: { service, type: "deposit" },
-    });
+      });
 
-    res.json({ url: session.url });
-  } catch (err) {
-    console.error("Stripe deposit session error:", err);
-    res.status(500).json({ error: "Failed to create deposit checkout session." });
-  }
-});
+      res.json({ url: session.url });
+    } catch (err) {
+      console.error("Stripe checkout session error:", err);
+      res.status(500).json({ error: "Failed to create checkout session." });
+    }
+  },
+);
+
+router.post(
+  "/payments/create-deposit-session",
+  async (req, res): Promise<void> => {
+    const stripe = getStripe();
+    if (!stripe) {
+      res.status(503).json({ error: "Payment processing is not configured." });
+      return;
+    }
+
+    const { service } = req.body as { service?: string };
+
+    if (!service || !DEPOSIT_CONFIG[service]) {
+      res.status(400).json({
+        error:
+          "Invalid service. Choose 'essentials', 'growth', 'startup_roadmap', or 'sba_investor'.",
+      });
+      return;
+    }
+
+    const config = DEPOSIT_CONFIG[service];
+
+    try {
+      const session = await stripe.checkout.sessions.create({
+        mode: "payment",
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: "usd",
+              product_data: {
+                name: config.name,
+                description: config.description,
+              },
+              unit_amount: config.amountCents,
+            },
+            quantity: 1,
+          },
+        ],
+        success_url: `${SITE_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}&service=${service}`,
+        cancel_url: `${SITE_URL}/pricing`,
+        metadata: { service, type: "deposit" },
+      });
+
+      res.json({ url: session.url });
+    } catch (err) {
+      console.error("Stripe deposit session error:", err);
+      res
+        .status(500)
+        .json({ error: "Failed to create deposit checkout session." });
+    }
+  },
+);
 
 router.post("/payments/webhook", async (req, res): Promise<void> => {
   const stripe = getStripe();
@@ -203,13 +230,21 @@ router.post("/payments/webhook", async (req, res): Promise<void> => {
   }
 });
 
-async function handleCheckoutCompleted(session: Stripe.Checkout.Session): Promise<void> {
+async function handleCheckoutCompleted(
+  session: Stripe.Checkout.Session,
+): Promise<void> {
   const plan = session.metadata?.plan || "unknown";
   const billingInterval = session.metadata?.billingInterval || "monthly";
   const customerEmail = session.customer_details?.email || "";
   const customerName = session.customer_details?.name || "";
-  const customerId = typeof session.customer === "string" ? session.customer : session.customer?.id || "";
-  const subscriptionId = typeof session.subscription === "string" ? session.subscription : session.subscription?.id || "";
+  const customerId =
+    typeof session.customer === "string"
+      ? session.customer
+      : session.customer?.id || "";
+  const subscriptionId =
+    typeof session.subscription === "string"
+      ? session.subscription
+      : session.subscription?.id || "";
 
   const existing = await db
     .select()
@@ -241,19 +276,31 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session): Promis
         from: FROM_ADDRESS,
         to: OWNER_EMAIL,
         subject: `New Self-Service Subscriber: ${customerName} — ${planLabel}`,
-        html: buildAdminNotificationEmail(customerName, customerEmail, planLabel, billingInterval),
+        html: buildAdminNotificationEmail(
+          customerName,
+          customerEmail,
+          planLabel,
+          billingInterval,
+        ),
       }),
     ];
 
     if (suppressed) {
-      console.warn("[Payments] Skipping subscription welcome email — address is suppressed:", customerEmail);
+      console.warn(
+        "[Payments] Skipping subscription welcome email — address is suppressed:",
+        customerEmail,
+      );
     } else {
       emailPromises.push(
         resend.emails.send({
           from: FROM_ADDRESS,
           to: customerEmail,
           subject: `Welcome to Blueprints & Bookkeeping — ${planLabel} Plan`,
-          html: buildClientConfirmationEmail(customerName, planLabel, billingInterval),
+          html: buildClientConfirmationEmail(
+            customerName,
+            planLabel,
+            billingInterval,
+          ),
         }),
       );
     }
@@ -262,24 +309,35 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session): Promis
   }
 }
 
-async function handleDepositCompleted(session: Stripe.Checkout.Session): Promise<void> {
+async function handleDepositCompleted(
+  session: Stripe.Checkout.Session,
+): Promise<void> {
   const service = session.metadata?.service || "unknown";
   const customerEmail = session.customer_details?.email || "";
   const customerName = session.customer_details?.name || "";
   const depositConfig = DEPOSIT_CONFIG[service];
   const serviceName = depositConfig?.name || service;
-  const amountPaid = session.amount_total ? `$${(session.amount_total / 100).toFixed(2)}` : "N/A";
+  const amountPaid = session.amount_total
+    ? `$${(session.amount_total / 100).toFixed(2)}`
+    : "N/A";
 
   const resend = getResend();
   if (resend) {
-    const suppressed = customerEmail ? await isEmailSuppressed(customerEmail) : false;
+    const suppressed = customerEmail
+      ? await isEmailSuppressed(customerEmail)
+      : false;
 
     const emailPromises: Promise<unknown>[] = [
       resend.emails.send({
         from: FROM_ADDRESS,
         to: OWNER_EMAIL,
         subject: `Deposit Received: ${customerName || customerEmail || "Unknown"} — ${serviceName}`,
-        html: buildDepositAdminEmail(customerName, customerEmail, serviceName, amountPaid),
+        html: buildDepositAdminEmail(
+          customerName,
+          customerEmail,
+          serviceName,
+          amountPaid,
+        ),
       }),
     ];
 
@@ -289,11 +347,18 @@ async function handleDepositCompleted(session: Stripe.Checkout.Session): Promise
           from: FROM_ADDRESS,
           to: customerEmail,
           subject: `Deposit Received — ${serviceName}`,
-          html: buildDepositClientEmail(customerName || "Client", serviceName, amountPaid),
+          html: buildDepositClientEmail(
+            customerName || "Client",
+            serviceName,
+            amountPaid,
+          ),
         }),
       );
     } else if (customerEmail && suppressed) {
-      console.warn("[Payments] Skipping deposit confirmation email — address is suppressed:", customerEmail);
+      console.warn(
+        "[Payments] Skipping deposit confirmation email — address is suppressed:",
+        customerEmail,
+      );
     }
 
     await Promise.allSettled(emailPromises);
@@ -301,10 +366,17 @@ async function handleDepositCompleted(session: Stripe.Checkout.Session): Promise
 }
 
 async function handlePaymentFailed(invoice: Stripe.Invoice): Promise<void> {
-  const customerEmail = typeof invoice.customer_email === "string" ? invoice.customer_email : "";
-  const customerName = typeof invoice.customer_name === "string" ? invoice.customer_name : "";
+  const customerEmail =
+    typeof invoice.customer_email === "string" ? invoice.customer_email : "";
+  const customerName =
+    typeof invoice.customer_name === "string" ? invoice.customer_name : "";
   const sub = (invoice as unknown as Record<string, unknown>)["subscription"];
-  const subscriptionId = typeof sub === "string" ? sub : (sub && typeof sub === "object" && "id" in sub ? (sub as { id: string }).id : "");
+  const subscriptionId =
+    typeof sub === "string"
+      ? sub
+      : sub && typeof sub === "object" && "id" in sub
+        ? (sub as { id: string }).id
+        : "";
 
   if (subscriptionId) {
     const now = new Date();
@@ -336,7 +408,10 @@ async function handlePaymentFailed(invoice: Stripe.Invoice): Promise<void> {
     ];
 
     if (suppressed) {
-      console.warn("[Payments] Skipping payment failed email — address is suppressed:", customerEmail);
+      console.warn(
+        "[Payments] Skipping payment failed email — address is suppressed:",
+        customerEmail,
+      );
     } else {
       emailPromises.push(
         resend.emails.send({
@@ -352,7 +427,9 @@ async function handlePaymentFailed(invoice: Stripe.Invoice): Promise<void> {
   }
 }
 
-async function handleSubscriptionCanceled(subscription: Stripe.Subscription): Promise<void> {
+async function handleSubscriptionCanceled(
+  subscription: Stripe.Subscription,
+): Promise<void> {
   const now = new Date();
   await db
     .update(subscriptionsTable)
@@ -388,7 +465,10 @@ async function handleSubscriptionCanceled(subscription: Stripe.Subscription): Pr
     ];
 
     if (suppressed) {
-      console.warn("[Payments] Skipping subscription canceled email — address is suppressed:", sub.clientEmail);
+      console.warn(
+        "[Payments] Skipping subscription canceled email — address is suppressed:",
+        sub.clientEmail,
+      );
     } else {
       emailPromises.push(
         resend.emails.send({
@@ -415,7 +495,11 @@ async function handleSubscriptionCanceled(subscription: Stripe.Subscription): Pr
   }
 }
 
-function buildClientConfirmationEmail(name: string, plan: string, interval: string): string {
+function buildClientConfirmationEmail(
+  name: string,
+  plan: string,
+  interval: string,
+): string {
   return `<div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
     <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
       <h1 style="color:white;margin:0;font-size:20px;">Welcome to Blueprints & Bookkeeping!</h1>
@@ -437,7 +521,12 @@ function buildClientConfirmationEmail(name: string, plan: string, interval: stri
   </div>`;
 }
 
-function buildAdminNotificationEmail(name: string, email: string, plan: string, interval: string): string {
+function buildAdminNotificationEmail(
+  name: string,
+  email: string,
+  plan: string,
+  interval: string,
+): string {
   return `<div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
     <div style="background:#16a34a;padding:24px 32px;border-radius:8px 8px 0 0;">
       <h1 style="color:white;margin:0;font-size:20px;">New Self-Service Subscriber!</h1>
@@ -469,7 +558,11 @@ function buildPaymentFailedEmail(name: string): string {
   </div>`;
 }
 
-function buildDepositClientEmail(name: string, service: string, amount: string): string {
+function buildDepositClientEmail(
+  name: string,
+  service: string,
+  amount: string,
+): string {
   return `<div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
     <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
       <h1 style="color:white;margin:0;font-size:20px;">Deposit Received</h1>
@@ -489,7 +582,12 @@ function buildDepositClientEmail(name: string, service: string, amount: string):
   </div>`;
 }
 
-function buildDepositAdminEmail(name: string, email: string, service: string, amount: string): string {
+function buildDepositAdminEmail(
+  name: string,
+  email: string,
+  service: string,
+  amount: string,
+): string {
   return `<div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
     <div style="background:#16a34a;padding:24px 32px;border-radius:8px 8px 0 0;">
       <h1 style="color:white;margin:0;font-size:20px;">New Deposit Received!</h1>

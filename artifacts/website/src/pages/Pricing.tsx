@@ -17,7 +17,8 @@ const bookkeepingTiers = [
     prefix: "Starting at",
     tag: "ONGOING",
     planKey: "essentials",
-    description: "Clean books for a single-entity business with straightforward transactions.",
+    description:
+      "Clean books for a single-entity business with straightforward transactions.",
     features: [
       "Single entity",
       "Up to 200 transactions/mo",
@@ -39,7 +40,8 @@ const bookkeepingTiers = [
     prefix: "Starting at",
     tag: "MOST POPULAR",
     planKey: "growth",
-    description: "For growing businesses with higher volume, multiple accounts, or niche complexity.",
+    description:
+      "For growing businesses with higher volume, multiple accounts, or niche complexity.",
     features: [
       "Up to 2 entities",
       "Up to 600 transactions/mo",
@@ -62,7 +64,8 @@ const bookkeepingTiers = [
     prefix: "",
     tag: "ENTERPRISE",
     planKey: "advanced",
-    description: "Multi-entity structures, high-volume operations, and complex consolidations.",
+    description:
+      "Multi-entity structures, high-volume operations, and complex consolidations.",
     features: [
       "3+ entities or complex structures",
       "Unlimited transaction volume",
@@ -86,7 +89,8 @@ const businessPlanTiers = [
     prefix: "Starting at",
     tag: "PROJECT",
     depositKey: "startup_roadmap",
-    description: "Ideal for early-stage businesses seeking internal clarity or initial bank conversations.",
+    description:
+      "Ideal for early-stage businesses seeking internal clarity or initial bank conversations.",
     features: [
       "3-year financial forecast",
       "Market overview & opportunity summary",
@@ -105,7 +109,8 @@ const businessPlanTiers = [
     prefix: "Starting at",
     tag: "FULL PACKAGE",
     depositKey: "sba_investor",
-    description: "Comprehensive, in-depth business plan with detailed financial modeling, market research, and full strategic narrative.",
+    description:
+      "Comprehensive, in-depth business plan with detailed financial modeling, market research, and full strategic narrative.",
     features: [
       "5-year rigorous financial model",
       "Professional plan formatting",
@@ -120,10 +125,16 @@ const businessPlanTiers = [
   },
 ];
 
-type BookkeepingTier = typeof bookkeepingTiers[0];
-type BusinessPlanTier = typeof businessPlanTiers[0];
+type BookkeepingTier = (typeof bookkeepingTiers)[0];
+type BusinessPlanTier = (typeof businessPlanTiers)[0];
 
-function SubscribeButton({ planKey, interval }: { planKey: string; interval: "monthly" | "annual" }) {
+function SubscribeButton({
+  planKey,
+  interval,
+}: {
+  planKey: string;
+  interval: "monthly" | "annual";
+}) {
   return (
     <Link
       href="/contact"
@@ -135,7 +146,13 @@ function SubscribeButton({ planKey, interval }: { planKey: string; interval: "mo
   );
 }
 
-function DepositButton({ serviceKey, label }: { serviceKey: string; label?: string }) {
+function DepositButton({
+  serviceKey,
+  label,
+}: {
+  serviceKey: string;
+  label?: string;
+}) {
   return (
     <Link
       href="/contact"
@@ -172,21 +189,37 @@ function BookkeepingTierCard({
           </div>
         )}
         <div className="relative mt-4 mb-6">
-          <h3 className="text-xl font-display font-bold text-white mb-1">{tier.name}</h3>
+          <h3 className="text-xl font-display font-bold text-white mb-1">
+            {tier.name}
+          </h3>
           <div className="flex items-baseline gap-1.5 mb-3">
-            {tier.prefix && <span className="text-xs text-muted-foreground">{tier.prefix}</span>}
+            {tier.prefix && (
+              <span className="text-xs text-muted-foreground">
+                {tier.prefix}
+              </span>
+            )}
             {showAnnual ? (
               <>
-                <span className="text-3xl font-extrabold text-white">{tier.annualPrice}</span>
+                <span className="text-3xl font-extrabold text-white">
+                  {tier.annualPrice}
+                </span>
                 <span className="text-muted-foreground text-sm">/yr</span>
                 {tier.annualSavings && (
-                  <span className="text-xs text-emerald-400 font-medium ml-1">Save {tier.annualSavings}</span>
+                  <span className="text-xs text-emerald-400 font-medium ml-1">
+                    Save {tier.annualSavings}
+                  </span>
                 )}
               </>
             ) : (
               <>
-                <span className="text-3xl font-extrabold text-white">{tier.price}</span>
-                {tier.period && <span className="text-muted-foreground text-sm">{tier.period}</span>}
+                <span className="text-3xl font-extrabold text-white">
+                  {tier.price}
+                </span>
+                {tier.period && (
+                  <span className="text-muted-foreground text-sm">
+                    {tier.period}
+                  </span>
+                )}
               </>
             )}
           </div>
@@ -201,7 +234,10 @@ function BookkeepingTierCard({
         </ul>
         <div className="relative space-y-2">
           {tier.subscribable && (
-            <SubscribeButton planKey={tier.planKey} interval={billingInterval} />
+            <SubscribeButton
+              planKey={tier.planKey}
+              interval={billingInterval}
+            />
           )}
           <Link
             href="/schedule"
@@ -216,30 +252,49 @@ function BookkeepingTierCard({
 
   return (
     <div className="glass-card rounded-2xl p-8 relative flex flex-col hover:border-white/10 transition-all">
-      {tier.tag && tier.tag !== "ONGOING" && tier.tag !== "PROJECT" && tier.tag !== "ENTERPRISE" && (
-        <div className="absolute top-0 left-1/2 -translate-x-1/2">
-          <div className="px-4 py-1.5 bg-accent text-white text-xs font-bold tracking-wider rounded-b-lg">
-            {tier.tag}
+      {tier.tag &&
+        tier.tag !== "ONGOING" &&
+        tier.tag !== "PROJECT" &&
+        tier.tag !== "ENTERPRISE" && (
+          <div className="absolute top-0 left-1/2 -translate-x-1/2">
+            <div className="px-4 py-1.5 bg-accent text-white text-xs font-bold tracking-wider rounded-b-lg">
+              {tier.tag}
+            </div>
           </div>
-        </div>
-      )}
+        )}
       <div className="mb-6">
-        <span className="text-[11px] font-mono font-medium tracking-widest text-muted-foreground">{tier.tag === "ENTERPRISE" ? "ENTERPRISE" : ""}</span>
-        <h3 className="text-xl font-display font-bold text-white mt-1 mb-1">{tier.name}</h3>
+        <span className="text-[11px] font-mono font-medium tracking-widest text-muted-foreground">
+          {tier.tag === "ENTERPRISE" ? "ENTERPRISE" : ""}
+        </span>
+        <h3 className="text-xl font-display font-bold text-white mt-1 mb-1">
+          {tier.name}
+        </h3>
         <div className="flex items-baseline gap-1.5 mb-3">
-          {tier.prefix && <span className="text-xs text-muted-foreground">{tier.prefix}</span>}
+          {tier.prefix && (
+            <span className="text-xs text-muted-foreground">{tier.prefix}</span>
+          )}
           {showAnnual ? (
             <>
-              <span className="text-3xl font-extrabold text-white">{tier.annualPrice}</span>
+              <span className="text-3xl font-extrabold text-white">
+                {tier.annualPrice}
+              </span>
               <span className="text-muted-foreground text-sm">/yr</span>
               {tier.annualSavings && (
-                <span className="text-xs text-emerald-400 font-medium ml-1">Save {tier.annualSavings}</span>
+                <span className="text-xs text-emerald-400 font-medium ml-1">
+                  Save {tier.annualSavings}
+                </span>
               )}
             </>
           ) : (
             <>
-              <span className="text-3xl font-extrabold text-white">{tier.price}</span>
-              {tier.period && <span className="text-muted-foreground text-sm">{tier.period}</span>}
+              <span className="text-3xl font-extrabold text-white">
+                {tier.price}
+              </span>
+              {tier.period && (
+                <span className="text-muted-foreground text-sm">
+                  {tier.period}
+                </span>
+              )}
             </>
           )}
         </div>
@@ -288,11 +343,23 @@ function TierCard({
           </div>
         )}
         <div className="relative mt-4 mb-6">
-          <h3 className="text-xl font-display font-bold text-white mb-1">{tier.name}</h3>
+          <h3 className="text-xl font-display font-bold text-white mb-1">
+            {tier.name}
+          </h3>
           <div className="flex items-baseline gap-1.5 mb-3">
-            {tier.prefix && <span className="text-xs text-muted-foreground">{tier.prefix}</span>}
-            <span className="text-3xl font-extrabold text-white">{tier.price}</span>
-            {tier.period && <span className="text-muted-foreground text-sm">{tier.period}</span>}
+            {tier.prefix && (
+              <span className="text-xs text-muted-foreground">
+                {tier.prefix}
+              </span>
+            )}
+            <span className="text-3xl font-extrabold text-white">
+              {tier.price}
+            </span>
+            {tier.period && (
+              <span className="text-muted-foreground text-sm">
+                {tier.period}
+              </span>
+            )}
           </div>
           <p className="text-sm text-muted-foreground">{tier.description}</p>
         </div>
@@ -304,7 +371,10 @@ function TierCard({
           ))}
         </ul>
         <div className="relative space-y-2">
-          <DepositButton serviceKey={tier.depositKey} label="Pay Deposit & Get Started" />
+          <DepositButton
+            serviceKey={tier.depositKey}
+            label="Pay Deposit & Get Started"
+          />
           <Link
             href="/schedule"
             className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
@@ -318,20 +388,33 @@ function TierCard({
 
   return (
     <div className="glass-card rounded-2xl p-8 relative flex flex-col hover:border-white/10 transition-all">
-      {tier.tag && tier.tag !== "ONGOING" && tier.tag !== "PROJECT" && tier.tag !== "ENTERPRISE" && (
-        <div className="absolute top-0 left-1/2 -translate-x-1/2">
-          <div className="px-4 py-1.5 bg-accent text-white text-xs font-bold tracking-wider rounded-b-lg">
-            {tier.tag}
+      {tier.tag &&
+        tier.tag !== "ONGOING" &&
+        tier.tag !== "PROJECT" &&
+        tier.tag !== "ENTERPRISE" && (
+          <div className="absolute top-0 left-1/2 -translate-x-1/2">
+            <div className="px-4 py-1.5 bg-accent text-white text-xs font-bold tracking-wider rounded-b-lg">
+              {tier.tag}
+            </div>
           </div>
-        </div>
-      )}
+        )}
       <div className="mb-6">
-        <span className="text-[11px] font-mono font-medium tracking-widest text-muted-foreground">{tier.tag === "FULL PACKAGE" ? "FULL PACKAGE" : ""}</span>
-        <h3 className="text-xl font-display font-bold text-white mt-1 mb-1">{tier.name}</h3>
+        <span className="text-[11px] font-mono font-medium tracking-widest text-muted-foreground">
+          {tier.tag === "FULL PACKAGE" ? "FULL PACKAGE" : ""}
+        </span>
+        <h3 className="text-xl font-display font-bold text-white mt-1 mb-1">
+          {tier.name}
+        </h3>
         <div className="flex items-baseline gap-1.5 mb-3">
-          {tier.prefix && <span className="text-xs text-muted-foreground">{tier.prefix}</span>}
-          <span className="text-3xl font-extrabold text-white">{tier.price}</span>
-          {tier.period && <span className="text-muted-foreground text-sm">{tier.period}</span>}
+          {tier.prefix && (
+            <span className="text-xs text-muted-foreground">{tier.prefix}</span>
+          )}
+          <span className="text-3xl font-extrabold text-white">
+            {tier.price}
+          </span>
+          {tier.period && (
+            <span className="text-muted-foreground text-sm">{tier.period}</span>
+          )}
         </div>
         <p className="text-sm text-muted-foreground">{tier.description}</p>
       </div>
@@ -343,7 +426,10 @@ function TierCard({
         ))}
       </ul>
       <div className="space-y-2">
-        <DepositButton serviceKey={tier.depositKey} label="Pay Deposit & Get Started" />
+        <DepositButton
+          serviceKey={tier.depositKey}
+          label="Pay Deposit & Get Started"
+        />
         <Link
           href="/schedule"
           className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
@@ -357,7 +443,9 @@ function TierCard({
 
 export default function Pricing() {
   usePageTitle("Pricing");
-  const [billingInterval, setBillingInterval] = useState<"monthly" | "annual">("monthly");
+  const [billingInterval, setBillingInterval] = useState<"monthly" | "annual">(
+    "monthly",
+  );
 
   return (
     <div className="pt-24 pb-20">
@@ -370,9 +458,12 @@ export default function Pricing() {
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="accent-bar mx-auto mb-6" />
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-6">Value-Based Investment</h1>
+          <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-6">
+            Value-Based Investment
+          </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Flat-fee pricing for predictable cash flow. You pay for outcomes, clarity, and executive-level expertise — not hours.
+            Flat-fee pricing for predictable cash flow. You pay for outcomes,
+            clarity, and executive-level expertise — not hours.
           </p>
           <div className="mt-6 inline-flex items-center gap-2 bg-accent/10 text-accent border border-accent/20 px-4 py-2 rounded-full text-sm font-medium">
             <Shield size={14} /> {TECHNOLOGY_SECURITY_SURCHARGE_COPY}
@@ -384,7 +475,9 @@ export default function Pricing() {
         <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
           <div className="flex items-center gap-3">
             <div className="accent-bar" />
-            <h2 className="text-xs font-mono font-semibold tracking-widest text-accent uppercase">Bookkeeping</h2>
+            <h2 className="text-xs font-mono font-semibold tracking-widest text-accent uppercase">
+              Bookkeeping
+            </h2>
           </div>
           <div className="inline-flex items-center bg-surface border border-white/[0.06] rounded-lg p-1">
             <button
@@ -405,20 +498,33 @@ export default function Pricing() {
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              Annual <span className="text-emerald-400 text-xs ml-1">Save 10%</span>
+              Annual{" "}
+              <span className="text-emerald-400 text-xs ml-1">Save 10%</span>
             </button>
           </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
           {bookkeepingTiers.map((tier) => (
-            <BookkeepingTierCard key={tier.name} tier={tier} accent={tier.featured} billingInterval={billingInterval} />
+            <BookkeepingTierCard
+              key={tier.name}
+              tier={tier}
+              accent={tier.featured}
+              billingInterval={billingInterval}
+            />
           ))}
         </div>
         <div className="glass-card rounded-xl p-5 flex items-start gap-3 max-w-3xl">
           <HelpCircle className="w-4 h-4 text-accent/60 shrink-0 mt-0.5" />
           <p className="text-sm text-muted-foreground">
-            <span className="text-foreground font-medium">How pricing is determined: </span>
-            Final monthly rate is based on transaction volume, number of entities, and niche complexity (crypto, agriculture, multi-currency, etc.). All quotes are flat-fee — no surprise hourly charges. {TECHNOLOGY_SECURITY_SURCHARGE_COPY} This surcharge covers secure cloud infrastructure, encrypted file handling, and software licensing.
+            <span className="text-foreground font-medium">
+              How pricing is determined:{" "}
+            </span>
+            Final monthly rate is based on transaction volume, number of
+            entities, and niche complexity (crypto, agriculture, multi-currency,
+            etc.). All quotes are flat-fee — no surprise hourly charges.{" "}
+            {TECHNOLOGY_SECURITY_SURCHARGE_COPY} This surcharge covers secure
+            cloud infrastructure, encrypted file handling, and software
+            licensing.
           </p>
         </div>
       </section>
@@ -426,7 +532,9 @@ export default function Pricing() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
         <div className="flex items-center gap-3 mb-6">
           <div className="accent-bar" />
-          <h2 className="text-xs font-mono font-semibold tracking-widest text-accent uppercase">Business Plans</h2>
+          <h2 className="text-xs font-mono font-semibold tracking-widest text-accent uppercase">
+            Business Plans
+          </h2>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-4xl mb-6">
           {businessPlanTiers.map((tier) => (
@@ -437,7 +545,9 @@ export default function Pricing() {
           <HelpCircle className="w-4 h-4 text-accent/60 shrink-0 mt-0.5" />
           <p className="text-sm text-muted-foreground">
             <span className="text-foreground font-medium">Turnaround: </span>
-            Most plans are delivered within 2–4 weeks from your completed onboarding call. Rush timelines are available — ask on the discovery call.
+            Most plans are delivered within 2–4 weeks from your completed
+            onboarding call. Rush timelines are available — ask on the discovery
+            call.
           </p>
         </div>
       </section>
@@ -445,16 +555,26 @@ export default function Pricing() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
         <div className="flex items-center gap-3 mb-6">
           <div className="accent-bar" />
-          <h2 className="text-xs font-mono font-semibold tracking-widest text-muted-foreground uppercase">Add-On</h2>
+          <h2 className="text-xs font-mono font-semibold tracking-widest text-muted-foreground uppercase">
+            Add-On
+          </h2>
         </div>
         <div className="glass-card rounded-xl p-6 flex flex-col sm:flex-row items-center gap-6 border-dashed border-white/[0.08] max-w-4xl">
           <div className="shrink-0 text-center sm:text-left">
-            <span className="text-[10px] font-mono tracking-widest text-accent bg-accent/10 px-2 py-1 rounded-full">ADD-ON</span>
-            <h4 className="font-bold text-white text-[15px] mt-2">The Digital Handshake</h4>
-            <p className="text-sm text-muted-foreground mt-1">$1,500 – $3,500+</p>
+            <span className="text-[10px] font-mono tracking-widest text-accent bg-accent/10 px-2 py-1 rounded-full">
+              ADD-ON
+            </span>
+            <h4 className="font-bold text-white text-[15px] mt-2">
+              The Digital Handshake
+            </h4>
+            <p className="text-sm text-muted-foreground mt-1">
+              $1,500 – $3,500+
+            </p>
           </div>
           <div className="flex-grow text-sm text-muted-foreground text-center sm:text-left">
-            If you want a more polished delivery format, ask about packaging your business plan as a custom static website. This add-on is only available alongside a Business Plan engagement.
+            If you want a more polished delivery format, ask about packaging
+            your business plan as a custom static website. This add-on is only
+            available alongside a Business Plan engagement.
           </div>
           <Link
             href="/services/business-plans"
@@ -467,13 +587,24 @@ export default function Pricing() {
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="glass-card rounded-2xl p-10 text-center max-w-3xl mx-auto">
-          <h3 className="text-2xl font-bold text-white mb-3">Not sure which plan fits?</h3>
-          <p className="text-muted-foreground mb-8">Book a free 30-minute discovery call. We'll talk through your situation and give you a clear recommendation — no pressure.</p>
+          <h3 className="text-2xl font-bold text-white mb-3">
+            Not sure which plan fits?
+          </h3>
+          <p className="text-muted-foreground mb-8">
+            Book a free 30-minute discovery call. We'll talk through your
+            situation and give you a clear recommendation — no pressure.
+          </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/schedule" className="px-6 py-3 rounded-lg bg-accent text-white font-semibold text-sm hover:shadow-xl hover:shadow-accent/20 transition-all duration-300">
+            <Link
+              href="/schedule"
+              className="px-6 py-3 rounded-lg bg-accent text-white font-semibold text-sm hover:shadow-xl hover:shadow-accent/20 transition-all duration-300"
+            >
               Book a Free Call <ArrowRight size={15} className="inline ml-1" />
             </Link>
-            <Link href="/faq" className="px-6 py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300">
+            <Link
+              href="/faq"
+              className="px-6 py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
+            >
               Read the FAQ
             </Link>
           </div>

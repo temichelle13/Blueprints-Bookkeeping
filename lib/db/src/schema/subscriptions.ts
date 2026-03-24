@@ -13,8 +13,12 @@ export const subscriptionsTable = pgTable("subscriptions", {
   currentPeriodStart: timestamp("current_period_start", { withTimezone: true }),
   currentPeriodEnd: timestamp("current_period_end", { withTimezone: true }),
   canceledAt: timestamp("canceled_at", { withTimezone: true }),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 });
 
 export const onboardingSubmissionsTable = pgTable("onboarding_submissions", {
@@ -31,10 +35,14 @@ export const onboardingSubmissionsTable = pgTable("onboarding_submissions", {
   notes: text("notes"),
   plan: text("plan"),
   businessState: text("business_state"),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 });
 
 export type Subscription = typeof subscriptionsTable.$inferSelect;
 export type InsertSubscription = typeof subscriptionsTable.$inferInsert;
-export type OnboardingSubmission = typeof onboardingSubmissionsTable.$inferSelect;
-export type InsertOnboardingSubmission = typeof onboardingSubmissionsTable.$inferInsert;
+export type OnboardingSubmission =
+  typeof onboardingSubmissionsTable.$inferSelect;
+export type InsertOnboardingSubmission =
+  typeof onboardingSubmissionsTable.$inferInsert;

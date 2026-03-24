@@ -1,5 +1,16 @@
 import type { ComponentType } from "react";
-import { Award, BadgeCheck, Brain, Code2, FileText, Github, Linkedin, Rss, ShieldCheck, Zap } from "lucide-react";
+import {
+  Award,
+  BadgeCheck,
+  Brain,
+  Code2,
+  FileText,
+  Github,
+  Linkedin,
+  Rss,
+  ShieldCheck,
+  Zap,
+} from "lucide-react";
 
 export type CredentialWithBadge = {
   name: string;
@@ -31,7 +42,8 @@ export const nationalSecurityCerts: CredentialEntry[] = [
   {
     name: "AI + AGI in National Security",
     issuer: "Special Competitive Studies Project (SCSP)",
-    description: "Rare national security credential covering the geopolitical and strategic implications of AI and AGI — issued by the Special Competitive Studies Project, a US government-chartered advisory commission.",
+    description:
+      "Rare national security credential covering the geopolitical and strategic implications of AI and AGI — issued by the Special Competitive Studies Project, a US government-chartered advisory commission.",
     badge: `${base}images/badge-scsp-national-security.png`,
     color: "from-blue-600/10 to-indigo-700/5",
     border: "border-blue-500/20",
@@ -40,7 +52,8 @@ export const nationalSecurityCerts: CredentialEntry[] = [
   {
     name: "AI in National Security: Microcredential",
     issuer: "Special Competitive Studies Project (SCSP)",
-    description: "Microcredential edition of the SCSP national security AI program — focused applied competencies for professionals working at the intersection of technology, intelligence, and policy.",
+    description:
+      "Microcredential edition of the SCSP national security AI program — focused applied competencies for professionals working at the intersection of technology, intelligence, and policy.",
     icon: ShieldCheck,
     color: "from-blue-600/10 to-indigo-700/5",
     border: "border-blue-500/20",
@@ -52,7 +65,8 @@ export const intuitCerts: CredentialWithBadge[] = [
   {
     name: "QuickBooks ProAdvisor — Level 1",
     issuer: "Intuit",
-    description: "Core QuickBooks Online certification covering client onboarding, transaction management, bank reconciliation, and reporting fundamentals.",
+    description:
+      "Core QuickBooks Online certification covering client onboarding, transaction management, bank reconciliation, and reporting fundamentals.",
     badge: `${base}images/badge-qb-level1.png`,
     color: "from-green-500/10 to-emerald-500/5",
     border: "border-green-500/20",
@@ -61,7 +75,8 @@ export const intuitCerts: CredentialWithBadge[] = [
   {
     name: "QuickBooks ProAdvisor — Level 2",
     issuer: "Intuit",
-    description: "Advanced QuickBooks Online certification covering complex workflows, automation, multi-entity management, and accountant-level tools.",
+    description:
+      "Advanced QuickBooks Online certification covering complex workflows, automation, multi-entity management, and accountant-level tools.",
     badge: `${base}images/badge-qb-level2.png`,
     color: "from-green-500/10 to-emerald-500/5",
     border: "border-green-500/20",
@@ -70,7 +85,8 @@ export const intuitCerts: CredentialWithBadge[] = [
   {
     name: "QuickBooks Payroll Certification",
     issuer: "Intuit",
-    description: "Certification in QuickBooks payroll management covering payroll setup, processing, tax compliance, and reporting.",
+    description:
+      "Certification in QuickBooks payroll management covering payroll setup, processing, tax compliance, and reporting.",
     badge: `${base}images/badge-qb-payroll.png`,
     color: "from-green-500/10 to-emerald-500/5",
     border: "border-green-500/20",
@@ -79,7 +95,8 @@ export const intuitCerts: CredentialWithBadge[] = [
   {
     name: "Intuit Bookkeeping Certification",
     issuer: "Intuit",
-    description: "Professional-level bookkeeping certification validating expertise in financial record-keeping, accounts management, and reporting accuracy.",
+    description:
+      "Professional-level bookkeeping certification validating expertise in financial record-keeping, accounts management, and reporting accuracy.",
     badge: `${base}images/badge-intuit-bookkeeping.png`,
     color: "from-blue-500/10 to-indigo-500/5",
     border: "border-blue-500/20",
@@ -88,7 +105,8 @@ export const intuitCerts: CredentialWithBadge[] = [
   {
     name: "Tax Exam — Level 1",
     issuer: "Intuit",
-    description: "Foundational tax knowledge certification covering individual and small business tax concepts, preparation principles, and compliance basics.",
+    description:
+      "Foundational tax knowledge certification covering individual and small business tax concepts, preparation principles, and compliance basics.",
     badge: `${base}images/badge-tax-exam-l1.png`,
     color: "from-blue-500/10 to-indigo-500/5",
     border: "border-blue-500/20",
@@ -100,7 +118,8 @@ export const technologyAndSecurityCerts: CredentialEntry[] = [
   {
     name: "Certified Ethical Hacker (CEH) v12",
     issuer: "Coursera / EC-Council",
-    description: "Three-course specialization covering ethical hacking reconnaissance, system hacking and malware analysis, advanced network attacks, web hacking, and cryptography — directly applied to client data protection.",
+    description:
+      "Three-course specialization covering ethical hacking reconnaissance, system hacking and malware analysis, advanced network attacks, web hacking, and cryptography — directly applied to client data protection.",
     icon: ShieldCheck,
     color: "from-red-500/10 to-rose-500/5",
     border: "border-red-500/20",
@@ -109,7 +128,8 @@ export const technologyAndSecurityCerts: CredentialEntry[] = [
   {
     name: "Foundations of Cybersecurity",
     issuer: "Google",
-    description: "Google-certified cybersecurity training covering threat landscapes, security frameworks, network defense, and data protection best practices.",
+    description:
+      "Google-certified cybersecurity training covering threat landscapes, security frameworks, network defense, and data protection best practices.",
     icon: ShieldCheck,
     color: "from-blue-500/10 to-sky-500/5",
     border: "border-blue-500/20",
@@ -118,7 +138,8 @@ export const technologyAndSecurityCerts: CredentialEntry[] = [
   {
     name: "Google AI Essentials",
     issuer: "Google",
-    description: "Foundational AI literacy certification from Google covering AI principles, practical applications, and responsible AI use in professional settings.",
+    description:
+      "Foundational AI literacy certification from Google covering AI principles, practical applications, and responsible AI use in professional settings.",
     badge: `${base}images/badge-google-ai.png`,
     color: "from-yellow-500/10 to-amber-500/5",
     border: "border-yellow-500/20",
@@ -127,7 +148,8 @@ export const technologyAndSecurityCerts: CredentialEntry[] = [
   {
     name: "Foundations of Business Intelligence",
     issuer: "Google",
-    description: "Google-certified BI training covering data modeling, dashboard design, stakeholder communication, and analytics-driven decision making.",
+    description:
+      "Google-certified BI training covering data modeling, dashboard design, stakeholder communication, and analytics-driven decision making.",
     icon: Zap,
     color: "from-yellow-500/10 to-amber-500/5",
     border: "border-yellow-500/20",
@@ -136,7 +158,8 @@ export const technologyAndSecurityCerts: CredentialEntry[] = [
   {
     name: "Foundations of Project Management",
     issuer: "Google",
-    description: "Google-certified project management training covering methodologies, stakeholder management, risk analysis, and Agile frameworks.",
+    description:
+      "Google-certified project management training covering methodologies, stakeholder management, risk analysis, and Agile frameworks.",
     icon: Award,
     color: "from-yellow-500/10 to-amber-500/5",
     border: "border-yellow-500/20",
@@ -145,7 +168,8 @@ export const technologyAndSecurityCerts: CredentialEntry[] = [
   {
     name: "Economics of Cloud Computing",
     issuer: "Microsoft",
-    description: "Microsoft-certified training covering cloud economics, cost optimization, infrastructure-as-a-service models, and enterprise cloud migration strategy.",
+    description:
+      "Microsoft-certified training covering cloud economics, cost optimization, infrastructure-as-a-service models, and enterprise cloud migration strategy.",
     icon: Zap,
     color: "from-blue-500/10 to-sky-500/5",
     border: "border-blue-500/20",
@@ -154,7 +178,8 @@ export const technologyAndSecurityCerts: CredentialEntry[] = [
   {
     name: "Generative AI Fundamentals",
     issuer: "Databricks",
-    description: "Databricks Academy accreditation covering large language models, generative AI architecture, prompt engineering, and responsible AI deployment.",
+    description:
+      "Databricks Academy accreditation covering large language models, generative AI architecture, prompt engineering, and responsible AI deployment.",
     icon: Brain,
     color: "from-red-500/10 to-orange-500/5",
     border: "border-red-500/20",
@@ -166,7 +191,8 @@ export const aboutSecurityBadges: CredentialWithBadge[] = [
   {
     name: "Cybersecurity Fundamentals",
     issuer: "IBM",
-    description: "IBM-issued foundational badge validating practical cybersecurity skills and core security concepts.",
+    description:
+      "IBM-issued foundational badge validating practical cybersecurity skills and core security concepts.",
     badge: `${base}images/badge-ibm-cybersecurity.png`,
     color: "from-blue-600/20 to-blue-800/20",
     border: "border-blue-500/20",
@@ -175,7 +201,8 @@ export const aboutSecurityBadges: CredentialWithBadge[] = [
   {
     name: "Cybersecurity with Capstone",
     issuer: "IBM",
-    description: "IBM capstone badge covering applied cybersecurity analysis and practical security workflows.",
+    description:
+      "IBM capstone badge covering applied cybersecurity analysis and practical security workflows.",
     badge: `${base}images/badge-ibm-cybersecurity-capstone.png`,
     color: "from-blue-600/20 to-blue-800/20",
     border: "border-blue-500/20",
@@ -184,7 +211,8 @@ export const aboutSecurityBadges: CredentialWithBadge[] = [
   {
     name: "IBM Granite Data Classification",
     issuer: "IBM",
-    description: "IBM-issued badge validating data classification and summarization skills using Granite.",
+    description:
+      "IBM-issued badge validating data classification and summarization skills using Granite.",
     badge: `${base}images/badge-ibm-granite.png`,
     color: "from-blue-600/20 to-blue-800/20",
     border: "border-blue-500/20",
@@ -193,7 +221,8 @@ export const aboutSecurityBadges: CredentialWithBadge[] = [
   {
     name: "Google AI Essentials",
     issuer: "Google",
-    description: "Google-issued AI literacy badge focused on practical and responsible AI use.",
+    description:
+      "Google-issued AI literacy badge focused on practical and responsible AI use.",
     badge: `${base}images/badge-google-ai.png`,
     color: "from-yellow-500/20 to-amber-500/20",
     border: "border-yellow-500/20",
@@ -205,7 +234,8 @@ export const specializedCerts: CredentialWithBadge[] = [
   {
     name: "Advanced Crypto Accounting Certified",
     issuer: "Intuit",
-    description: "Specialized certification covering digital asset taxation, cost-basis methodology, transaction reconciliation, and crypto income reporting.",
+    description:
+      "Specialized certification covering digital asset taxation, cost-basis methodology, transaction reconciliation, and crypto income reporting.",
     badge: `${base}images/badge-crypto-tax.png`,
     color: "from-orange-500/10 to-amber-500/5",
     border: "border-orange-500/20",
@@ -214,7 +244,8 @@ export const specializedCerts: CredentialWithBadge[] = [
   {
     name: "Client Advisory Services Foundations",
     issuer: "Intuit",
-    description: "Certification in delivering strategic advisory services to clients — moving beyond bookkeeping to actionable financial guidance and business insights.",
+    description:
+      "Certification in delivering strategic advisory services to clients — moving beyond bookkeeping to actionable financial guidance and business insights.",
     badge: `${base}images/badge-client-advisory.png`,
     color: "from-accent/10 to-primary/5",
     border: "border-accent/20",
@@ -232,35 +263,41 @@ export const leadershipCerts = [
   {
     title: "Managing Emotions in Times of Uncertainty & Stress",
     school: "Yale University",
-    focus: "Emotional intelligence and resilience frameworks for high-stakes professional environments.",
+    focus:
+      "Emotional intelligence and resilience frameworks for high-stakes professional environments.",
     url: "https://www.coursera.org/account/accomplishments/certificate/7MPSBTXW624E",
   },
   {
     title: "Intro to Psychology",
     school: "Yale University",
-    focus: "Foundational psychology principles covering human behavior, cognition, emotion, and social dynamics.",
+    focus:
+      "Foundational psychology principles covering human behavior, cognition, emotion, and social dynamics.",
     url: "https://coursera.org/share/e9d32ec91ee35b8ad28c00f99aa8dcd7",
   },
   {
     title: "Strategic Innovation and Entrepreneurship",
     school: "University of Illinois",
-    focus: "Innovation frameworks, entrepreneurial strategy, and growth-stage business planning.",
+    focus:
+      "Innovation frameworks, entrepreneurial strategy, and growth-stage business planning.",
     url: "https://www.coursera.org/account/accomplishments/records/MVW4VCQQQ9A2",
   },
   {
     title: "Organizational Management Professional",
     school: "Jack Welch Management Institute",
-    focus: "Leadership strategy, organizational performance, and management excellence.",
+    focus:
+      "Leadership strategy, organizational performance, and management excellence.",
   },
   {
     title: "American Negotiation Professional",
     school: "American Negotiation Institute",
-    focus: "Professional negotiation techniques, conflict resolution, and deal-making strategy.",
+    focus:
+      "Professional negotiation techniques, conflict resolution, and deal-making strategy.",
   },
   {
     title: "Business Communications",
     school: "Dwayne University",
-    focus: "Professional written and verbal communication in business contexts.",
+    focus:
+      "Professional written and verbal communication in business contexts.",
   },
   {
     title: "Software Engineer",
@@ -279,13 +316,19 @@ export const aboutFeaturedBadges: CredentialWithBadge[] = [
   intuitCerts[3],
 ];
 
-export const academicStudies = ["Business", "Equine Science", "Psychology", "Communications"];
+export const academicStudies = [
+  "Business",
+  "Equine Science",
+  "Psychology",
+  "Communications",
+];
 
 export const researchAndWork = [
   {
     title: "The Graph Protocol — Research Paper",
     outlet: "Published Research",
-    description: "Published a research paper on The Graph Protocol covering decentralized query infrastructure, subgraph indexing, and network mechanics. Repository hosted on GitHub.",
+    description:
+      "Published a research paper on The Graph Protocol covering decentralized query infrastructure, subgraph indexing, and network mechanics. Repository hosted on GitHub.",
     icon: FileText,
     color: "from-violet-500/10 to-purple-500/5",
     border: "border-violet-500/20",
@@ -293,7 +336,8 @@ export const researchAndWork = [
   {
     title: "The Graph Sunrise Upgrade Program",
     outlet: "Contributor & Developer",
-    description: "Active contributor and developer in The Graph's Sunrise upgrade program — working on protocol-level improvements and maintaining open-source tooling for graph querying.",
+    description:
+      "Active contributor and developer in The Graph's Sunrise upgrade program — working on protocol-level improvements and maintaining open-source tooling for graph querying.",
     icon: Code2,
     color: "from-blue-500/10 to-indigo-500/5",
     border: "border-blue-500/20",
@@ -301,7 +345,8 @@ export const researchAndWork = [
   {
     title: "Artificial Intelligence & Cryptocurrency",
     outlet: "Medium — Two Publications",
-    description: "Commissioned writer for two Medium publications. Covers artificial intelligence developments, emerging technology, and the evolving cryptocurrency landscape.",
+    description:
+      "Commissioned writer for two Medium publications. Covers artificial intelligence developments, emerging technology, and the evolving cryptocurrency landscape.",
     icon: Rss,
     color: "from-green-500/10 to-emerald-500/5",
     border: "border-green-500/20",
@@ -309,7 +354,8 @@ export const researchAndWork = [
   {
     title: "AI Model Training",
     outlet: "Active Contributor",
-    description: "Contributes to AI model training and development outside of regular client work — applying domain expertise in finance and language to improve model performance and accuracy.",
+    description:
+      "Contributes to AI model training and development outside of regular client work — applying domain expertise in finance and language to improve model performance and accuracy.",
     icon: Brain,
     color: "from-amber-500/10 to-yellow-500/5",
     border: "border-amber-500/20",

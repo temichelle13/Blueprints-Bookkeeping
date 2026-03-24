@@ -3,7 +3,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import { Send, Users, Handshake, Gift, DollarSign, ArrowDown } from "lucide-react";
+import {
+  Send,
+  Users,
+  Handshake,
+  Gift,
+  DollarSign,
+  ArrowDown,
+} from "lucide-react";
 import { useContactMutation } from "@/hooks/use-contact";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
@@ -11,11 +18,15 @@ import { SEO } from "@/components/SEO";
 const referralSchema = z.object({
   referrerName: z.string().min(2, "Your name is required"),
   referrerEmail: z.string().email("Valid email is required"),
-  referrerType: z.enum(["client", "partner"], { required_error: "Please select your referral type" }),
+  referrerType: z.enum(["client", "partner"], {
+    required_error: "Please select your referral type",
+  }),
   referredName: z.string().min(2, "Referred person's name is required"),
   referredContact: z.string().min(2, "Contact info is required"),
   notes: z.string().optional(),
-  smsConsent: z.boolean().refine((val) => val === true, { message: "You must consent to receive text messages and phone calls" }),
+  smsConsent: z.boolean().refine((val) => val === true, {
+    message: "You must consent to receive text messages and phone calls",
+  }),
   website: z.string().max(0).optional(),
 });
 
@@ -40,9 +51,13 @@ export default function Referral() {
             transition={{ duration: 0.5 }}
           >
             <div className="accent-bar mx-auto mb-6" />
-            <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-6">Referral Program</h1>
+            <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-6">
+              Referral Program
+            </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Great businesses grow through great relationships. Earn rewards by connecting us with businesses that need expert bookkeeping and strategic planning.
+              Great businesses grow through great relationships. Earn rewards by
+              connecting us with businesses that need expert bookkeeping and
+              strategic planning.
             </p>
           </motion.div>
         </div>
@@ -60,22 +75,35 @@ export default function Referral() {
               <div className="p-3 bg-accent/10 rounded-xl text-accent">
                 <Users size={24} />
               </div>
-              <h2 className="text-2xl font-display font-bold text-white">Client Referrals</h2>
+              <h2 className="text-2xl font-display font-bold text-white">
+                Client Referrals
+              </h2>
             </div>
             <p className="text-foreground leading-relaxed mb-6">
-              Know a fellow business owner who's drowning in receipts or struggling with their books? Refer them to us and you'll both benefit.
+              Know a fellow business owner who's drowning in receipts or
+              struggling with their books? Refer them to us and you'll both
+              benefit.
             </p>
             <div className="glass-card rounded-xl p-6 mb-6 border border-accent/20">
               <div className="flex items-center gap-3 mb-3">
                 <Gift size={20} className="text-accent" />
-                <h3 className="text-lg font-semibold text-white">Your Reward</h3>
+                <h3 className="text-lg font-semibold text-white">
+                  Your Reward
+                </h3>
               </div>
               <p className="text-foreground leading-relaxed">
-                Receive <span className="text-accent font-bold">one month of bookkeeping service credit</span> (~$500 value) when your referred client signs on and completes their first month of service.
+                Receive{" "}
+                <span className="text-accent font-bold">
+                  one month of bookkeeping service credit
+                </span>{" "}
+                (~$500 value) when your referred client signs on and completes
+                their first month of service.
               </p>
             </div>
             <div className="mt-auto">
-              <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3">How It Works</h4>
+              <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+                How It Works
+              </h4>
               <ol className="space-y-3">
                 {[
                   "Submit the referral form below with your info and your contact's details",
@@ -110,22 +138,34 @@ export default function Referral() {
               <div className="p-3 bg-accent/10 rounded-xl text-accent">
                 <Handshake size={24} />
               </div>
-              <h2 className="text-2xl font-display font-bold text-white">Partner Referrals</h2>
+              <h2 className="text-2xl font-display font-bold text-white">
+                Partner Referrals
+              </h2>
             </div>
             <p className="text-foreground leading-relaxed mb-6">
-              CPAs, attorneys, financial advisors, and other professionals — build a referral partnership that puts money in your pocket while serving your clients better.
+              CPAs, attorneys, financial advisors, and other professionals —
+              build a referral partnership that puts money in your pocket while
+              serving your clients better.
             </p>
             <div className="glass-card rounded-xl p-6 mb-6 border border-accent/20">
               <div className="flex items-center gap-3 mb-3">
                 <DollarSign size={20} className="text-accent" />
-                <h3 className="text-lg font-semibold text-white">Your Reward</h3>
+                <h3 className="text-lg font-semibold text-white">
+                  Your Reward
+                </h3>
               </div>
               <p className="text-foreground leading-relaxed">
-                Earn a <span className="text-accent font-bold">10% revenue share on the first three months</span> of the referred client's engagement, paid after the client pays.
+                Earn a{" "}
+                <span className="text-accent font-bold">
+                  10% revenue share on the first three months
+                </span>{" "}
+                of the referred client's engagement, paid after the client pays.
               </p>
             </div>
             <div className="mt-auto">
-              <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3">Why Partner With Us</h4>
+              <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+                Why Partner With Us
+              </h4>
               <ul className="space-y-3">
                 {[
                   "We handle bookkeeping so you can focus on tax prep, legal, or advisory work",
@@ -156,16 +196,23 @@ export default function Referral() {
         </div>
       </section>
 
-      <section id="referral-form" className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section
+        id="referral-form"
+        className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8"
+      >
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           className="glass-card rounded-2xl p-8 md:p-10"
         >
-          <h2 className="text-2xl font-display font-bold text-white mb-2">Submit a Referral</h2>
+          <h2 className="text-2xl font-display font-bold text-white mb-2">
+            Submit a Referral
+          </h2>
           <p className="text-muted-foreground mb-8 text-[15px]">
-            Fill out the form below and we'll take it from here. We treat every referral with the same care and professionalism you'd expect for yourself.
+            Fill out the form below and we'll take it from here. We treat every
+            referral with the same care and professionalism you'd expect for
+            yourself.
           </p>
           <ReferralForm />
         </motion.div>
@@ -215,7 +262,9 @@ function ReferralForm() {
       return;
     }
 
-    setSubmitError("We couldn't submit your referral. Please try again, or contact us at (541) 319-8654.");
+    setSubmitError(
+      "We couldn't submit your referral. Please try again, or contact us at (541) 319-8654.",
+    );
   };
 
   const inputClass =
@@ -224,7 +273,13 @@ function ReferralForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <input type="text" {...register("website")} className="hidden" tabIndex={-1} autoComplete="off" />
+      <input
+        type="text"
+        {...register("website")}
+        className="hidden"
+        tabIndex={-1}
+        autoComplete="off"
+      />
 
       <div>
         <label className={labelClass}>I am a... *</label>
@@ -243,8 +298,12 @@ function ReferralForm() {
               className="w-4 h-4 accent-accent"
             />
             <div>
-              <span className="text-sm font-medium text-foreground">Current Client</span>
-              <p className="text-xs text-muted-foreground mt-0.5">Earn service credit</p>
+              <span className="text-sm font-medium text-foreground">
+                Current Client
+              </span>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Earn service credit
+              </p>
             </div>
           </label>
           <label
@@ -261,22 +320,34 @@ function ReferralForm() {
               className="w-4 h-4 accent-accent"
             />
             <div>
-              <span className="text-sm font-medium text-foreground">Professional Partner</span>
-              <p className="text-xs text-muted-foreground mt-0.5">Earn revenue share</p>
+              <span className="text-sm font-medium text-foreground">
+                Professional Partner
+              </span>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Earn revenue share
+              </p>
             </div>
           </label>
         </div>
         {errors.referrerType && (
-          <span className="text-destructive text-xs mt-1 block">{errors.referrerType.message}</span>
+          <span className="text-destructive text-xs mt-1 block">
+            {errors.referrerType.message}
+          </span>
         )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label className={labelClass}>Your Name *</label>
-          <input {...register("referrerName")} placeholder="Your full name" className={inputClass} />
+          <input
+            {...register("referrerName")}
+            placeholder="Your full name"
+            className={inputClass}
+          />
           {errors.referrerName && (
-            <span className="text-destructive text-xs mt-1">{errors.referrerName.message}</span>
+            <span className="text-destructive text-xs mt-1">
+              {errors.referrerName.message}
+            </span>
           )}
         </div>
         <div>
@@ -288,7 +359,9 @@ function ReferralForm() {
             className={inputClass}
           />
           {errors.referrerEmail && (
-            <span className="text-destructive text-xs mt-1">{errors.referrerEmail.message}</span>
+            <span className="text-destructive text-xs mt-1">
+              {errors.referrerEmail.message}
+            </span>
           )}
         </div>
       </div>
@@ -304,7 +377,9 @@ function ReferralForm() {
             className={inputClass}
           />
           {errors.referredName && (
-            <span className="text-destructive text-xs mt-1">{errors.referredName.message}</span>
+            <span className="text-destructive text-xs mt-1">
+              {errors.referredName.message}
+            </span>
           )}
         </div>
         <div>
@@ -315,7 +390,9 @@ function ReferralForm() {
             className={inputClass}
           />
           {errors.referredContact && (
-            <span className="text-destructive text-xs mt-1">{errors.referredContact.message}</span>
+            <span className="text-destructive text-xs mt-1">
+              {errors.referredContact.message}
+            </span>
           )}
         </div>
       </div>
@@ -337,12 +414,23 @@ function ReferralForm() {
           {...register("smsConsent")}
           className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer shrink-0"
         />
-        <label htmlFor="referral-sms-consent" className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none">
-          I agree to receive text messages and phone calls from Blueprints &amp; Bookkeeping at my provided contact number. Message and data rates may apply. Reply STOP to opt out.
+        <label
+          htmlFor="referral-sms-consent"
+          className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
+        >
+          I agree to receive text messages and phone calls from Blueprints &amp;
+          Bookkeeping at my provided contact number. Message and data rates may
+          apply. Reply STOP to opt out.
         </label>
       </div>
-      {errors.smsConsent && <span className="text-destructive text-xs -mt-4 block">{errors.smsConsent.message}</span>}
-      {submitError && <p className="text-destructive text-sm -mt-2">{submitError}</p>}
+      {errors.smsConsent && (
+        <span className="text-destructive text-xs -mt-4 block">
+          {errors.smsConsent.message}
+        </span>
+      )}
+      {submitError && (
+        <p className="text-destructive text-sm -mt-2">{submitError}</p>
+      )}
 
       <button
         type="submit"

@@ -1,9 +1,15 @@
 import { Router, type IRouter } from "express";
 import { db, newsletterSubscribersTable } from "@workspace/db";
-import { SubscribeNewsletterBody, UnsubscribeNewsletterBody } from "@workspace/api-zod";
+import {
+  SubscribeNewsletterBody,
+  UnsubscribeNewsletterBody,
+} from "@workspace/api-zod";
 import { eq } from "drizzle-orm";
 import { Resend } from "resend";
-import { isEmailSuppressed, addToSuppressionList } from "../lib/email-suppression";
+import {
+  isEmailSuppressed,
+  addToSuppressionList,
+} from "../lib/email-suppression";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_EMAIL_LENGTH = 320;
@@ -18,15 +24,19 @@ function getResend(): Resend | null {
   return new Resend(key);
 }
 
-const FROM_ADDRESS = "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const FROM_ADDRESS =
+  "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 type UnsubscribeByTokenResult =
   | { status: 200; body: { success: true; message: string } }
   | { status: 400; body: { error: string } }
   | { status: 404; body: { error: string } };
 
-async function unsubscribeByToken(token: unknown): Promise<UnsubscribeByTokenResult> {
+async function unsubscribeByToken(
+  token: unknown,
+): Promise<UnsubscribeByTokenResult> {
   if (!token || typeof token !== "string") {
     return { status: 400, body: { error: "Missing or invalid token." } };
   }
@@ -51,10 +61,19 @@ async function unsubscribeByToken(token: unknown): Promise<UnsubscribeByTokenRes
 
   await addToSuppressionList(rows[0].email, "unsubscribed");
 
-  return { status: 200, body: { success: true, message: "You have been unsubscribed. We're sorry to see you go." } };
+  return {
+    status: 200,
+    body: {
+      success: true,
+      message: "You have been unsubscribed. We're sorry to see you go.",
+    },
+  };
 }
 
-function buildWelcomeEmail(unsubscribeToken: string): { html: string; headers: Record<string, string> } {
+function buildWelcomeEmail(unsubscribeToken: string): {
+  html: string;
+  headers: Record<string, string>;
+} {
   const unsubscribePageUrl = `https://blueprintsandbookkeeping.com/unsubscribe?token=${unsubscribeToken}`;
   const unsubscribeApiUrl = `https://blueprintsandbookkeeping.com/api/newsletter/unsubscribe?token=${unsubscribeToken}`;
   const html = `
@@ -88,17 +107,28 @@ function buildWelcomeEmail(unsubscribeToken: string): { html: string; headers: R
   };
 }
 
-async function sendWelcomeEmail(resend: Resend, email: string, unsubscribeToken: string): Promise<void> {
+async function sendWelcomeEmail(
+  resend: Resend,
+  email: string,
+  unsubscribeToken: string,
+): Promise<void> {
   const { html, headers } = buildWelcomeEmail(unsubscribeToken);
-  await resend.emails.send({
-    from: FROM_ADDRESS,
-    to: email,
-    subject: "Welcome to Blueprints & Bookkeeping",
-    html,
-    headers,
-  }).catch((err: unknown) => {
-    console.error("[Resend] Welcome email failed for", email, "—", err instanceof Error ? err.message : String(err));
-  });
+  await resend.emails
+    .send({
+      from: FROM_ADDRESS,
+      to: email,
+      subject: "Welcome to Blueprints & Bookkeeping",
+      html,
+      headers,
+    })
+    .catch((err: unknown) => {
+      console.error(
+        "[Resend] Welcome email failed for",
+        email,
+        "—",
+        err instanceof Error ? err.message : String(err),
+      );
+    });
 }
 
 const router: IRouter = Router();
@@ -141,7 +171,10 @@ router.post("/newsletter/subscribe", async (req, res): Promise<void> => {
 
       const suppressed = await isEmailSuppressed(email);
       if (suppressed) {
-        console.warn("[Newsletter] Skipping welcome email for reactivated subscriber — address is suppressed:", email);
+        console.warn(
+          "[Newsletter] Skipping welcome email for reactivated subscriber — address is suppressed:",
+          email,
+        );
       } else {
         const resend = getResend();
         if (resend) {
@@ -156,14 +189,22 @@ router.post("/newsletter/subscribe", async (req, res): Promise<void> => {
     return;
   }
 
-  const [inserted] = await db.insert(newsletterSubscribersTable).values({
-    email,
-    signupSource,
-  }).returning({ unsubscribeToken: newsletterSubscribersTable.unsubscribeToken });
+  const [inserted] = await db
+    .insert(newsletterSubscribersTable)
+    .values({
+      email,
+      signupSource,
+    })
+    .returning({
+      unsubscribeToken: newsletterSubscribersTable.unsubscribeToken,
+    });
 
   const suppressed = await isEmailSuppressed(email);
   if (suppressed) {
-    console.warn("[Newsletter] Skipping welcome email — address is suppressed:", email);
+    console.warn(
+      "[Newsletter] Skipping welcome email — address is suppressed:",
+      email,
+    );
     res.status(201).json({
       success: true,
       message: "You're subscribed! Thank you for signing up.",
@@ -175,7 +216,10 @@ router.post("/newsletter/subscribe", async (req, res): Promise<void> => {
   if (resend) {
     await sendWelcomeEmail(resend, email, inserted.unsubscribeToken);
   } else {
-    console.warn("[Newsletter] RESEND_API_KEY not set — skipping welcome email for", email);
+    console.warn(
+      "[Newsletter] RESEND_API_KEY not set — skipping welcome email for",
+      email,
+    );
   }
 
   res.status(201).json({

@@ -42,7 +42,8 @@ export default function CookieConsent() {
   useEffect(() => {
     const handleOpenPreferences = () => setVisible(true);
     window.addEventListener(OPEN_CONSENT_EVENT, handleOpenPreferences);
-    return () => window.removeEventListener(OPEN_CONSENT_EVENT, handleOpenPreferences);
+    return () =>
+      window.removeEventListener(OPEN_CONSENT_EVENT, handleOpenPreferences);
   }, []);
 
   const handleAccept = () => {
@@ -73,14 +74,23 @@ export default function CookieConsent() {
         <div className="mx-auto max-w-md lg:mx-6 lg:max-w-lg lg:ml-auto">
           <div className="pointer-events-auto glass-card rounded-2xl border border-white/[0.08] p-4 shadow-2xl shadow-black/30 sm:p-5">
             <div className="flex items-start gap-3">
-              <div className="mt-0.5 shrink-0 rounded-xl bg-accent/12 p-2 text-accent" aria-hidden="true">
+              <div
+                className="mt-0.5 shrink-0 rounded-xl bg-accent/12 p-2 text-accent"
+                aria-hidden="true"
+              >
                 <Cookie size={18} />
               </div>
               <div className="min-w-0 flex-1">
-                <h2 className="mb-1 text-sm font-semibold text-white">Cookies, kept simple</h2>
+                <h2 className="mb-1 text-sm font-semibold text-white">
+                  Cookies, kept simple
+                </h2>
                 <p className="text-sm leading-6 text-muted-foreground">
-                  Allow analytics cookies, or keep only essential site cookies. You can update this anytime in our{" "}
-                  <a href={`${import.meta.env.BASE_URL}privacy`} className="text-accent hover:underline">
+                  Allow analytics cookies, or keep only essential site cookies.
+                  You can update this anytime in our{" "}
+                  <a
+                    href={`${import.meta.env.BASE_URL}privacy`}
+                    className="text-accent hover:underline"
+                  >
                     Privacy Policy
                   </a>
                   .

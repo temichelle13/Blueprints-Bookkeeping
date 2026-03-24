@@ -14,7 +14,8 @@ function getResend(): Resend | null {
 }
 
 const OWNER_EMAIL = "tea@blueprintsandbookkeeping.com";
-const FROM_ADDRESS = "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
+const FROM_ADDRESS =
+  "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
 const CHAT_MODEL = process.env["OPENAI_CHAT_MODEL"] || "gpt-4.1-mini";
 const isOpenAiConfigured = Boolean(openai);
 
@@ -140,10 +141,7 @@ router.post("/openai/conversations", async (req, res): Promise<void> => {
     return;
   }
 
-  const [conv] = await db
-    .insert(conversations)
-    .values({ title })
-    .returning();
+  const [conv] = await db.insert(conversations).values({ title }).returning();
 
   res.status(201).json({
     id: conv.id,
@@ -188,122 +186,142 @@ router.get("/openai/conversations/:id", async (req, res): Promise<void> => {
   });
 });
 
-router.post("/openai/conversations/:id/messages", async (req, res): Promise<void> => {
-  const id = parseInt(req.params.id, 10);
-  if (isNaN(id)) {
-    res.status(400).json({ error: "Invalid id" });
-    return;
-  }
+router.post(
+  "/openai/conversations/:id/messages",
+  async (req, res): Promise<void> => {
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) {
+      res.status(400).json({ error: "Invalid id" });
+      return;
+    }
 
-  const { content } = req.body;
-  if (!content || typeof content !== "string") {
-    res.status(400).json({ error: "content is required" });
-    return;
-  }
+    const { content } = req.body;
+    if (!content || typeof content !== "string") {
+      res.status(400).json({ error: "content is required" });
+      return;
+    }
 
-  const [conv] = await db
-    .select()
-    .from(conversations)
-    .where(eq(conversations.id, id));
+    const [conv] = await db
+      .select()
+      .from(conversations)
+      .where(eq(conversations.id, id));
 
-  if (!conv) {
-    res.status(404).json({ error: "Conversation not found" });
-    return;
-  }
-
-  await db.insert(messages).values({
-    conversationId: id,
-    role: "user",
-    content,
-  });
-
-  const history = await db
-    .select()
-    .from(messages)
-    .where(eq(messages.conversationId, id));
-
-  const chatMessages = history.map((m) => ({
-    role: m.role as "user" | "assistant" | "system",
-    content: m.content,
-  }));
-
-  res.setHeader("Content-Type", "text/event-stream");
-  res.setHeader("Cache-Control", "no-cache");
-  res.setHeader("Connection", "keep-alive");
-
-  let fullResponse = "";
-
-  if (!isOpenAiConfigured || !openai) {
-    const fallback = "Aria is temporarily offline right now. Please use the contact form, email tea@blueprintsandbookkeeping.com, or book a discovery call and Tea will follow up personally.";
-    res.write(`data: ${JSON.stringify({ content: fallback })}
-
-`);
-    await db.insert(messages).values({
-      conversationId: id,
-      role: "assistant",
-      content: fallback,
-    });
-    res.write(`data: ${JSON.stringify({ done: true })}
-
-`);
-    res.end();
-    return;
-  }
-
-  try {
-    const stream = await openai.chat.completions.create({
-      model: CHAT_MODEL,
-      max_completion_tokens: 4096,
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        ...chatMessages,
-      ],
-      stream: true,
-    });
-
-    for await (const chunk of stream) {
-      const delta = chunk.choices[0]?.delta?.content;
-      if (delta) {
-        fullResponse += delta;
-        res.write(`data: ${JSON.stringify({ content: delta })}\n\n`);
-      }
+    if (!conv) {
+      res.status(404).json({ error: "Conversation not found" });
+      return;
     }
 
     await db.insert(messages).values({
       conversationId: id,
-      role: "assistant",
-      content: fullResponse,
+      role: "user",
+      content,
     });
 
-    await checkAndNotifyTea(content, fullResponse, id);
+    const history = await db
+      .select()
+      .from(messages)
+      .where(eq(messages.conversationId, id));
 
-    res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
-  } catch (err) {
-    console.error("Chat error:", err);
-    res.write(`data: ${JSON.stringify({ error: "Something went wrong. Please try again." })}\n\n`);
-  }
+    const chatMessages = history.map((m) => ({
+      role: m.role as "user" | "assistant" | "system",
+      content: m.content,
+    }));
 
-  res.end();
-});
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
+
+    let fullResponse = "";
+
+    if (!isOpenAiConfigured || !openai) {
+      const fallback =
+        "Aria is temporarily offline right now. Please use the contact form, email tea@blueprintsandbookkeeping.com, or book a discovery call and Tea will follow up personally.";
+      res.write(`data: ${JSON.stringify({ content: fallback })}
+
+`);
+      await db.insert(messages).values({
+        conversationId: id,
+        role: "assistant",
+        content: fallback,
+      });
+      res.write(`data: ${JSON.stringify({ done: true })}
+
+`);
+      res.end();
+      return;
+    }
+
+    try {
+      const stream = await openai.chat.completions.create({
+        model: CHAT_MODEL,
+        max_completion_tokens: 4096,
+        messages: [{ role: "system", content: SYSTEM_PROMPT }, ...chatMessages],
+        stream: true,
+      });
+
+      for await (const chunk of stream) {
+        const delta = chunk.choices[0]?.delta?.content;
+        if (delta) {
+          fullResponse += delta;
+          res.write(`data: ${JSON.stringify({ content: delta })}\n\n`);
+        }
+      }
+
+      await db.insert(messages).values({
+        conversationId: id,
+        role: "assistant",
+        content: fullResponse,
+      });
+
+      await checkAndNotifyTea(content, fullResponse, id);
+
+      res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
+    } catch (err) {
+      console.error("Chat error:", err);
+      res.write(
+        `data: ${JSON.stringify({ error: "Something went wrong. Please try again." })}\n\n`,
+      );
+    }
+
+    res.end();
+  },
+);
 
 async function checkAndNotifyTea(
   userMessage: string,
   assistantResponse: string,
-  conversationId: number
+  conversationId: number,
 ): Promise<void> {
   const lowerUser = userMessage.toLowerCase();
   const lowerAssistant = assistantResponse.toLowerCase();
 
   const leadKeywords = [
-    "my name is", "i'm interested", "i want to get started", "sign me up",
-    "how do i start", "reach out", "contact me", "follow up", "my email",
-    "my phone", "my number", "call me", "email me", "i'd like to", "id like to",
-    "ready to start", "ready to move forward", "i need help with", "i run a",
-    "my business", "how much would it cost", "what would it cost",
+    "my name is",
+    "i'm interested",
+    "i want to get started",
+    "sign me up",
+    "how do i start",
+    "reach out",
+    "contact me",
+    "follow up",
+    "my email",
+    "my phone",
+    "my number",
+    "call me",
+    "email me",
+    "i'd like to",
+    "id like to",
+    "ready to start",
+    "ready to move forward",
+    "i need help with",
+    "i run a",
+    "my business",
+    "how much would it cost",
+    "what would it cost",
   ];
 
   const isLead = leadKeywords.some(
-    (kw) => lowerUser.includes(kw) || lowerAssistant.includes(kw)
+    (kw) => lowerUser.includes(kw) || lowerAssistant.includes(kw),
   );
 
   if (!isLead) return;
@@ -313,11 +331,12 @@ async function checkAndNotifyTea(
 
   const preview = assistantResponse.slice(0, 300);
 
-  await resend.emails.send({
-    from: FROM_ADDRESS,
-    to: OWNER_EMAIL,
-    subject: `Aria Chat Lead — Conversation #${conversationId}`,
-    html: `
+  await resend.emails
+    .send({
+      from: FROM_ADDRESS,
+      to: OWNER_EMAIL,
+      subject: `Aria Chat Lead — Conversation #${conversationId}`,
+      html: `
       <div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
         <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
           <h1 style="color:white;margin:0;font-size:20px;">New Chat Lead — Aria Assistant</h1>
@@ -335,7 +354,8 @@ async function checkAndNotifyTea(
           <p style="margin-top:24px;font-size:13px;color:#999;">This visitor appears to be interested in your services. Consider reaching out directly.</p>
         </div>
       </div>`,
-  }).catch(() => {});
+    })
+    .catch(() => {});
 }
 
 export default router;

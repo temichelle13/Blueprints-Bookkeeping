@@ -1,13 +1,26 @@
-const PLAUSIBLE_DOMAIN = import.meta.env.VITE_ANALYTICS_ID as string | undefined;
-const GA_MEASUREMENT_ID = (import.meta.env.VITE_GA_MEASUREMENT_ID as string | undefined) || "G-XYLJ9XZ2SL";
-const GTM_CONTAINER_ID = (import.meta.env.VITE_GTM_ID as string | undefined) || "GTM-5T5S2TFG";
-const APOLLO_APP_ID = (import.meta.env.VITE_APOLLO_APP_ID as string | undefined) || "69b73acda386f500112ae77b";
+const PLAUSIBLE_DOMAIN = import.meta.env.VITE_ANALYTICS_ID as
+  | string
+  | undefined;
+const GA_MEASUREMENT_ID =
+  (import.meta.env.VITE_GA_MEASUREMENT_ID as string | undefined) ||
+  "G-XYLJ9XZ2SL";
+const GTM_CONTAINER_ID =
+  (import.meta.env.VITE_GTM_ID as string | undefined) || "GTM-5T5S2TFG";
+const APOLLO_APP_ID =
+  (import.meta.env.VITE_APOLLO_APP_ID as string | undefined) ||
+  "69b73acda386f500112ae77b";
 
 let initialized = false;
 let pendingApolloPageUrl: string | null = null;
 
-function ensureScript(id: string, src: string, attributes?: Record<string, string>): HTMLScriptElement {
-  const existing = document.querySelector<HTMLScriptElement>(`script[data-analytics-script="${id}"]`);
+function ensureScript(
+  id: string,
+  src: string,
+  attributes?: Record<string, string>,
+): HTMLScriptElement {
+  const existing = document.querySelector<HTMLScriptElement>(
+    `script[data-analytics-script="${id}"]`,
+  );
   if (existing) return existing;
 
   const script = document.createElement("script");
@@ -47,11 +60,16 @@ function initGoogleAnalytics(): void {
   if (!GA_MEASUREMENT_ID) return;
 
   window.dataLayer = window.dataLayer || [];
-  window.gtag = window.gtag || function (...args: unknown[]) {
-    window.dataLayer?.push(args);
-  };
+  window.gtag =
+    window.gtag ||
+    function (...args: unknown[]) {
+      window.dataLayer?.push(args);
+    };
 
-  ensureScript("google-analytics", `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`);
+  ensureScript(
+    "google-analytics",
+    `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`,
+  );
 
   window.gtag("js", new Date());
   window.gtag("config", GA_MEASUREMENT_ID, { send_page_view: false });
@@ -66,7 +84,10 @@ function initGoogleTagManager(): void {
     event: "gtm.js",
   });
 
-  ensureScript("google-tag-manager", `https://www.googletagmanager.com/gtm.js?id=${GTM_CONTAINER_ID}`);
+  ensureScript(
+    "google-tag-manager",
+    `https://www.googletagmanager.com/gtm.js?id=${GTM_CONTAINER_ID}`,
+  );
 }
 
 function flushApolloPageview(): void {
@@ -125,7 +146,10 @@ export function trackPageview(): void {
 
   if (typeof window.gtag === "function") {
     window.gtag("event", "page_view", {
-      page_path: window.location.pathname + window.location.search + window.location.hash,
+      page_path:
+        window.location.pathname +
+        window.location.search +
+        window.location.hash,
       page_location: pageUrl,
       page_title: document.title,
     });
@@ -139,7 +163,10 @@ export function trackPageview(): void {
   pendingApolloPageUrl = pageUrl;
 }
 
-export function trackEvent(name: string, props?: Record<string, string | number | boolean>): void {
+export function trackEvent(
+  name: string,
+  props?: Record<string, string | number | boolean>,
+): void {
   if (!initialized) return;
 
   if (props) {

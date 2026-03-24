@@ -152,7 +152,9 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
       <div
         className={`overflow-hidden transition-all duration-300 ${open ? "max-h-96 pb-5" : "max-h-0"}`}
       >
-        <p className="text-sm text-muted-foreground leading-relaxed">{answer}</p>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          {answer}
+        </p>
       </div>
     </div>
   );
@@ -177,8 +179,9 @@ export default function BusinessPlanning() {
               Business Planning Services
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-              From startup blueprints to comprehensive financial models — we build
-              business plans that clarify your direction and communicate your vision.
+              From startup blueprints to comprehensive financial models — we
+              build business plans that clarify your direction and communicate
+              your vision.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
@@ -204,8 +207,9 @@ export default function BusinessPlanning() {
             What We Offer
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Every business is different. We tailor each plan to your stage, industry,
-            and goals — whether you're launching, growing, or planning your next move.
+            Every business is different. We tailor each plan to your stage,
+            industry, and goals — whether you're launching, growing, or planning
+            your next move.
           </p>
         </motion.div>
 
@@ -271,11 +275,13 @@ export default function BusinessPlanning() {
                 </h2>
                 <p className="text-muted-foreground text-[15px] leading-relaxed mb-6">
                   We're proud to be a{" "}
-                  <strong className="text-foreground">LivePlan Certified Advisor</strong>{" "}
-                  — part of a select network of financial professionals trusted by the
-                  leading business planning platform. LivePlan is used by over 1 million
-                  entrepreneurs and is recommended by SCORE and business advisors
-                  nationwide.
+                  <strong className="text-foreground">
+                    LivePlan Certified Advisor
+                  </strong>{" "}
+                  — part of a select network of financial professionals trusted
+                  by the leading business planning platform. LivePlan is used by
+                  over 1 million entrepreneurs and is recommended by SCORE and
+                  business advisors nationwide.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
                   {[
@@ -288,15 +294,18 @@ export default function BusinessPlanning() {
                   ].map((benefit) => (
                     <div key={benefit} className="flex items-start gap-2">
                       <CheckCircle2 className="w-4 h-4 text-accent shrink-0 mt-0.5" />
-                      <span className="text-[14px] text-foreground">{benefit}</span>
+                      <span className="text-[14px] text-foreground">
+                        {benefit}
+                      </span>
                     </div>
                   ))}
                 </div>
                 <p className="text-muted-foreground text-sm leading-relaxed mb-6">
                   When you work with us, you get the power of LivePlan's
-                  professional-grade software combined with hands-on advisory from a real
-                  financial expert. We handle the heavy lifting — you get a plan that's
-                  ready for banks, partners, and your own strategic clarity.
+                  professional-grade software combined with hands-on advisory
+                  from a real financial expert. We handle the heavy lifting —
+                  you get a plan that's ready for banks, partners, and your own
+                  strategic clarity.
                 </p>
                 <div className="flex flex-wrap gap-4">
                   <a
@@ -330,8 +339,8 @@ export default function BusinessPlanning() {
             Our Process
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            A proven, collaborative approach that produces plans built on real data
-            and strategic thinking.
+            A proven, collaborative approach that produces plans built on real
+            data and strategic thinking.
           </p>
         </motion.div>
 
@@ -348,7 +357,9 @@ export default function BusinessPlanning() {
               <span className="text-3xl font-display font-bold text-accent/30 mb-3 block">
                 {step.step}
               </span>
-              <h3 className="text-lg font-bold text-white mb-2">{step.title}</h3>
+              <h3 className="text-lg font-bold text-white mb-2">
+                {step.title}
+              </h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 {step.description}
               </p>
@@ -364,12 +375,13 @@ export default function BusinessPlanning() {
           </h2>
         </motion.div>
 
-        <motion.div
-          {...fadeUp}
-          className="glass-card rounded-2xl p-6 md:p-8"
-        >
+        <motion.div {...fadeUp} className="glass-card rounded-2xl p-6 md:p-8">
           {faqs.map((faq) => (
-            <FAQItem key={faq.question} question={faq.question} answer={faq.answer} />
+            <FAQItem
+              key={faq.question}
+              question={faq.question}
+              answer={faq.answer}
+            />
           ))}
         </motion.div>
       </section>
@@ -385,8 +397,9 @@ export default function BusinessPlanning() {
               Ready to Build Your Business Plan?
             </h2>
             <p className="text-muted-foreground mb-8">
-              Whether you're planning a launch, charting your next phase of growth, or
-              just need a clear picture of where you're going — let's build a plan that gets you there.
+              Whether you're planning a launch, charting your next phase of
+              growth, or just need a clear picture of where you're going — let's
+              build a plan that gets you there.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
@@ -409,12 +422,15 @@ export default function BusinessPlanning() {
       <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <p className="text-xs text-muted-foreground/60 leading-relaxed">
-            <strong className="text-muted-foreground/80">Affiliate Disclosure:</strong>{" "}
-            Blueprints & Bookkeeping is a LivePlan Certified Advisor and may earn a
-            commission when clients sign up for LivePlan directly through our referral
-            links. This does not affect the price you pay or the quality of our
-            advisory services. We recommend LivePlan because we genuinely believe it's
-            the best tool for building rigorous, professional business plans.
+            <strong className="text-muted-foreground/80">
+              Affiliate Disclosure:
+            </strong>{" "}
+            Blueprints & Bookkeeping is a LivePlan Certified Advisor and may
+            earn a commission when clients sign up for LivePlan directly through
+            our referral links. This does not affect the price you pay or the
+            quality of our advisory services. We recommend LivePlan because we
+            genuinely believe it's the best tool for building rigorous,
+            professional business plans.
           </p>
         </div>
       </section>

@@ -12,10 +12,13 @@ export default function NotFound() {
           <Search className="w-9 h-9 text-accent" />
         </div>
 
-        <h1 className="text-6xl md:text-7xl font-display font-extrabold text-white mb-4">404</h1>
+        <h1 className="text-6xl md:text-7xl font-display font-extrabold text-white mb-4">
+          404
+        </h1>
         <p className="text-xl text-muted-foreground mb-2">Page not found</p>
         <p className="text-muted-foreground text-[15px] leading-relaxed max-w-md mx-auto mb-10">
-          The page you're looking for doesn't exist or may have been moved. Let's get you back on track.
+          The page you're looking for doesn't exist or may have been moved.
+          Let's get you back on track.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -35,10 +38,21 @@ export default function NotFound() {
         </div>
 
         <div className="mt-12 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
-          <Link href="/services" className="hover:text-accent transition-colors">Services</Link>
-          <Link href="/pricing" className="hover:text-accent transition-colors">Pricing</Link>
-          <Link href="/faq" className="hover:text-accent transition-colors">FAQ</Link>
-          <Link href="/blog" className="hover:text-accent transition-colors">Blog</Link>
+          <Link
+            href="/services"
+            className="hover:text-accent transition-colors"
+          >
+            Services
+          </Link>
+          <Link href="/pricing" className="hover:text-accent transition-colors">
+            Pricing
+          </Link>
+          <Link href="/faq" className="hover:text-accent transition-colors">
+            FAQ
+          </Link>
+          <Link href="/blog" className="hover:text-accent transition-colors">
+            Blog
+          </Link>
         </div>
       </div>
     </div>

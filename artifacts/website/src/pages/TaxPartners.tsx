@@ -30,7 +30,13 @@ import {
   type TaxPartner,
 } from "@/data/tax-partners";
 
-function PartnerCard({ partner, index }: { partner: TaxPartner; index: number }) {
+function PartnerCard({
+  partner,
+  index,
+}: {
+  partner: TaxPartner;
+  index: number;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -41,7 +47,9 @@ function PartnerCard({ partner, index }: { partner: TaxPartner; index: number })
     >
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-lg font-bold text-white mb-1">{partner.firmName}</h3>
+          <h3 className="text-lg font-bold text-white mb-1">
+            {partner.firmName}
+          </h3>
           <p className="text-sm text-muted-foreground">{partner.contactName}</p>
         </div>
         <div className="flex gap-1.5">
@@ -72,7 +80,9 @@ function PartnerCard({ partner, index }: { partner: TaxPartner; index: number })
 
       {!partner.nationwide && (
         <div className="mb-4">
-          <p className="text-xs text-muted-foreground mb-1.5">States Licensed:</p>
+          <p className="text-xs text-muted-foreground mb-1.5">
+            States Licensed:
+          </p>
           <div className="flex flex-wrap gap-1">
             {partner.statesCovered.map((state) => (
               <span
@@ -129,7 +139,9 @@ const joinNetworkSchema = z.object({
   statesLicensed: z.string().min(2, "States licensed are required"),
   specialties: z.string().min(2, "Specialties are required"),
   message: z.string().optional(),
-  smsConsent: z.boolean().refine((val) => val === true, { message: "You must consent to receive text messages and phone calls" }),
+  smsConsent: z.boolean().refine((val) => val === true, {
+    message: "You must consent to receive text messages and phone calls",
+  }),
 });
 
 function JoinNetworkForm() {
@@ -152,7 +164,10 @@ function JoinNetworkForm() {
     e.preventDefault();
     const parsed = joinNetworkSchema.safeParse(formData);
     if (!parsed.success) {
-      setFormError(parsed.error.issues[0]?.message ?? "Please review your application details and try again.");
+      setFormError(
+        parsed.error.issues[0]?.message ??
+          "Please review your application details and try again.",
+      );
       return;
     }
 
@@ -161,7 +176,7 @@ function JoinNetworkForm() {
       formType: "quick" as const,
       name: formData.contactName,
       email: formData.email,
-message: `[Tax Partner Network Application]
+      message: `[Tax Partner Network Application]
 Firm: ${formData.firmName}
 Credentials: ${formData.credentials}
 States Licensed: ${formData.statesLicensed}
@@ -169,15 +184,17 @@ Specialties: ${formData.specialties}
 Phone: ${formData.phone}
 
 Additional Info: ${formData.message}`,
-smsConsent: formData.smsConsent,
-website: "",
+      smsConsent: formData.smsConsent,
+      website: "",
     });
     if (success) {
       setSubmitted(true);
       return;
     }
 
-    setFormError("We couldn't submit your application. Please try again, or contact us at (541) 319-8654.");
+    setFormError(
+      "We couldn't submit your application. Please try again, or contact us at (541) 319-8654.",
+    );
   };
 
   if (submitted) {
@@ -186,41 +203,56 @@ website: "",
         <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-4">
           <CheckCircle2 className="w-8 h-8 text-accent" />
         </div>
-        <h3 className="text-xl font-bold text-white mb-2">Application Received</h3>
+        <h3 className="text-xl font-bold text-white mb-2">
+          Application Received
+        </h3>
         <p className="text-muted-foreground max-w-md mx-auto">
-          Thank you for your interest in joining our Tax Partner Network. We'll review your
-          application and be in touch within 5 business days.
+          Thank you for your interest in joining our Tax Partner Network. We'll
+          review your application and be in touch within 5 business days.
         </p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <form
+      onSubmit={handleSubmit}
+      className="grid grid-cols-1 md:grid-cols-2 gap-5"
+    >
       <div>
-        <label className="block text-sm font-medium text-foreground mb-1.5">Firm Name *</label>
+        <label className="block text-sm font-medium text-foreground mb-1.5">
+          Firm Name *
+        </label>
         <input
           required
           type="text"
           value={formData.firmName}
-          onChange={(e) => setFormData({ ...formData, firmName: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, firmName: e.target.value })
+          }
           className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/25 transition-all"
           placeholder="Your firm name"
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-foreground mb-1.5">Contact Name *</label>
+        <label className="block text-sm font-medium text-foreground mb-1.5">
+          Contact Name *
+        </label>
         <input
           required
           type="text"
           value={formData.contactName}
-          onChange={(e) => setFormData({ ...formData, contactName: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, contactName: e.target.value })
+          }
           className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/25 transition-all"
           placeholder="Full name"
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-foreground mb-1.5">Email *</label>
+        <label className="block text-sm font-medium text-foreground mb-1.5">
+          Email *
+        </label>
         <input
           required
           type="email"
@@ -231,7 +263,9 @@ website: "",
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-foreground mb-1.5">Phone</label>
+        <label className="block text-sm font-medium text-foreground mb-1.5">
+          Phone
+        </label>
         <input
           type="tel"
           value={formData.phone}
@@ -241,44 +275,60 @@ website: "",
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-foreground mb-1.5">Credentials *</label>
+        <label className="block text-sm font-medium text-foreground mb-1.5">
+          Credentials *
+        </label>
         <input
           required
           type="text"
           value={formData.credentials}
-          onChange={(e) => setFormData({ ...formData, credentials: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, credentials: e.target.value })
+          }
           className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/25 transition-all"
           placeholder="CPA, EA, MST, etc."
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-foreground mb-1.5">States Licensed In *</label>
+        <label className="block text-sm font-medium text-foreground mb-1.5">
+          States Licensed In *
+        </label>
         <input
           required
           type="text"
           value={formData.statesLicensed}
-          onChange={(e) => setFormData({ ...formData, statesLicensed: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, statesLicensed: e.target.value })
+          }
           className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/25 transition-all"
           placeholder="Oregon, Washington, California..."
         />
       </div>
       <div className="md:col-span-2">
-        <label className="block text-sm font-medium text-foreground mb-1.5">Specialties *</label>
+        <label className="block text-sm font-medium text-foreground mb-1.5">
+          Specialties *
+        </label>
         <input
           required
           type="text"
           value={formData.specialties}
-          onChange={(e) => setFormData({ ...formData, specialties: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, specialties: e.target.value })
+          }
           className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/25 transition-all"
           placeholder="Crypto, agriculture, multi-entity, individual, etc."
         />
       </div>
       <div className="md:col-span-2">
-        <label className="block text-sm font-medium text-foreground mb-1.5">Additional Information</label>
+        <label className="block text-sm font-medium text-foreground mb-1.5">
+          Additional Information
+        </label>
         <textarea
           rows={3}
           value={formData.message}
-          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, message: e.target.value })
+          }
           className="w-full px-4 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/25 transition-all resize-none"
           placeholder="Tell us about your practice and why you'd like to join the network..."
         />
@@ -295,12 +345,19 @@ website: "",
             }}
             className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer shrink-0"
           />
-          <label htmlFor="tax-partner-sms-consent" className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none">
-            I agree to receive text messages and phone calls from Blueprints &amp; Bookkeeping at my provided contact number. Message and data rates may apply. Reply STOP to opt out.
+          <label
+            htmlFor="tax-partner-sms-consent"
+            className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
+          >
+            I agree to receive text messages and phone calls from Blueprints
+            &amp; Bookkeeping at my provided contact number. Message and data
+            rates may apply. Reply STOP to opt out.
           </label>
         </div>
       </div>
-      {formError && <p className="md:col-span-2 text-destructive text-sm">{formError}</p>}
+      {formError && (
+        <p className="md:col-span-2 text-destructive text-sm">{formError}</p>
+      )}
       <div className="md:col-span-2">
         <button
           type="submit"
@@ -364,7 +421,8 @@ export default function TaxPartners() {
     setSelectedRegion("");
   };
 
-  const hasActiveFilters = searchQuery || selectedState || selectedSpecialty || selectedRegion;
+  const hasActiveFilters =
+    searchQuery || selectedState || selectedSpecialty || selectedRegion;
 
   return (
     <div className="pt-24 pb-20">
@@ -385,7 +443,9 @@ export default function TaxPartners() {
             className="flex items-center gap-2 px-4 py-2 rounded-full border border-accent/20 bg-accent/5 backdrop-blur-sm mb-8 w-fit mx-auto"
           >
             <Handshake size={16} className="text-accent" />
-            <span className="text-sm font-medium text-accent">Trusted Professionals &mdash; Vetted by Us</span>
+            <span className="text-sm font-medium text-accent">
+              Trusted Professionals &mdash; Vetted by Us
+            </span>
           </motion.div>
 
           <motion.h1
@@ -394,8 +454,7 @@ export default function TaxPartners() {
             transition={{ delay: 0.1 }}
             className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white mb-6"
           >
-            Tax Partner{" "}
-            <span className="text-gradient">Network</span>
+            Tax Partner <span className="text-gradient">Network</span>
           </motion.h1>
 
           <motion.p
@@ -404,9 +463,10 @@ export default function TaxPartners() {
             transition={{ delay: 0.2 }}
             className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed"
           >
-            While we focus on bookkeeping and business plans, tax season demands specialists.
-            Our curated network of vetted, US-based tax professionals ensures a seamless
-            handoff — so your financials stay clean from ledger to return.
+            While we focus on bookkeeping and business plans, tax season demands
+            specialists. Our curated network of vetted, US-based tax
+            professionals ensures a seamless handoff — so your financials stay
+            clean from ledger to return.
           </motion.p>
 
           <motion.div
@@ -420,7 +480,10 @@ export default function TaxPartners() {
               className="group px-8 py-4 rounded-xl bg-accent text-white font-semibold text-lg shadow-xl shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
             >
               Browse Partners
-              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+              <ArrowRight
+                size={20}
+                className="group-hover:translate-x-1 transition-transform"
+              />
             </a>
             <a
               href="#join"
@@ -462,28 +525,36 @@ export default function TaxPartners() {
               <div className="w-12 h-12 rounded-xl bg-accent/10 text-accent flex items-center justify-center mx-auto mb-4">
                 {item.icon}
               </div>
-              <h3 className="text-lg font-bold text-white mb-2">{item.title}</h3>
+              <h3 className="text-lg font-bold text-white mb-2">
+                {item.title}
+              </h3>
               <p className="text-sm text-muted-foreground">{item.desc}</p>
             </motion.div>
           ))}
         </div>
       </section>
 
-      <section id="directory" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+      <section
+        id="directory"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20"
+      >
         <div className="flex flex-col items-center text-center mb-10">
           <div className="accent-bar mb-6" />
           <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
             Find a Tax Partner
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl">
-            Search by state, specialty, or region to find the right tax professional for your needs.
+            Search by state, specialty, or region to find the right tax
+            professional for your needs.
           </p>
         </div>
 
         <div className="glass-card rounded-2xl p-6 mb-8">
           <div className="flex items-center gap-2 mb-4">
             <Filter size={16} className="text-accent" />
-            <span className="text-sm font-medium text-foreground">Filter Partners</span>
+            <span className="text-sm font-medium text-foreground">
+              Filter Partners
+            </span>
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
@@ -495,7 +566,10 @@ export default function TaxPartners() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="relative">
-              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Search
+                size={16}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+              />
               <input
                 type="text"
                 placeholder="Search by name or keyword..."
@@ -517,7 +591,10 @@ export default function TaxPartners() {
                   </option>
                 ))}
               </select>
-              <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+              <ChevronDown
+                size={16}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
+              />
             </div>
             <div className="relative">
               <select
@@ -532,7 +609,10 @@ export default function TaxPartners() {
                   </option>
                 ))}
               </select>
-              <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+              <ChevronDown
+                size={16}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
+              />
             </div>
             <div className="relative">
               <select
@@ -547,7 +627,10 @@ export default function TaxPartners() {
                   </option>
                 ))}
               </select>
-              <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+              <ChevronDown
+                size={16}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
+              />
             </div>
           </div>
         </div>
@@ -566,16 +649,28 @@ export default function TaxPartners() {
           </div>
         ) : taxPartners.length === 0 ? (
           <div className="glass-card rounded-2xl p-12 text-center">
-            <Handshake size={40} className="text-muted-foreground mx-auto mb-4 opacity-40" />
-            <h3 className="text-lg font-bold text-white mb-2">Network Building</h3>
+            <Handshake
+              size={40}
+              className="text-muted-foreground mx-auto mb-4 opacity-40"
+            />
+            <h3 className="text-lg font-bold text-white mb-2">
+              Network Building
+            </h3>
             <p className="text-muted-foreground mb-4 max-w-sm mx-auto">
-              We're carefully vetting licensed CPA and EA partners. Use the form below to apply — qualified firms will be listed here once verified.
+              We're carefully vetting licensed CPA and EA partners. Use the form
+              below to apply — qualified firms will be listed here once
+              verified.
             </p>
           </div>
         ) : (
           <div className="glass-card rounded-2xl p-12 text-center">
-            <Search size={40} className="text-muted-foreground mx-auto mb-4 opacity-40" />
-            <h3 className="text-lg font-bold text-white mb-2">No Partners Found</h3>
+            <Search
+              size={40}
+              className="text-muted-foreground mx-auto mb-4 opacity-40"
+            />
+            <h3 className="text-lg font-bold text-white mb-2">
+              No Partners Found
+            </h3>
             <p className="text-muted-foreground mb-4">
               Try adjusting your search filters or browse all partners.
             </p>
@@ -598,9 +693,12 @@ export default function TaxPartners() {
               </div>
             </div>
             <div className="flex-grow">
-              <h3 className="text-xl font-bold text-white mb-2">How the Handoff Works</h3>
+              <h3 className="text-xl font-bold text-white mb-2">
+                How the Handoff Works
+              </h3>
               <p className="text-muted-foreground text-[15px] mb-5">
-                Our bookkeeping clients get a seamless experience when tax season arrives. Here's the process:
+                Our bookkeeping clients get a seamless experience when tax
+                season arrives. Here's the process:
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 {[
@@ -621,8 +719,12 @@ export default function TaxPartners() {
                   },
                 ].map((item, i) => (
                   <div key={i} className="text-center">
-                    <div className="text-2xl font-display font-bold text-accent/40 mb-2">{item.step}</div>
-                    <h4 className="text-sm font-bold text-white mb-1">{item.title}</h4>
+                    <div className="text-2xl font-display font-bold text-accent/40 mb-2">
+                      {item.step}
+                    </div>
+                    <h4 className="text-sm font-bold text-white mb-1">
+                      {item.title}
+                    </h4>
                     <p className="text-xs text-muted-foreground">{item.desc}</p>
                   </div>
                 ))}
@@ -632,15 +734,18 @@ export default function TaxPartners() {
         </div>
       </section>
 
-      <section id="join" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+      <section
+        id="join"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20"
+      >
         <div className="flex flex-col items-center text-center mb-10">
           <div className="accent-bar mb-6" />
           <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
             Join the Network
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl">
-            Are you a licensed CPA, EA, or tax professional? Apply to join our vetted partner
-            network and receive client referrals year-round.
+            Are you a licensed CPA, EA, or tax professional? Apply to join our
+            vetted partner network and receive client referrals year-round.
           </p>
         </div>
 
@@ -664,9 +769,13 @@ export default function TaxPartners() {
               },
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-3">
-                <div className="p-2 rounded-lg bg-accent/10 text-accent shrink-0">{item.icon}</div>
+                <div className="p-2 rounded-lg bg-accent/10 text-accent shrink-0">
+                  {item.icon}
+                </div>
                 <div>
-                  <h4 className="text-sm font-bold text-white mb-0.5">{item.title}</h4>
+                  <h4 className="text-sm font-bold text-white mb-0.5">
+                    {item.title}
+                  </h4>
                   <p className="text-xs text-muted-foreground">{item.desc}</p>
                 </div>
               </div>
@@ -682,15 +791,19 @@ export default function TaxPartners() {
             Need Bookkeeping That's Tax-Ready?
           </h2>
           <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-            Our bookkeeping services are designed to make tax season painless. Clean books, organized
-            records, and a direct line to trusted tax professionals.
+            Our bookkeeping services are designed to make tax season painless.
+            Clean books, organized records, and a direct line to trusted tax
+            professionals.
           </p>
           <Link
             href="/contact"
             className="inline-flex items-center gap-2 px-8 py-3 rounded-lg bg-accent text-white font-semibold hover:bg-accent/90 transition-all duration-300 group"
           >
             Get Started with Bookkeeping
-            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            <ArrowRight
+              size={16}
+              className="group-hover:translate-x-1 transition-transform"
+            />
           </Link>
         </div>
       </section>

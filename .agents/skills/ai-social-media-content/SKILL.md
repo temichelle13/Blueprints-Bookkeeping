@@ -23,17 +23,16 @@ infsh app run google/veo-3-1-fast --input '{
 }'
 ```
 
-
 ## Platform Formats
 
-| Platform | Aspect Ratio | Duration | Resolution |
-|----------|--------------|----------|------------|
-| TikTok | 9:16 vertical | 15-60s | 1080x1920 |
-| Instagram Reels | 9:16 vertical | 15-90s | 1080x1920 |
-| Instagram Feed | 1:1 or 4:5 | - | 1080x1080 |
-| YouTube Shorts | 9:16 vertical | <60s | 1080x1920 |
-| YouTube Thumbnail | 16:9 | - | 1280x720 |
-| Twitter/X | 16:9 or 1:1 | <140s | 1920x1080 |
+| Platform          | Aspect Ratio  | Duration | Resolution |
+| ----------------- | ------------- | -------- | ---------- |
+| TikTok            | 9:16 vertical | 15-60s   | 1080x1920  |
+| Instagram Reels   | 9:16 vertical | 15-90s   | 1080x1920  |
+| Instagram Feed    | 1:1 or 4:5    | -        | 1080x1080  |
+| YouTube Shorts    | 9:16 vertical | <60s     | 1080x1920  |
+| YouTube Thumbnail | 16:9          | -        | 1280x720   |
+| Twitter/X         | 16:9 or 1:1   | <140s    | 1920x1080  |
 
 ## Content Workflows
 
@@ -210,21 +209,25 @@ done
 ## Platform-Specific Tips
 
 ### TikTok
+
 - Fast cuts, trending sounds
 - Text overlays important
 - Hook immediately
 
 ### Instagram
+
 - High visual quality
 - Carousel for engagement
 - Aesthetic consistency
 
 ### YouTube Shorts
+
 - Clear value proposition
 - Subscribe CTAs work
 - Repurpose longer content
 
 ### Twitter/X
+
 - Single striking image
 - Controversial hooks work
 - Thread potential
@@ -249,4 +252,3 @@ npx skills add inference-sh/skills@agent-tools
 ```
 
 Browse all apps: `infsh app list`
-

@@ -9,7 +9,11 @@ import { getEnv } from "../config/env";
  *   router.use("/admin", adminAuth);
  *   router.get("/admin/some-route", async (req, res) => { ... });
  */
-export function adminAuth(req: Request, res: Response, next: NextFunction): void {
+export function adminAuth(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void {
   const token = req.headers["x-admin-token"];
   const env = getEnv();
 

@@ -115,9 +115,7 @@ export default function ChatWidget() {
     if (!text || loading) return;
 
     const isAvailable =
-      availability === "available"
-        ? true
-        : await checkAvailability();
+      availability === "available" ? true : await checkAvailability();
 
     if (!isAvailable) {
       return;
@@ -213,7 +211,10 @@ export default function ChatWidget() {
         }
       }
     } catch {
-      setStatusMessage((current) => current ?? "Sorry, something went wrong. Please try again.");
+      setStatusMessage(
+        (current) =>
+          current ?? "Sorry, something went wrong. Please try again.",
+      );
       setMessages((prev) => {
         const updated = [...prev];
         const last = updated[updated.length - 1];
@@ -415,7 +416,9 @@ export default function ChatWidget() {
                     color: "#F3F4F6",
                   }}
                 >
-                  <p style={{ margin: "0 0 8px", fontSize: 14, lineHeight: 1.6 }}>
+                  <p
+                    style={{ margin: "0 0 8px", fontSize: 14, lineHeight: 1.6 }}
+                  >
                     {statusMessage ?? OFFLINE_NOTICE}
                   </p>
                   <div
@@ -639,14 +642,19 @@ export default function ChatWidget() {
               />
               <button
                 onClick={sendMessage}
-                disabled={!input.trim() || loading || chatUnavailable || chatChecking}
+                disabled={
+                  !input.trim() || loading || chatUnavailable || chatChecking
+                }
                 aria-label="Send message"
                 style={{
                   width: 40,
                   height: 40,
                   borderRadius: "50%",
                   background:
-                    input.trim() && !loading && !chatUnavailable && !chatChecking
+                    input.trim() &&
+                    !loading &&
+                    !chatUnavailable &&
+                    !chatChecking
                       ? "linear-gradient(135deg, #6366F1, #4F46E5)"
                       : "#252B3D",
                   border: "none",

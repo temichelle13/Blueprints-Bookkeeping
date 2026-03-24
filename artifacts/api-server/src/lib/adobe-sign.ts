@@ -1,5 +1,6 @@
 const ADOBE_SIGN_BASE_URL =
-  process.env["ADOBE_SIGN_BASE_URL"] || "https://api.na1.adobesign.com/api/rest/v6";
+  process.env["ADOBE_SIGN_BASE_URL"] ||
+  "https://api.na1.adobesign.com/api/rest/v6";
 
 interface AdobeSignConfig {
   clientId: string;
@@ -33,23 +34,31 @@ async function getAccessToken(config: AdobeSignConfig): Promise<string> {
     return cachedAccessToken;
   }
 
-  const response = await fetch("https://api.na1.adobesign.com/oauth/v2/refresh", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
-      grant_type: "refresh_token",
-      client_id: config.clientId,
-      client_secret: config.clientSecret,
-      refresh_token: config.refreshToken,
-    }),
-  });
+  const response = await fetch(
+    "https://api.na1.adobesign.com/oauth/v2/refresh",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        grant_type: "refresh_token",
+        client_id: config.clientId,
+        client_secret: config.clientSecret,
+        refresh_token: config.refreshToken,
+      }),
+    },
+  );
 
   if (!response.ok) {
     const text = await response.text();
-    throw new Error(`Adobe Sign token refresh failed: ${response.status} ${text}`);
+    throw new Error(
+      `Adobe Sign token refresh failed: ${response.status} ${text}`,
+    );
   }
 
-  const data = (await response.json()) as { access_token: string; expires_in: number };
+  const data = (await response.json()) as {
+    access_token: string;
+    expires_in: number;
+  };
   cachedAccessToken = data.access_token;
   tokenExpiresAt = Date.now() + (data.expires_in - 60) * 1000;
   return cachedAccessToken;
@@ -89,7 +98,10 @@ async function apiRequest(
 }
 
 export interface AgreementCreationInfo {
-  fileInfos: Array<{ libraryDocumentId?: string; transientDocumentId?: string }>;
+  fileInfos: Array<{
+    libraryDocumentId?: string;
+    transientDocumentId?: string;
+  }>;
   name: string;
   participantSetsInfo: Array<{
     memberInfos: Array<{ email: string }>;
@@ -133,21 +145,28 @@ export async function createAgreement(
   return result as AgreementResponse;
 }
 
-export async function getAgreement(agreementId: string): Promise<AgreementDetails> {
+export async function getAgreement(
+  agreementId: string,
+): Promise<AgreementDetails> {
   const result = await apiRequest("GET", `/agreements/${agreementId}`);
   return result as AgreementDetails;
 }
 
-export async function getAgreementSigningUrls(
-  agreementId: string,
-): Promise<{ signingUrlSetInfos: Array<{ signingUrls: Array<{ esignUrl: string }> }> }> {
-  const result = await apiRequest("GET", `/agreements/${agreementId}/signingUrls`);
+export async function getAgreementSigningUrls(agreementId: string): Promise<{
+  signingUrlSetInfos: Array<{ signingUrls: Array<{ esignUrl: string }> }>;
+}> {
+  const result = await apiRequest(
+    "GET",
+    `/agreements/${agreementId}/signingUrls`,
+  );
   return result as {
     signingUrlSetInfos: Array<{ signingUrls: Array<{ esignUrl: string }> }>;
   };
 }
 
-export async function getSignedDocument(agreementId: string): Promise<ArrayBuffer> {
+export async function getSignedDocument(
+  agreementId: string,
+): Promise<ArrayBuffer> {
   const config = getConfig();
   if (!config) throw new Error("Adobe Sign API credentials not configured");
 
@@ -166,14 +185,20 @@ export async function getSignedDocument(agreementId: string): Promise<ArrayBuffe
   return response.arrayBuffer();
 }
 
-export async function sendReminder(
-  agreementId: string,
-): Promise<void> {
-  const members = (await apiRequest("GET", `/agreements/${agreementId}/members`)) as {
-    participantSets?: Array<{ participantSetId: string; memberInfos: Array<{ email: string }> }>;
+export async function sendReminder(agreementId: string): Promise<void> {
+  const members = (await apiRequest(
+    "GET",
+    `/agreements/${agreementId}/members`,
+  )) as {
+    participantSets?: Array<{
+      participantSetId: string;
+      memberInfos: Array<{ email: string }>;
+    }>;
   };
 
-  const participantIds = (members.participantSets || []).map((ps) => ps.participantSetId);
+  const participantIds = (members.participantSets || []).map(
+    (ps) => ps.participantSetId,
+  );
 
   await apiRequest("POST", `/agreements/${agreementId}/reminders`, {
     recipientParticipantIds: participantIds,
@@ -192,7 +217,11 @@ export async function getLibraryDocuments(): Promise<
   Array<{ id: string; name: string; templateTypes: string[] }>
 > {
   const result = (await apiRequest("GET", "/libraryDocuments")) as {
-    libraryDocumentList: Array<{ id: string; name: string; templateTypes: string[] }>;
+    libraryDocumentList: Array<{
+      id: string;
+      name: string;
+      templateTypes: string[];
+    }>;
   };
   return result.libraryDocumentList || [];
 }
@@ -209,7 +238,11 @@ export async function uploadTransientDocument(
 
   const formData = new FormData();
   formData.append("File-Name", fileName);
-  formData.append("File", new Blob([new Uint8Array(fileData)], { type: mimeType }), fileName);
+  formData.append(
+    "File",
+    new Blob([new Uint8Array(fileData)], { type: mimeType }),
+    fileName,
+  );
 
   const response = await fetch(`${config.baseUrl}/transientDocuments`, {
     method: "POST",
@@ -219,7 +252,9 @@ export async function uploadTransientDocument(
 
   if (!response.ok) {
     const text = await response.text();
-    throw new Error(`Failed to upload transient document: ${response.status} ${text}`);
+    throw new Error(
+      `Failed to upload transient document: ${response.status} ${text}`,
+    );
   }
 
   const data = (await response.json()) as { transientDocumentId: string };

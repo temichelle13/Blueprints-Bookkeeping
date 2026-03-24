@@ -19,9 +19,13 @@ const caseStudies = [
       "Completed a 10-week historical cleanup, rebuilt chart-of-accounts structure, implemented rule-based categorization in QuickBooks, and introduced a monthly close checklist with owner review checkpoints.",
     outcome:
       "Month-end close cycle moved from 45+ days to 8 business days. The owner identified a recurring margin leak and improved gross margin by 6.2 percentage points in the following two quarters.",
-    timeframe: "Initial stabilization in 90 days; margin gains measured over 6 months",
+    timeframe:
+      "Initial stabilization in 90 days; margin gains measured over 6 months",
     serviceLinks: [
-      { href: "/services/bookkeeping", label: "Advanced Bookkeeping & Cleanup" },
+      {
+        href: "/services/bookkeeping",
+        label: "Advanced Bookkeeping & Cleanup",
+      },
       { href: "/services", label: "All Services" },
     ],
   },
@@ -34,7 +38,8 @@ const caseStudies = [
       "Standardized job-cost classes, reconciled historical project data, and introduced a weekly WIP and variance reporting cadence tied to monthly owner strategy meetings.",
     outcome:
       "Within two quarters, average estimate accuracy improved by 18% and project gross margin variance narrowed from +/-14% to +/-5.5%.",
-    timeframe: "Reporting system built in 12 weeks; results measured over 2 quarters",
+    timeframe:
+      "Reporting system built in 12 weeks; results measured over 2 quarters",
     serviceLinks: [
       { href: "/services/bookkeeping", label: "Bookkeeping Systems Support" },
       { href: "/industries", label: "Industry Experience" },
@@ -51,7 +56,10 @@ const caseStudies = [
       "Client entered lender meetings with standardized projections and successfully obtained a mid-six-figure equipment financing package with terms aligned to forecasted cash flow.",
     timeframe: "Plan delivered in 5 weeks; financing closed in under 4 months",
     serviceLinks: [
-      { href: "/services/business-plans", label: "Business Plans & Forecasting" },
+      {
+        href: "/services/business-plans",
+        label: "Business Plans & Forecasting",
+      },
       { href: "/contact", label: "Ask About Optional Add-Ons" },
     ],
   },
@@ -74,10 +82,14 @@ export default function Results() {
               Client <span className="text-gradient">Case Studies</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Real outcomes from real founders. Every engagement is confidential — names and identifying details are anonymized to protect client privacy.
+              Real outcomes from real founders. Every engagement is confidential
+              — names and identifying details are anonymized to protect client
+              privacy.
             </p>
             <p className="mt-6 text-sm text-muted-foreground/70 italic max-w-xl mx-auto">
-              Past results are not a guarantee of future outcomes. Every business is unique, and individual results will vary based on circumstances, market conditions, and other factors.
+              Past results are not a guarantee of future outcomes. Every
+              business is unique, and individual results will vary based on
+              circumstances, market conditions, and other factors.
             </p>
           </motion.div>
         </div>
@@ -87,37 +99,62 @@ export default function Results() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-8">
             {caseStudies.map((caseStudy, index) => (
-              <motion.article key={caseStudy.title} {...fadeUp} className="glass-card rounded-2xl p-8 md:p-10">
+              <motion.article
+                key={caseStudy.title}
+                {...fadeUp}
+                className="glass-card rounded-2xl p-8 md:p-10"
+              >
                 <div className="flex items-center gap-3 mb-5">
                   <div className="p-3 rounded-xl bg-accent/10 text-accent">
-                    {index % 2 === 0 ? <MessageSquare size={24} /> : <FileText size={24} />}
+                    {index % 2 === 0 ? (
+                      <MessageSquare size={24} />
+                    ) : (
+                      <FileText size={24} />
+                    )}
                   </div>
-                  <p className="text-xs tracking-widest uppercase text-muted-foreground font-mono">Anonymized Client Case</p>
+                  <p className="text-xs tracking-widest uppercase text-muted-foreground font-mono">
+                    Anonymized Client Case
+                  </p>
                 </div>
-                <h2 className="text-2xl md:text-3xl font-display font-bold text-white mb-3">{caseStudy.title}</h2>
-                <p className="text-sm text-muted-foreground mb-6">{caseStudy.profile}</p>
+                <h2 className="text-2xl md:text-3xl font-display font-bold text-white mb-3">
+                  {caseStudy.title}
+                </h2>
+                <p className="text-sm text-muted-foreground mb-6">
+                  {caseStudy.profile}
+                </p>
 
                 <div className="space-y-5 text-muted-foreground leading-relaxed">
                   <div>
-                    <h3 className="text-base font-semibold text-white mb-1">Problem</h3>
+                    <h3 className="text-base font-semibold text-white mb-1">
+                      Problem
+                    </h3>
                     <p>{caseStudy.problem}</p>
                   </div>
                   <div>
-                    <h3 className="text-base font-semibold text-white mb-1">Intervention</h3>
+                    <h3 className="text-base font-semibold text-white mb-1">
+                      Intervention
+                    </h3>
                     <p>{caseStudy.intervention}</p>
                   </div>
                   <div>
-                    <h3 className="text-base font-semibold text-white mb-1">Measurable Outcome</h3>
+                    <h3 className="text-base font-semibold text-white mb-1">
+                      Measurable Outcome
+                    </h3>
                     <p>{caseStudy.outcome}</p>
                   </div>
                   <div>
-                    <h3 className="text-base font-semibold text-white mb-1">Timeframe</h3>
+                    <h3 className="text-base font-semibold text-white mb-1">
+                      Timeframe
+                    </h3>
                     <p>{caseStudy.timeframe}</p>
                   </div>
                 </div>
 
                 <p className="mt-6 text-xs text-muted-foreground/80 italic">
-                  Case details are composited and anonymized from real engagements to preserve confidentiality. Outcomes depend on implementation consistency, underlying business conditions, and market factors.
+                  Case details are composited and anonymized from real
+                  engagements to preserve confidentiality. Outcomes depend on
+                  implementation consistency, underlying business conditions,
+                  and market factors.
                 </p>
 
                 <div className="mt-7 flex flex-wrap gap-3">
@@ -155,9 +192,15 @@ export default function Results() {
 
       <section className="pb-4">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div {...fadeUp} className="rounded-xl border border-white/10 bg-white/[0.02] p-5 text-sm text-muted-foreground">
+          <motion.div
+            {...fadeUp}
+            className="rounded-xl border border-white/10 bg-white/[0.02] p-5 text-sm text-muted-foreground"
+          >
             <p>
-              <strong className="text-white">Transparency note:</strong> Each case study reflects authentic client scenarios and measured metrics, but company names, dates, and certain operational details have been modified for privacy.
+              <strong className="text-white">Transparency note:</strong> Each
+              case study reflects authentic client scenarios and measured
+              metrics, but company names, dates, and certain operational details
+              have been modified for privacy.
             </p>
           </motion.div>
         </div>
@@ -174,7 +217,8 @@ export default function Results() {
               <span className="text-gradient">Success Story?</span>
             </h2>
             <p className="text-lg text-muted-foreground mb-10 leading-relaxed">
-              Book a free 30-minute discovery call. We'll look at your books together and build a custom plan.
+              Book a free 30-minute discovery call. We'll look at your books
+              together and build a custom plan.
             </p>
             <Link
               href="/contact"

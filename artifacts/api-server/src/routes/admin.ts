@@ -1,5 +1,12 @@
 import { Router, type IRouter } from "express";
-import { db, contactInquiriesTable, newsletterSubscribersTable, emailSuppressionListTable, INQUIRY_STATUSES, SUPPRESSION_REASONS } from "@workspace/db";
+import {
+  db,
+  contactInquiriesTable,
+  newsletterSubscribersTable,
+  emailSuppressionListTable,
+  INQUIRY_STATUSES,
+  SUPPRESSION_REASONS,
+} from "@workspace/db";
 import type { SuppressionReason } from "@workspace/db";
 import { desc, eq, sql, count } from "drizzle-orm";
 import { addToSuppressionList } from "../lib/email-suppression";
@@ -24,7 +31,9 @@ router.patch("/admin/inquiries/:id/status", async (req, res): Promise<void> => {
   const { status } = req.body;
 
   if (!INQUIRY_STATUSES.includes(status)) {
-    res.status(400).json({ error: `Invalid status. Must be one of: ${INQUIRY_STATUSES.join(", ")}` });
+    res.status(400).json({
+      error: `Invalid status. Must be one of: ${INQUIRY_STATUSES.join(", ")}`,
+    });
     return;
   }
 
@@ -62,12 +71,16 @@ router.get("/admin/newsletter/export", async (_req, res): Promise<void> => {
 
   const header = "id,email,signup_source,active,subscribed_at";
   const rows = subscribers.map(
-    (s) => `${s.id},"${s.email}","${s.signupSource}",${s.active},"${s.subscribedAt?.toISOString() ?? ""}"`
+    (s) =>
+      `${s.id},"${s.email}","${s.signupSource}",${s.active},"${s.subscribedAt?.toISOString() ?? ""}"`,
   );
   const csv = [header, ...rows].join("\n");
 
   res.setHeader("Content-Type", "text/csv");
-  res.setHeader("Content-Disposition", "attachment; filename=newsletter_subscribers.csv");
+  res.setHeader(
+    "Content-Disposition",
+    "attachment; filename=newsletter_subscribers.csv",
+  );
   res.send(csv);
 });
 
@@ -94,7 +107,9 @@ router.get("/admin/stats", async (_req, res): Promise<void> => {
   res.json({
     inquiries: {
       total: inquiryStats?.total ?? 0,
-      byStatus: Object.fromEntries(statusCounts.map((s) => [s.status, s.count])),
+      byStatus: Object.fromEntries(
+        statusCounts.map((s) => [s.status, s.count]),
+      ),
     },
     newsletter: {
       total: subscriberStats?.total ?? 0,
@@ -126,7 +141,9 @@ router.post("/admin/suppression", async (req, res): Promise<void> => {
     return;
   }
 
-  const finalReason: SuppressionReason = SUPPRESSION_REASONS.includes(reason) ? reason : "manual";
+  const finalReason: SuppressionReason = SUPPRESSION_REASONS.includes(reason)
+    ? reason
+    : "manual";
 
   await addToSuppressionList(email, finalReason);
 

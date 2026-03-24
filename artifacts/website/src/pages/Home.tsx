@@ -1,8 +1,20 @@
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { ArrowRight, BookOpen, Calculator, ShieldCheck, Clock, Users, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  Calculator,
+  ShieldCheck,
+  Clock,
+  Users,
+  Sparkles,
+} from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
-import { StatsProofBar, CredentialBadgeStrip, GoogleReviewsCallout } from "@/components/TrustSignals";
+import {
+  StatsProofBar,
+  CredentialBadgeStrip,
+  GoogleReviewsCallout,
+} from "@/components/TrustSignals";
 import { SEO } from "@/components/SEO";
 import { localBusinessSchema } from "@/lib/seo-schemas";
 
@@ -39,7 +51,9 @@ export default function Home() {
             className="flex items-center gap-2 px-4 py-2 rounded-full border border-accent/20 bg-accent/5 backdrop-blur-sm mb-8"
           >
             <span className="glow-dot" />
-            <span className="text-sm font-medium text-accent">Roseburg, OR &mdash; Serving Nationwide</span>
+            <span className="text-sm font-medium text-accent">
+              Roseburg, OR &mdash; Serving Nationwide
+            </span>
           </motion.div>
 
           <motion.h1
@@ -58,7 +72,8 @@ export default function Home() {
             transition={{ delay: 0.2 }}
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed"
           >
-            Advanced bookkeeping and professional business plans for founders who need clean books and a clear path forward.
+            Advanced bookkeeping and professional business plans for founders
+            who need clean books and a clear path forward.
           </motion.p>
 
           <motion.div
@@ -72,7 +87,10 @@ export default function Home() {
               className="group px-8 py-4 rounded-xl bg-accent text-white font-semibold text-lg shadow-xl shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
             >
               Get Started
-              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+              <ArrowRight
+                size={20}
+                className="group-hover:translate-x-1 transition-transform"
+              />
             </Link>
             <Link
               href="/services"
@@ -94,8 +112,13 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center text-center mb-16">
             <div className="accent-bar mb-6" />
-            <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">Two Core Services</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl">Financial infrastructure designed for founders who have outgrown generalist solutions.</p>
+            <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
+              Two Core Services
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-2xl">
+              Financial infrastructure designed for founders who have outgrown
+              generalist solutions.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -103,30 +126,49 @@ export default function Home() {
               {
                 icon: <Calculator className="w-6 h-6" />,
                 title: "Advanced Bookkeeping",
-                description: "Multi-entity structuring, historical cleanups, and rule-based QBO automation for operations that demand precision.",
+                description:
+                  "Multi-entity structuring, historical cleanups, and rule-based QBO automation for operations that demand precision.",
                 tag: "ONGOING",
-                features: ["Multi-entity consolidation", "Historical cleanup & reconciliation", "Monthly close & financial statements"]
+                features: [
+                  "Multi-entity consolidation",
+                  "Historical cleanup & reconciliation",
+                  "Monthly close & financial statements",
+                ],
               },
               {
                 icon: <BookOpen className="w-6 h-6" />,
                 title: "Business Plans",
-                description: "Professionally written business plans with 3-to-5-year financial forecasting, market analysis, and strategic narrative.",
+                description:
+                  "Professionally written business plans with 3-to-5-year financial forecasting, market analysis, and strategic narrative.",
                 tag: "PROJECT",
-                features: ["Rigorous 3-to-5 year forecasting", "Comprehensive documentation", "Market research & competitive analysis"]
-              }
+                features: [
+                  "Rigorous 3-to-5 year forecasting",
+                  "Comprehensive documentation",
+                  "Market research & competitive analysis",
+                ],
+              },
             ].map((pillar, i) => (
               <div key={i} className="glass-card-hover rounded-2xl p-8 group">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="p-2.5 rounded-lg bg-accent/10 text-accent group-hover:bg-accent group-hover:text-white transition-all duration-500">
                     {pillar.icon}
                   </div>
-                  <span className="text-[11px] font-mono font-medium tracking-widest text-muted-foreground">{pillar.tag}</span>
+                  <span className="text-[11px] font-mono font-medium tracking-widest text-muted-foreground">
+                    {pillar.tag}
+                  </span>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3">{pillar.title}</h3>
-                <p className="text-muted-foreground leading-relaxed text-[15px] mb-5">{pillar.description}</p>
+                <h3 className="text-xl font-bold text-white mb-3">
+                  {pillar.title}
+                </h3>
+                <p className="text-muted-foreground leading-relaxed text-[15px] mb-5">
+                  {pillar.description}
+                </p>
                 <ul className="space-y-2">
                   {pillar.features.map((f, j) => (
-                    <li key={j} className="flex items-center gap-2 text-[14px] text-muted-foreground">
+                    <li
+                      key={j}
+                      className="flex items-center gap-2 text-[14px] text-muted-foreground"
+                    >
                       <span className="w-1.5 h-1.5 rounded-full bg-accent/60 shrink-0" />
                       {f}
                     </li>
@@ -149,22 +191,40 @@ export default function Home() {
                 Why High-Value Founders Choose Us
               </h2>
               <p className="text-lg text-muted-foreground mb-10 leading-relaxed">
-                Generalist bookkeepers hit a complexity ceiling. Tax practices disappear during Q1. We designed a boutique model that stays available and technically unmatched.
+                Generalist bookkeepers hit a complexity ceiling. Tax practices
+                disappear during Q1. We designed a boutique model that stays
+                available and technically unmatched.
               </p>
 
               <div className="space-y-6">
                 {[
-                  { icon: <Clock className="w-5 h-5" />, title: "12-Month Availability", desc: "No tax preparation means no seasonal blind spots. We are a year-round strategic resource." },
-                  { icon: <ShieldCheck className="w-5 h-5" />, title: "No Offshore — Ever", desc: "100% domestic. Your sensitive financial data is handled personally by a dedicated US expert." },
-                  { icon: <Users className="w-5 h-5" />, title: "20-Client Maximum", desc: "Strictly capped roster to ensure executive-level dedication and rapid response times." }
+                  {
+                    icon: <Clock className="w-5 h-5" />,
+                    title: "12-Month Availability",
+                    desc: "No tax preparation means no seasonal blind spots. We are a year-round strategic resource.",
+                  },
+                  {
+                    icon: <ShieldCheck className="w-5 h-5" />,
+                    title: "No Offshore — Ever",
+                    desc: "100% domestic. Your sensitive financial data is handled personally by a dedicated US expert.",
+                  },
+                  {
+                    icon: <Users className="w-5 h-5" />,
+                    title: "20-Client Maximum",
+                    desc: "Strictly capped roster to ensure executive-level dedication and rapid response times.",
+                  },
                 ].map((item, i) => (
                   <div key={i} className="flex gap-4 items-start group">
                     <div className="mt-0.5 p-2.5 rounded-lg bg-accent/10 text-accent group-hover:bg-accent/20 transition-colors shrink-0">
                       {item.icon}
                     </div>
                     <div>
-                      <h3 className="font-bold text-white text-[15px] mb-1">{item.title}</h3>
-                      <p className="text-muted-foreground text-[15px] leading-relaxed">{item.desc}</p>
+                      <h3 className="font-bold text-white text-[15px] mb-1">
+                        {item.title}
+                      </h3>
+                      <p className="text-muted-foreground text-[15px] leading-relaxed">
+                        {item.desc}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -176,22 +236,31 @@ export default function Home() {
               <div className="relative glass-card rounded-2xl p-8 space-y-6">
                 <div className="flex items-center gap-3">
                   <Sparkles className="w-5 h-5 text-accent" />
-                  <span className="text-sm font-semibold text-white">The Blueprints Difference</span>
+                  <span className="text-sm font-semibold text-white">
+                    The Blueprints Difference
+                  </span>
                 </div>
                 <div className="space-y-4">
                   {[
                     { label: "Advanced Bookkeeping Expertise", value: true },
-                    { label: "Certified Ethical Hacker (CEH v12)", value: true },
+                    {
+                      label: "Certified Ethical Hacker (CEH v12)",
+                      value: true,
+                    },
                     { label: "QuickBooks ProAdvisor Advanced", value: true },
                     { label: "Year-Round Availability", value: true },
                     { label: "Offshore Labor", value: false },
                     { label: "Tax Season Blackouts", value: false },
                   ].map((item, i) => (
                     <div key={i} className="flex items-center gap-3">
-                      <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold ${item.value ? 'bg-green-500/20 text-green-400' : 'bg-red-500/15 text-red-400'}`}>
-                        {item.value ? '✓' : '✕'}
+                      <div
+                        className={`w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold ${item.value ? "bg-green-500/20 text-green-400" : "bg-red-500/15 text-red-400"}`}
+                      >
+                        {item.value ? "✓" : "✕"}
                       </div>
-                      <span className={`text-[14px] ${item.value ? 'text-foreground' : 'text-muted-foreground line-through'}`}>
+                      <span
+                        className={`text-[14px] ${item.value ? "text-foreground" : "text-muted-foreground line-through"}`}
+                      >
                         {item.label}
                       </span>
                     </div>
@@ -207,9 +276,12 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center text-center mb-14">
             <div className="accent-bar mb-6" />
-            <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">Limited to 20 Active Clients</h2>
+            <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
+              Limited to 20 Active Clients
+            </h2>
             <p className="text-muted-foreground text-lg max-w-2xl">
-              This isn't a volume practice. Every client gets direct access to Tea — no handoffs, no junior staff, no outsourcing.
+              This isn't a volume practice. Every client gets direct access to
+              Tea — no handoffs, no junior staff, no outsourcing.
             </p>
           </div>
 
@@ -218,17 +290,20 @@ export default function Home() {
               {
                 stat: "Week 1",
                 label: "Books assessed & cleanup scoped",
-                detail: "You'll know exactly what needs to be fixed and how long it will take before committing.",
+                detail:
+                  "You'll know exactly what needs to be fixed and how long it will take before committing.",
               },
               {
                 stat: "Month 1",
                 label: "Reconciled, caught up, and current",
-                detail: "Historical cleanup completed. Monthly close process established. Reports ready for any stakeholder.",
+                detail:
+                  "Historical cleanup completed. Monthly close process established. Reports ready for any stakeholder.",
               },
               {
                 stat: "Ongoing",
                 label: "Proactive, not reactive",
-                detail: "Monthly close, cash flow monitoring, and advisory communication — not just data entry.",
+                detail:
+                  "Monthly close, cash flow monitoring, and advisory communication — not just data entry.",
               },
             ].map((item, i) => (
               <motion.div
@@ -239,9 +314,15 @@ export default function Home() {
                 transition={{ delay: i * 0.1 }}
                 className="glass-card rounded-2xl p-7"
               >
-                <div className="text-2xl font-display font-extrabold text-accent mb-1">{item.stat}</div>
-                <div className="font-semibold text-white mb-3 text-[15px]">{item.label}</div>
-                <p className="text-muted-foreground text-sm leading-relaxed">{item.detail}</p>
+                <div className="text-2xl font-display font-extrabold text-accent mb-1">
+                  {item.stat}
+                </div>
+                <div className="font-semibold text-white mb-3 text-[15px]">
+                  {item.label}
+                </div>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  {item.detail}
+                </p>
               </motion.div>
             ))}
           </div>
@@ -274,11 +355,13 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 via-accent/[0.02] to-transparent" />
         <div className="relative max-w-3xl mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-6">
-            Stop Guessing.<br />
+            Stop Guessing.
+            <br />
             <span className="text-gradient">Start Scaling.</span>
           </h2>
           <p className="text-xl text-muted-foreground mb-10">
-            Secure your financial infrastructure and map out a profitable future today.
+            Secure your financial infrastructure and map out a profitable future
+            today.
           </p>
           <Link
             href="/schedule"

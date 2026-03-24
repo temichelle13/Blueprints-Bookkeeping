@@ -22,7 +22,9 @@ async function getAccessToken(): Promise<string> {
 
   if (!response.ok) {
     const text = await response.text();
-    throw new Error(`Adobe CC token refresh failed: ${response.status} ${text}`);
+    throw new Error(
+      `Adobe CC token refresh failed: ${response.status} ${text}`,
+    );
   }
 
   const data = (await response.json()) as { access_token: string };
@@ -55,9 +57,15 @@ export async function uploadToCreativeCloud(
   return filePath;
 }
 
-export function buildArchivePath(clientName: string, contractType: string): string {
+export function buildArchivePath(
+  clientName: string,
+  contractType: string,
+): string {
   const year = new Date().getFullYear();
-  const safeName = clientName.replace(/[^a-zA-Z0-9\s-]/g, "").trim().replace(/\s+/g, "_");
+  const safeName = clientName
+    .replace(/[^a-zA-Z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "_");
   const typeLabel = contractType.replace(/_/g, "-");
   const date = new Date().toISOString().split("T")[0];
   return `Blueprints_Bookkeeping/Contracts/${year}/${safeName}/${typeLabel}_${date}.pdf`;

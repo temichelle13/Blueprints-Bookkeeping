@@ -46,11 +46,11 @@ curl -fsSL https://cli.inference.sh | sh
 
 ## Troubleshooting
 
-| Error | Solution |
-|-------|----------|
-| "not authenticated" | Run `infsh login` |
-| "command not found" | Reinstall CLI or add to PATH |
-| "API key invalid" | Check `INFSH_API_KEY` or re-login |
+| Error               | Solution                          |
+| ------------------- | --------------------------------- |
+| "not authenticated" | Run `infsh login`                 |
+| "command not found" | Reinstall CLI or add to PATH      |
+| "API key invalid"   | Check `INFSH_API_KEY` or re-login |
 
 ## Documentation
 

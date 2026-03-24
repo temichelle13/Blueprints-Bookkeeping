@@ -1,7 +1,10 @@
 import { validateEnv, getEnv } from "./config/env";
 import { logger } from "./lib/logger";
 import app from "./app";
-import { checkAndSendReminders, syncAllPendingAgreements } from "./lib/contract-service";
+import {
+  checkAndSendReminders,
+  syncAllPendingAgreements,
+} from "./lib/contract-service";
 import { runNexusCheck, ensureNexusRulesSeeded } from "./lib/nexus-service";
 
 // Validate environment variables at startup
@@ -28,7 +31,10 @@ function startContractScheduler() {
 
       const { remindersProcessed, expired } = await checkAndSendReminders();
       if (remindersProcessed > 0 || expired > 0) {
-        logger.info("Contract reminders processed", { remindersProcessed, expired });
+        logger.info("Contract reminders processed", {
+          remindersProcessed,
+          expired,
+        });
       }
     } catch (err) {
       logger.error("Contract scheduler error", err as Error);
@@ -53,7 +59,9 @@ function startNexusScheduler() {
 
   function getMsUntilNext8amPacific(): number {
     const now = new Date();
-    const pacificNow = new Date(now.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }));
+    const pacificNow = new Date(
+      now.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }),
+    );
     const target = new Date(pacificNow);
     target.setHours(8, 0, 0, 0);
 
@@ -69,7 +77,9 @@ function startNexusScheduler() {
 
   function scheduleNext() {
     const msUntil = getMsUntilNext8amPacific();
-    logger.info("Next nexus check scheduled", { minutesUntil: Math.round(msUntil / 60000) });
+    logger.info("Next nexus check scheduled", {
+      minutesUntil: Math.round(msUntil / 60000),
+    });
     setTimeout(async () => {
       await run();
       scheduleNext();
