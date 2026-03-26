@@ -12,6 +12,7 @@ const APOLLO_APP_ID =
 
 let initialized = false;
 let pendingApolloPageUrl: string | null = null;
+let webVitalsInitialized = false;
 
 function ensureScript(
   id: string,
@@ -135,6 +136,55 @@ export function initAnalytics(): void {
   initApollo();
 
   initialized = true;
+
+  // Initialize Web Vitals monitoring after analytics are ready
+  initWebVitals();
+}
+
+function sendWebVital(metric: Metric): void {
+  if (!initialized) return;
+
+  // Send to Google Analytics
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', metric.name, {
+      event_category: 'Web Vitals',
+      value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
+      event_label: metric.id,
+      non_interaction: true,
+    });
+  }
+
+  // Send to Plausible
+  window.plausible?.(metric.name, {
+    props: {
+      value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
+      rating: metric.rating,
+    },
+  });
+
+  // Log to console in development
+  if (import.meta.env.DEV) {
+    console.log(`[Web Vitals] ${metric.name}:`, {
+      value: metric.value,
+      rating: metric.rating,
+      id: metric.id,
+    });
+  }
+}
+
+function initWebVitals(): void {
+  if (webVitalsInitialized) return;
+
+  // Track Core Web Vitals
+  onLCP(sendWebVital); // Largest Contentful Paint
+  onINP(sendWebVital); // Interaction to Next Paint
+  onCLS(sendWebVital); // Cumulative Layout Shift
+
+  // Track additional metrics
+  onFCP(sendWebVital); // First Contentful Paint
+  onTTFB(sendWebVital); // Time to First Byte
+
+  webVitalsInitialized = true;
 }
 
 export function trackPageview(): void {

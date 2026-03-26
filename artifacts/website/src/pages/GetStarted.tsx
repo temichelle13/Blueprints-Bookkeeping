@@ -28,10 +28,9 @@ interface BasePath {
   href: string;
   external: boolean;
   newTab?: boolean;
-  kind?: "primary" | "secondary" | "quickbooks";
+  kind?: "primary" | "secondary" | "accountant";
+  instructions?: string[];
   note?: string;
-  secondaryCta?: string;
-  secondaryHref?: string;
 }
 
 type PathCard = BasePath;
@@ -100,16 +99,20 @@ export default function GetStarted() {
     {
       icon: MessageSquare,
       color: "#10B981",
-      title: "Add Me as Your Bookkeeper",
+      title: "Add Me as Your Accountant",
       subtitle:
-        "I already have books or QuickBooks and want Tea to review my situation before any accountant invite instructions are shared.",
-      cta: "Need QuickBooks Subscription?",
-      href: QB_PROADVISOR_URL,
-      external: true,
-      kind: "quickbooks",
-      note: "Start the intake first if you want Tea added as your bookkeeper. Firm ID and invitation details are sent privately only after review, if still appropriate.",
-      secondaryCta: "Start Intake",
-      secondaryHref: "/contact?intent=bookkeeper-intake",
+        "Already have QuickBooks Online? Start the intake process. Once you submit, Tea will review your books, provide recommendations and an estimate, or ask for further information. From there, you can discuss your needs, costs, and contracts.",
+      cta: "Start Intake",
+      href: "/contact?intent=bookkeeper-intake",
+      external: false,
+      kind: "accountant",
+      instructions: [
+        "In QuickBooks Online, open the gear icon and go to Manage users or Users.",
+        "Choose the option to add an accountant or invite an accounting professional.",
+        `Enter ${EMAIL_ADDRESS} and send the invitation from QuickBooks.`,
+        "Once Tea reviews your request and you both agree to proceed, she will accept the invitation and begin working on your books.",
+      ],
+      note: "To add Tea as your accountant, you'll need to send an invitation from QuickBooks Online using the steps below. Tea will only accept the invitation after your initial intake and review.",
     },
   ];
 
@@ -196,7 +199,7 @@ export default function GetStarted() {
           {path.subtitle}
         </p>
 
-        {path.kind === "quickbooks" && (
+        {path.kind === "accountant" && path.note && (
           <div
             style={{
               background: `${path.color}10`,
@@ -324,23 +327,61 @@ export default function GetStarted() {
         ) : (
           <div
             style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
-              padding: "12px 20px",
+              background: "rgba(255,255,255,0.02)",
+              border: "1px solid rgba(255,255,255,0.08)",
               borderRadius: 10,
-              background: path.color,
-              color: "white",
-              fontWeight: 600,
-              fontSize: 14,
-              textDecoration: "none",
+              padding: "12px 14px",
+              marginBottom: 16,
             }}
           >
-            {path.cta}
-            <ArrowRight size={16} />
+            <p
+              style={{
+                fontSize: 11,
+                fontWeight: 600,
+                color: path.color,
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                marginBottom: 8,
+              }}
+            >
+              QuickBooks Online Instructions:
+            </p>
+            <ol
+              style={{
+                margin: 0,
+                paddingLeft: 20,
+                fontSize: 12,
+                color: "rgba(255,255,255,0.7)",
+                lineHeight: 1.6,
+              }}
+            >
+              {path.instructions.map((step, i) => (
+                <li key={i} style={{ marginBottom: 6 }}>
+                  {step}
+                </li>
+              ))}
+            </ol>
           </div>
         )}
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 8,
+            padding: "12px 20px",
+            borderRadius: 10,
+            background: path.color,
+            color: "white",
+            fontWeight: 600,
+            fontSize: 14,
+            textDecoration: "none",
+          }}
+        >
+          {path.cta}
+          <ArrowRight size={16} />
+        </div>
       </motion.div>
     );
 
@@ -374,7 +415,7 @@ export default function GetStarted() {
     <div className="min-h-screen py-20 px-4">
       <SEO
         title="Get Started"
-        description="Choose how to begin with Blueprints & Bookkeeping — schedule a call, book a video chat, send a text, or review the steps to add Tea as your bookkeeper."
+        description="Choose how to begin with Blueprints & Bookkeeping — schedule a call, book a video chat, or start the intake process to add Tea as your accountant."
         path="/get-started"
       />
       <div className="max-w-5xl mx-auto">
@@ -385,7 +426,7 @@ export default function GetStarted() {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/20 bg-accent/5 mb-6 text-sm font-medium text-accent">
             <span className="glow-dot" />
-            Four ways to get started
+            Three ways to get started
           </div>
           <h1 className="text-4xl md:text-5xl font-display font-extrabold text-white mb-4">
             How Would You Like to Begin?
@@ -400,7 +441,7 @@ export default function GetStarted() {
           variants={container}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-12"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"
         >
           {paths.map((path, i) => renderCard(path, i))}
         </motion.div>
