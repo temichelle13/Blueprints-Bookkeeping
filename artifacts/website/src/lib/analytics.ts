@@ -1,4 +1,4 @@
-import { onCLS, onINP, onLCP, onFCP, onTTFB, type Metric } from 'web-vitals';
+import { onCLS, onINP, onLCP, onFCP, onTTFB, type Metric } from "web-vitals";
 
 const PLAUSIBLE_DOMAIN = import.meta.env.VITE_ANALYTICS_ID as string | undefined;
 const GA_MEASUREMENT_ID = (import.meta.env.VITE_GA_MEASUREMENT_ID as string | undefined) || "G-XYLJ9XZ2SL";
