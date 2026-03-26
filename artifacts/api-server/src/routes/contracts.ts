@@ -1,4 +1,10 @@
-import { Router, type IRouter, type Request, type Response, type NextFunction } from "express";
+import {
+  Router,
+  type IRouter,
+  type Request,
+  type Response,
+  type NextFunction,
+} from "express";
 import { db, contractsTable, contractTemplatesTable } from "@workspace/db";
 import { eq, desc } from "drizzle-orm";
 import * as contractService from "../lib/contract-service";
@@ -11,7 +17,10 @@ function adminAuth(req: Request, res: Response, next: NextFunction): void {
   const expected = process.env["ADMIN_TOKEN"];
 
   if (!expected) {
-    res.status(503).json({ error: "Admin access not configured. Set ADMIN_TOKEN environment variable." });
+    res.status(503).json({
+      error:
+        "Admin access not configured. Set ADMIN_TOKEN environment variable.",
+    });
     return;
   }
 
@@ -26,11 +35,16 @@ function adminAuth(req: Request, res: Response, next: NextFunction): void {
 router.post("/contracts/webhooks/booking", async (req, res): Promise<void> => {
   const webhookSecret = process.env["BOOKING_WEBHOOK_SECRET"];
   if (!webhookSecret) {
-    res.status(503).json({ error: "Booking webhook not configured. Set BOOKING_WEBHOOK_SECRET environment variable." });
+    res.status(503).json({
+      error:
+        "Booking webhook not configured. Set BOOKING_WEBHOOK_SECRET environment variable.",
+    });
     return;
   }
 
-  const provided = req.headers["x-webhook-secret"] || req.headers["x-calendly-webhook-signing-key"];
+  const provided =
+    req.headers["x-webhook-secret"] ||
+    req.headers["x-calendly-webhook-signing-key"];
   if (provided !== webhookSecret) {
     res.status(401).json({ error: "Invalid webhook secret" });
     return;
@@ -111,11 +125,19 @@ router.get("/contracts/:id", async (req, res): Promise<void> => {
   res.json(results[0]);
 });
 
-function validateSendContract(body: unknown): { clientName: string; clientEmail: string; contractType: string; serviceType?: string; pricingTier?: string; startDate?: string } | null {
+function validateSendContract(body: unknown): {
+  clientName: string;
+  clientEmail: string;
+  contractType: string;
+  serviceType?: string;
+  pricingTier?: string;
+  startDate?: string;
+} | null {
   if (!body || typeof body !== "object") return null;
   const b = body as Record<string, unknown>;
   if (typeof b.clientName !== "string" || !b.clientName) return null;
-  if (typeof b.clientEmail !== "string" || !b.clientEmail.includes("@")) return null;
+  if (typeof b.clientEmail !== "string" || !b.clientEmail.includes("@"))
+    return null;
   if (typeof b.contractType !== "string" || !b.contractType) return null;
   return {
     clientName: b.clientName,
@@ -130,7 +152,9 @@ function validateSendContract(body: unknown): { clientName: string; clientEmail:
 router.post("/contracts/send", async (req, res): Promise<void> => {
   const data = validateSendContract(req.body);
   if (!data) {
-    res.status(400).json({ error: "clientName, clientEmail (valid), and contractType are required" });
+    res.status(400).json({
+      error: "clientName, clientEmail (valid), and contractType are required",
+    });
     return;
   }
 
@@ -144,8 +168,13 @@ router.post("/contracts/send", async (req, res): Promise<void> => {
     });
   } catch (err) {
     console.error("Failed to send contract:", err);
-    const message = err instanceof Error ? err.message : "Failed to send contract";
-    const status = message.includes("not configured") ? 503 : message.includes("No active template") ? 422 : 500;
+    const message =
+      err instanceof Error ? err.message : "Failed to send contract";
+    const status = message.includes("not configured")
+      ? 503
+      : message.includes("No active template")
+        ? 422
+        : 500;
     res.status(status).json({ error: message });
   }
 });
@@ -193,15 +222,18 @@ router.post("/contracts/sync-all", async (_req, res): Promise<void> => {
   }
 });
 
-router.post("/contracts/process-reminders", async (_req, res): Promise<void> => {
-  try {
-    const result = await contractService.checkAndSendReminders();
-    res.json({ success: true, ...result });
-  } catch (err) {
-    console.error("Failed to process reminders:", err);
-    res.status(500).json({ error: "Failed to process reminders" });
-  }
-});
+router.post(
+  "/contracts/process-reminders",
+  async (_req, res): Promise<void> => {
+    try {
+      const result = await contractService.checkAndSendReminders();
+      res.json({ success: true, ...result });
+    } catch (err) {
+      console.error("Failed to process reminders:", err);
+      res.status(500).json({ error: "Failed to process reminders" });
+    }
+  },
+);
 
 router.get("/contracts/templates/list", async (_req, res): Promise<void> => {
   const templates = await db
@@ -212,12 +244,21 @@ router.get("/contracts/templates/list", async (_req, res): Promise<void> => {
   res.json(templates);
 });
 
-function validateTemplateBody(body: unknown): { name: string; contractType: string; adobeTemplateId?: string; triggerCondition: string; description?: string; prefillFields?: string[]; active?: boolean } | null {
+function validateTemplateBody(body: unknown): {
+  name: string;
+  contractType: string;
+  adobeTemplateId?: string;
+  triggerCondition: string;
+  description?: string;
+  prefillFields?: string[];
+  active?: boolean;
+} | null {
   if (!body || typeof body !== "object") return null;
   const b = body as Record<string, unknown>;
   if (typeof b.name !== "string" || !b.name) return null;
   if (typeof b.contractType !== "string" || !b.contractType) return null;
-  if (typeof b.triggerCondition !== "string" || !b.triggerCondition) return null;
+  if (typeof b.triggerCondition !== "string" || !b.triggerCondition)
+    return null;
 
   let active: boolean | undefined = undefined;
   if (typeof b.active === "boolean") {
@@ -229,10 +270,13 @@ function validateTemplateBody(body: unknown): { name: string; contractType: stri
   return {
     name: b.name,
     contractType: b.contractType,
-    adobeTemplateId: typeof b.adobeTemplateId === "string" ? b.adobeTemplateId : undefined,
+    adobeTemplateId:
+      typeof b.adobeTemplateId === "string" ? b.adobeTemplateId : undefined,
     triggerCondition: b.triggerCondition,
     description: typeof b.description === "string" ? b.description : undefined,
-    prefillFields: Array.isArray(b.prefillFields) ? b.prefillFields.filter((f): f is string => typeof f === "string") : undefined,
+    prefillFields: Array.isArray(b.prefillFields)
+      ? b.prefillFields.filter((f): f is string => typeof f === "string")
+      : undefined,
     active,
   };
 }
@@ -240,7 +284,9 @@ function validateTemplateBody(body: unknown): { name: string; contractType: stri
 router.post("/contracts/templates", async (req, res): Promise<void> => {
   const data = validateTemplateBody(req.body);
   if (!data) {
-    res.status(400).json({ error: "name, contractType, and triggerCondition are required" });
+    res
+      .status(400)
+      .json({ error: "name, contractType, and triggerCondition are required" });
     return;
   }
 
@@ -269,7 +315,9 @@ router.put("/contracts/templates/:id", async (req, res): Promise<void> => {
 
   const data = validateTemplateBody(req.body);
   if (!data) {
-    res.status(400).json({ error: "name, contractType, and triggerCondition are required" });
+    res
+      .status(400)
+      .json({ error: "name, contractType, and triggerCondition are required" });
     return;
   }
 
@@ -346,8 +394,12 @@ router.get("/contracts/:id/document", async (req, res): Promise<void> => {
   }
 
   try {
-    const pdfBuffer = await adobeSign.getSignedDocument(contract.adobeAgreementId);
-    const safeName = contract.clientName.replace(/[^a-zA-Z0-9\s-]/g, "").replace(/\s+/g, "_");
+    const pdfBuffer = await adobeSign.getSignedDocument(
+      contract.adobeAgreementId,
+    );
+    const safeName = contract.clientName
+      .replace(/[^a-zA-Z0-9\s-]/g, "")
+      .replace(/\s+/g, "_");
     const fileName = `${contract.contractType}_${safeName}.pdf`;
 
     res.setHeader("Content-Type", "application/pdf");

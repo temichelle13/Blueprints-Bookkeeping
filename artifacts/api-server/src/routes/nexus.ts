@@ -1,7 +1,17 @@
-import { Router, type IRouter, type Request, type Response, type NextFunction } from "express";
+import {
+  Router,
+  type IRouter,
+  type Request,
+  type Response,
+  type NextFunction,
+} from "express";
 import { db, stateNexusRulesTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
-import { getNexusSummary, runNexusCheck, getNotificationLog } from "../lib/nexus-service";
+import {
+  getNexusSummary,
+  runNexusCheck,
+  getNotificationLog,
+} from "../lib/nexus-service";
 
 const router: IRouter = Router();
 
@@ -36,7 +46,10 @@ router.get("/admin/nexus/summary", async (_req, res): Promise<void> => {
 
 router.get("/admin/nexus/rules", async (_req, res): Promise<void> => {
   try {
-    const rules = await db.select().from(stateNexusRulesTable).orderBy(stateNexusRulesTable.stateName);
+    const rules = await db
+      .select()
+      .from(stateNexusRulesTable)
+      .orderBy(stateNexusRulesTable.stateName);
     res.json(rules);
   } catch (err) {
     console.error("Failed to get nexus rules:", err);
@@ -44,60 +57,73 @@ router.get("/admin/nexus/rules", async (_req, res): Promise<void> => {
   }
 });
 
-router.patch("/admin/nexus/rules/:stateCode", async (req, res): Promise<void> => {
-  const { stateCode } = req.params;
-  const { foreignQualificationThreshold, warningThresholdPercent, bookkeepingLicenseRequired, notes, authorityUrl } = req.body;
+router.patch(
+  "/admin/nexus/rules/:stateCode",
+  async (req, res): Promise<void> => {
+    const { stateCode } = req.params;
+    const {
+      foreignQualificationThreshold,
+      warningThresholdPercent,
+      bookkeepingLicenseRequired,
+      notes,
+      authorityUrl,
+    } = req.body;
 
-  const updates: Record<string, unknown> = { updatedAt: new Date() };
+    const updates: Record<string, unknown> = { updatedAt: new Date() };
 
-  if (foreignQualificationThreshold !== undefined) {
-    const val = parseInt(foreignQualificationThreshold, 10);
-    if (isNaN(val) || val < 1) {
-      res.status(400).json({ error: "foreignQualificationThreshold must be a positive integer" });
-      return;
-    }
-    updates.foreignQualificationThreshold = val;
-  }
-
-  if (warningThresholdPercent !== undefined) {
-    const val = parseInt(warningThresholdPercent, 10);
-    if (isNaN(val) || val < 1 || val > 99) {
-      res.status(400).json({ error: "warningThresholdPercent must be between 1 and 99" });
-      return;
-    }
-    updates.warningThresholdPercent = val;
-  }
-
-  if (bookkeepingLicenseRequired !== undefined) {
-    updates.bookkeepingLicenseRequired = !!bookkeepingLicenseRequired;
-  }
-
-  if (notes !== undefined) {
-    updates.notes = notes;
-  }
-
-  if (authorityUrl !== undefined) {
-    updates.authorityUrl = authorityUrl;
-  }
-
-  try {
-    const [updated] = await db
-      .update(stateNexusRulesTable)
-      .set(updates)
-      .where(eq(stateNexusRulesTable.stateCode, stateCode.toUpperCase()))
-      .returning();
-
-    if (!updated) {
-      res.status(404).json({ error: "State not found" });
-      return;
+    if (foreignQualificationThreshold !== undefined) {
+      const val = parseInt(foreignQualificationThreshold, 10);
+      if (isNaN(val) || val < 1) {
+        res.status(400).json({
+          error: "foreignQualificationThreshold must be a positive integer",
+        });
+        return;
+      }
+      updates.foreignQualificationThreshold = val;
     }
 
-    res.json(updated);
-  } catch (err) {
-    console.error("Failed to update nexus rule:", err);
-    res.status(500).json({ error: "Failed to update nexus rule" });
-  }
-});
+    if (warningThresholdPercent !== undefined) {
+      const val = parseInt(warningThresholdPercent, 10);
+      if (isNaN(val) || val < 1 || val > 99) {
+        res
+          .status(400)
+          .json({ error: "warningThresholdPercent must be between 1 and 99" });
+        return;
+      }
+      updates.warningThresholdPercent = val;
+    }
+
+    if (bookkeepingLicenseRequired !== undefined) {
+      updates.bookkeepingLicenseRequired = !!bookkeepingLicenseRequired;
+    }
+
+    if (notes !== undefined) {
+      updates.notes = notes;
+    }
+
+    if (authorityUrl !== undefined) {
+      updates.authorityUrl = authorityUrl;
+    }
+
+    try {
+      const [updated] = await db
+        .update(stateNexusRulesTable)
+        .set(updates)
+        .where(eq(stateNexusRulesTable.stateCode, stateCode.toUpperCase()))
+        .returning();
+
+      if (!updated) {
+        res.status(404).json({ error: "State not found" });
+        return;
+      }
+
+      res.json(updated);
+    } catch (err) {
+      console.error("Failed to update nexus rule:", err);
+      res.status(500).json({ error: "Failed to update nexus rule" });
+    }
+  },
+);
 
 router.post("/admin/nexus/check", async (_req, res): Promise<void> => {
   try {

@@ -12,7 +12,8 @@ export const blogPosts: BlogPost[] = [
   {
     slug: "why-your-bookkeeper-isnt-enough",
     title: "Why Your Bookkeeper Isn't Enough: The Complexity Ceiling",
-    excerpt: "Most small businesses outgrow their generalist bookkeeper long before they realize it. Here's how to recognize when you've hit the complexity ceiling — and what to do about it.",
+    excerpt:
+      "Most small businesses outgrow their generalist bookkeeper long before they realize it. Here's how to recognize when you've hit the complexity ceiling — and what to do about it.",
     category: "Bookkeeping",
     date: "2026-03-10",
     readTime: "6 min read",
@@ -41,12 +42,13 @@ Breaking through the complexity ceiling requires a bookkeeper who understands yo
 3. Delivers monthly close procedures, not just data entry
 4. Provides financial statements you'd be comfortable showing a banker
 
-The right financial infrastructure doesn't just track your money — it gives you the clarity to make decisions that grow your business.`
+The right financial infrastructure doesn't just track your money — it gives you the clarity to make decisions that grow your business.`,
   },
   {
     slug: "what-makes-a-strong-business-plan",
     title: "What Makes a Business Plan Actually Work",
-    excerpt: "Most business plans fail not because the idea is bad — but because the financials don't hold up and the narrative doesn't land. Here's what separates a strong plan from a weak one.",
+    excerpt:
+      "Most business plans fail not because the idea is bad — but because the financials don't hold up and the narrative doesn't land. Here's what separates a strong plan from a weak one.",
     category: "Business Plans",
     date: "2026-03-05",
     readTime: "8 min read",
@@ -82,12 +84,14 @@ The narrative section is where many plans fail. Reviewers can spot inflated clai
 
 **The Digital Handshake Advantage**
 
-Increasingly, forward-thinking founders are presenting their business plans as interactive websites rather than static PDFs. This approach demonstrates technical sophistication and makes it easier for multiple stakeholders to review the plan simultaneously. It's not required — but it sets you apart.`
+Increasingly, forward-thinking founders are presenting their business plans as interactive websites rather than static PDFs. This approach demonstrates technical sophistication and makes it easier for multiple stakeholders to review the plan simultaneously. It's not required — but it sets you apart.`,
   },
   {
     slug: "crypto-accounting-basics-business-owners",
-    title: "Crypto Accounting for Business Owners: What You Need to Know in 2026",
-    excerpt: "If your business accepts, holds, or trades cryptocurrency, your accounting just got significantly more complex. Here's a practical guide to staying compliant and organized.",
+    title:
+      "Crypto Accounting for Business Owners: What You Need to Know in 2026",
+    excerpt:
+      "If your business accepts, holds, or trades cryptocurrency, your accounting just got significantly more complex. Here's a practical guide to staying compliant and organized.",
     category: "Crypto & Digital Assets",
     date: "2026-02-28",
     readTime: "7 min read",
@@ -124,12 +128,13 @@ The single best thing you can do is establish a clean accounting framework now, 
 3. Setting up automated reconciliation where possible
 4. Working with a bookkeeper who actually understands blockchain
 
-Don't wait for a compliance issue to force the conversation. Proactive crypto accounting is significantly cheaper than retroactive cleanup.`
+Don't wait for a compliance issue to force the conversation. Proactive crypto accounting is significantly cheaper than retroactive cleanup.`,
   },
   {
     slug: "digital-handshake-business-plan-website",
     title: "The Digital Handshake: Why Your Business Plan Deserves a Website",
-    excerpt: "A 40-page PDF is how business plans have been delivered for decades. But in 2026, there's a better way to demonstrate competence and make a lasting impression.",
+    excerpt:
+      "A 40-page PDF is how business plans have been delivered for decades. But in 2026, there's a better way to demonstrate competence and make a lasting impression.",
     category: "Digital Presence",
     date: "2026-02-20",
     readTime: "5 min read",
@@ -169,6 +174,6 @@ Unlike dynamic web applications that require databases, servers, and ongoing mai
 - Zero maintenance (no updates, no patches)
 - Cost-effective to host (pennies per month)
 
-Your business plan isn't just a document — it's your first handshake with the people who will decide your company's future. Make it count.`
-  }
+Your business plan isn't just a document — it's your first handshake with the people who will decide your company's future. Make it count.`,
+  },
 ];

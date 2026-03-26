@@ -15,7 +15,7 @@ export async function isEmailSuppressed(email: string): Promise<boolean> {
 
 export async function addToSuppressionList(
   email: string,
-  reason: SuppressionReason
+  reason: SuppressionReason,
 ): Promise<void> {
   const normalized = email.trim().toLowerCase();
   await db

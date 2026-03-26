@@ -11,18 +11,21 @@ This document outlines the comprehensive improvements made to the Blueprints & B
 **Solution**: Implemented a centralized environment validation system using Zod.
 
 **Files**:
+
 - `artifacts/api-server/src/config/env.ts` - Environment variable validation schema
 - `.env.example` - Complete documentation of all required environment variables
 
 **Benefits**:
+
 - ✅ Startup validation ensures all required variables are present
 - ✅ Type-safe access to environment variables throughout the application
 - ✅ Clear error messages when configuration is missing or invalid
 - ✅ Centralized configuration management
 
 **Usage**:
+
 ```typescript
-import { getEnv, validateEnv } from './config/env';
+import { getEnv, validateEnv } from "./config/env";
 
 // At application startup
 validateEnv();
@@ -41,9 +44,11 @@ console.log(env.DATABASE_URL);
 **Solution**: Implemented a structured logging framework with severity levels and contextual information.
 
 **Files**:
+
 - `artifacts/api-server/src/lib/logger.ts`
 
 **Benefits**:
+
 - ✅ Structured JSON logs in production for log aggregation
 - ✅ Human-readable logs in development
 - ✅ Severity levels (DEBUG, INFO, WARN, ERROR)
@@ -51,8 +56,9 @@ console.log(env.DATABASE_URL);
 - ✅ Proper error stack trace logging
 
 **Usage**:
+
 ```typescript
-import { logger } from './lib/logger';
+import { logger } from "./lib/logger";
 
 logger.info("User logged in", { userId: 123 });
 logger.warn("Rate limit approaching", { ip: "1.2.3.4", count: 95 });
@@ -68,19 +74,22 @@ logger.error("Database connection failed", error, { database: "primary" });
 **Solution**: Created centralized shared utilities modules.
 
 **Files**:
+
 - `artifacts/api-server/src/lib/email.ts` - Email utilities (Resend client, email constants)
 - `artifacts/api-server/src/middleware/admin-auth.ts` - Admin authentication middleware
 
 **Benefits**:
+
 - ✅ Single source of truth for common functionality
 - ✅ Consistent behavior across the application
 - ✅ Easier maintenance and updates
 - ✅ Security improvements (constant-time token comparison in admin auth)
 
 **Usage**:
+
 ```typescript
 // Email utilities
-import { getResend, getOwnerEmail, EMAIL_FROM } from './lib/email';
+import { getResend, getOwnerEmail, EMAIL_FROM } from "./lib/email";
 
 const resend = getResend();
 await resend.emails.send({
@@ -91,7 +100,7 @@ await resend.emails.send({
 });
 
 // Admin authentication
-import { adminAuth } from './middleware/admin-auth';
+import { adminAuth } from "./middleware/admin-auth";
 
 router.use(adminAuth);
 router.get("/admin/users", async (req, res) => {
@@ -108,17 +117,24 @@ router.get("/admin/users", async (req, res) => {
 **Solution**: Implemented in-memory rate limiting with configurable limits for different endpoint types.
 
 **Files**:
+
 - `artifacts/api-server/src/middleware/rate-limit.ts`
 
 **Benefits**:
+
 - ✅ Protection against brute force attacks
 - ✅ Different rate limits for different endpoints (admin, auth, general API)
 - ✅ Proper HTTP 429 responses with Retry-After headers
 - ✅ Logging of rate limit violations
 
 **Usage**:
+
 ```typescript
-import { adminRateLimiter, authRateLimiter, apiRateLimiter } from './middleware/rate-limit';
+import {
+  adminRateLimiter,
+  authRateLimiter,
+  apiRateLimiter,
+} from "./middleware/rate-limit";
 
 // Protect admin endpoints
 router.use("/admin", adminRateLimiter.middleware());
@@ -135,6 +151,7 @@ app.use("/api", apiRateLimiter.middleware());
 ### 5. Database Schema Improvements
 
 **Problem**:
+
 - Missing foreign key constraints on `contracts.templateId` and `contracts.contactInquiryId`
 - `contract_templates.active` stored as text "true"/"false" instead of boolean
 - No indexes on frequently queried fields
@@ -142,16 +159,19 @@ app.use("/api", apiRateLimiter.middleware());
 **Solution**: Updated schema with proper types, foreign keys, and indexes.
 
 **Files**:
+
 - `lib/db/src/schema/contracts.ts` - Updated schema definition
 - `lib/db/drizzle/0003_add_foreign_keys_and_indexes.sql` - Migration script
 
 **Benefits**:
+
 - ✅ Referential integrity enforced at database level
 - ✅ Proper boolean type for active field
 - ✅ Improved query performance with indexes
 - ✅ Better type safety with Drizzle relations
 
 **Migration**:
+
 ```bash
 # Run the migration
 npx drizzle-kit push
@@ -169,9 +189,11 @@ psql $DATABASE_URL -f lib/db/drizzle/0003_add_foreign_keys_and_indexes.sql
 **Solution**: Enabled `strictFunctionTypes: true` for better type checking.
 
 **Files**:
+
 - `tsconfig.base.json`
 
 **Benefits**:
+
 - ✅ Better type safety for function parameters
 - ✅ Catches more potential bugs at compile time
 - ✅ Aligns with TypeScript best practices
@@ -185,9 +207,11 @@ psql $DATABASE_URL -f lib/db/drizzle/0003_add_foreign_keys_and_indexes.sql
 **Solution**: Updated `index.ts` to use new utilities and validate environment at startup.
 
 **Files**:
+
 - `artifacts/api-server/src/index.ts`
 
 **Benefits**:
+
 - ✅ Fail fast on missing configuration
 - ✅ Structured logging from startup
 - ✅ Fixed potential infinite loop bug in Nexus scheduler
@@ -248,6 +272,7 @@ The following issues were identified but not addressed in this PR. They should b
 ### Environment Setup
 
 1. Copy `.env.example` to `.env`:
+
    ```bash
    cp .env.example .env
    ```
@@ -287,29 +312,32 @@ Please ensure all required environment variables are set correctly.
 If you have existing code that needs to be updated:
 
 #### Replace Direct env Access
+
 ```typescript
 // Before
 const apiKey = process.env.RESEND_API_KEY;
 
 // After
-import { getEnv } from './config/env';
+import { getEnv } from "./config/env";
 const env = getEnv();
 const apiKey = env.RESEND_API_KEY;
 ```
 
 #### Replace console.log
+
 ```typescript
 // Before
 console.log(`User ${userId} logged in`);
 console.error("Failed:", error);
 
 // After
-import { logger } from './lib/logger';
+import { logger } from "./lib/logger";
 logger.info("User logged in", { userId });
 logger.error("Operation failed", error);
 ```
 
 #### Replace Duplicated getResend()
+
 ```typescript
 // Before
 import { Resend } from "resend";
@@ -319,11 +347,12 @@ function getResend() {
 }
 
 // After
-import { getResend } from './lib/email';
+import { getResend } from "./lib/email";
 const resend = getResend();
 ```
 
 #### Use Admin Auth Middleware
+
 ```typescript
 // Before
 function adminAuth(req, res, next) {
@@ -336,7 +365,7 @@ function adminAuth(req, res, next) {
 }
 
 // After
-import { adminAuth } from './middleware/admin-auth';
+import { adminAuth } from "./middleware/admin-auth";
 router.use(adminAuth);
 ```
 

@@ -28,5 +28,6 @@ export function getOwnerEmail(): string {
 export const EMAIL_FROM = {
   default: "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>",
   support: "Blueprints & Bookkeeping <support@blueprintsandbookkeeping.com>",
-  notifications: "Blueprints & Bookkeeping <notifications@blueprintsandbookkeeping.com>",
+  notifications:
+    "Blueprints & Bookkeeping <notifications@blueprintsandbookkeeping.com>",
 } as const;

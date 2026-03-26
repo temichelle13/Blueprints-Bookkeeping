@@ -8,12 +8,20 @@ interface BreadcrumbItem {
 
 export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
   return (
-    <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-sm text-muted-foreground mb-6">
+    <nav
+      aria-label="Breadcrumb"
+      className="flex items-center gap-1.5 text-sm text-muted-foreground mb-6"
+    >
       {items.map((item, i) => (
         <span key={i} className="flex items-center gap-1.5">
-          {i > 0 && <ChevronRight size={14} className="text-muted-foreground/50" />}
+          {i > 0 && (
+            <ChevronRight size={14} className="text-muted-foreground/50" />
+          )}
           {item.href ? (
-            <Link href={item.href} className="hover:text-accent transition-colors">
+            <Link
+              href={item.href}
+              className="hover:text-accent transition-colors"
+            >
               {item.label}
             </Link>
           ) : (

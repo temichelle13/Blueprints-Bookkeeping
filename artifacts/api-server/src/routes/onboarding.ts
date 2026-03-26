@@ -1,6 +1,11 @@
 import { Router, type IRouter } from "express";
 import Stripe from "stripe";
-import { db, onboardingSubmissionsTable, contactInquiriesTable, subscriptionsTable } from "@workspace/db";
+import {
+  db,
+  onboardingSubmissionsTable,
+  contactInquiriesTable,
+  subscriptionsTable,
+} from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { Resend } from "resend";
 import * as contractService from "../lib/contract-service";
@@ -9,8 +14,10 @@ import { isEmailSuppressed } from "../lib/email-suppression";
 const router: IRouter = Router();
 
 const OWNER_EMAIL = "tea@blueprintsandbookkeeping.com";
-const FROM_ADDRESS = "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
-const SITE_URL = process.env["SITE_URL"] || "https://blueprintsandbookkeeping.com";
+const FROM_ADDRESS =
+  "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
+const SITE_URL =
+  process.env["SITE_URL"] || "https://blueprintsandbookkeeping.com";
 
 function getStripe(): Stripe | null {
   const key = process.env["STRIPE_SECRET_KEY"];
@@ -51,26 +58,88 @@ router.post("/onboarding", async (req, res): Promise<void> => {
     businessState?: string;
   };
 
-  if (!clientName || !clientEmail || !businessName || !ownerName || !businessState) {
-    res.status(400).json({ error: "Name, email, business name, owner name, and business state are required." });
+  if (
+    !clientName ||
+    !clientEmail ||
+    !businessName ||
+    !ownerName ||
+    !businessState
+  ) {
+    res.status(400).json({
+      error:
+        "Name, email, business name, owner name, and business state are required.",
+    });
     return;
   }
 
   const normalizedState = businessState.trim().toUpperCase();
   const VALID_STATE_CODES = [
-    "AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN",
-    "IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH",
-    "NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT",
-    "VT","VA","WA","WV","WI","WY",
+    "AL",
+    "AK",
+    "AZ",
+    "AR",
+    "CA",
+    "CO",
+    "CT",
+    "DE",
+    "DC",
+    "FL",
+    "GA",
+    "HI",
+    "ID",
+    "IL",
+    "IN",
+    "IA",
+    "KS",
+    "KY",
+    "LA",
+    "ME",
+    "MD",
+    "MA",
+    "MI",
+    "MN",
+    "MS",
+    "MO",
+    "MT",
+    "NE",
+    "NV",
+    "NH",
+    "NJ",
+    "NM",
+    "NY",
+    "NC",
+    "ND",
+    "OH",
+    "OK",
+    "OR",
+    "PA",
+    "RI",
+    "SC",
+    "SD",
+    "TN",
+    "TX",
+    "UT",
+    "VT",
+    "VA",
+    "WA",
+    "WV",
+    "WI",
+    "WY",
   ];
 
   if (!VALID_STATE_CODES.includes(normalizedState)) {
-    res.status(400).json({ error: "Invalid business state. Please provide a valid two-letter U.S. state code." });
+    res.status(400).json({
+      error:
+        "Invalid business state. Please provide a valid two-letter U.S. state code.",
+    });
     return;
   }
 
   if (!stripeSessionId) {
-    res.status(400).json({ error: "A valid checkout session is required. Please complete payment first." });
+    res.status(400).json({
+      error:
+        "A valid checkout session is required. Please complete payment first.",
+    });
     return;
   }
 
@@ -85,15 +154,25 @@ router.post("/onboarding", async (req, res): Promise<void> => {
   try {
     const session = await stripe.checkout.sessions.retrieve(stripeSessionId);
     if (session.payment_status !== "paid") {
-      res.status(400).json({ error: "Payment has not been completed. Please complete checkout first." });
+      res.status(400).json({
+        error:
+          "Payment has not been completed. Please complete checkout first.",
+      });
       return;
     }
     const sessionEmail = session.customer_details?.email;
-    if (sessionEmail && sessionEmail.toLowerCase() !== clientEmail.toLowerCase()) {
-      res.status(400).json({ error: "Email does not match the checkout session. Please use the email you checked out with." });
+    if (
+      sessionEmail &&
+      sessionEmail.toLowerCase() !== clientEmail.toLowerCase()
+    ) {
+      res.status(400).json({
+        error:
+          "Email does not match the checkout session. Please use the email you checked out with.",
+      });
       return;
     }
-    const stripeSubId = typeof session.subscription === "string" ? session.subscription : "";
+    const stripeSubId =
+      typeof session.subscription === "string" ? session.subscription : "";
     if (stripeSubId) {
       const subs = await db
         .select()
@@ -106,7 +185,9 @@ router.post("/onboarding", async (req, res): Promise<void> => {
     }
   } catch (err) {
     console.error("Stripe session verification failed:", err);
-    res.status(400).json({ error: "Could not verify payment session. Please contact support." });
+    res.status(400).json({
+      error: "Could not verify payment session. Please contact support.",
+    });
     return;
   }
 
@@ -163,12 +244,25 @@ router.post("/onboarding", async (req, res): Promise<void> => {
           to: OWNER_EMAIL,
           replyTo: clientEmail,
           subject: `Onboarding Form Submitted: ${clientName} — ${businessName}`,
-          html: buildAdminOnboardingEmail(clientName, clientEmail, businessName, ownerName, phone, einBusinessType, currentBookkeepingSoftware, notes, plan),
+          html: buildAdminOnboardingEmail(
+            clientName,
+            clientEmail,
+            businessName,
+            ownerName,
+            phone,
+            einBusinessType,
+            currentBookkeepingSoftware,
+            notes,
+            plan,
+          ),
         }),
       ];
 
       if (suppressed) {
-        console.warn("[Onboarding] Skipping client confirmation email — address is suppressed:", clientEmail);
+        console.warn(
+          "[Onboarding] Skipping client confirmation email — address is suppressed:",
+          clientEmail,
+        );
       } else {
         emailPromises.push(
           resend.emails.send({
@@ -185,7 +279,8 @@ router.post("/onboarding", async (req, res): Promise<void> => {
 
     res.status(201).json({
       success: true,
-      message: "Onboarding form submitted successfully. Contracts will be sent shortly.",
+      message:
+        "Onboarding form submitted successfully. Contracts will be sent shortly.",
       id: submission.id,
     });
   } catch (err) {
@@ -195,8 +290,15 @@ router.post("/onboarding", async (req, res): Promise<void> => {
 });
 
 function buildAdminOnboardingEmail(
-  name: string, email: string, businessName: string, ownerName: string,
-  phone?: string, ein?: string, software?: string, notes?: string, plan?: string,
+  name: string,
+  email: string,
+  businessName: string,
+  ownerName: string,
+  phone?: string,
+  ein?: string,
+  software?: string,
+  notes?: string,
+  plan?: string,
 ): string {
   return `<div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
     <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
@@ -213,16 +315,23 @@ function buildAdminOnboardingEmail(
         ${software ? `<tr><td style="padding:8px 0;color:#666;font-size:14px;">Bookkeeping Software</td><td style="padding:8px 0;">${software}</td></tr>` : ""}
         ${plan ? `<tr><td style="padding:8px 0;color:#666;font-size:14px;">Plan</td><td style="padding:8px 0;font-weight:600;">${plan}</td></tr>` : ""}
       </table>
-      ${notes ? `<div style="margin-top:20px;padding:16px;background:white;border-radius:6px;border-left:3px solid #6366f1;">
+      ${
+        notes
+          ? `<div style="margin-top:20px;padding:16px;background:white;border-radius:6px;border-left:3px solid #6366f1;">
         <p style="margin:0 0 8px;font-size:13px;color:#666;text-transform:uppercase;letter-spacing:0.05em;">Notes</p>
         <p style="margin:0;line-height:1.6;">${notes}</p>
-      </div>` : ""}
+      </div>`
+          : ""
+      }
       <p style="margin-top:20px;font-size:13px;color:#999;">Engagement Letter and NDA have been triggered via Adobe Sign.</p>
     </div>
   </div>`;
 }
 
-function buildClientOnboardingConfirmation(name: string, plan?: string): string {
+function buildClientOnboardingConfirmation(
+  name: string,
+  plan?: string,
+): string {
   return `<div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
     <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
       <h1 style="color:white;margin:0;font-size:20px;">Onboarding Received!</h1>

@@ -7,7 +7,9 @@ interface RawBodyRequest extends Request {
   rawBody?: Buffer;
 }
 
-function parseAllowedCorsOrigins(corsOriginEnv: string | undefined): string[] | undefined {
+function parseAllowedCorsOrigins(
+  corsOriginEnv: string | undefined,
+): string[] | undefined {
   if (!corsOriginEnv) {
     return undefined;
   }
@@ -21,7 +23,8 @@ function parseAllowedCorsOrigins(corsOriginEnv: string | undefined): string[] | 
   const allowedOrigins = configuredOrigins.flatMap((origin) => {
     try {
       const parsedOrigin = new URL(origin);
-      const isHttpProtocol = parsedOrigin.protocol === "http:" || parsedOrigin.protocol === "https:";
+      const isHttpProtocol =
+        parsedOrigin.protocol === "http:" || parsedOrigin.protocol === "https:";
       const hasOriginOnlyPath = parsedOrigin.pathname === "/";
       const hasNoSearch = parsedOrigin.search === "";
       const hasNoHash = parsedOrigin.hash === "";
@@ -41,7 +44,7 @@ function parseAllowedCorsOrigins(corsOriginEnv: string | undefined): string[] | 
   if (invalidOrigins.length > 0) {
     throw new Error(
       `Invalid CORS_ORIGIN value${invalidOrigins.length === 1 ? "" : "s"}: ${invalidOrigins.join(", ")}. ` +
-      "Expected a comma-separated list of full origin URLs like https://blueprintsandbookkeeping.com",
+        "Expected a comma-separated list of full origin URLs like https://blueprintsandbookkeeping.com",
     );
   }
 
@@ -69,18 +72,13 @@ if (isProduction && (!allowedOrigins || allowedOrigins.length === 0)) {
 
 app.use(
   cors({
-    origin: isProduction
-      ? allowedOrigins
-      : allowedOrigins ?? true,
+    origin: isProduction ? allowedOrigins : (allowedOrigins ?? true),
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
   }),
 );
 
-app.use(
-  "/api/payments/webhook",
-  express.raw({ type: "application/json" }),
-);
+app.use("/api/payments/webhook", express.raw({ type: "application/json" }));
 
 app.use(
   "/api/webhooks/cal",

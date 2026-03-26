@@ -33,6 +33,7 @@ export function usePageTracking() {
     };
 
     window.addEventListener("cookie-consent-changed", handleConsentChange);
-    return () => window.removeEventListener("cookie-consent-changed", handleConsentChange);
+    return () =>
+      window.removeEventListener("cookie-consent-changed", handleConsentChange);
   }, []);
 }

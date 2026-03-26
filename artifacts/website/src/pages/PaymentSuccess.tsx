@@ -2,7 +2,10 @@ import { Link } from "wouter";
 import { CheckCircle, ArrowRight, Phone, Mail } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
-import { buildOnboardingUrl, getOnboardingContextFromSearch } from "@/lib/onboarding-url";
+import {
+  buildOnboardingUrl,
+  getOnboardingContextFromSearch,
+} from "@/lib/onboarding-url";
 
 const SERVICE_LABELS: Record<string, string> = {
   essentials: "Essentials Bookkeeping",
@@ -14,7 +17,9 @@ const SERVICE_LABELS: Record<string, string> = {
 export default function PaymentSuccess() {
   usePageTitle("Payment Confirmed");
 
-  const { service, plan, sessionId } = getOnboardingContextFromSearch(window.location.search);
+  const { service, plan, sessionId } = getOnboardingContextFromSearch(
+    window.location.search,
+  );
   const serviceLabel = SERVICE_LABELS[service || ""] || "your selected service";
   const onboardingHref = buildOnboardingUrl({ service, plan, sessionId });
 
@@ -35,7 +40,11 @@ export default function PaymentSuccess() {
               Payment Received!
             </h1>
             <p className="text-lg text-muted-foreground mb-8">
-              Thank you for your deposit for <span className="text-foreground font-medium">{serviceLabel}</span>. We're excited to work with you.
+              Thank you for your deposit for{" "}
+              <span className="text-foreground font-medium">
+                {serviceLabel}
+              </span>
+              . We're excited to work with you.
             </p>
 
             <div className="bg-surface border border-white/[0.06] rounded-xl p-6 text-left mb-8">
@@ -44,27 +53,49 @@ export default function PaymentSuccess() {
               </h3>
               <ol className="space-y-4">
                 <li className="flex gap-3">
-                  <span className="shrink-0 w-6 h-6 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center">1</span>
+                  <span className="shrink-0 w-6 h-6 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center">
+                    1
+                  </span>
                   <span className="text-sm text-muted-foreground">
-                    <span className="text-foreground font-medium">Confirmation email</span> — Check your inbox for a receipt and next-steps details.
+                    <span className="text-foreground font-medium">
+                      Confirmation email
+                    </span>{" "}
+                    — Check your inbox for a receipt and next-steps details.
                   </span>
                 </li>
                 <li className="flex gap-3">
-                  <span className="shrink-0 w-6 h-6 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center">2</span>
+                  <span className="shrink-0 w-6 h-6 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center">
+                    2
+                  </span>
                   <span className="text-sm text-muted-foreground">
-                    <span className="text-foreground font-medium">Kickoff call</span> — Tea will reach out within 1 business day to schedule your kickoff call.
+                    <span className="text-foreground font-medium">
+                      Kickoff call
+                    </span>{" "}
+                    — Tea will reach out within 1 business day to schedule your
+                    kickoff call.
                   </span>
                 </li>
                 <li className="flex gap-3">
-                  <span className="shrink-0 w-6 h-6 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center">3</span>
+                  <span className="shrink-0 w-6 h-6 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center">
+                    3
+                  </span>
                   <span className="text-sm text-muted-foreground">
-                    <span className="text-foreground font-medium">Engagement documents</span> — You'll receive your Engagement Letter and NDA via Adobe Sign.
+                    <span className="text-foreground font-medium">
+                      Engagement documents
+                    </span>{" "}
+                    — You'll receive your Engagement Letter and NDA via Adobe
+                    Sign.
                   </span>
                 </li>
                 <li className="flex gap-3">
-                  <span className="shrink-0 w-6 h-6 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center">4</span>
+                  <span className="shrink-0 w-6 h-6 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center">
+                    4
+                  </span>
                   <span className="text-sm text-muted-foreground">
-                    <span className="text-foreground font-medium">Onboarding</span> — Complete the intake form so we can hit the ground running.
+                    <span className="text-foreground font-medium">
+                      Onboarding
+                    </span>{" "}
+                    — Complete the intake form so we can hit the ground running.
                   </span>
                 </li>
               </ol>
@@ -86,13 +117,22 @@ export default function PaymentSuccess() {
             </div>
 
             <div className="border-t border-white/[0.06] pt-6">
-              <p className="text-xs text-muted-foreground mb-3">Questions? We're here to help.</p>
+              <p className="text-xs text-muted-foreground mb-3">
+                Questions? We're here to help.
+              </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center text-sm text-muted-foreground">
-                <a href="tel:+15413198654" className="flex items-center gap-2 hover:text-foreground transition-colors">
+                <a
+                  href="tel:+15413198654"
+                  className="flex items-center gap-2 hover:text-foreground transition-colors"
+                >
                   <Phone size={14} className="text-accent" /> (541) 319-8654
                 </a>
-                <a href="mailto:tea@blueprintsandbookkeeping.com" className="flex items-center gap-2 hover:text-foreground transition-colors">
-                  <Mail size={14} className="text-accent" /> tea@blueprintsandbookkeeping.com
+                <a
+                  href="mailto:tea@blueprintsandbookkeeping.com"
+                  className="flex items-center gap-2 hover:text-foreground transition-colors"
+                >
+                  <Mail size={14} className="text-accent" />{" "}
+                  tea@blueprintsandbookkeeping.com
                 </a>
               </div>
             </div>

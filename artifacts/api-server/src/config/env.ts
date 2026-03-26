@@ -6,7 +6,9 @@ import { z } from "zod";
  */
 const envSchema = z.object({
   // Server Configuration
-  NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
+  NODE_ENV: z
+    .enum(["development", "production", "test"])
+    .default("development"),
   PORT: z.string().regex(/^\d+$/).transform(Number).default("3001"),
 
   // Database
@@ -19,7 +21,9 @@ const envSchema = z.object({
   SITE_URL: z.string().url().optional(),
 
   // Authentication & Security
-  ADMIN_TOKEN: z.string().min(32, "ADMIN_TOKEN must be at least 32 characters for security"),
+  ADMIN_TOKEN: z
+    .string()
+    .min(32, "ADMIN_TOKEN must be at least 32 characters for security"),
 
   // Email - Resend
   RESEND_API_KEY: z.string().min(1, "RESEND_API_KEY is required"),
@@ -84,7 +88,7 @@ export function validateEnv(): Env {
 
       throw new Error(
         `Environment variable validation failed:\n${errorMessages.join("\n")}\n\n` +
-        "Please ensure all required environment variables are set correctly."
+          "Please ensure all required environment variables are set correctly.",
       );
     }
     throw error;
@@ -98,7 +102,7 @@ export function validateEnv(): Env {
 export function getEnv(): Env {
   if (!cachedEnv) {
     throw new Error(
-      "Environment variables not initialized. Call validateEnv() at application startup."
+      "Environment variables not initialized. Call validateEnv() at application startup.",
     );
   }
   return cachedEnv;
@@ -126,7 +130,7 @@ export function getAdobeSignConfig() {
   if (!isAdobeSignConfigured()) {
     throw new Error(
       "Adobe Sign is not configured. Please set ADOBE_SIGN_CLIENT_ID, " +
-      "ADOBE_SIGN_CLIENT_SECRET, and ADOBE_SIGN_REFRESH_TOKEN environment variables."
+        "ADOBE_SIGN_CLIENT_SECRET, and ADOBE_SIGN_REFRESH_TOKEN environment variables.",
     );
   }
 

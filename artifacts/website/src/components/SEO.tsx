@@ -13,12 +13,21 @@ interface SEOProps {
 const BASE_TITLE = "Blueprints & Bookkeeping";
 const BASE_URL = "https://blueprintsandbookkeeping.com";
 const DEFAULT_OG_IMAGE = `${BASE_URL}/opengraph.jpg`;
-const DEFAULT_DESCRIPTION = "Your Blueprint to Business Success. Advanced bookkeeping and professional business plans for complex, high-growth businesses.";
+const DEFAULT_DESCRIPTION =
+  "Your Blueprint to Business Success. Advanced bookkeeping and professional business plans for complex, high-growth businesses.";
 
 const MANAGED_META_TAGS = [
   "description",
-  "og:title", "og:description", "og:url", "og:type", "og:image", "og:site_name",
-  "twitter:card", "twitter:title", "twitter:description", "twitter:image"
+  "og:title",
+  "og:description",
+  "og:url",
+  "og:type",
+  "og:image",
+  "og:site_name",
+  "twitter:card",
+  "twitter:title",
+  "twitter:description",
+  "twitter:image",
 ];
 
 function setMeta(name: string, content: string) {
@@ -57,7 +66,7 @@ function removeCanonical() {
 }
 
 function setJsonLd(data: Record<string, unknown> | Record<string, unknown>[]) {
-  const existing = document.querySelector('script[data-seo-jsonld]');
+  const existing = document.querySelector("script[data-seo-jsonld]");
   if (existing) existing.remove();
 
   const script = document.createElement("script");
@@ -71,7 +80,7 @@ function setJsonLd(data: Record<string, unknown> | Record<string, unknown>[]) {
 }
 
 function removeJsonLd() {
-  const existing = document.querySelector('script[data-seo-jsonld]');
+  const existing = document.querySelector("script[data-seo-jsonld]");
   if (existing) existing.remove();
 }
 
@@ -90,7 +99,15 @@ function restoreRobotsMeta() {
   if (el) el.setAttribute("content", "index, follow");
 }
 
-export function SEO({ title, description, path, ogImage, ogType, jsonLd, noindex }: SEOProps) {
+export function SEO({
+  title,
+  description,
+  path,
+  ogImage,
+  ogType,
+  jsonLd,
+  noindex,
+}: SEOProps) {
   const fullTitle = title ? `${title} | ${BASE_TITLE}` : BASE_TITLE;
   const url = path ? `${BASE_URL}${path}` : BASE_URL;
   const image = ogImage || DEFAULT_OG_IMAGE;

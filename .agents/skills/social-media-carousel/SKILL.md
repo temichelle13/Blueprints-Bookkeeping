@@ -21,15 +21,14 @@ infsh app run infsh/html-to-image --input '{
 }'
 ```
 
-
 ## Platform Specs
 
-| Platform | Dimensions | Slides | Aspect Ratios |
-|----------|-----------|--------|---------------|
-| **Instagram** | 1080 x 1080 px | Up to 20 | 1:1 (default), 4:5, 16:9 |
-| **LinkedIn** | 1080 x 1080 px or 1080 x 1350 | Up to 20 | 1:1, 4:5 |
-| **Twitter/X** | 1080 x 1080 px | Up to 4 | 1:1, 16:9 |
-| **Facebook** | 1080 x 1080 px | Up to 10 | 1:1, 4:5 |
+| Platform      | Dimensions                    | Slides   | Aspect Ratios            |
+| ------------- | ----------------------------- | -------- | ------------------------ |
+| **Instagram** | 1080 x 1080 px                | Up to 20 | 1:1 (default), 4:5, 16:9 |
+| **LinkedIn**  | 1080 x 1080 px or 1080 x 1350 | Up to 20 | 1:1, 4:5                 |
+| **Twitter/X** | 1080 x 1080 px                | Up to 4  | 1:1, 16:9                |
+| **Facebook**  | 1080 x 1080 px                | Up to 10 | 1:1, 4:5                 |
 
 **Use 1080 x 1350 (4:5)** on Instagram and LinkedIn — takes up more screen real estate in the feed than square.
 
@@ -37,24 +36,24 @@ infsh app run infsh/html-to-image --input '{
 
 ### The 7-Slide Framework
 
-| Slide | Purpose | Content |
-|-------|---------|---------|
-| 1 | **Hook** | Bold claim, question, or promise — stops the scroll |
-| 2 | **Context** | Why this matters, set up the problem |
-| 3-6 | **Value** | One point per slide, numbered |
-| 7 | **CTA** | Follow, save, share, comment, visit link |
+| Slide | Purpose     | Content                                             |
+| ----- | ----------- | --------------------------------------------------- |
+| 1     | **Hook**    | Bold claim, question, or promise — stops the scroll |
+| 2     | **Context** | Why this matters, set up the problem                |
+| 3-6   | **Value**   | One point per slide, numbered                       |
+| 7     | **CTA**     | Follow, save, share, comment, visit link            |
 
 ### Slide 1: The Hook
 
 The most important slide. If this fails, nobody swipes.
 
-| Hook Type | Example |
-|-----------|---------|
-| Bold claim | "90% of landing pages make this mistake" |
-| Question | "Why do your ads get clicks but no conversions?" |
-| Number + promise | "7 Python tricks I wish I learned sooner" |
-| Contrarian | "Stop writing blog posts (do this instead)" |
-| Before/after | Show transformation |
+| Hook Type        | Example                                          |
+| ---------------- | ------------------------------------------------ |
+| Bold claim       | "90% of landing pages make this mistake"         |
+| Question         | "Why do your ads get clicks but no conversions?" |
+| Number + promise | "7 Python tricks I wish I learned sooner"        |
+| Contrarian       | "Stop writing blog posts (do this instead)"      |
+| Before/after     | Show transformation                              |
 
 ```bash
 # Hook slide
@@ -87,33 +86,33 @@ infsh app run infsh/html-to-image --input '{
 
 ### Text Hierarchy
 
-| Element | Size (at 1080px) | Weight |
-|---------|-----------------|--------|
-| Slide number | 96-120px | Black (900) |
-| Heading | 48-64px | Bold (700-800) |
-| Body text | 24-28px | Regular (400) |
-| Caption/tag | 18-22px | Medium (500) |
+| Element      | Size (at 1080px) | Weight         |
+| ------------ | ---------------- | -------------- |
+| Slide number | 96-120px         | Black (900)    |
+| Heading      | 48-64px          | Bold (700-800) |
+| Body text    | 24-28px          | Regular (400)  |
+| Caption/tag  | 18-22px          | Medium (500)   |
 
 ### Readability
 
-| Rule | Value |
-|------|-------|
-| Max words per slide | 30-40 |
-| Max lines of body text | 4-5 |
-| Line height | 1.5-1.6 |
-| Font | Sans-serif (Inter, Montserrat, Poppins) |
-| Text contrast | 4.5:1 minimum (WCAG AA) |
+| Rule                   | Value                                   |
+| ---------------------- | --------------------------------------- |
+| Max words per slide    | 30-40                                   |
+| Max lines of body text | 4-5                                     |
+| Line height            | 1.5-1.6                                 |
+| Font                   | Sans-serif (Inter, Montserrat, Poppins) |
+| Text contrast          | 4.5:1 minimum (WCAG AA)                 |
 
 ### Visual Consistency
 
-| Element | Keep Consistent Across All Slides |
-|---------|----------------------------------|
+| Element                   | Keep Consistent Across All Slides  |
+| ------------------------- | ---------------------------------- |
 | Background color/gradient | Same palette, slight variations OK |
-| Font family | Same font throughout |
-| Text alignment | Same position (left or center) |
-| Margins/padding | Same spacing |
-| Accent color | Same highlight color |
-| Numbering style | Same format (01, 02 or 1., 2.) |
+| Font family               | Same font throughout               |
+| Text alignment            | Same position (left or center)     |
+| Margins/padding           | Same spacing                       |
+| Accent color              | Same highlight color               |
+| Numbering style           | Same format (01, 02 or 1., 2.)     |
 
 ## Carousel Types
 
@@ -162,13 +161,13 @@ Slide 7: "Save this for later 🔖"
 
 ## Swipe Psychology
 
-| Principle | Application |
-|-----------|------------|
-| **Curiosity gap** | Hook promises value that requires swiping |
-| **Numbered progress** | "3/7" creates completion drive |
-| **Visual continuity** | Consistent design signals "there's more" |
-| **Increasing value** | Best tip last — rewards completing |
-| **Swipe cue** | Arrow or "Swipe →" on slide 1 |
+| Principle             | Application                               |
+| --------------------- | ----------------------------------------- |
+| **Curiosity gap**     | Hook promises value that requires swiping |
+| **Numbered progress** | "3/7" creates completion drive            |
+| **Visual continuity** | Consistent design signals "there's more"  |
+| **Increasing value**  | Best tip last — rewards completing        |
+| **Swipe cue**         | Arrow or "Swipe →" on slide 1             |
 
 ## Batch Generation
 
@@ -194,16 +193,16 @@ infsh app run falai/flux-dev-lora --input '{
 
 ## Common Mistakes
 
-| Mistake | Problem | Fix |
-|---------|---------|-----|
-| Weak hook (slide 1) | Nobody swipes | Bold claim, question, or number + promise |
-| Too much text per slide | Overwhelming, stops reading | Max 30-40 words per slide |
-| No visual consistency | Looks like different posts | Same colors, fonts, margins throughout |
-| No swipe indicator | People don't realize there's more | Add "Swipe →" or arrow on slide 1 |
-| No CTA on last slide | Missed engagement opportunity | Ask to save, follow, share, or comment |
-| Inconsistent numbering | Feels disorganized | Same number format on every content slide |
-| Cramming 2+ ideas per slide | Hard to digest | One point per slide, always |
-| Square format on Instagram | Wastes feed real estate | Use 1080x1350 (4:5) for more visibility |
+| Mistake                     | Problem                           | Fix                                       |
+| --------------------------- | --------------------------------- | ----------------------------------------- |
+| Weak hook (slide 1)         | Nobody swipes                     | Bold claim, question, or number + promise |
+| Too much text per slide     | Overwhelming, stops reading       | Max 30-40 words per slide                 |
+| No visual consistency       | Looks like different posts        | Same colors, fonts, margins throughout    |
+| No swipe indicator          | People don't realize there's more | Add "Swipe →" or arrow on slide 1         |
+| No CTA on last slide        | Missed engagement opportunity     | Ask to save, follow, share, or comment    |
+| Inconsistent numbering      | Feels disorganized                | Same number format on every content slide |
+| Cramming 2+ ideas per slide | Hard to digest                    | One point per slide, always               |
+| Square format on Instagram  | Wastes feed real estate           | Use 1080x1350 (4:5) for more visibility   |
 
 ## Related Skills
 
@@ -214,4 +213,3 @@ npx skills add inference-sh/skills@linkedin-content
 ```
 
 Browse all apps: `infsh app list`
-

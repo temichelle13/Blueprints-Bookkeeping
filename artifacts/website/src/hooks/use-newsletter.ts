@@ -15,8 +15,13 @@ export function useNewsletterMutation() {
   const subscribe = async (data: SubscribeParams) => {
     try {
       const { website: _honeypot, ...payload } = data;
-      const result = await mutation.mutateAsync({ data: { ...payload, website: _honeypot } as any });
-      const eventName = data.signupSource === "lead_magnet" ? "Lead Magnet Download" : "Newsletter Signup";
+      const result = await mutation.mutateAsync({
+        data: { ...payload, website: _honeypot } as any,
+      });
+      const eventName =
+        data.signupSource === "lead_magnet"
+          ? "Lead Magnet Download"
+          : "Newsletter Signup";
       trackEvent(eventName, { source: data.signupSource });
       toast({
         title: "You're In!",

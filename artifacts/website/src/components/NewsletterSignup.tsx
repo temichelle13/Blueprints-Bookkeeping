@@ -14,7 +14,10 @@ export function FooterNewsletterSignup() {
     if (honeypot.trim()) {
       return;
     }
-    const success = await subscribe({ email: email.trim(), signupSource: "footer" });
+    const success = await subscribe({
+      email: email.trim(),
+      signupSource: "footer",
+    });
     if (success) {
       setSubscribed(true);
       setEmail("");
@@ -32,11 +35,24 @@ export function FooterNewsletterSignup() {
 
   return (
     <form onSubmit={handleSubmit} className="relative flex gap-2">
-      <div className="pointer-events-none absolute opacity-0 h-0 w-0 overflow-hidden" aria-hidden="true" tabIndex={-1}>
+      <div
+        className="pointer-events-none absolute opacity-0 h-0 w-0 overflow-hidden"
+        aria-hidden="true"
+        tabIndex={-1}
+      >
         <label htmlFor="footer-nl-website">Website</label>
-        <input id="footer-nl-website" type="text" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} tabIndex={-1} autoComplete="off" />
+        <input
+          id="footer-nl-website"
+          type="text"
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
+          tabIndex={-1}
+          autoComplete="off"
+        />
       </div>
-      <label htmlFor="footer-newsletter-email" className="sr-only">Email address</label>
+      <label htmlFor="footer-newsletter-email" className="sr-only">
+        Email address
+      </label>
       <input
         id="footer-newsletter-email"
         type="email"
@@ -51,7 +67,11 @@ export function FooterNewsletterSignup() {
         disabled={isPending}
         className="shrink-0 px-4 py-2.5 bg-accent/15 border border-accent/30 text-accent font-semibold text-sm rounded-lg hover:bg-accent hover:text-white hover:border-accent transition-all duration-300 disabled:opacity-50 flex items-center gap-1.5"
       >
-        {isPending ? <Loader2 size={14} className="animate-spin" aria-hidden="true" /> : <Send size={14} aria-hidden="true" />}
+        {isPending ? (
+          <Loader2 size={14} className="animate-spin" aria-hidden="true" />
+        ) : (
+          <Send size={14} aria-hidden="true" />
+        )}
         Subscribe
       </button>
     </form>

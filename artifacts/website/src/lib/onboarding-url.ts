@@ -4,7 +4,9 @@ interface OnboardingRouteContext {
   sessionId?: string | null;
 }
 
-export function getOnboardingContextFromSearch(search: string): OnboardingRouteContext {
+export function getOnboardingContextFromSearch(
+  search: string,
+): OnboardingRouteContext {
   const params = new URLSearchParams(search);
 
   return {
@@ -14,7 +16,9 @@ export function getOnboardingContextFromSearch(search: string): OnboardingRouteC
   };
 }
 
-export function buildOnboardingUrl(context: OnboardingRouteContext = {}): string {
+export function buildOnboardingUrl(
+  context: OnboardingRouteContext = {},
+): string {
   const params = new URLSearchParams();
 
   if (context.sessionId) {

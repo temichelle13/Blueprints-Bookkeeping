@@ -89,7 +89,10 @@ class RateLimiter {
 
       // Set rate limit headers
       res.setHeader("X-RateLimit-Limit", this.config.maxRequests.toString());
-      res.setHeader("X-RateLimit-Remaining", (this.config.maxRequests - entry.count).toString());
+      res.setHeader(
+        "X-RateLimit-Remaining",
+        (this.config.maxRequests - entry.count).toString(),
+      );
       res.setHeader("X-RateLimit-Reset", entry.resetAt.toString());
 
       next();

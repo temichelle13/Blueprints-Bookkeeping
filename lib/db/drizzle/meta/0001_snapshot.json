@@ -154,16 +154,12 @@
         "newsletter_subscribers_email_unique": {
           "name": "newsletter_subscribers_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         },
         "newsletter_subscribers_unsubscribe_token_unique": {
           "name": "newsletter_subscribers_unsubscribe_token_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "unsubscribe_token"
-          ]
+          "columns": ["unsubscribe_token"]
         }
       },
       "policies": {},
@@ -244,12 +240,8 @@
           "name": "messages_conversation_id_conversations_id_fk",
           "tableFrom": "messages",
           "tableTo": "conversations",
-          "columnsFrom": [
-            "conversation_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["conversation_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -829,9 +821,7 @@
         "bookings_cal_booking_id_unique": {
           "name": "bookings_cal_booking_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "cal_booking_id"
-          ]
+          "columns": ["cal_booking_id"]
         }
       },
       "policies": {},
@@ -843,20 +833,12 @@
     "public.booking_status": {
       "name": "booking_status",
       "schema": "public",
-      "values": [
-        "confirmed",
-        "cancelled",
-        "rescheduled"
-      ]
+      "values": ["confirmed", "cancelled", "rescheduled"]
     },
     "public.meeting_type": {
       "name": "meeting_type",
       "schema": "public",
-      "values": [
-        "video",
-        "phone",
-        "async"
-      ]
+      "values": ["video", "phone", "async"]
     }
   },
   "schemas": {},

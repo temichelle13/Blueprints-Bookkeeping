@@ -9,7 +9,9 @@ export const clientDocumentsTable = pgTable("client_documents", {
   fileSize: integer("file_size").notNull(),
   mimeType: text("mime_type").notNull(),
   storagePath: text("storage_path").notNull(),
-  uploadedAt: timestamp("uploaded_at", { withTimezone: true }).notNull().defaultNow(),
+  uploadedAt: timestamp("uploaded_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 });
 
 export type ClientDocument = typeof clientDocumentsTable.$inferSelect;

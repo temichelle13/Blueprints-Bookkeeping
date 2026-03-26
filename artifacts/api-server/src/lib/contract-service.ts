@@ -5,22 +5,33 @@ import * as ccStorage from "./adobe-cc-storage";
 import { Resend } from "resend";
 
 const OWNER_EMAIL = "tea@blueprintsandbookkeeping.com";
-const FROM_ADDRESS = "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
+const FROM_ADDRESS =
+  "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
 
-async function notifyAdminExpired(contracts: Array<{ clientName: string; clientEmail: string; contractType: string }>): Promise<void> {
+async function notifyAdminExpired(
+  contracts: Array<{
+    clientName: string;
+    clientEmail: string;
+    contractType: string;
+  }>,
+): Promise<void> {
   const key = process.env["RESEND_API_KEY"];
   if (!key || contracts.length === 0) return;
 
   const resend = new Resend(key);
   const rows = contracts
-    .map((c) => `<tr><td style="padding:6px 12px;border-bottom:1px solid #e2e5f0;">${c.clientName}</td><td style="padding:6px 12px;border-bottom:1px solid #e2e5f0;">${c.clientEmail}</td><td style="padding:6px 12px;border-bottom:1px solid #e2e5f0;">${c.contractType.replace(/_/g, " ")}</td></tr>`)
+    .map(
+      (c) =>
+        `<tr><td style="padding:6px 12px;border-bottom:1px solid #e2e5f0;">${c.clientName}</td><td style="padding:6px 12px;border-bottom:1px solid #e2e5f0;">${c.clientEmail}</td><td style="padding:6px 12px;border-bottom:1px solid #e2e5f0;">${c.contractType.replace(/_/g, " ")}</td></tr>`,
+    )
     .join("");
 
-  await resend.emails.send({
-    from: FROM_ADDRESS,
-    to: OWNER_EMAIL,
-    subject: `${contracts.length} Contract(s) Auto-Expired — Action May Be Needed`,
-    html: `
+  await resend.emails
+    .send({
+      from: FROM_ADDRESS,
+      to: OWNER_EMAIL,
+      subject: `${contracts.length} Contract(s) Auto-Expired — Action May Be Needed`,
+      html: `
       <div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
         <div style="background:#dc2626;padding:24px 32px;border-radius:8px 8px 0 0;">
           <h1 style="color:white;margin:0;font-size:20px;">Contracts Auto-Expired</h1>
@@ -34,37 +45,41 @@ async function notifyAdminExpired(contracts: Array<{ clientName: string; clientE
           <p style="margin-top:16px;">You may want to follow up with these clients directly or resend the contract from the <a href="https://blueprintsandbookkeeping.com/admin/contracts" style="color:#6366f1;">admin dashboard</a>.</p>
         </div>
       </div>`,
-  }).catch((err) => {
-    console.error("Failed to send expiration notification:", err);
-  });
+    })
+    .catch((err) => {
+      console.error("Failed to send expiration notification:", err);
+    });
 }
 
 const CONTRACT_TYPE_MAP: Record<string, string[]> = {
-  "bookkeeping": ["engagement_letter"],
-  "advanced_bookkeeping": ["engagement_letter"],
-  "business_plans": ["engagement_letter"],
-  "business_planning": ["engagement_letter"],
-  "digital_handshake": ["engagement_letter"],
-  "web_design": ["engagement_letter"],
-  "advisory": ["engagement_letter"],
-  "discovery": ["mutual_nda"],
-  "discovery_call": ["mutual_nda"],
-  "self_service_onboarding": ["engagement_letter", "mutual_nda"],
+  bookkeeping: ["engagement_letter"],
+  advanced_bookkeeping: ["engagement_letter"],
+  business_plans: ["engagement_letter"],
+  business_planning: ["engagement_letter"],
+  digital_handshake: ["engagement_letter"],
+  web_design: ["engagement_letter"],
+  advisory: ["engagement_letter"],
+  discovery: ["mutual_nda"],
+  discovery_call: ["mutual_nda"],
+  self_service_onboarding: ["engagement_letter", "mutual_nda"],
 };
 
 function normalizeServiceName(service: string): string {
-  return service.trim().toLowerCase().replace(/[\s_-]+/g, "_");
+  return service
+    .trim()
+    .toLowerCase()
+    .replace(/[\s_-]+/g, "_");
 }
 
 const SERVICE_ALIASES: Record<string, string> = {
-  "discovery_call": "discovery",
+  discovery_call: "discovery",
   "30_minute_discovery_call": "discovery",
-  "discovery_session": "discovery",
+  discovery_session: "discovery",
   "30min": "discovery",
-  "advanced_bookkeeping": "bookkeeping",
-  "business_plans": "business_planning",
-  "digital_handshake": "digital_handshake",
-  "web_design": "web_design",
+  advanced_bookkeeping: "bookkeeping",
+  business_plans: "business_planning",
+  digital_handshake: "digital_handshake",
+  web_design: "web_design",
 };
 
 function resolveServiceAlias(normalized: string): string {
@@ -75,7 +90,9 @@ export async function processBooking(data: {
   clientName: string;
   clientEmail: string;
   serviceType?: string;
-}): Promise<Array<{ id: number; contractType: string; adobeAgreementId: string | null }>> {
+}): Promise<
+  Array<{ id: number; contractType: string; adobeAgreementId: string | null }>
+> {
   const services = data.serviceType ? [data.serviceType] : null;
   const recurring = await isRecurringClient(data.clientEmail);
 
@@ -88,8 +105,16 @@ export async function processBooking(data: {
     }
   }
 
-  const contractTypes = await determineContractTypes(formType, services, recurring);
-  const results: Array<{ id: number; contractType: string; adobeAgreementId: string | null }> = [];
+  const contractTypes = await determineContractTypes(
+    formType,
+    services,
+    recurring,
+  );
+  const results: Array<{
+    id: number;
+    contractType: string;
+    adobeAgreementId: string | null;
+  }> = [];
 
   if (contractTypes.length === 0) {
     contractTypes.push("engagement_letter");
@@ -105,7 +130,10 @@ export async function processBooking(data: {
       });
       results.push({ ...result, contractType });
     } catch (err) {
-      console.error(`Failed to send ${contractType} on booking for ${data.clientEmail}:`, err);
+      console.error(
+        `Failed to send ${contractType} on booking for ${data.clientEmail}:`,
+        err,
+      );
     }
   }
 
@@ -127,7 +155,9 @@ export async function determineContractTypes(
   const dbTriggerMap = new Map<string, Set<string>>();
   for (const tpl of activeTemplates) {
     if (tpl.triggerCondition) {
-      const conditions = tpl.triggerCondition.split(",").map((s: string) => s.trim());
+      const conditions = tpl.triggerCondition
+        .split(",")
+        .map((s: string) => s.trim());
       for (const condition of conditions) {
         if (!dbTriggerMap.has(condition)) {
           dbTriggerMap.set(condition, new Set());
@@ -168,7 +198,8 @@ export async function determineContractTypes(
       for (const service of servicesInterested) {
         const normalized = normalizeServiceName(service);
         const alias = resolveServiceAlias(normalized);
-        const mapped = CONTRACT_TYPE_MAP[alias] || CONTRACT_TYPE_MAP[normalized];
+        const mapped =
+          CONTRACT_TYPE_MAP[alias] || CONTRACT_TYPE_MAP[normalized];
         if (mapped) {
           for (const t of mapped) types.add(t);
         } else {
@@ -228,27 +259,39 @@ export async function sendContract(opts: {
     { fieldName: "clientEmail", defaultValue: opts.clientEmail },
   ];
   if (opts.serviceType) {
-    mergeFields.push({ fieldName: "serviceType", defaultValue: opts.serviceType });
+    mergeFields.push({
+      fieldName: "serviceType",
+      defaultValue: opts.serviceType,
+    });
   }
   if (opts.pricingTier) {
-    mergeFields.push({ fieldName: "pricingTier", defaultValue: opts.pricingTier });
+    mergeFields.push({
+      fieldName: "pricingTier",
+      defaultValue: opts.pricingTier,
+    });
   }
   if (opts.startDate) {
     mergeFields.push({ fieldName: "startDate", defaultValue: opts.startDate });
   }
 
   if (!adobeSign.isConfigured()) {
-    throw new Error("Adobe Sign API is not configured. Cannot send contracts without ADOBE_SIGN_CLIENT_ID, ADOBE_SIGN_CLIENT_SECRET, and ADOBE_SIGN_REFRESH_TOKEN.");
+    throw new Error(
+      "Adobe Sign API is not configured. Cannot send contracts without ADOBE_SIGN_CLIENT_ID, ADOBE_SIGN_CLIENT_SECRET, and ADOBE_SIGN_REFRESH_TOKEN.",
+    );
   }
 
   if (!template?.adobeTemplateId) {
-    throw new Error(`No active template found for contract type "${opts.contractType}". Create a template in the admin dashboard before sending.`);
+    throw new Error(
+      `No active template found for contract type "${opts.contractType}". Create a template in the admin dashboard before sending.`,
+    );
   }
 
   let adobeAgreementId: string | null = null;
 
   {
-    const contractTypeLabel = opts.contractType.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+    const contractTypeLabel = opts.contractType
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase());
     const expirationDate = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
 
     const agreementInfo: adobeSign.AgreementCreationInfo = {
@@ -304,10 +347,20 @@ export async function processFormSubmission(data: {
   email: string;
   servicesInterested?: string[] | null;
   contactInquiryId: number;
-}): Promise<Array<{ id: number; contractType: string; adobeAgreementId: string | null }>> {
+}): Promise<
+  Array<{ id: number; contractType: string; adobeAgreementId: string | null }>
+> {
   const recurring = await isRecurringClient(data.email);
-  const contractTypes = await determineContractTypes(data.formType, data.servicesInterested ?? null, recurring);
-  const results: Array<{ id: number; contractType: string; adobeAgreementId: string | null }> = [];
+  const contractTypes = await determineContractTypes(
+    data.formType,
+    data.servicesInterested ?? null,
+    recurring,
+  );
+  const results: Array<{
+    id: number;
+    contractType: string;
+    adobeAgreementId: string | null;
+  }> = [];
 
   for (const contractType of contractTypes) {
     try {
@@ -320,7 +373,10 @@ export async function processFormSubmission(data: {
       });
       results.push({ ...result, contractType });
     } catch (err) {
-      console.error(`Failed to send ${contractType} contract to ${data.email}:`, err);
+      console.error(
+        `Failed to send ${contractType} contract to ${data.email}:`,
+        err,
+      );
     }
   }
 
@@ -338,7 +394,11 @@ export async function checkAndSendReminders(): Promise<{
 
   let remindersProcessed = 0;
   let expired = 0;
-  const expiredContracts: Array<{ clientName: string; clientEmail: string; contractType: string }> = [];
+  const expiredContracts: Array<{
+    clientName: string;
+    clientEmail: string;
+    contractType: string;
+  }> = [];
 
   const pendingContracts = await db
     .select()
@@ -363,7 +423,10 @@ export async function checkAndSendReminders(): Promise<{
         try {
           await adobeSign.cancelAgreement(contract.adobeAgreementId);
         } catch (err) {
-          console.error(`Failed to cancel agreement ${contract.adobeAgreementId}:`, err);
+          console.error(
+            `Failed to cancel agreement ${contract.adobeAgreementId}:`,
+            err,
+          );
         }
       }
       expiredContracts.push({
@@ -392,7 +455,10 @@ export async function checkAndSendReminders(): Promise<{
           .where(eq(contractsTable.id, contract.id));
         remindersProcessed++;
       } catch (err) {
-        console.error(`Failed to send reminder for contract ${contract.id}:`, err);
+        console.error(
+          `Failed to send reminder for contract ${contract.id}:`,
+          err,
+        );
       }
     }
   }
@@ -417,14 +483,20 @@ export async function syncAgreementStatus(contractId: number): Promise<void> {
   const details = await adobeSign.getAgreement(contract.adobeAgreementId);
   const now = new Date();
 
-  if (details.status === "OUT_FOR_SIGNATURE" || details.status === "OUT_FOR_APPROVAL") {
+  if (
+    details.status === "OUT_FOR_SIGNATURE" ||
+    details.status === "OUT_FOR_APPROVAL"
+  ) {
     if (contract.status !== "sent") {
       await db
         .update(contractsTable)
         .set({ status: "sent", updatedAt: now })
         .where(eq(contractsTable.id, contractId));
     }
-  } else if (details.status === "VIEWED" || details.status === "WAITING_FOR_MY_SIGNATURE") {
+  } else if (
+    details.status === "VIEWED" ||
+    details.status === "WAITING_FOR_MY_SIGNATURE"
+  ) {
     if (contract.status !== "viewed") {
       await db
         .update(contractsTable)
@@ -438,8 +510,13 @@ export async function syncAgreementStatus(contractId: number): Promise<void> {
       .where(eq(contractsTable.id, contractId));
 
     try {
-      const signedPdf = await adobeSign.getSignedDocument(contract.adobeAgreementId);
-      const archivePath = ccStorage.buildArchivePath(contract.clientName, contract.contractType);
+      const signedPdf = await adobeSign.getSignedDocument(
+        contract.adobeAgreementId,
+      );
+      const archivePath = ccStorage.buildArchivePath(
+        contract.clientName,
+        contract.contractType,
+      );
       await ccStorage.uploadToCreativeCloud(archivePath, signedPdf);
 
       await db
@@ -447,7 +524,10 @@ export async function syncAgreementStatus(contractId: number): Promise<void> {
         .set({ signedDocumentUrl: archivePath, updatedAt: now })
         .where(eq(contractsTable.id, contractId));
     } catch (err) {
-      console.error(`Failed to archive signed document for contract ${contractId}:`, err);
+      console.error(
+        `Failed to archive signed document for contract ${contractId}:`,
+        err,
+      );
     }
   } else if (details.status === "CANCELLED" || details.status === "EXPIRED") {
     await db
@@ -465,11 +545,7 @@ export async function syncAllPendingAgreements(): Promise<number> {
   const pending = await db
     .select()
     .from(contractsTable)
-    .where(
-      and(
-        inArray(contractsTable.status, ["sent", "viewed"]),
-      ),
-    );
+    .where(and(inArray(contractsTable.status, ["sent", "viewed"])));
 
   let synced = 0;
   for (const contract of pending) {

@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Mail, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
-import { useUnsubscribeNewsletter, unsubscribeNewsletterByToken } from "@workspace/api-client-react";
+import {
+  useUnsubscribeNewsletter,
+  unsubscribeNewsletterByToken,
+} from "@workspace/api-client-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 
@@ -63,7 +66,8 @@ export default function Unsubscribe() {
                 You've Been Unsubscribed
               </h1>
               <p className="text-muted-foreground">
-                Your email has been removed from our list. We're sorry to see you go.
+                Your email has been removed from our list. We're sorry to see
+                you go.
               </p>
             </>
           ) : state === "error" ? (
@@ -92,7 +96,9 @@ export default function Unsubscribe() {
                 Enter your email address to unsubscribe from our newsletter.
               </p>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <label htmlFor="unsub-email" className="sr-only">Email address</label>
+                <label htmlFor="unsub-email" className="sr-only">
+                  Email address
+                </label>
                 <input
                   id="unsub-email"
                   type="email"

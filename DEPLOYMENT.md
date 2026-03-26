@@ -70,11 +70,13 @@ VITE_API_URL=
 **Symptoms**: Contact forms, intake forms, newsletter signup return errors or fail silently.
 
 **Root Causes**:
+
 1. `VITE_API_URL` not set during website build
 2. `CORS_ORIGIN` not configured on backend
 3. API server not running or unreachable
 
 **Solution**:
+
 ```bash
 # During website build:
 export VITE_API_URL=https://api.blueprintsandbookkeeping.com
@@ -121,6 +123,7 @@ export CORS_ORIGIN=https://blueprintsandbookkeeping.com
 If you want to deploy to Cloudflare instead of Replit, you'll need to:
 
 1. **Create `wrangler.toml`** in the root directory (for Cloudflare Pages):
+
 ```toml
 name = "blueprints-bookkeeping"
 pages_build_output_dir = "artifacts/website/dist/public"
@@ -147,6 +150,7 @@ command = "pnpm install && pnpm --filter @workspace/website run build"
    - `VITE_API_URL` (if needed)
 
 2. The `.replit` file handles the deployment:
+
    ```bash
    pnpm install
    pnpm run build
@@ -157,17 +161,20 @@ command = "pnpm install && pnpm --filter @workspace/website run build"
 ### Manual Deployment
 
 1. **Install dependencies**:
+
    ```bash
    pnpm install --frozen-lockfile
    ```
 
 2. **Build the website**:
+
    ```bash
    export VITE_API_URL=<your-api-url-or-empty>
    pnpm --filter @workspace/website run build
    ```
 
 3. **Build the API server**:
+
    ```bash
    pnpm --filter @workspace/api-server run build
    ```
@@ -219,6 +226,7 @@ Access to fetch at 'https://api.example.com/api/...' from origin 'https://exampl
 **Symptoms**: Chat widget shows offline message even though API is running.
 
 **Fix**:
+
 1. Check `VITE_API_URL` is set
 2. Check `/api/healthz` endpoint is accessible
 3. Check CORS configuration
@@ -232,6 +240,7 @@ Access to fetch at 'https://api.example.com/api/...' from origin 'https://exampl
 ## Support
 
 For deployment issues, contact Tea at tea@blueprintsandbookkeeping.com or check:
+
 - `.env.example` - List of all environment variables
 - `artifacts/website/.replit-artifact/artifact.toml` - Frontend configuration
 - `.replit` - Main deployment configuration

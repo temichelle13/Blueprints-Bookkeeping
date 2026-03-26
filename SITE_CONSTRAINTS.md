@@ -8,13 +8,16 @@
 ## Services — What This Business Does
 
 ### CORE services (the only two to emphasize everywhere):
+
 1. **Advanced Bookkeeping** — ongoing monthly bookkeeping, QuickBooks Online management, reconciliation, niche industries (crypto, ag/timber, SaaS)
 2. **Business Plans** — startup plans, SBA-ready plans, investor-ready financials, LivePlan-powered forecasting
 
 ### ADD-ON only (never positioned as a standalone or core service):
+
 - **The Digital Handshake** — a business plan delivered as a website. Only available to existing bookkeeping or business plan clients. **Do NOT add it to the home page hero, main nav, or anywhere it would appear as a third core service.**
 
 ### NEVER offered (do not add, imply, or reference):
+
 - Tax preparation
 - Tax filing
 - Tax advice
@@ -25,16 +28,16 @@
 
 ## Third-Party Services Actually in Use
 
-| Service | In Use | Notes |
-|---------|--------|-------|
-| **Calendly** | YES | URL: `https://calendly.com/tea-blueprintsandbookkeeping/30min` |
-| Cal.com | NO | Do NOT integrate. Do NOT embed. Do NOT reference. |
-| QuickBooks Online | YES | Tea uses QBO. Stripe for online sign-ups. QB Payments for invoicing existing clients. |
-| Resend | YES | All transactional email goes through Resend (API key in env) |
-| Adobe Acrobat Sign | YES | Contract automation |
-| Stripe | YES | Online sign-up checkout for Essentials/Growth only. NOT for invoicing existing clients. |
-| Plausible | YES | Analytics. Configured via VITE_ANALYTICS_ID env var. |
-| LivePlan | YES | Business planning tool partnership |
+| Service            | In Use | Notes                                                                                   |
+| ------------------ | ------ | --------------------------------------------------------------------------------------- |
+| **Calendly**       | YES    | URL: `https://calendly.com/tea-blueprintsandbookkeeping/30min`                          |
+| Cal.com            | NO     | Do NOT integrate. Do NOT embed. Do NOT reference.                                       |
+| QuickBooks Online  | YES    | Tea uses QBO. Stripe for online sign-ups. QB Payments for invoicing existing clients.   |
+| Resend             | YES    | All transactional email goes through Resend (API key in env)                            |
+| Adobe Acrobat Sign | YES    | Contract automation                                                                     |
+| Stripe             | YES    | Online sign-up checkout for Essentials/Growth only. NOT for invoicing existing clients. |
+| Plausible          | YES    | Analytics. Configured via VITE_ANALYTICS_ID env var.                                    |
+| LivePlan           | YES    | Business planning tool partnership                                                      |
 
 ---
 

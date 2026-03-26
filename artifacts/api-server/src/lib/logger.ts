@@ -28,15 +28,26 @@ class Logger {
 
   constructor() {
     const env = getEnv();
-    this.minLevel = env.NODE_ENV === "production" ? LogLevel.INFO : LogLevel.DEBUG;
+    this.minLevel =
+      env.NODE_ENV === "production" ? LogLevel.INFO : LogLevel.DEBUG;
   }
 
   private shouldLog(level: LogLevel): boolean {
-    const levels = [LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARN, LogLevel.ERROR];
+    const levels = [
+      LogLevel.DEBUG,
+      LogLevel.INFO,
+      LogLevel.WARN,
+      LogLevel.ERROR,
+    ];
     return levels.indexOf(level) >= levels.indexOf(this.minLevel);
   }
 
-  private formatLog(level: LogLevel, message: string, context?: LogContext, error?: Error): LogEntry {
+  private formatLog(
+    level: LogLevel,
+    message: string,
+    context?: LogContext,
+    error?: Error,
+  ): LogEntry {
     const entry: LogEntry = {
       timestamp: new Date().toISOString(),
       level,
@@ -66,9 +77,15 @@ class Logger {
       console.log(JSON.stringify(entry));
     } else {
       // In development, output human-readable format
-      const contextStr = entry.context ? ` ${JSON.stringify(entry.context)}` : "";
-      const errorStr = entry.error ? `\n  Error: ${entry.error.message}\n  Stack: ${entry.error.stack}` : "";
-      console.log(`[${entry.timestamp}] ${entry.level.toUpperCase()}: ${entry.message}${contextStr}${errorStr}`);
+      const contextStr = entry.context
+        ? ` ${JSON.stringify(entry.context)}`
+        : "";
+      const errorStr = entry.error
+        ? `\n  Error: ${entry.error.message}\n  Stack: ${entry.error.stack}`
+        : "";
+      console.log(
+        `[${entry.timestamp}] ${entry.level.toUpperCase()}: ${entry.message}${contextStr}${errorStr}`,
+      );
     }
   }
 

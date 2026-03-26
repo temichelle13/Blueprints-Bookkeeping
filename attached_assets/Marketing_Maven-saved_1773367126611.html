@@ -1,326 +1,553 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Blueprints & Bookkeeping | Vision Board</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:ital,wght@0,200;0,400;0,700;1,200&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:ital,wght@0,200;0,400;0,700;1,200&display=swap"
+      rel="stylesheet"
+    />
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            navy: '#0F172A',
-                            gold: '#F59E0B',
-                            emerald: '#10B981',
-                            accent: '#6366F1',
-                            glass: 'rgba(255, 255, 255, 0.05)',
-                        }
-                    },
-                    fontFamily: {
-                        display: ['Outfit', 'sans-serif'],
-                        body: ['Plus Jakarta Sans', 'sans-serif'],
-                    },
-                    animation: {
-                        'float': 'float 6s ease-in-out infinite',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-20px)' },
-                        }
-                    }
-                }
-            }
-        }
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                navy: "#0F172A",
+                gold: "#F59E0B",
+                emerald: "#10B981",
+                accent: "#6366F1",
+                glass: "rgba(255, 255, 255, 0.05)",
+              },
+            },
+            fontFamily: {
+              display: ["Outfit", "sans-serif"],
+              body: ["Plus Jakarta Sans", "sans-serif"],
+            },
+            animation: {
+              float: "float 6s ease-in-out infinite",
+              "pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+            },
+            keyframes: {
+              float: {
+                "0%, 100%": { transform: "translateY(0)" },
+                "50%": { transform: "translateY(-20px)" },
+              },
+            },
+          },
+        },
+      };
     </script>
     <style>
-        body {
-            background-color: #020617;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(245, 158, 11, 0.1) 0px, transparent 50%);
-            color: #F8FAFC;
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .glass-card:hover {
-            border-color: rgba(245, 158, 11, 0.4);
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.06);
-        }
-        .bento-item {
-            position: relative;
-            overflow: hidden;
-            border-radius: 1.5rem;
-        }
-        .text-gradient-gold {
-            background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.02);
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(245, 158, 11, 0.3);
-            border-radius: 10px;
-        }
+      body {
+        background-color: #020617;
+        background-image:
+          radial-gradient(
+            at 0% 0%,
+            rgba(16, 185, 129, 0.1) 0px,
+            transparent 50%
+          ),
+          radial-gradient(
+            at 100% 0%,
+            rgba(245, 158, 11, 0.1) 0px,
+            transparent 50%
+          );
+        color: #f8fafc;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .glass-card:hover {
+        border-color: rgba(245, 158, 11, 0.4);
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .bento-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 1.5rem;
+      }
+      .text-gradient-gold {
+        background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.02);
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(245, 158, 11, 0.3);
+        border-radius: 10px;
+      }
     </style>
-</head>
-<body class="font-body selection:bg-gold selection:text-navy">
-
+  </head>
+  <body class="font-body selection:bg-gold selection:text-navy">
     <!-- Hero Section -->
     <header class="relative pt-20 pb-16 px-6 overflow-hidden">
-        <div class="max-w-7xl mx-auto relative z-10 text-center">
-            <div class="inline-block px-4 py-1.5 mb-6 border border-emerald/30 rounded-full bg-emerald/10 text-emerald text-sm font-semibold tracking-wider uppercase animate-pulse">
-                Strategic Marketing Blueprint 2024
-            </div>
-            <h1 class="font-display text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
-                Blueprints & <span class="text-gradient-gold">Bookkeeping</span>
-            </h1>
-            <p class="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 font-light leading-relaxed">
-                Modernizing the financial core of asset-heavy SMBs through strategic storytelling and high-value partnerships.
-            </p>
+      <div class="max-w-7xl mx-auto relative z-10 text-center">
+        <div
+          class="inline-block px-4 py-1.5 mb-6 border border-emerald/30 rounded-full bg-emerald/10 text-emerald text-sm font-semibold tracking-wider uppercase animate-pulse"
+        >
+          Strategic Marketing Blueprint 2024
         </div>
-        <!-- Decorative Grid -->
-        <div class="absolute inset-0 z-0 opacity-20" style="background-image: radial-gradient(#334155 1px, transparent 1px); background-size: 40px 40px;"></div>
+        <h1
+          class="font-display text-5xl md:text-7xl font-extrabold tracking-tight mb-6"
+        >
+          Blueprints & <span class="text-gradient-gold">Bookkeeping</span>
+        </h1>
+        <p
+          class="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 font-light leading-relaxed"
+        >
+          Modernizing the financial core of asset-heavy SMBs through strategic
+          storytelling and high-value partnerships.
+        </p>
+      </div>
+      <!-- Decorative Grid -->
+      <div
+        class="absolute inset-0 z-0 opacity-20"
+        style="
+          background-image: radial-gradient(#334155 1px, transparent 1px);
+          background-size: 40px 40px;
+        "
+      ></div>
     </header>
 
     <main class="max-w-7xl mx-auto px-6 pb-24 space-y-24">
-        
-        <!-- Top Strategic Pillars (Bento Grid) -->
-        <section>
-            <div class="flex items-center space-x-4 mb-10">
-                <div class="h-px flex-1 bg-slate-800"></div>
-                <h2 class="font-display text-2xl font-bold uppercase tracking-widest text-slate-500">The Core Strategy</h2>
-                <div class="h-px flex-1 bg-slate-800"></div>
+      <!-- Top Strategic Pillars (Bento Grid) -->
+      <section>
+        <div class="flex items-center space-x-4 mb-10">
+          <div class="h-px flex-1 bg-slate-800"></div>
+          <h2
+            class="font-display text-2xl font-bold uppercase tracking-widest text-slate-500"
+          >
+            The Core Strategy
+          </h2>
+          <div class="h-px flex-1 bg-slate-800"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+          <!-- Main Strategy Card -->
+          <div class="md:col-span-8 bento-item glass-card p-8 group">
+            <div class="flex flex-col h-full justify-between">
+              <div>
+                <span
+                  class="text-xs font-bold text-emerald uppercase tracking-tighter mb-4 block"
+                  >Primary Strategy</span
+                >
+                <h3 class="text-3xl font-display font-bold mb-4">
+                  The Messy Books Rescue
+                </h3>
+                <p class="text-slate-400 text-lg mb-6 leading-relaxed">
+                  A high-impact case study series transforming financial chaos
+                  into digital clarity. This narrative-driven approach positions
+                  B&B as the ultimate solution for complex, multi-industry
+                  cleanups.
+                </p>
+                <div class="flex flex-wrap gap-3 mb-8">
+                  <span
+                    class="px-3 py-1 bg-emerald/10 border border-emerald/20 text-emerald text-xs rounded-full"
+                    >Educational</span
+                  >
+                  <span
+                    class="px-3 py-1 bg-emerald/10 border border-emerald/20 text-emerald text-xs rounded-full"
+                    >ROI Focused</span
+                  >
+                  <span
+                    class="px-3 py-1 bg-emerald/10 border border-emerald/20 text-emerald text-xs rounded-full"
+                    >Social Proof</span
+                  >
+                </div>
+              </div>
+              <div
+                class="relative rounded-2xl overflow-hidden border border-white/10 aspect-video md:aspect-auto"
+              >
+                <img
+                  src="https://opal.google/board/blobs/01ab9205-ba45-432e-b14e-1561e9bf3527"
+                  alt="The Messy Books Rescue"
+                  class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-navy/80 via-transparent to-transparent"
+                ></div>
+                <div
+                  class="absolute bottom-4 left-6 flex items-center space-x-2"
+                >
+                  <div
+                    class="w-2 h-2 rounded-full bg-emerald animate-pulse"
+                  ></div>
+                  <span class="text-xs font-bold tracking-widest uppercase"
+                    >Visual Vision</span
+                  >
+                </div>
+              </div>
             </div>
+          </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-                <!-- Main Strategy Card -->
-                <div class="md:col-span-8 bento-item glass-card p-8 group">
-                    <div class="flex flex-col h-full justify-between">
-                        <div>
-                            <span class="text-xs font-bold text-emerald uppercase tracking-tighter mb-4 block">Primary Strategy</span>
-                            <h3 class="text-3xl font-display font-bold mb-4">The Messy Books Rescue</h3>
-                            <p class="text-slate-400 text-lg mb-6 leading-relaxed">
-                                A high-impact case study series transforming financial chaos into digital clarity. This narrative-driven approach positions B&B as the ultimate solution for complex, multi-industry cleanups.
-                            </p>
-                            <div class="flex flex-wrap gap-3 mb-8">
-                                <span class="px-3 py-1 bg-emerald/10 border border-emerald/20 text-emerald text-xs rounded-full">Educational</span>
-                                <span class="px-3 py-1 bg-emerald/10 border border-emerald/20 text-emerald text-xs rounded-full">ROI Focused</span>
-                                <span class="px-3 py-1 bg-emerald/10 border border-emerald/20 text-emerald text-xs rounded-full">Social Proof</span>
-                            </div>
-                        </div>
-                        <div class="relative rounded-2xl overflow-hidden border border-white/10 aspect-video md:aspect-auto">
-                            <img src='https://opal.google/board/blobs/01ab9205-ba45-432e-b14e-1561e9bf3527' alt='The Messy Books Rescue' class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                            <div class="absolute inset-0 bg-gradient-to-t from-navy/80 via-transparent to-transparent"></div>
-                            <div class="absolute bottom-4 left-6 flex items-center space-x-2">
-                                <div class="w-2 h-2 rounded-full bg-emerald animate-pulse"></div>
-                                <span class="text-xs font-bold tracking-widest uppercase">Visual Vision</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Secondary Strategy 1 -->
-                <div class="md:col-span-4 bento-item glass-card p-8 group bg-brand-gold/5 border-gold/20">
-                    <span class="text-xs font-bold text-gold uppercase tracking-tighter mb-4 block">Social Presence</span>
-                    <h3 class="text-2xl font-display font-bold mb-4">Audit Your Assets</h3>
-                    <p class="text-slate-400 text-sm mb-6 leading-relaxed">
-                        LinkedIn-led authority building. Targeting B2B decision-makers with high-level strategic teardowns and complex business planning insights.
-                    </p>
-                    <div class="rounded-xl overflow-hidden border border-white/5 mb-6">
-                        <img src='https://opal.google/board/blobs/64fd1c7e-cdfa-45a2-b044-71a32e857214' alt='Audit Your Assets' class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" />
-                    </div>
-                    <ul class="space-y-2 text-xs text-slate-300">
-                        <li class="flex items-center space-x-2"><span class="text-gold">✦</span> <span>Weekly Strategy Threads</span></li>
-                        <li class="flex items-center space-x-2"><span class="text-gold">✦</span> <span>Asset Management Polls</span></li>
-                        <li class="flex items-center space-x-2"><span class="text-gold">✦</span> <span>B2B Authority Playbook</span></li>
-                    </ul>
-                </div>
-
-                <!-- Secondary Strategy 2 -->
-                <div class="md:col-span-4 bento-item glass-card p-8 group border-indigo-500/20">
-                    <span class="text-xs font-bold text-indigo-400 uppercase tracking-tighter mb-4 block">Strategic Network</span>
-                    <h3 class="text-2xl font-display font-bold mb-4">CPA Alliances</h3>
-                    <p class="text-slate-400 text-sm mb-6 leading-relaxed">
-                        Forging deep roots with tax professionals who dread bookkeeping cleanup. We are the trusted hands that prepare the foundation for tax strategy.
-                    </p>
-                    <div class="rounded-xl overflow-hidden border border-white/5">
-                        <img src='https://opal.google/board/blobs/341a8e70-c82e-4915-979c-4c9484f67751' alt='CPA Referral Network' class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" />
-                    </div>
-                </div>
-
-                <!-- Roadmap / Checklist Item -->
-                <div class="md:col-span-8 bento-item glass-card p-8 bg-slate-900/50">
-                    <div class="flex items-center justify-between mb-8">
-                        <h3 class="text-2xl font-display font-bold">Execution Roadmap</h3>
-                        <span class="text-xs font-mono text-slate-500">v1.0.2</span>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="flex items-start space-x-4 p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
-                            <div class="mt-1 w-6 h-6 rounded border-2 border-emerald flex-shrink-0 flex items-center justify-center">
-                                <div class="w-2.5 h-2.5 bg-emerald rounded-sm"></div>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-slate-100">Draft The First Case Study</h4>
-                                <p class="text-sm text-slate-400">Anonymize past projects into the "Before & After" narrative.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start space-x-4 p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
-                            <div class="mt-1 w-6 h-6 rounded border-2 border-gold flex-shrink-0"></div>
-                            <div>
-                                <h4 class="font-bold text-slate-100">Launch LinkedIn Calendar</h4>
-                                <p class="text-sm text-slate-400">4-week "Audit Your Assets" theme with bi-weekly high-value posts.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start space-x-4 p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
-                            <div class="mt-1 w-6 h-6 rounded border-2 border-indigo-400 flex-shrink-0"></div>
-                            <div>
-                                <h4 class="font-bold text-slate-100">CPA Outreach Blitz</h4>
-                                <p class="text-sm text-slate-400">Targeted regional outreach to 20 top-tier tax attorneys and CPAs.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          <!-- Secondary Strategy 1 -->
+          <div
+            class="md:col-span-4 bento-item glass-card p-8 group bg-brand-gold/5 border-gold/20"
+          >
+            <span
+              class="text-xs font-bold text-gold uppercase tracking-tighter mb-4 block"
+              >Social Presence</span
+            >
+            <h3 class="text-2xl font-display font-bold mb-4">
+              Audit Your Assets
+            </h3>
+            <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+              LinkedIn-led authority building. Targeting B2B decision-makers
+              with high-level strategic teardowns and complex business planning
+              insights.
+            </p>
+            <div class="rounded-xl overflow-hidden border border-white/5 mb-6">
+              <img
+                src="https://opal.google/board/blobs/64fd1c7e-cdfa-45a2-b044-71a32e857214"
+                alt="Audit Your Assets"
+                class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
+              />
             </div>
-        </section>
+            <ul class="space-y-2 text-xs text-slate-300">
+              <li class="flex items-center space-x-2">
+                <span class="text-gold">✦</span>
+                <span>Weekly Strategy Threads</span>
+              </li>
+              <li class="flex items-center space-x-2">
+                <span class="text-gold">✦</span>
+                <span>Asset Management Polls</span>
+              </li>
+              <li class="flex items-center space-x-2">
+                <span class="text-gold">✦</span>
+                <span>B2B Authority Playbook</span>
+              </li>
+            </ul>
+          </div>
 
-        <!-- The Vision Deep Dive -->
-        <section class="relative">
-            <div class="absolute inset-0 -top-20 -bottom-20 bg-brand-navy/50 blur-3xl -z-10 rounded-[100px]"></div>
-            
-            <div class="mb-12">
-                <h2 class="font-display text-4xl font-extrabold mb-4">Marketing <span class="text-emerald">Ecosystem</span></h2>
-                <p class="text-slate-400">A detailed breakdown of tactical ideas and partnership funnels.</p>
+          <!-- Secondary Strategy 2 -->
+          <div
+            class="md:col-span-4 bento-item glass-card p-8 group border-indigo-500/20"
+          >
+            <span
+              class="text-xs font-bold text-indigo-400 uppercase tracking-tighter mb-4 block"
+              >Strategic Network</span
+            >
+            <h3 class="text-2xl font-display font-bold mb-4">CPA Alliances</h3>
+            <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+              Forging deep roots with tax professionals who dread bookkeeping
+              cleanup. We are the trusted hands that prepare the foundation for
+              tax strategy.
+            </p>
+            <div class="rounded-xl overflow-hidden border border-white/5">
+              <img
+                src="https://opal.google/board/blobs/341a8e70-c82e-4915-979c-4c9484f67751"
+                alt="CPA Referral Network"
+                class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
+              />
             </div>
+          </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Content Marketing Bucket -->
-                <div class="space-y-6">
-                    <div class="flex items-center space-x-3 text-emerald">
-                        <div class="p-2 bg-emerald/10 rounded-lg">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l4 4v10a2 2 0 01-2 2zM14 2v4h4"></path></svg>
-                        </div>
-                        <h4 class="font-bold uppercase tracking-wider text-sm">Content Ideas</h4>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="glass-card p-5 rounded-2xl">
-                            <h5 class="font-bold mb-2">Blueprint to Scale</h5>
-                            <p class="text-sm text-slate-400">Webinar deep-dives on operational strategy for asset-heavy businesses.</p>
-                        </div>
-                        <div class="glass-card p-5 rounded-2xl">
-                            <h5 class="font-bold mb-2">Legacy-to-Digital</h5>
-                            <p class="text-sm text-slate-400">Modernizing self-employed workflows and establishing web presence.</p>
-                        </div>
-                        <div class="glass-card p-5 rounded-2xl">
-                            <h5 class="font-bold mb-2">Red Flags Series</h5>
-                            <p class="text-sm text-slate-400">Educational blog posts highlighting common bookkeeping leaks.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Social Media Bucket -->
-                <div class="space-y-6">
-                    <div class="flex items-center space-x-3 text-gold">
-                        <div class="p-2 bg-gold/10 rounded-lg">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        </div>
-                        <h4 class="font-bold uppercase tracking-wider text-sm">Social Campaigns</h4>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="glass-card p-5 rounded-2xl border-gold/10">
-                            <h5 class="font-bold mb-2 text-gold">Cleanup Confessions</h5>
-                            <p class="text-sm text-slate-400">TikTok/Shorts showing the satisfying transition from chaos to dashboards.</p>
-                        </div>
-                        <div class="glass-card p-5 rounded-2xl border-gold/10">
-                            <h5 class="font-bold mb-2 text-gold">Strategy Thread Weekly</h5>
-                            <p class="text-sm text-slate-400">Twitter/X threads breaking down multi-industry operation strategies.</p>
-                        </div>
-                        <div class="glass-card p-5 rounded-2xl border-gold/10">
-                            <h5 class="font-bold mb-2 text-gold">Web Presence Glow-Up</h5>
-                            <p class="text-sm text-slate-400">Targeted Facebook ads for combined bookkeeping & digital modernization.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Partnership Bucket -->
-                <div class="space-y-6">
-                    <div class="flex items-center space-x-3 text-accent">
-                        <div class="p-2 bg-accent/10 rounded-lg">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                        </div>
-                        <h4 class="font-bold uppercase tracking-wider text-sm">Strategic Alliances</h4>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="glass-card p-5 rounded-2xl border-accent/10">
-                            <h5 class="font-bold mb-2 text-indigo-300">Commercial Banking</h5>
-                            <p class="text-sm text-slate-400">Alliances with loan officers requiring clean books for commercial approvals.</p>
-                        </div>
-                        <div class="glass-card p-5 rounded-2xl border-accent/10">
-                            <h5 class="font-bold mb-2 text-indigo-300">Chamber Workshops</h5>
-                            <p class="text-sm text-slate-400">"Modernize Your Business" workshops for local self-employed pros.</p>
-                        </div>
-                        <div class="glass-card p-5 rounded-2xl border-accent/10">
-                            <h5 class="font-bold mb-2 text-indigo-300">RE Broker Bundles</h5>
-                            <p class="text-sm text-slate-400">Partnership with brokers selling physical assets to growth firms.</p>
-                        </div>
-                    </div>
-                </div>
+          <!-- Roadmap / Checklist Item -->
+          <div class="md:col-span-8 bento-item glass-card p-8 bg-slate-900/50">
+            <div class="flex items-center justify-between mb-8">
+              <h3 class="text-2xl font-display font-bold">Execution Roadmap</h3>
+              <span class="text-xs font-mono text-slate-500">v1.0.2</span>
             </div>
-        </section>
-
-        <!-- Analysis & Logic -->
-        <section class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div class="order-2 md:order-1">
-                <div class="inline-block px-3 py-1 mb-6 border border-slate-700 rounded-lg text-xs font-mono text-slate-400">
-                    Strategic Analysis Log
+            <div class="space-y-4">
+              <div
+                class="flex items-start space-x-4 p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors"
+              >
+                <div
+                  class="mt-1 w-6 h-6 rounded border-2 border-emerald flex-shrink-0 flex items-center justify-center"
+                >
+                  <div class="w-2.5 h-2.5 bg-emerald rounded-sm"></div>
                 </div>
-                <h2 class="text-3xl font-display font-bold mb-8 italic text-gradient-gold leading-tight">"By showcasing tangible transformations, it acts as both educational content and powerful social proof."</h2>
-                <div class="space-y-6">
-                    <div class="border-l-2 border-emerald pl-6">
-                        <h4 class="font-bold text-slate-200 mb-1">CPA Referral Logic</h4>
-                        <p class="text-sm text-slate-400 leading-relaxed">Creates a highly qualified, recurring pipeline with zero customer acquisition cost. We solve the headache CPAs hate, they provide the trust we need.</p>
-                    </div>
-                    <div class="border-l-2 border-gold pl-6">
-                        <h4 class="font-bold text-slate-200 mb-1">LinkedIn Reach</h4>
-                        <p class="text-sm text-slate-400 leading-relaxed">Positions B&B as a premium consulting firm. Direct access to target B2B demographics through sustained community engagement.</p>
-                    </div>
+                <div>
+                  <h4 class="font-bold text-slate-100">
+                    Draft The First Case Study
+                  </h4>
+                  <p class="text-sm text-slate-400">
+                    Anonymize past projects into the "Before & After" narrative.
+                  </p>
                 </div>
+              </div>
+              <div
+                class="flex items-start space-x-4 p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors"
+              >
+                <div
+                  class="mt-1 w-6 h-6 rounded border-2 border-gold flex-shrink-0"
+                ></div>
+                <div>
+                  <h4 class="font-bold text-slate-100">
+                    Launch LinkedIn Calendar
+                  </h4>
+                  <p class="text-sm text-slate-400">
+                    4-week "Audit Your Assets" theme with bi-weekly high-value
+                    posts.
+                  </p>
+                </div>
+              </div>
+              <div
+                class="flex items-start space-x-4 p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors"
+              >
+                <div
+                  class="mt-1 w-6 h-6 rounded border-2 border-indigo-400 flex-shrink-0"
+                ></div>
+                <div>
+                  <h4 class="font-bold text-slate-100">CPA Outreach Blitz</h4>
+                  <p class="text-sm text-slate-400">
+                    Targeted regional outreach to 20 top-tier tax attorneys and
+                    CPAs.
+                  </p>
+                </div>
+              </div>
             </div>
-            <div class="order-1 md:order-2 relative group">
-                <div class="absolute -inset-1 bg-gradient-to-r from-emerald to-gold rounded-[2.5rem] blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
-                <div class="relative glass-card p-4 rounded-[2rem] overflow-hidden">
-                    <div class="bg-navy rounded-[1.5rem] overflow-hidden">
-                        <img src='https://opal.google/board/blobs/01ab9205-ba45-432e-b14e-1561e9bf3527' alt='Analysis Visual' class="w-full h-full object-cover transform transition-transform duration-1000 group-hover:scale-105" />
-                    </div>
-                </div>
-            </div>
-        </section>
+          </div>
+        </div>
+      </section>
 
+      <!-- The Vision Deep Dive -->
+      <section class="relative">
+        <div
+          class="absolute inset-0 -top-20 -bottom-20 bg-brand-navy/50 blur-3xl -z-10 rounded-[100px]"
+        ></div>
+
+        <div class="mb-12">
+          <h2 class="font-display text-4xl font-extrabold mb-4">
+            Marketing <span class="text-emerald">Ecosystem</span>
+          </h2>
+          <p class="text-slate-400">
+            A detailed breakdown of tactical ideas and partnership funnels.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Content Marketing Bucket -->
+          <div class="space-y-6">
+            <div class="flex items-center space-x-3 text-emerald">
+              <div class="p-2 bg-emerald/10 rounded-lg">
+                <svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l4 4v10a2 2 0 01-2 2zM14 2v4h4"
+                  ></path>
+                </svg>
+              </div>
+              <h4 class="font-bold uppercase tracking-wider text-sm">
+                Content Ideas
+              </h4>
+            </div>
+            <div class="space-y-4">
+              <div class="glass-card p-5 rounded-2xl">
+                <h5 class="font-bold mb-2">Blueprint to Scale</h5>
+                <p class="text-sm text-slate-400">
+                  Webinar deep-dives on operational strategy for asset-heavy
+                  businesses.
+                </p>
+              </div>
+              <div class="glass-card p-5 rounded-2xl">
+                <h5 class="font-bold mb-2">Legacy-to-Digital</h5>
+                <p class="text-sm text-slate-400">
+                  Modernizing self-employed workflows and establishing web
+                  presence.
+                </p>
+              </div>
+              <div class="glass-card p-5 rounded-2xl">
+                <h5 class="font-bold mb-2">Red Flags Series</h5>
+                <p class="text-sm text-slate-400">
+                  Educational blog posts highlighting common bookkeeping leaks.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Social Media Bucket -->
+          <div class="space-y-6">
+            <div class="flex items-center space-x-3 text-gold">
+              <div class="p-2 bg-gold/10 rounded-lg">
+                <svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  ></path>
+                </svg>
+              </div>
+              <h4 class="font-bold uppercase tracking-wider text-sm">
+                Social Campaigns
+              </h4>
+            </div>
+            <div class="space-y-4">
+              <div class="glass-card p-5 rounded-2xl border-gold/10">
+                <h5 class="font-bold mb-2 text-gold">Cleanup Confessions</h5>
+                <p class="text-sm text-slate-400">
+                  TikTok/Shorts showing the satisfying transition from chaos to
+                  dashboards.
+                </p>
+              </div>
+              <div class="glass-card p-5 rounded-2xl border-gold/10">
+                <h5 class="font-bold mb-2 text-gold">Strategy Thread Weekly</h5>
+                <p class="text-sm text-slate-400">
+                  Twitter/X threads breaking down multi-industry operation
+                  strategies.
+                </p>
+              </div>
+              <div class="glass-card p-5 rounded-2xl border-gold/10">
+                <h5 class="font-bold mb-2 text-gold">Web Presence Glow-Up</h5>
+                <p class="text-sm text-slate-400">
+                  Targeted Facebook ads for combined bookkeeping & digital
+                  modernization.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Partnership Bucket -->
+          <div class="space-y-6">
+            <div class="flex items-center space-x-3 text-accent">
+              <div class="p-2 bg-accent/10 rounded-lg">
+                <svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                  ></path>
+                </svg>
+              </div>
+              <h4 class="font-bold uppercase tracking-wider text-sm">
+                Strategic Alliances
+              </h4>
+            </div>
+            <div class="space-y-4">
+              <div class="glass-card p-5 rounded-2xl border-accent/10">
+                <h5 class="font-bold mb-2 text-indigo-300">
+                  Commercial Banking
+                </h5>
+                <p class="text-sm text-slate-400">
+                  Alliances with loan officers requiring clean books for
+                  commercial approvals.
+                </p>
+              </div>
+              <div class="glass-card p-5 rounded-2xl border-accent/10">
+                <h5 class="font-bold mb-2 text-indigo-300">
+                  Chamber Workshops
+                </h5>
+                <p class="text-sm text-slate-400">
+                  "Modernize Your Business" workshops for local self-employed
+                  pros.
+                </p>
+              </div>
+              <div class="glass-card p-5 rounded-2xl border-accent/10">
+                <h5 class="font-bold mb-2 text-indigo-300">
+                  RE Broker Bundles
+                </h5>
+                <p class="text-sm text-slate-400">
+                  Partnership with brokers selling physical assets to growth
+                  firms.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Analysis & Logic -->
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div class="order-2 md:order-1">
+          <div
+            class="inline-block px-3 py-1 mb-6 border border-slate-700 rounded-lg text-xs font-mono text-slate-400"
+          >
+            Strategic Analysis Log
+          </div>
+          <h2
+            class="text-3xl font-display font-bold mb-8 italic text-gradient-gold leading-tight"
+          >
+            "By showcasing tangible transformations, it acts as both educational
+            content and powerful social proof."
+          </h2>
+          <div class="space-y-6">
+            <div class="border-l-2 border-emerald pl-6">
+              <h4 class="font-bold text-slate-200 mb-1">CPA Referral Logic</h4>
+              <p class="text-sm text-slate-400 leading-relaxed">
+                Creates a highly qualified, recurring pipeline with zero
+                customer acquisition cost. We solve the headache CPAs hate, they
+                provide the trust we need.
+              </p>
+            </div>
+            <div class="border-l-2 border-gold pl-6">
+              <h4 class="font-bold text-slate-200 mb-1">LinkedIn Reach</h4>
+              <p class="text-sm text-slate-400 leading-relaxed">
+                Positions B&B as a premium consulting firm. Direct access to
+                target B2B demographics through sustained community engagement.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="order-1 md:order-2 relative group">
+          <div
+            class="absolute -inset-1 bg-gradient-to-r from-emerald to-gold rounded-[2.5rem] blur opacity-25 group-hover:opacity-50 transition duration-1000"
+          ></div>
+          <div class="relative glass-card p-4 rounded-[2rem] overflow-hidden">
+            <div class="bg-navy rounded-[1.5rem] overflow-hidden">
+              <img
+                src="https://opal.google/board/blobs/01ab9205-ba45-432e-b14e-1561e9bf3527"
+                alt="Analysis Visual"
+                class="w-full h-full object-cover transform transition-transform duration-1000 group-hover:scale-105"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
 
     <!-- Floating UI Element -->
     <div class="fixed bottom-8 right-8 z-50 animate-float hidden md:block">
-        <button class="bg-gradient-to-r from-emerald to-emerald/80 text-navy px-6 py-3 rounded-full font-bold shadow-2xl shadow-emerald/20 flex items-center space-x-2 border border-white/20 hover:scale-105 transition-transform" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-            <span>Vision Top</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
-        </button>
+      <button
+        class="bg-gradient-to-r from-emerald to-emerald/80 text-navy px-6 py-3 rounded-full font-bold shadow-2xl shadow-emerald/20 flex items-center space-x-2 border border-white/20 hover:scale-105 transition-transform"
+        onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+      >
+        <span>Vision Top</span>
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="3"
+            d="M5 10l7-7m0 0l7 7m-7-7v18"
+          ></path>
+        </svg>
+      </button>
     </div>
-
-</body>
+  </body>
 </html>

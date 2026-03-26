@@ -2,7 +2,10 @@ import { Link } from "wouter";
 import { CheckCircle, ArrowRight, FileText, Mail } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
-import { buildOnboardingUrl, getOnboardingContextFromSearch } from "@/lib/onboarding-url";
+import {
+  buildOnboardingUrl,
+  getOnboardingContextFromSearch,
+} from "@/lib/onboarding-url";
 
 export default function Welcome() {
   usePageTitle("Welcome — Blueprints & Bookkeeping");
@@ -10,7 +13,12 @@ export default function Welcome() {
   const { plan, service, sessionId } = getOnboardingContextFromSearch(
     window.location.search,
   );
-  const planLabel = plan === "growth" ? "Growth" : plan === "essentials" ? "Essentials" : "your selected";
+  const planLabel =
+    plan === "growth"
+      ? "Growth"
+      : plan === "essentials"
+        ? "Essentials"
+        : "your selected";
   const onboardingHref = buildOnboardingUrl({ plan, service, sessionId });
 
   return (
@@ -22,9 +30,12 @@ export default function Welcome() {
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-emerald-500/20 mb-8">
             <CheckCircle className="w-10 h-10 text-emerald-400" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">Welcome Aboard!</h1>
+          <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
+            Welcome Aboard!
+          </h1>
           <p className="text-xl text-muted-foreground mb-2">
-            Your <span className="text-accent font-semibold">{planLabel}</span> plan subscription is active.
+            Your <span className="text-accent font-semibold">{planLabel}</span>{" "}
+            plan subscription is active.
           </p>
           <p className="text-muted-foreground">
             Payment confirmed. Let's get you set up.
@@ -34,27 +45,50 @@ export default function Welcome() {
 
       <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="glass-card rounded-2xl p-8 md:p-10 mb-8">
-          <h2 className="text-2xl font-display font-bold text-white mb-6">What Happens Next</h2>
+          <h2 className="text-2xl font-display font-bold text-white mb-6">
+            What Happens Next
+          </h2>
           <div className="space-y-6">
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold">1</div>
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold">
+                1
+              </div>
               <div>
-                <h3 className="text-white font-semibold mb-1">Complete Your Onboarding Form</h3>
-                <p className="text-muted-foreground text-sm">Tell us about your business so we can hit the ground running. This takes about 5 minutes.</p>
+                <h3 className="text-white font-semibold mb-1">
+                  Complete Your Onboarding Form
+                </h3>
+                <p className="text-muted-foreground text-sm">
+                  Tell us about your business so we can hit the ground running.
+                  This takes about 5 minutes.
+                </p>
               </div>
             </div>
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold">2</div>
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold">
+                2
+              </div>
               <div>
-                <h3 className="text-white font-semibold mb-1">Sign Your Contracts</h3>
-                <p className="text-muted-foreground text-sm">You'll receive an Engagement Letter and NDA via Adobe Sign. Review and e-sign at your convenience.</p>
+                <h3 className="text-white font-semibold mb-1">
+                  Sign Your Contracts
+                </h3>
+                <p className="text-muted-foreground text-sm">
+                  You'll receive an Engagement Letter and NDA via Adobe Sign.
+                  Review and e-sign at your convenience.
+                </p>
               </div>
             </div>
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold">3</div>
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold">
+                3
+              </div>
               <div>
-                <h3 className="text-white font-semibold mb-1">Watch for Next-Step Instructions</h3>
-                <p className="text-muted-foreground text-sm">If we need records from you, we’ll send secure file-sharing instructions separately instead of using the website.</p>
+                <h3 className="text-white font-semibold mb-1">
+                  Watch for Next-Step Instructions
+                </h3>
+                <p className="text-muted-foreground text-sm">
+                  If we need records from you, we’ll send secure file-sharing
+                  instructions separately instead of using the website.
+                </p>
               </div>
             </div>
           </div>
@@ -70,9 +104,14 @@ export default function Welcome() {
             </div>
             <div className="flex-grow">
               <h4 className="text-white font-semibold">Onboarding Form</h4>
-              <p className="text-sm text-muted-foreground">Complete your intake</p>
+              <p className="text-sm text-muted-foreground">
+                Complete your intake
+              </p>
             </div>
-            <ArrowRight className="text-accent opacity-0 group-hover:opacity-100 transition-opacity" size={20} />
+            <ArrowRight
+              className="text-accent opacity-0 group-hover:opacity-100 transition-opacity"
+              size={20}
+            />
           </Link>
 
           <a
@@ -84,17 +123,32 @@ export default function Welcome() {
             </div>
             <div className="flex-grow">
               <h4 className="text-white font-semibold">Questions or Files?</h4>
-              <p className="text-sm text-muted-foreground">We’ll send secure sharing instructions as needed</p>
+              <p className="text-sm text-muted-foreground">
+                We’ll send secure sharing instructions as needed
+              </p>
             </div>
-            <ArrowRight className="text-accent opacity-0 group-hover:opacity-100 transition-opacity" size={20} />
+            <ArrowRight
+              className="text-accent opacity-0 group-hover:opacity-100 transition-opacity"
+              size={20}
+            />
           </a>
         </div>
 
         <div className="glass-card rounded-xl p-6 text-center">
           <p className="text-muted-foreground text-sm">
-            A confirmation email with these details has been sent to your inbox. Questions? Reach us at{" "}
-            <a href="mailto:tea@blueprintsandbookkeeping.com" className="text-accent hover:underline">tea@blueprintsandbookkeeping.com</a>{" "}
-            or <a href="tel:+15413198654" className="text-accent hover:underline">(541) 319-8654</a>.
+            A confirmation email with these details has been sent to your inbox.
+            Questions? Reach us at{" "}
+            <a
+              href="mailto:tea@blueprintsandbookkeeping.com"
+              className="text-accent hover:underline"
+            >
+              tea@blueprintsandbookkeeping.com
+            </a>{" "}
+            or{" "}
+            <a href="tel:+15413198654" className="text-accent hover:underline">
+              (541) 319-8654
+            </a>
+            .
           </p>
         </div>
       </section>

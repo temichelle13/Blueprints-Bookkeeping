@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: 'Inter', sans-serif;
-  --font-display: 'Outfit', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: "Inter", sans-serif;
+  --font-display: "Outfit", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
 
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -94,14 +94,30 @@
   .dark body,
   :root:not(.light) body {
     background-image:
-      radial-gradient(ellipse 80% 50% at 50% -20%, hsla(238, 50%, 40%, 0.12), transparent),
-      radial-gradient(ellipse 60% 40% at 80% 100%, hsla(226, 54%, 23%, 0.08), transparent);
+      radial-gradient(
+        ellipse 80% 50% at 50% -20%,
+        hsla(238, 50%, 40%, 0.12),
+        transparent
+      ),
+      radial-gradient(
+        ellipse 60% 40% at 80% 100%,
+        hsla(226, 54%, 23%, 0.08),
+        transparent
+      );
   }
 
   .light body {
     background-image:
-      radial-gradient(ellipse 80% 50% at 50% -20%, hsla(238, 50%, 62%, 0.06), transparent),
-      radial-gradient(ellipse 60% 40% at 80% 100%, hsla(226, 54%, 23%, 0.03), transparent);
+      radial-gradient(
+        ellipse 80% 50% at 50% -20%,
+        hsla(238, 50%, 62%, 0.06),
+        transparent
+      ),
+      radial-gradient(
+        ellipse 60% 40% at 80% 100%,
+        hsla(226, 54%, 23%, 0.03),
+        transparent
+      );
   }
 
   ::selection {
@@ -109,18 +125,37 @@
     color: white;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-display);
     @apply font-bold tracking-tight;
   }
 
-  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6,
-  :root:not(.light) h1, :root:not(.light) h2, :root:not(.light) h3,
-  :root:not(.light) h4, :root:not(.light) h5, :root:not(.light) h6 {
+  .dark h1,
+  .dark h2,
+  .dark h3,
+  .dark h4,
+  .dark h5,
+  .dark h6,
+  :root:not(.light) h1,
+  :root:not(.light) h2,
+  :root:not(.light) h3,
+  :root:not(.light) h4,
+  :root:not(.light) h5,
+  :root:not(.light) h6 {
     @apply text-white;
   }
 
-  .light h1, .light h2, .light h3, .light h4, .light h5, .light h6 {
+  .light h1,
+  .light h2,
+  .light h3,
+  .light h4,
+  .light h5,
+  .light h6 {
     color: hsl(228, 20%, 12%);
   }
 
@@ -197,11 +232,14 @@
   box-shadow: 0 8px 32px -4px hsl(238 50% 52% / 0.1);
 }
 
-input, textarea, select {
+input,
+textarea,
+select {
   @apply text-foreground;
 }
 
-input::placeholder, textarea::placeholder {
+input::placeholder,
+textarea::placeholder {
   @apply text-muted-foreground;
 }
 
@@ -238,7 +276,12 @@ input::placeholder, textarea::placeholder {
     page-break-inside: avoid;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     color: #111 !important;
     page-break-after: avoid;
   }

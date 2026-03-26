@@ -10,7 +10,8 @@ function getResend(): Resend | null {
 }
 
 const OWNER_EMAIL = "tea@blueprintsandbookkeeping.com";
-const FROM_ADDRESS = "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
+const FROM_ADDRESS =
+  "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
 
 const CATEGORIES: Record<string, string> = {
   bug: "Bug / Something Broken",
@@ -22,24 +23,34 @@ const CATEGORIES: Record<string, string> = {
 router.post("/feedback", async (req, res): Promise<void> => {
   const { name, email, page, category, description } = req.body;
 
-  if (!description || typeof description !== "string" || description.trim().length < 5) {
-    res.status(400).json({ error: "Please describe the issue in at least a few words." });
+  if (
+    !description ||
+    typeof description !== "string" ||
+    description.trim().length < 5
+  ) {
+    res
+      .status(400)
+      .json({ error: "Please describe the issue in at least a few words." });
     return;
   }
 
   const categoryLabel = CATEGORIES[category] ?? category ?? "Not specified";
-  const nameSafe = typeof name === "string" && name.trim() ? name.trim() : "Anonymous";
-  const emailSafe = typeof email === "string" && email.trim() ? email.trim() : null;
-  const pageSafe = typeof page === "string" && page.trim() ? page.trim() : "Not specified";
+  const nameSafe =
+    typeof name === "string" && name.trim() ? name.trim() : "Anonymous";
+  const emailSafe =
+    typeof email === "string" && email.trim() ? email.trim() : null;
+  const pageSafe =
+    typeof page === "string" && page.trim() ? page.trim() : "Not specified";
 
   const resend = getResend();
   if (resend) {
-    await resend.emails.send({
-      from: FROM_ADDRESS,
-      to: OWNER_EMAIL,
-      ...(emailSafe ? { replyTo: emailSafe } : {}),
-      subject: `[Site Feedback] ${categoryLabel} — ${pageSafe}`,
-      html: `
+    await resend.emails
+      .send({
+        from: FROM_ADDRESS,
+        to: OWNER_EMAIL,
+        ...(emailSafe ? { replyTo: emailSafe } : {}),
+        subject: `[Site Feedback] ${categoryLabel} — ${pageSafe}`,
+        html: `
         <div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
           <div style="background:#4F46E5;padding:24px 32px;border-radius:8px 8px 0 0;">
             <h1 style="color:white;margin:0;font-size:20px;">Website Feedback</h1>
@@ -58,7 +69,8 @@ router.post("/feedback", async (req, res): Promise<void> => {
             ${emailSafe ? `<p style="margin-top:24px;font-size:13px;color:#999;">Reply directly to this email to respond to ${nameSafe}.</p>` : ""}
           </div>
         </div>`,
-    }).catch(() => {});
+      })
+      .catch(() => {});
   }
 
   res.status(201).json({ success: true, message: "Thanks for the feedback!" });
