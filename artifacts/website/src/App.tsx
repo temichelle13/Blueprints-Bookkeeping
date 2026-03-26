@@ -77,19 +77,28 @@ function PageTransition({ children }: { children: React.ReactNode }) {
     if (location !== previousLocation.current) {
       setIsVisible(false);
       // Use requestAnimationFrame for smoother transitions and reduced INP impact
+      let timeoutId: number | undefined;
+      let innerRafId: number | undefined;
       const rafId = requestAnimationFrame(() => {
-        const timer = setTimeout(() => {
+        timeoutId = window.setTimeout(() => {
           setDisplayChildren(children);
           previousLocation.current = location;
           window.scrollTo(0, 0);
           // Shorter delay for better INP
-          requestAnimationFrame(() => {
+          innerRafId = requestAnimationFrame(() => {
             setIsVisible(true);
           });
         }, 150); // Reduced from 200ms to 150ms
-        return () => clearTimeout(timer);
       });
-      return () => cancelAnimationFrame(rafId);
+      return () => {
+        cancelAnimationFrame(rafId);
+        if (innerRafId !== undefined) {
+          cancelAnimationFrame(innerRafId);
+        }
+        if (timeoutId !== undefined) {
+          clearTimeout(timeoutId);
+        }
+      };
     }
 
     return undefined;
