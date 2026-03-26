@@ -111,7 +111,7 @@ export default function GetStarted() {
         `Enter ${EMAIL_ADDRESS} and send the invitation from QuickBooks.`,
         "Once Tea reviews your request and you both agree to proceed, she will accept the invitation and begin working on your books.",
       ],
-      note: "To add Tea as your accountant, you'll need to send an invitation from QuickBooks Online. Instructions for this will be provided after the initial intake and review.",
+      note: "To add Tea as your accountant, you'll need to send an invitation from QuickBooks Online using the steps below. Tea will only accept the invitation after your initial intake and review.",
     },
   ];
 
