@@ -59,7 +59,12 @@ const queryClient = new QueryClient();
 function RouteLoadingFallback() {
   return (
     <div className="flex items-center justify-center min-h-[400px]">
-      <div className="text-center">
+      <div
+        className="text-center"
+        role="status"
+        aria-live="polite"
+        aria-label="Loading content"
+      >
         <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-gray-100"></div>
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">Loading...</p>
       </div>
