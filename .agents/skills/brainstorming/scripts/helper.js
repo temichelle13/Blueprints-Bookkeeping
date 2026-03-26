@@ -58,10 +58,15 @@
           selected[0]
             .querySelector("h3, .content h3, .card-body h3")
             ?.textContent?.trim() || selected[0].dataset.choice;
-        indicator.innerHTML =
-          '<span class="selected-text">' +
-          label +
-          " selected</span> — return to terminal to continue";
+        // Build the indicator content safely without using innerHTML for the label
+        indicator.textContent = "";
+        const span = document.createElement("span");
+        span.className = "selected-text";
+        span.textContent = label + " selected";
+        indicator.appendChild(span);
+        indicator.appendChild(
+          document.createTextNode(" — return to terminal to continue")
+        );
       } else {
         indicator.innerHTML =
           '<span class="selected-text">' +
