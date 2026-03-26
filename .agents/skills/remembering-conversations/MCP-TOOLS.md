@@ -102,7 +102,7 @@ Display a full conversation from episodic memory as markdown.
 
 ```typescript
 {
-  path: "/Users/name/.config/superpowers/conversation-archive/project/uuid.jsonl";
+  path: "/Users/name/.config/superpowers/conversation-archive/project/uuid.jsonl"
 }
 ```
 
