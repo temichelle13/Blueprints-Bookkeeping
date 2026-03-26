@@ -1,5 +1,6 @@
 (function () {
-  const WS_URL = "ws://" + window.location.host;
+  const WS_PROTOCOL = window.location.protocol === "https:" ? "wss:" : "ws:";
+  const WS_URL = WS_PROTOCOL + "//" + window.location.host;
   let ws = null;
   let eventQueue = [];
 
