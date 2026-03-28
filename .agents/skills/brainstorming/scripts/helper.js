@@ -34,8 +34,6 @@
   }
 
   document.addEventListener("click", (e) => {
-    if (!(e.target instanceof Element)) return;
-  document.addEventListener("click", (e) => {
     const target = e.target.closest("[data-choice]");
     if (!target) return;
 
@@ -67,7 +65,7 @@
         span.textContent = label + " selected";
         indicator.appendChild(span);
         indicator.appendChild(
-          document.createTextNode(" — return to terminal to continue")
+          document.createTextNode(" — return to terminal to continue"),
         );
       } else {
         indicator.innerHTML =

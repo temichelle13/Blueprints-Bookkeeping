@@ -18,6 +18,7 @@ import { getApiRoot } from "@/lib/api";
 const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
 const QB_PROADVISOR_URL =
   "https://quickbooks.intuit.com/accountants/products-solutions/bookkeeping/";
+const EMAIL_ADDRESS = "tea@blueprintsandbookkeeping.com";
 
 interface BasePath {
   icon: typeof CalendarDays;
@@ -31,6 +32,8 @@ interface BasePath {
   kind?: "primary" | "secondary" | "accountant";
   instructions?: string[];
   note?: string;
+  secondaryHref?: string;
+  secondaryCta?: string;
 }
 
 type PathCard = BasePath;
@@ -199,7 +202,7 @@ export default function GetStarted() {
           {path.subtitle}
         </p>
 
-        {path.kind === "accountant" && path.note && (
+        {path.kind === "accountant" && path.instructions && path.note && (
           <div
             style={{
               background: `${path.color}10`,
@@ -222,7 +225,7 @@ export default function GetStarted() {
           </div>
         )}
 
-        {path.kind === "quickbooks" ? (
+        {path.kind === "accountant" ? (
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {path.external ? (
               <a
@@ -324,45 +327,7 @@ export default function GetStarted() {
                 </Link>
               ))}
           </div>
-        ) : (
-          <div
-            style={{
-              background: "rgba(255,255,255,0.02)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              borderRadius: 10,
-              padding: "12px 14px",
-              marginBottom: 16,
-            }}
-          >
-            <p
-              style={{
-                fontSize: 11,
-                fontWeight: 600,
-                color: path.color,
-                textTransform: "uppercase",
-                letterSpacing: "0.05em",
-                marginBottom: 8,
-              }}
-            >
-              QuickBooks Online Instructions:
-            </p>
-            <ol
-              style={{
-                margin: 0,
-                paddingLeft: 20,
-                fontSize: 12,
-                color: "rgba(255,255,255,0.7)",
-                lineHeight: 1.6,
-              }}
-            >
-              {path.instructions.map((step, i) => (
-                <li key={i} style={{ marginBottom: 6 }}>
-                  {step}
-                </li>
-              ))}
-            </ol>
-          </div>
-        )}
+        ) : null}
 
         <div
           style={{
