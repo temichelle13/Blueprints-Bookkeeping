@@ -18,6 +18,7 @@ import { getApiRoot } from "@/lib/api";
 const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
 const QB_PROADVISOR_URL =
   "https://quickbooks.intuit.com/accountants/products-solutions/bookkeeping/";
+const EMAIL_ADDRESS = "tea@blueprintsandbookkeeping.com";
 
 interface BasePath {
   icon: typeof CalendarDays;
@@ -31,6 +32,8 @@ interface BasePath {
   kind?: "primary" | "secondary" | "accountant";
   instructions?: string[];
   note?: string;
+  secondaryHref?: string;
+  secondaryCta?: string;
 }
 
 type PathCard = BasePath;
@@ -222,7 +225,7 @@ export default function GetStarted() {
           </div>
         )}
 
-        {path.kind === "quickbooks" ? (
+        {path.kind !== "accountant" ? (
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {path.external ? (
               <a
@@ -355,7 +358,7 @@ export default function GetStarted() {
                 lineHeight: 1.6,
               }}
             >
-              {path.instructions.map((step, i) => (
+              {path.instructions?.map((step, i) => (
                 <li key={i} style={{ marginBottom: 6 }}>
                   {step}
                 </li>

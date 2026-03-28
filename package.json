@@ -16,17 +16,17 @@
   "devDependencies": {
     "prettier": "^3.8.1",
     "tsx": "catalog:",
-    "typescript": "~5.9.2",
+    "typescript": "~6.0.2",
     "@types/node": "catalog:"
   },
   "dependencies": {
-    "@types/adm-zip": "^0.5.7",
+    "@types/adm-zip": "^0.5.8",
     "adm-zip": "^0.5.16",
     "archiver": "^7.0.1",
-    "pdfkit": "^0.17.2",
+    "pdfkit": "^0.18.0",
     "pngjs": "^7.0.0",
     "sharp": "^0.34.5",
-    "stripe": "^20.4.1",
+    "stripe": "^21.0.1",
     "stripe-replit-sync": "^1.0.0"
   },
   "packageManager": "pnpm@10.13.1",

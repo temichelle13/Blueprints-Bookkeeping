@@ -49,7 +49,7 @@ const bookkeeperIntakeSchema = z.object({
   businessName: z.string().optional(),
   servicesWanted: z.array(z.string()).min(1, "Select at least one service"),
   budgetRange: z.string().optional(),
-  budgetUnknown: z.boolean().default(false),
+  budgetUnknown: z.boolean(),
   deadlinePressure: z.string().min(2, "Please select your timeline"),
   additionalComments: z
     .string()
