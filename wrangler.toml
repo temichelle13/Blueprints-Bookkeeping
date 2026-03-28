@@ -1,0 +1,6 @@
+name = "blueprints-bookkeeping"
+pages_build_output_dir = "artifacts/website/dist/public"
+compatibility_date = "2024-01-01"
+
+[build]
+command = "pnpm install && pnpm --filter @workspace/website run build"
