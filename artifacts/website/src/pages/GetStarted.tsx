@@ -202,7 +202,7 @@ export default function GetStarted() {
           {path.subtitle}
         </p>
 
-        {path.kind === "accountant" && path.note && (
+        {path.kind === "accountant" && path.instructions && path.note && (
           <div
             style={{
               background: `${path.color}10`,
