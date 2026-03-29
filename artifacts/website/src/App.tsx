@@ -47,7 +47,9 @@ const BusinessPlanning = lazy(() => import("./pages/BusinessPlanning"));
 const Status = lazy(() => import("./pages/Status"));
 const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
 const ServiceBookkeeping = lazy(() => import("./pages/services/Bookkeeping"));
-const ServiceBusinessPlans = lazy(() => import("./pages/services/BusinessPlans"));
+const ServiceBusinessPlans = lazy(
+  () => import("./pages/services/BusinessPlans"),
+);
 const OregonBookkeeper = lazy(() => import("./pages/OregonBookkeeper"));
 
 if (import.meta.env.VITE_API_URL) {
@@ -67,7 +69,9 @@ function RouteLoadingFallback() {
         aria-label="Loading content"
       >
         <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-gray-100"></div>
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">Loading...</p>
+        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          Loading...
+        </p>
       </div>
     </div>
   );

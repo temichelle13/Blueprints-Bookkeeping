@@ -1,3 +1,5 @@
+import { onLCP, onINP, onCLS, onFCP, onTTFB, type Metric } from "web-vitals";
+
 const PLAUSIBLE_DOMAIN = import.meta.env.VITE_ANALYTICS_ID as
   | string
   | undefined;
@@ -145,10 +147,12 @@ function sendWebVital(metric: Metric): void {
   if (!initialized) return;
 
   // Send to Google Analytics
-  if (typeof window.gtag === 'function') {
-    window.gtag('event', metric.name, {
-      event_category: 'Web Vitals',
-      value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
+  if (typeof window.gtag === "function") {
+    window.gtag("event", metric.name, {
+      event_category: "Web Vitals",
+      value: Math.round(
+        metric.name === "CLS" ? metric.value * 1000 : metric.value,
+      ),
       event_label: metric.id,
       non_interaction: true,
     });
@@ -157,7 +161,9 @@ function sendWebVital(metric: Metric): void {
   // Send to Plausible
   window.plausible?.(metric.name, {
     props: {
-      value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
+      value: Math.round(
+        metric.name === "CLS" ? metric.value * 1000 : metric.value,
+      ),
       rating: metric.rating,
     },
   });
