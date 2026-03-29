@@ -80,7 +80,7 @@ router.post("/contracts/webhooks/booking", async (req, res): Promise<void> => {
     const results = await contractService.processBooking({
       clientName,
       clientEmail,
-      serviceType,
+      ...(serviceType !== undefined && { serviceType }),
     });
     res.status(201).json({
       success: true,
@@ -143,9 +143,9 @@ function validateSendContract(body: unknown): {
     clientName: b.clientName,
     clientEmail: b.clientEmail,
     contractType: b.contractType,
-    serviceType: typeof b.serviceType === "string" ? b.serviceType : undefined,
-    pricingTier: typeof b.pricingTier === "string" ? b.pricingTier : undefined,
-    startDate: typeof b.startDate === "string" ? b.startDate : undefined,
+    ...(typeof b.serviceType === "string" && { serviceType: b.serviceType }),
+    ...(typeof b.pricingTier === "string" && { pricingTier: b.pricingTier }),
+    ...(typeof b.startDate === "string" && { startDate: b.startDate }),
   };
 }
 
@@ -270,14 +270,11 @@ function validateTemplateBody(body: unknown): {
   return {
     name: b.name,
     contractType: b.contractType,
-    adobeTemplateId:
-      typeof b.adobeTemplateId === "string" ? b.adobeTemplateId : undefined,
+    ...(typeof b.adobeTemplateId === "string" && { adobeTemplateId: b.adobeTemplateId }),
     triggerCondition: b.triggerCondition,
-    description: typeof b.description === "string" ? b.description : undefined,
-    prefillFields: Array.isArray(b.prefillFields)
-      ? b.prefillFields.filter((f): f is string => typeof f === "string")
-      : undefined,
-    active,
+    ...(typeof b.description === "string" && { description: b.description }),
+    ...(Array.isArray(b.prefillFields) && { prefillFields: b.prefillFields.filter((f): f is string => typeof f === "string") }),
+    ...(active !== undefined && { active }),
   };
 }
 

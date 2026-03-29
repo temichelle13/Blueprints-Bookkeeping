@@ -59,7 +59,7 @@ async function unsubscribeByToken(
     .set({ active: false })
     .where(eq(newsletterSubscribersTable.unsubscribeToken, token));
 
-  await addToSuppressionList(rows[0].email, "unsubscribed");
+  await addToSuppressionList(rows[0]!.email, "unsubscribed");
 
   return {
     status: 200,
@@ -163,7 +163,8 @@ router.post("/newsletter/subscribe", async (req, res): Promise<void> => {
     .limit(1);
 
   if (existing.length > 0) {
-    if (!existing[0].active) {
+    const existingEntry = existing[0]!;
+    if (!existingEntry.active) {
       await db
         .update(newsletterSubscribersTable)
         .set({ active: true, signupSource })
@@ -178,7 +179,7 @@ router.post("/newsletter/subscribe", async (req, res): Promise<void> => {
       } else {
         const resend = getResend();
         if (resend) {
-          await sendWelcomeEmail(resend, email, existing[0].unsubscribeToken);
+          await sendWelcomeEmail(resend, email, existingEntry.unsubscribeToken);
         }
       }
     }
@@ -213,7 +214,7 @@ router.post("/newsletter/subscribe", async (req, res): Promise<void> => {
   }
 
   const resend = getResend();
-  if (resend) {
+  if (resend && inserted) {
     await sendWelcomeEmail(resend, email, inserted.unsubscribeToken);
   } else {
     console.warn(

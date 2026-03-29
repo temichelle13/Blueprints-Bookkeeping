@@ -400,12 +400,12 @@ function BookkeeperIntakeForm() {
           formType: "detailed",
           name: data.name,
           email: data.email,
-          businessName: data.businessName?.trim() || undefined,
+          businessName: data.businessName?.trim() || null,
           industry: "Bookkeeper Intake",
           servicesInterested: data.servicesWanted,
           monthlyRevenueRange: data.budgetUnknown
             ? "Budget not decided yet"
-            : data.budgetRange?.trim() || undefined,
+            : data.budgetRange?.trim() || null,
           biggestChallenge: [
             `Deadline pressure: ${data.deadlinePressure}`,
             "",

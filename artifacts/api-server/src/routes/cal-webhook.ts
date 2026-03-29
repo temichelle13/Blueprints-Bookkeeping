@@ -187,6 +187,10 @@ router.post("/webhooks/cal", async (req, res): Promise<void> => {
       booking = inserted;
     }
 
+    if (!booking) {
+      throw new Error("Failed to upsert booking record");
+    }
+
     sendBookingNotifications(booking, eventType).catch((err) => {
       console.error("Notification dispatch error (non-blocking):", err);
     });

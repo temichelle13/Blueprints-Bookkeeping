@@ -309,10 +309,10 @@ export const leadershipCerts = [
 export const footerCredentialBadges = intuitCerts.slice(0, 3);
 
 export const aboutFeaturedBadges: CredentialWithBadge[] = [
-  intuitCerts[0],
-  intuitCerts[1],
-  intuitCerts[2],
-  intuitCerts[3],
+  intuitCerts[0]!,
+  intuitCerts[1]!,
+  intuitCerts[2]!,
+  intuitCerts[3]!,
 ];
 
 export const academicStudies = [

@@ -5,9 +5,9 @@ import { Link } from "wouter";
 import { ArrowRight, Award, BadgeCheck, ExternalLink, Zap } from "lucide-react";
 import {
   academicStudies,
-  CredentialEntry,
-  CredentialWithBadge,
-  CredentialWithIcon,
+  type CredentialEntry,
+  type CredentialWithBadge,
+  type CredentialWithIcon,
   intuitCerts,
   leadershipCerts,
   nationalSecurityCerts,
