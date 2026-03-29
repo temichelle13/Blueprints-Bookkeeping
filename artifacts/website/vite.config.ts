@@ -53,7 +53,10 @@ export default defineConfig({
       output: {
         manualChunks: (id) => {
           // Core React libraries
-          if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
+          if (
+            id.includes("node_modules/react") ||
+            id.includes("node_modules/react-dom")
+          ) {
             return "vendor-react";
           }
           // Radix UI components (large UI library)
@@ -61,7 +64,10 @@ export default defineConfig({
             return "vendor-radix";
           }
           // Heavy charting library
-          if (id.includes("node_modules/recharts") || id.includes("node_modules/d3-")) {
+          if (
+            id.includes("node_modules/recharts") ||
+            id.includes("node_modules/d3-")
+          ) {
             return "vendor-charts";
           }
           // Animation library
@@ -69,7 +75,10 @@ export default defineConfig({
             return "vendor-animation";
           }
           // Form libraries
-          if (id.includes("node_modules/react-hook-form") || id.includes("node_modules/@hookform")) {
+          if (
+            id.includes("node_modules/react-hook-form") ||
+            id.includes("node_modules/@hookform")
+          ) {
             return "vendor-forms";
           }
           // Other large dependencies
