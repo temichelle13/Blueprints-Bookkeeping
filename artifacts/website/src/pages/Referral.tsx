@@ -24,9 +24,11 @@ const referralSchema = z.object({
   referredName: z.string().min(2, "Referred person's name is required"),
   referredContact: z.string().min(2, "Contact info is required"),
   notes: z.string().optional(),
-  smsConsent: z.boolean().refine((val) => val === true, {
-    message: "You must consent to receive text messages and phone calls",
+  emailConsent: z.boolean().refine((val) => val === true, {
+    message: "Email consent is required so we can follow up",
   }),
+  smsConsent: z.boolean(),
+  phoneConsent: z.boolean(),
   website: z.string().max(0).optional(),
 });
 
@@ -232,6 +234,11 @@ function ReferralForm() {
     formState: { errors },
   } = useForm<ReferralValues>({
     resolver: zodResolver(referralSchema),
+    defaultValues: {
+      emailConsent: true,
+      smsConsent: false,
+      phoneConsent: false,
+    },
   });
 
   const referrerType = watch("referrerType");
@@ -254,6 +261,8 @@ function ReferralForm() {
       email: data.referrerEmail,
       message,
       smsConsent: data.smsConsent,
+      emailConsent: data.emailConsent,
+      phoneConsent: data.phoneConsent,
       website: data.website || "",
     });
 
@@ -407,7 +416,21 @@ function ReferralForm() {
         />
       </div>
 
-      <div className="flex items-start gap-3">
+      <div className="space-y-3 rounded-xl border border-white/10 bg-white/[0.02] p-4">
+        <div className="flex items-start gap-3">
+          <input
+            id="referral-email-consent"
+            type="checkbox"
+            {...register("emailConsent")}
+            className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer shrink-0"
+          />
+          <label
+            htmlFor="referral-email-consent"
+            className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
+          >
+            I consent to email follow-up regarding this referral.
+          </label>
+        </div>
         <input
           id="referral-sms-consent"
           type="checkbox"
@@ -422,10 +445,29 @@ function ReferralForm() {
           Bookkeeping at my provided contact number. Message and data rates may
           apply. Reply STOP to opt out.
         </label>
+        <div className="flex items-start gap-3">
+          <input
+            id="referral-phone-consent"
+            type="checkbox"
+            {...register("phoneConsent")}
+            className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer shrink-0"
+          />
+          <label
+            htmlFor="referral-phone-consent"
+            className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
+          >
+            I consent to phone call outreach about this referral.
+          </label>
+        </div>
+        {!watch("smsConsent") && (
+          <p className="text-[11px] text-muted-foreground">
+            If SMS remains unchecked, no SMS outreach will occur.
+          </p>
+        )}
       </div>
-      {errors.smsConsent && (
+      {errors.emailConsent && (
         <span className="text-destructive text-xs -mt-4 block">
-          {errors.smsConsent.message}
+          {errors.emailConsent.message}
         </span>
       )}
       {submitError && (

@@ -686,6 +686,25 @@ components:
           type: ["string", "null"]
         preferredContactMethod:
           type: ["string", "null"]
+        consent:
+          type: object
+          properties:
+            email:
+              type: boolean
+            sms:
+              type: boolean
+            phone:
+              type: boolean
+            source:
+              type: string
+            legalTextVersion:
+              type: string
+          required:
+            - email
+            - sms
+            - phone
+            - source
+            - legalTextVersion
         smsConsent:
           type: boolean
         website:

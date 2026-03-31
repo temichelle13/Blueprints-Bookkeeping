@@ -22,6 +22,13 @@
       "when": 1773692412733,
       "tag": "0002_equal_marvel_apes",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1774950150648,
+      "tag": "0004_add_contact_consent_audit_fields",
+      "breakpoints": true
     }
   ]
 }

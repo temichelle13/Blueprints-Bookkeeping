@@ -139,9 +139,11 @@ const joinNetworkSchema = z.object({
   statesLicensed: z.string().min(2, "States licensed are required"),
   specialties: z.string().min(2, "Specialties are required"),
   message: z.string().optional(),
-  smsConsent: z.boolean().refine((val) => val === true, {
-    message: "You must consent to receive text messages and phone calls",
+  emailConsent: z.boolean().refine((val) => val === true, {
+    message: "Email consent is required so we can follow up",
   }),
+  smsConsent: z.boolean(),
+  phoneConsent: z.boolean(),
 });
 
 function JoinNetworkForm() {
@@ -155,7 +157,9 @@ function JoinNetworkForm() {
     statesLicensed: "",
     specialties: "",
     message: "",
+    emailConsent: true,
     smsConsent: false,
+    phoneConsent: false,
   });
   const [submitted, setSubmitted] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -185,6 +189,8 @@ Phone: ${formData.phone}
 
 Additional Info: ${formData.message}`,
       smsConsent: formData.smsConsent,
+      emailConsent: formData.emailConsent,
+      phoneConsent: formData.phoneConsent,
       website: "",
     });
     if (success) {
@@ -333,7 +339,25 @@ Additional Info: ${formData.message}`,
           placeholder="Tell us about your practice and why you'd like to join the network..."
         />
       </div>
-      <div className="md:col-span-2">
+      <div className="md:col-span-2 rounded-xl border border-white/10 bg-white/[0.02] p-4 space-y-3">
+        <div className="flex items-start gap-3">
+          <input
+            id="tax-partner-email-consent"
+            type="checkbox"
+            checked={formData.emailConsent}
+            onChange={(e) => {
+              setFormError(null);
+              setFormData({ ...formData, emailConsent: e.target.checked });
+            }}
+            className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer shrink-0"
+          />
+          <label
+            htmlFor="tax-partner-email-consent"
+            className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
+          >
+            I consent to email follow-up regarding this application.
+          </label>
+        </div>
         <div className="flex items-start gap-3">
           <input
             id="tax-partner-sms-consent"
@@ -354,6 +378,29 @@ Additional Info: ${formData.message}`,
             rates may apply. Reply STOP to opt out.
           </label>
         </div>
+        <div className="flex items-start gap-3">
+          <input
+            id="tax-partner-phone-consent"
+            type="checkbox"
+            checked={formData.phoneConsent}
+            onChange={(e) => {
+              setFormError(null);
+              setFormData({ ...formData, phoneConsent: e.target.checked });
+            }}
+            className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer shrink-0"
+          />
+          <label
+            htmlFor="tax-partner-phone-consent"
+            className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
+          >
+            I consent to phone call outreach regarding this application.
+          </label>
+        </div>
+        {!formData.smsConsent && (
+          <p className="text-[11px] text-muted-foreground">
+            If SMS remains unchecked, no SMS outreach will occur.
+          </p>
+        )}
       </div>
       {formError && (
         <p className="md:col-span-2 text-destructive text-sm">{formError}</p>

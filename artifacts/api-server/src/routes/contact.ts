@@ -8,6 +8,33 @@ import { getResend, getOwnerEmail, EMAIL_FROM } from "../lib/email";
 import { logger } from "../lib/logger";
 
 const router: IRouter = Router();
+const CONSENT_FALLBACK_VERSION = "v2026-03-31";
+
+type ContactConsent = {
+  email: boolean;
+  sms: boolean;
+  phone: boolean;
+  source: string;
+  legalTextVersion: string;
+};
+
+function normalizeConsent(data: {
+  consent?: ContactConsent | undefined;
+  smsConsent: boolean;
+  formType: "quick" | "detailed";
+}): ContactConsent {
+  if (data.consent) {
+    return data.consent;
+  }
+
+  return {
+    email: true,
+    sms: data.smsConsent,
+    phone: data.smsConsent,
+    source: `legacy_${data.formType}_form`,
+    legalTextVersion: CONSENT_FALLBACK_VERSION,
+  };
+}
 
 const contactLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -37,6 +64,8 @@ router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
   }
 
   const data = parsed.data;
+  const normalizedConsent = normalizeConsent(data);
+  const consentCapturedAt = new Date();
 
   const [inquiry] = await db
     .insert(contactInquiriesTable)
@@ -52,7 +81,24 @@ router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
       monthlyRevenueRange: data.monthlyRevenueRange ?? null,
       biggestChallenge: data.biggestChallenge ?? null,
       preferredContactMethod: data.preferredContactMethod ?? null,
-      smsConsent: data.smsConsent,
+      emailConsent: normalizedConsent.email,
+      emailConsentCapturedAt: normalizedConsent.email
+        ? consentCapturedAt
+        : null,
+      emailConsentSource: normalizedConsent.email
+        ? normalizedConsent.source
+        : null,
+      smsConsent: normalizedConsent.sms,
+      smsConsentCapturedAt: normalizedConsent.sms ? consentCapturedAt : null,
+      smsConsentSource: normalizedConsent.sms ? normalizedConsent.source : null,
+      phoneConsent: normalizedConsent.phone,
+      phoneConsentCapturedAt: normalizedConsent.phone
+        ? consentCapturedAt
+        : null,
+      phoneConsentSource: normalizedConsent.phone
+        ? normalizedConsent.source
+        : null,
+      consentLegalTextVersion: normalizedConsent.legalTextVersion,
     })
     .returning();
 
@@ -84,7 +130,11 @@ router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
             <tr><td style="padding:8px 0;color:#666;font-size:14px;">Services</td><td style="padding:8px 0;">${servicesLabel}</td></tr>
             ${data.monthlyRevenueRange ? `<tr><td style="padding:8px 0;color:#666;font-size:14px;">Revenue Range</td><td style="padding:8px 0;">${data.monthlyRevenueRange}</td></tr>` : ""}
             ${data.preferredContactMethod ? `<tr><td style="padding:8px 0;color:#666;font-size:14px;">Prefers</td><td style="padding:8px 0;">${data.preferredContactMethod}</td></tr>` : ""}
-            <tr><td style="padding:8px 0;color:#666;font-size:14px;">SMS/Call Consent</td><td style="padding:8px 0;font-weight:600;color:${data.smsConsent ? "#10B981" : "#EF4444"};">${data.smsConsent ? "Yes" : "No"}</td></tr>
+            <tr><td style="padding:8px 0;color:#666;font-size:14px;">Email Consent</td><td style="padding:8px 0;font-weight:600;color:${normalizedConsent.email ? "#10B981" : "#EF4444"};">${normalizedConsent.email ? "Yes" : "No"}</td></tr>
+            <tr><td style="padding:8px 0;color:#666;font-size:14px;">SMS Consent</td><td style="padding:8px 0;font-weight:600;color:${normalizedConsent.sms ? "#10B981" : "#EF4444"};">${normalizedConsent.sms ? "Yes" : "No"}</td></tr>
+            <tr><td style="padding:8px 0;color:#666;font-size:14px;">Phone Consent</td><td style="padding:8px 0;font-weight:600;color:${normalizedConsent.phone ? "#10B981" : "#EF4444"};">${normalizedConsent.phone ? "Yes" : "No"}</td></tr>
+            <tr><td style="padding:8px 0;color:#666;font-size:14px;">Consent Source</td><td style="padding:8px 0;">${normalizedConsent.source}</td></tr>
+            <tr><td style="padding:8px 0;color:#666;font-size:14px;">Consent Legal Text</td><td style="padding:8px 0;">${normalizedConsent.legalTextVersion}</td></tr>
           </table>
           ${
             data.biggestChallenge || data.message

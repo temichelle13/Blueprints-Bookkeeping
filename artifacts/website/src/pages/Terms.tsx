@@ -125,7 +125,21 @@ export default function Terms() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              8. Governing Law
+              8. Communication Consent
+            </h2>
+            <p>
+              By submitting a contact or intake form, you confirm your selected
+              communication preferences for email, SMS, and phone outreach.
+              Email consent is required for follow-up; SMS and phone outreach
+              occur only if you opt in. Consent selections and legal text
+              versions are retained as part of our records for compliance and
+              dispute resolution purposes.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-white font-bold text-lg mb-3">
+              9. Governing Law
             </h2>
             <p>
               These Terms are governed by the laws of the State of Oregon. Any
@@ -136,7 +150,7 @@ export default function Terms() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              9. Changes to Terms
+              10. Changes to Terms
             </h2>
             <p>
               We may update these Terms from time to time. Continued use of our
@@ -147,7 +161,7 @@ export default function Terms() {
           </section>
 
           <section>
-            <h2 className="text-white font-bold text-lg mb-3">10. Contact</h2>
+            <h2 className="text-white font-bold text-lg mb-3">11. Contact</h2>
             <p>Questions about these Terms? Contact us:</p>
             <div className="mt-3 pl-4 border-l border-accent/30 space-y-1">
               <p>Blueprints & Bookkeeping LLC</p>
