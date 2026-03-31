@@ -16,10 +16,13 @@ import {
   GoogleReviewsCallout,
 } from "@/components/TrustSignals";
 import { SEO } from "@/components/SEO";
+import { trackHomeCtaClick } from "@/hooks/usePageTracking";
 import { localBusinessSchema } from "@/lib/seo-schemas";
 
 export default function Home() {
   usePageTitle();
+  const primaryCtaLabel = "Book a Discovery Call";
+  const secondaryCtaLabel = "View Services";
 
   return (
     <div>
@@ -83,10 +86,11 @@ export default function Home() {
             className="flex flex-col sm:flex-row gap-4"
           >
             <Link
-              href="/get-started"
+              href="/schedule"
+              onClick={() => trackHomeCtaClick("primary", "hero")}
               className="group px-8 py-4 rounded-xl bg-accent text-white font-semibold text-lg shadow-xl shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
             >
-              Get Started
+              {primaryCtaLabel}
               <ArrowRight
                 size={20}
                 className="group-hover:translate-x-1 transition-transform"
@@ -94,9 +98,10 @@ export default function Home() {
             </Link>
             <Link
               href="/services"
+              onClick={() => trackHomeCtaClick("secondary", "hero")}
               className="px-8 py-4 rounded-xl bg-white/[0.04] text-white backdrop-blur-sm border border-white/10 font-semibold text-lg hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300 flex items-center justify-center"
             >
-              Explore Our Services
+              {secondaryCtaLabel}
             </Link>
           </motion.div>
         </div>
@@ -328,13 +333,23 @@ export default function Home() {
           </div>
 
           <div className="text-center">
-            <Link
-              href="/get-started"
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-accent text-white font-semibold text-sm shadow-lg shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300"
-            >
-              See if there's a spot available
-              <ArrowRight size={16} />
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/schedule"
+                onClick={() => trackHomeCtaClick("primary", "mid_page")}
+                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-accent text-white font-semibold text-sm shadow-lg shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300"
+              >
+                {primaryCtaLabel}
+                <ArrowRight size={16} />
+              </Link>
+              <Link
+                href="/services"
+                onClick={() => trackHomeCtaClick("secondary", "mid_page")}
+                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-white/[0.04] text-white backdrop-blur-sm border border-white/10 font-semibold text-sm hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300"
+              >
+                {secondaryCtaLabel}
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -363,13 +378,23 @@ export default function Home() {
             Secure your financial infrastructure and map out a profitable future
             today.
           </p>
-          <Link
-            href="/schedule"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-accent text-white font-bold text-lg rounded-xl shadow-xl shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300"
-          >
-            Book Your Consultation
-            <ArrowRight size={20} />
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              href="/schedule"
+              onClick={() => trackHomeCtaClick("primary", "closing")}
+              className="inline-flex items-center gap-2 px-8 py-4 bg-accent text-white font-bold text-lg rounded-xl shadow-xl shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300"
+            >
+              {primaryCtaLabel}
+              <ArrowRight size={20} />
+            </Link>
+            <Link
+              href="/services"
+              onClick={() => trackHomeCtaClick("secondary", "closing")}
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-white/[0.04] text-white backdrop-blur-sm border border-white/10 font-semibold text-lg hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300"
+            >
+              {secondaryCtaLabel}
+            </Link>
+          </div>
         </div>
       </section>
     </div>
