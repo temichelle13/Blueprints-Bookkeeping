@@ -107,10 +107,11 @@ export default function Privacy() {
           <section>
             <h2 className="text-white font-bold text-lg mb-3">6. Security</h2>
             <p>
-              We implement industry-standard security measures to protect your
-              information, including encrypted data transmission (HTTPS) and
-              secure database storage. While we take reasonable precautions, no
-              internet transmission is 100% secure.
+              We use practical safeguards to protect your information, including
+              domestic handling, controlled account access, encrypted data
+              transmission (HTTPS), and secure systems for storage and
+              communication. While we take reasonable precautions, no internet
+              transmission is 100% secure.
             </p>
           </section>
 
