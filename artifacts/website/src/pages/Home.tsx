@@ -210,8 +210,8 @@ export default function Home() {
                   },
                   {
                     icon: <Users className="w-5 h-5" />,
-                    title: "20-Client Maximum",
-                    desc: "Strictly capped roster to ensure executive-level dedication and rapid response times.",
+                    title: "Boutique, High-Touch Service",
+                    desc: "A deliberately selective client model ensures executive-level dedication and rapid response times for every engagement.",
                   },
                 ].map((item, i) => (
                   <div key={i} className="flex gap-4 items-start group">
