@@ -1,11 +1,32 @@
 import { usePageTitle } from "@/hooks/use-page-title";
+import { SEO } from "@/components/SEO";
+import {
+  breadcrumbSchema,
+  localBusinessSchema,
+  professionalServiceSchema,
+} from "@/lib/seo-schemas";
 import { Link } from "wouter";
 
 export default function Terms() {
   usePageTitle("Terms of Service");
+  const BASE_URL = "https://blueprintsandbookkeeping.com";
+  const jsonLd = [
+    localBusinessSchema(),
+    professionalServiceSchema({ url: `${BASE_URL}/terms` }),
+    breadcrumbSchema([
+      { name: "Home", url: BASE_URL },
+      { name: "Terms of Service", url: `${BASE_URL}/terms` },
+    ]),
+  ];
 
   return (
     <div className="pt-24 pb-20">
+      <SEO
+        title="Terms of Service"
+        path="/terms"
+        description="Review service terms, limitations, and legal conditions for working with Blueprints & Bookkeeping."
+        jsonLd={jsonLd}
+      />
       <section className="py-16 mb-8 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -165,9 +186,20 @@ export default function Terms() {
         </div>
 
         <div className="text-center">
-          <Link href="/" className="text-accent hover:underline text-sm">
-            ← Back to Home
-          </Link>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
+            <Link href="/" className="text-accent hover:underline">
+              ← Back to Home
+            </Link>
+            <Link href="/privacy" className="text-accent hover:underline">
+              Privacy Policy
+            </Link>
+            <Link
+              href="/compliance-security"
+              className="text-accent hover:underline"
+            >
+              Compliance & Security
+            </Link>
+          </div>
         </div>
       </div>
     </div>

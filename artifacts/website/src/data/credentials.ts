@@ -125,7 +125,7 @@ export const technologyAndSecurityCerts: CredentialEntry[] = [
     url: "https://www.coursera.org/account/accomplishments/specialization/AFOGOQ19VBCK",
   },
   {
-    name: "Foundations of Cybersecurity",
+    name: "Cybersecurity Operations",
     issuer: "Google",
     description:
       "Google-certified cybersecurity training covering threat landscapes, security frameworks, network defense, and data protection best practices.",
@@ -145,7 +145,7 @@ export const technologyAndSecurityCerts: CredentialEntry[] = [
     url: "https://www.credly.com/badges/e2823194-36dc-4ab3-ab1d-155b9189714f/public_url",
   },
   {
-    name: "Foundations of Business Intelligence",
+    name: "Business Intelligence Analytics",
     issuer: "Google",
     description:
       "Google-certified BI training covering data modeling, dashboard design, stakeholder communication, and analytics-driven decision making.",
@@ -155,7 +155,7 @@ export const technologyAndSecurityCerts: CredentialEntry[] = [
     url: "https://www.coursera.org/account/accomplishments/verify/E8HX7LY389H8",
   },
   {
-    name: "Foundations of Project Management",
+    name: "Project Management Systems",
     issuer: "Google",
     description:
       "Google-certified project management training covering methodologies, stakeholder management, risk analysis, and Agile frameworks.",
@@ -254,7 +254,7 @@ export const specializedCerts: CredentialWithBadge[] = [
 
 export const leadershipCerts = [
   {
-    title: "Exercising Leadership: Foundational Principles",
+    title: "Exercising Leadership: Executive Principles",
     school: "HarvardX",
     focus: "Leadership communication, influence, and executive presence.",
     url: "https://courses.edx.org/certificates/04f26e09cd414470bebc4a9852865dba",
@@ -267,7 +267,7 @@ export const leadershipCerts = [
     url: "https://www.coursera.org/account/accomplishments/certificate/7MPSBTXW624E",
   },
   {
-    title: "Intro to Psychology",
+    title: "Psychology of Decision-Making",
     school: "Yale University",
     focus:
       "Foundational psychology principles covering human behavior, cognition, emotion, and social dynamics.",

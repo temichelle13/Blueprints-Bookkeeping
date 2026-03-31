@@ -81,7 +81,7 @@ export function Footer() {
             <div className="flex flex-col gap-3 text-sm">
               <a
                 href="mailto:tea@blueprintsandbookkeeping.com"
-                className="flex items-center gap-2.5 text-muted-foreground hover:text-accent transition-colors"
+                className="flex items-center gap-2.5 rounded-sm text-muted-foreground hover:text-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <Mail
                   size={14}
@@ -92,7 +92,7 @@ export function Footer() {
               </a>
               <a
                 href="tel:+15413198654"
-                className="flex items-center gap-2.5 text-muted-foreground hover:text-accent transition-colors"
+                className="flex items-center gap-2.5 rounded-sm text-muted-foreground hover:text-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <Phone
                   size={14}
@@ -124,7 +124,7 @@ export function Footer() {
               {contactLinks.map((item) => {
                 const Icon = item.icon;
                 const linkClassName =
-                  "group flex items-start gap-3 text-sm text-muted-foreground transition-colors hover:text-foreground";
+                  "group flex items-start gap-3 rounded-md text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
                 const content = (
                   <>
                     <span className="mt-0.5 text-accent/70">
@@ -168,7 +168,7 @@ export function Footer() {
             <button
               type="button"
               onClick={openCookieConsentPreferences}
-              className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-accent/30 hover:text-foreground"
+              className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-accent/30 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               Cookie Preferences
             </button>
@@ -192,7 +192,7 @@ export function Footer() {
                   <Link
                     href={item.href}
                     onClick={scrollToTopOnSameRoute(item.href)}
-                    className="text-muted-foreground hover:text-accent text-sm transition-colors inline-flex items-center gap-1 group"
+                    className="text-muted-foreground hover:text-accent text-sm transition-colors inline-flex items-center gap-1 group rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     {item.label}
                     <ArrowRight
@@ -219,7 +219,7 @@ export function Footer() {
                   <Link
                     href={item.href}
                     onClick={scrollToTopOnSameRoute(item.href)}
-                    className="text-muted-foreground hover:text-accent text-sm transition-colors inline-flex items-center gap-1 group"
+                    className="text-muted-foreground hover:text-accent text-sm transition-colors inline-flex items-center gap-1 group rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     {item.label}
                     <ArrowRight
@@ -278,7 +278,7 @@ export function Footer() {
                   href={badge.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="shrink-0 hover:scale-110 transition-transform"
+                  className="shrink-0 rounded-sm hover:scale-110 transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   <img
                     src={badge.badge}
@@ -293,43 +293,49 @@ export function Footer() {
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             <Link
               href="/privacy"
-              className="hover:text-foreground transition-colors"
+              className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               Privacy Policy
             </Link>
             <Link
               href="/terms"
-              className="hover:text-foreground transition-colors"
+              className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               Terms of Service
             </Link>
             <Link
               href="/accessibility"
-              className="hover:text-foreground transition-colors"
+              className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               Accessibility
             </Link>
             <Link
               href="/cookies"
-              className="hover:text-foreground transition-colors"
+              className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               Cookies
             </Link>
             <Link
+              href="/compliance-security"
+              className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              Compliance & Security
+            </Link>
+            <Link
               href="/referral"
-              className="hover:text-foreground transition-colors"
+              className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               Referral Program
             </Link>
             <Link
               href="/unsubscribe"
-              className="hover:text-foreground transition-colors"
+              className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               Unsubscribe
             </Link>
             <Link
               href="/feedback"
-              className="hover:text-foreground transition-colors"
+              className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               Site Feedback
             </Link>

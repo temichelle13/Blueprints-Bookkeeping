@@ -2,15 +2,31 @@ import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 import { Link } from "wouter";
 import { openCookieConsentPreferences } from "@/components/CookieConsent";
+import {
+  breadcrumbSchema,
+  localBusinessSchema,
+  professionalServiceSchema,
+} from "@/lib/seo-schemas";
 
 export default function CookiePolicy() {
   usePageTitle("Cookie Policy");
+  const BASE_URL = "https://blueprintsandbookkeeping.com";
+  const jsonLd = [
+    localBusinessSchema(),
+    professionalServiceSchema({ url: `${BASE_URL}/cookies` }),
+    breadcrumbSchema([
+      { name: "Home", url: BASE_URL },
+      { name: "Cookie Policy", url: `${BASE_URL}/cookies` },
+    ]),
+  ];
 
   return (
     <div className="pt-24 pb-20">
       <SEO
+        title="Cookie Policy"
         path="/cookies"
         description="Learn about how Blueprints & Bookkeeping uses cookies and similar technologies on our website, and how you can manage your preferences."
+        jsonLd={jsonLd}
       />
 
       <section className="py-16 mb-8 relative">
