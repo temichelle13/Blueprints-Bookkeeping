@@ -75,8 +75,8 @@ export default function Home() {
             transition={{ delay: 0.2 }}
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed"
           >
-            Advanced bookkeeping and professional business plans for founders
-            who need clean books and a clear path forward.
+            Executive-grade bookkeeping and strategic business planning for
+            founders who need financial clarity, control, and momentum.
           </motion.p>
 
           <motion.div
@@ -215,8 +215,8 @@ export default function Home() {
                   },
                   {
                     icon: <Users className="w-5 h-5" />,
-                    title: "20-Client Maximum",
-                    desc: "Strictly capped roster to ensure executive-level dedication and rapid response times.",
+                    title: "Boutique, High-Touch Service",
+                    desc: "A deliberately selective client model ensures executive-level dedication and rapid response times for every engagement.",
                   },
                 ].map((item, i) => (
                   <div key={i} className="flex gap-4 items-start group">
@@ -282,11 +282,12 @@ export default function Home() {
           <div className="flex flex-col items-center text-center mb-14">
             <div className="accent-bar mb-6" />
             <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
-              Limited to 20 Active Clients
+              Built for Strategic Clarity and Financial Control
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl">
-              This isn't a volume practice. Every client gets direct access to
-              Tea — no handoffs, no junior staff, no outsourcing.
+              A boutique financial partner model delivering executive-level
+              guidance, disciplined reporting, and proactive support as your
+              company scales.
             </p>
           </div>
 
@@ -374,9 +375,13 @@ export default function Home() {
             <br />
             <span className="text-gradient">Start Scaling.</span>
           </h2>
-          <p className="text-xl text-muted-foreground mb-10">
-            Secure your financial infrastructure and map out a profitable future
-            today.
+          <p className="text-xl text-muted-foreground mb-4">
+            Secure your financial infrastructure and make faster, better
+            decisions with confidence.
+          </p>
+          <p className="text-sm text-muted-foreground/80 mb-10">
+            Client roster is intentionally limited to maintain responsive,
+            high-touch service.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
