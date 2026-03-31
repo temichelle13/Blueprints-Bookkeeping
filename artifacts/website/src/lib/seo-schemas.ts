@@ -38,6 +38,81 @@ export function localBusinessSchema() {
   };
 }
 
+export function homepageSchemas() {
+  return [
+    localBusinessSchema(),
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "@id": `${BASE_URL}/#webpage`,
+      url: BASE_URL,
+      name: "Roseburg Bookkeeping, Cleanup, Monthly Close & Business Plans",
+      description:
+        "Roseburg, Oregon bookkeeping firm serving clients nationwide with cleanup bookkeeping, monthly close support, and professionally written business plans.",
+      isPartOf: {
+        "@type": "WebSite",
+        "@id": `${BASE_URL}/#website`,
+        url: BASE_URL,
+        name: "Blueprints & Bookkeeping",
+      },
+      about: {
+        "@id": `${BASE_URL}/#business`,
+      },
+      primaryImageOfPage: `${BASE_URL}/opengraph.jpg`,
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "@id": `${BASE_URL}/#service-bookkeeping`,
+      serviceType: "Bookkeeping",
+      name: "Advanced Bookkeeping Services",
+      description:
+        "Advanced bookkeeping services including cleanup/catch-up projects, monthly close workflows, reconciliations, and ongoing reporting for founders and business owners.",
+      provider: {
+        "@id": `${BASE_URL}/#business`,
+      },
+      areaServed: [
+        {
+          "@type": "City",
+          name: "Roseburg",
+        },
+        {
+          "@type": "State",
+          name: "Oregon",
+        },
+        {
+          "@type": "Country",
+          name: "United States",
+        },
+      ],
+      availableChannel: {
+        "@type": "ServiceChannel",
+        serviceUrl: `${BASE_URL}/services/bookkeeping`,
+      },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "@id": `${BASE_URL}/#service-business-plans`,
+      serviceType: "Business Plan Development",
+      name: "Business Plan Services",
+      description:
+        "Professional business plans with financial forecasting, market analysis, and strategic narratives for startups, acquisitions, and growth-stage businesses.",
+      provider: {
+        "@id": `${BASE_URL}/#business`,
+      },
+      areaServed: {
+        "@type": "Country",
+        name: "United States",
+      },
+      availableChannel: {
+        "@type": "ServiceChannel",
+        serviceUrl: `${BASE_URL}/services/business-plans`,
+      },
+    },
+  ];
+}
+
 export function serviceSchema(opts: {
   name: string;
   description: string;
