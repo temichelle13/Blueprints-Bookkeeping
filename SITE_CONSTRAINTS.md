@@ -9,8 +9,8 @@
 
 ### CORE services (the only two to emphasize everywhere):
 
-1. **Advanced Bookkeeping** — ongoing monthly bookkeeping, QuickBooks Online management, reconciliation, niche industries (crypto, ag/timber, SaaS)
-2. **Business Plans** — startup plans, SBA-ready plans, investor-ready financials, LivePlan-powered forecasting
+1. **Advanced Bookkeeping** — ongoing monthly bookkeeping, QuickBooks Online management, reconciliation, niche industries (crypto, ag/timber, SaaS, independent contractors, gig-workers, rural businesses, niche industries), emergency bookkeeping or same-day reports or cleanup (within reasonable bounds), one time services, training and troubleshooting, payroll, bill pay, A/R and A/P, Assets (fixed, current, depreciation)
+2. **Business Plans** — startup plans, management reports, financials, LivePlan-powered forecasting, target market analysis, growth pothential, new market opportunities, full business plan design, PDF delivery of documents, website of business plan summary with shareable link, roadmaps, pricing strategy
 
 ### ADD-ON only (never positioned as a standalone or core service):
 
@@ -23,40 +23,41 @@
 - Tax advice
 - Tax planning
 - Any seasonal tax-related services
-
+**All tax prep and filing will be able to be done seamlessly through partners that have been vetted and trusted by BPBK or clients can use their preffered tax  pro. Financial reports and reports for accountants are available when needed for subsscriptions, one time services for reports will be a charged services if not a current client.**
 ---
 
 ## Third-Party Services Actually in Use
 
-| Service            | In Use | Notes                                                                                   |
-| ------------------ | ------ | --------------------------------------------------------------------------------------- |
-| **Calendly**       | YES    | URL: `https://calendly.com/tea-blueprintsandbookkeeping/30min`                          |
-| Cal.com            | NO     | Do NOT integrate. Do NOT embed. Do NOT reference.                                       |
-| QuickBooks Online  | YES    | Tea uses QBO. Stripe for online sign-ups. QB Payments for invoicing existing clients.   |
-| Resend             | YES    | All transactional email goes through Resend (API key in env)                            |
-| Adobe Acrobat Sign | YES    | Contract automation                                                                     |
-| Stripe             | YES    | Online sign-up checkout for Essentials/Growth only. NOT for invoicing existing clients. |
-| Plausible          | YES    | Analytics. Configured via VITE_ANALYTICS_ID env var.                                    |
-| LivePlan           | YES    | Business planning tool partnership                                                      |
+| Service             | In Use | Notes                                                                                                                                                                                                                                                                                                                                 |
+| ------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Calendly**        | YES    | URL: `https://calendly.com/tea-blueprintsandbookkeeping/30min`                                                                                                                                                                                                                                                                         |
+| **QuickBooks Online** | YES  | Tea uses QBO for bookkeeping via Intuit Accountant Suite as a ProAdvisor. Client subscriptions can be billed directly to the client, through the firm (client pays the firm), or via revenue‑share programs. If a client already has a subscription, they can simply add Tea as their accountant. If they want to change tiers or add‑ons, Tea will advise to ensure best pricing. |
+| **Resend**          | YES    | All transactional email goes through Resend (API key stored in environment variables).                                                                                                                                                                                                                                                 |
+| **Contract Automation (TBD)** | TBD | A contract automation solution is still being selected. Requirements: secure signing, automated contract generation, template support, API integration, automated sending, storage, and update workflows. Must be seamless, feature‑rich, and cost‑effective.                                                                                         |
+| **Stripe**          | MAYBE  | Still determining the best setup for payments and invoicing to maximize transparency, record retention, and ease of billing. Currently evaluating whether QBO, Stripe, or a hybrid approach is best long‑term.                                                                                                                          |
+| **LivePlan**        | YES    | Business planning tool partnership.                                                                                                                                                                                                                                                                                                    |
+
 
 ---
 
 ## Scheduling
 
-- **Always use Calendly**, not Cal.com
-- Calendly URL: `https://calendly.com/tea-blueprintsandbookkeeping/30min`
+- **Always use Calendly**
+- Calendly URL FOR 30-mINUTE INTRODUCTORY MEETINGS AND first time meeting for non emergency bookings `https://calendly.com/tea-blueprintsandbookkeeping/30min`
 - The /schedule page embeds Calendly via iframe
 - Do NOT replace this with any other scheduling service without explicit instruction
+-  Emergency 15 minute meetings for urgent matters for clients or non/new clients: https://calendly.com/tea-blueprintsandbookkeeping/emergency-or-other-expedited-request
+
 
 ---
 
 ## Credentials & Content Rules
 
-- "Advanced Crypto Accounting Certified" is the correct credential label (not "Crypto Tax Certified")
-- Degrees from Tea's education must be referred to as "coursework" or "studies" — never "degree" or "completed"
-- Earned certifications (CEH v12, QB ProAdvisor Gold, Advanced Crypto Accounting Certified) may be listed fully
-- Max client count is **20** — mention as a scarcity signal where appropriate
-- Pricing always uses "starting at" phrasing — never flat/fixed rates
+- "Intuit Cryptocurrency Tax Certified" is the correct credential label 
+- Degrees from Tea's education history: MBA, BSBA, BS Equine Science, MSPsy, PsyD
+- Earned certifications (CEH v12, QB ProAdvisor Gold, Intuit Cryptocurrency Tax, Intuit Tax Exam Level 1, Intuit Quickbooks Online Level 1 and Advanced Level 2, Software Engineer Intern, AI Foundations from Google, Harvard Certification in Leadership and Communications, Yale Psychology Certification) may be listed fully
+- Max client count is **20** — mention as a scarcity signal where appropriate, but do not repeat on all pages and do not make it bigger than other content. this is very secondary
+- Pricing always uses "starting at" phrasing — never flat/fixed rates until they are established
 
 ---
 
@@ -82,12 +83,3 @@
 - Font stack: Outfit (display), Inter (body), JetBrains Mono (labels)
 
 ---
-
-## Common Mistakes Task Agents Make
-
-1. **Swapping Calendly for Cal.com** — Cal.com is NOT used here
-2. **Listing Digital Handshake as a core service** — it is add-on only
-3. **Mentioning tax services** — Tea does NOT do taxes, ever
-4. **Changing "starting at" pricing to flat rates** — always use "starting at"
-5. **Breaking App.tsx route registration** when adding new pages — always add both the import AND the Route
-6. **Forgetting to update sitemap.xml** when adding new public pages
