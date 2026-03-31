@@ -14,6 +14,9 @@ import {
   StatsProofBar,
   CredentialBadgeStrip,
   GoogleReviewsCallout,
+  HeroCtaTrustNote,
+  EngagementClarityPreview,
+  FinalCtaTrustNote,
 } from "@/components/TrustSignals";
 import { SEO } from "@/components/SEO";
 import { localBusinessSchema } from "@/lib/seo-schemas";
@@ -99,12 +102,22 @@ export default function Home() {
               Explore Our Services
             </Link>
           </motion.div>
+
+          <HeroCtaTrustNote />
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
       </section>
 
       <StatsProofBar />
+
+      <div className="glow-line max-w-5xl mx-auto" />
+
+      <EngagementClarityPreview />
+
+      <div className="glow-line max-w-5xl mx-auto" />
+
+      <CredentialBadgeStrip compact />
 
       <div className="glow-line max-w-5xl mx-auto" />
 
@@ -339,12 +352,6 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="glow-line max-w-5xl mx-auto" />
-
-      <CredentialBadgeStrip compact />
-
-      <div className="glow-line max-w-5xl mx-auto" />
-
       <GoogleReviewsCallout />
 
       <div className="glow-line max-w-5xl mx-auto" />
@@ -370,6 +377,7 @@ export default function Home() {
             Book Your Consultation
             <ArrowRight size={20} />
           </Link>
+          <FinalCtaTrustNote />
         </div>
       </section>
     </div>
