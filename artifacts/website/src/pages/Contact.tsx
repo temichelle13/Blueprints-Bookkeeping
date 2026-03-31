@@ -28,6 +28,12 @@ const PHONE_HREF = "tel:+15413198654";
 const SMS_HREF = "sms:+15413198654";
 const EMAIL_ADDRESS = "tea@blueprintsandbookkeeping.com";
 const BOOKKEEPER_INTENT = "bookkeeper";
+const CONTACT_CONSENT_TEXT_VERSION = "contact-consent-2026-03-31.1";
+const CONTACT_CONSENT_SOURCE_PAGE = "/contact";
+const CONTACT_CONSENT_LANGUAGE =
+  "I agree to receive text messages and phone calls from Blueprints & Bookkeeping at my provided contact number. Message and data rates may apply. Reply STOP to opt out.";
+const INQUIRY_PROCESSING_DISCLOSURE =
+  "By submitting this inquiry, you consent to Blueprints & Bookkeeping processing your contact and business details to respond to your request, provide service recommendations, maintain compliance records, and prevent abuse.";
 
 const messageSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -318,11 +324,13 @@ function MessageForm({ defaultMessage = "" }: { defaultMessage?: string }) {
           htmlFor="contact-sms-consent"
           className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none min-h-[44px] flex items-center"
         >
-          I agree to receive text messages and phone calls from Blueprints &amp;
-          Bookkeeping at my provided contact number. Message and data rates may
-          apply. Reply STOP to opt out.
+          {CONTACT_CONSENT_LANGUAGE}
         </label>
       </div>
+      <p className="text-xs text-muted-foreground leading-relaxed -mt-1">
+        {INQUIRY_PROCESSING_DISCLOSURE} Consent language version:{" "}
+        {CONTACT_CONSENT_TEXT_VERSION}.
+      </p>
       {errors.smsConsent && (
         <p
           id="contact-sms-consent-error"
@@ -413,6 +421,8 @@ function BookkeeperIntakeForm() {
             data.additionalComments,
           ].join("\n"),
           smsConsent: false,
+          consentTextVersion: CONTACT_CONSENT_TEXT_VERSION,
+          consentSourcePage: CONTACT_CONSENT_SOURCE_PAGE,
           website: data.website || "",
         },
       });
@@ -723,6 +733,10 @@ function BookkeeperIntakeForm() {
           {submitError}
         </p>
       )}
+      <p className="text-xs text-muted-foreground leading-relaxed -mt-2">
+        {INQUIRY_PROCESSING_DISCLOSURE} Consent language version:{" "}
+        {CONTACT_CONSENT_TEXT_VERSION}.
+      </p>
 
       <button
         type="submit"

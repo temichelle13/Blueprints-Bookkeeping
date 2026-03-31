@@ -688,6 +688,12 @@ components:
           type: ["string", "null"]
         smsConsent:
           type: boolean
+        consentTextVersion:
+          type: string
+          description: Version identifier for the exact consent language shown at submit time
+        consentSourcePage:
+          type: string
+          description: Public page path where consent was captured (for example /contact)
         website:
           type: string
       required:
@@ -695,6 +701,8 @@ components:
         - name
         - email
         - smsConsent
+        - consentTextVersion
+        - consentSourcePage
     ContactFormResponse:
       type: object
       properties:

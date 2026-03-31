@@ -34,6 +34,8 @@ export const SubmitContactFormBody = zod.object({
   biggestChallenge: zod.string().nullish(),
   preferredContactMethod: zod.string().nullish(),
   smsConsent: zod.boolean(),
+  consentTextVersion: zod.string(),
+  consentSourcePage: zod.string(),
   website: zod.string().optional(),
 });
 
@@ -51,7 +53,8 @@ export const SubscribeNewsletterBody = zod.object({
  * @summary Unsubscribe from the newsletter via token
  */
 export const UnsubscribeNewsletterByTokenQueryParams = zod.object({
-  token: zod.string()
+  token: zod
+    .string()
     .uuid()
     .describe("The unique unsubscribe token for the subscriber"),
 });

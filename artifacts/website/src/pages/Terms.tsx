@@ -98,7 +98,29 @@ export default function Terms() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              6. Disclaimer of Warranties
+              6. Inquiry Data Processing and Retention
+            </h2>
+            <p>
+              When you submit a website inquiry, we process your contact and
+              business details to respond to your request, evaluate service fit,
+              maintain communication-consent records, and comply with legal and
+              regulatory obligations (including privacy/TCPA workflows). Inquiry
+              data is retained for up to 12 months while active, then
+              auto-archived/redacted, and permanently deleted after 24 months
+              unless a legal hold applies.
+            </p>
+            <p className="mt-3">
+              Additional details are provided in our{" "}
+              <Link href="/privacy" className="text-accent hover:underline">
+                Privacy Policy
+              </Link>
+              .
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-white font-bold text-lg mb-3">
+              7. Disclaimer of Warranties
             </h2>
             <p>
               Our website and services are provided "as is" without warranties
@@ -112,7 +134,7 @@ export default function Terms() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              7. Limitation of Liability
+              8. Limitation of Liability
             </h2>
             <p>
               To the fullest extent permitted by law, Blueprints & Bookkeeping
@@ -125,7 +147,7 @@ export default function Terms() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              8. Governing Law
+              9. Governing Law
             </h2>
             <p>
               These Terms are governed by the laws of the State of Oregon. Any
@@ -136,7 +158,7 @@ export default function Terms() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              9. Changes to Terms
+              10. Changes to Terms
             </h2>
             <p>
               We may update these Terms from time to time. Continued use of our
@@ -147,7 +169,7 @@ export default function Terms() {
           </section>
 
           <section>
-            <h2 className="text-white font-bold text-lg mb-3">10. Contact</h2>
+            <h2 className="text-white font-bold text-lg mb-3">11. Contact</h2>
             <p>Questions about these Terms? Contact us:</p>
             <div className="mt-3 pl-4 border-l border-accent/30 space-y-1">
               <p>Blueprints & Bookkeeping LLC</p>

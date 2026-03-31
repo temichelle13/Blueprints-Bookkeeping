@@ -55,6 +55,8 @@ export interface ContactFormInput {
   /** @nullable */
   preferredContactMethod?: string | null;
   smsConsent: boolean;
+  consentTextVersion: string;
+  consentSourcePage: string;
   website?: string;
 }
 

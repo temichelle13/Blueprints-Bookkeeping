@@ -6,6 +6,9 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
 
+const CONTACT_CONSENT_TEXT_VERSION = "contact-consent-2026-03-31.1";
+const CONTACT_CONSENT_SOURCE_PAGE = "/contact";
+
 export const quickContactSchema = z.object({
   formType: z.literal("quick"),
   name: z.string().min(2, "Name is required"),
@@ -53,6 +56,8 @@ export function useContactMutation() {
               email: data.email,
               message: data.message,
               smsConsent: data.smsConsent,
+              consentTextVersion: CONTACT_CONSENT_TEXT_VERSION,
+              consentSourcePage: CONTACT_CONSENT_SOURCE_PAGE,
               website: data.website ?? "",
             }
           : {
@@ -67,6 +72,8 @@ export function useContactMutation() {
               biggestChallenge: data.biggestChallenge,
               preferredContactMethod: data.preferredContactMethod ?? null,
               smsConsent: data.smsConsent,
+              consentTextVersion: CONTACT_CONSENT_TEXT_VERSION,
+              consentSourcePage: CONTACT_CONSENT_SOURCE_PAGE,
               website: data.website ?? "",
             };
       await mutation.mutateAsync({ data: payload });

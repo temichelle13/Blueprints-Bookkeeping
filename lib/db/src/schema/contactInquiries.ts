@@ -7,6 +7,7 @@ export const INQUIRY_STATUSES = [
   "Contacted",
   "In Progress",
   "Closed",
+  "Archived",
 ] as const;
 export type InquiryStatus = (typeof INQUIRY_STATUSES)[number];
 
@@ -24,6 +25,13 @@ export const contactInquiriesTable = pgTable("contact_inquiries", {
   biggestChallenge: text("biggest_challenge"),
   preferredContactMethod: text("preferred_contact_method"),
   smsConsent: boolean("sms_consent").notNull().default(false),
+  consentTimestamp: timestamp("consent_timestamp", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  consentTextVersion: text("consent_text_version").notNull(),
+  requestIp: text("request_ip").notNull().default("unknown"),
+  userAgent: text("user_agent").notNull().default("unknown"),
+  consentSourcePage: text("consent_source_page").notNull(),
   status: text("status").notNull().default("New"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()

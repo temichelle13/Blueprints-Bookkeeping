@@ -1,4 +1,4 @@
-import { Router, type IRouter } from "express";
+import { Router, type IRouter, type Request } from "express";
 import rateLimit from "express-rate-limit";
 import { db, contactInquiriesTable } from "@workspace/db";
 import { SubmitContactFormBody } from "@workspace/api-zod";
@@ -8,6 +8,17 @@ import { getResend, getOwnerEmail, EMAIL_FROM } from "../lib/email";
 import { logger } from "../lib/logger";
 
 const router: IRouter = Router();
+
+function getRequestIp(req: Request): string {
+  const forwardedFor = req.headers["x-forwarded-for"];
+  if (typeof forwardedFor === "string" && forwardedFor.length > 0) {
+    return forwardedFor.split(",")[0]?.trim() || req.ip || "unknown";
+  }
+  if (Array.isArray(forwardedFor) && forwardedFor.length > 0) {
+    return forwardedFor[0]?.split(",")[0]?.trim() || req.ip || "unknown";
+  }
+  return req.ip || "unknown";
+}
 
 const contactLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -53,6 +64,11 @@ router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
       biggestChallenge: data.biggestChallenge ?? null,
       preferredContactMethod: data.preferredContactMethod ?? null,
       smsConsent: data.smsConsent,
+      consentTimestamp: new Date(),
+      consentTextVersion: data.consentTextVersion,
+      requestIp: getRequestIp(req),
+      userAgent: req.get("user-agent") || "unknown",
+      consentSourcePage: data.consentSourcePage,
     })
     .returning();
 

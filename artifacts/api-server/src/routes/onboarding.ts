@@ -220,6 +220,8 @@ router.post("/onboarding", async (req, res): Promise<void> => {
         businessName: businessName,
         servicesInterested: plan ? [plan] : null,
         message: notes ?? null,
+        consentTextVersion: "self-service-onboarding-consent-2026-03-31.1",
+        consentSourcePage: "/onboarding",
       })
       .returning();
 
