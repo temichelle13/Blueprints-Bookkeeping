@@ -4,8 +4,7 @@ import { db, contactInquiriesTable } from "@workspace/db";
 import { SubmitContactFormBody } from "@workspace/api-zod";
 import * as contractService from "../lib/contract-service";
 import { isEmailSuppressed } from "../lib/email-suppression";
-import { getResend, getOwnerEmail, EMAIL_FROM } from "../lib/email";
-import { logger } from "../lib/logger";
+import { queueContactInquiryEmails } from "../lib/outbound-email-events";
 
 const router: IRouter = Router();
 
@@ -62,14 +61,12 @@ router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
 
   const suppressed = await isEmailSuppressed(data.email);
 
-  const resend = getResend();
-  if (resend) {
-    const servicesLabel =
-      Array.isArray(data.servicesInterested) && data.servicesInterested.length
-        ? data.servicesInterested.join(", ")
-        : "Not specified";
+  const servicesLabel =
+    Array.isArray(data.servicesInterested) && data.servicesInterested.length
+      ? data.servicesInterested.join(", ")
+      : "Not specified";
 
-    const notifyHtml = `
+  const notifyHtml = `
       <div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
         <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
           <h1 style="color:white;margin:0;font-size:20px;">New Inquiry — Blueprints & Bookkeeping</h1>
@@ -99,7 +96,7 @@ router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
         </div>
       </div>`;
 
-    const confirmHtml = `
+  const confirmHtml = `
       <div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
         <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
           <h1 style="color:white;margin:0;font-size:20px;">We've got your message.</h1>
@@ -119,33 +116,14 @@ router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
         </div>
       </div>`;
 
-    const emailPromises: Promise<unknown>[] = [
-      resend.emails.send({
-        from: EMAIL_FROM.default,
-        to: getOwnerEmail(),
-        replyTo: data.email,
-        subject: `New Inquiry: ${data.name}${data.businessName ? ` — ${data.businessName}` : ""}`,
-        html: notifyHtml,
-      }),
-    ];
-
-    if (suppressed) {
-      logger.warn("Skipping confirmation email for suppressed address", {
-        email: data.email,
-      });
-    } else {
-      emailPromises.push(
-        resend.emails.send({
-          from: EMAIL_FROM.default,
-          to: data.email,
-          subject: "We received your message — Blueprints & Bookkeeping",
-          html: confirmHtml,
-        }),
-      );
-    }
-
-    await Promise.allSettled(emailPromises);
-  }
+  await queueContactInquiryEmails({
+    inquiryId: inquiry.id,
+    senderEmail: data.email,
+    senderSuppressed: suppressed,
+    ownerHtml: notifyHtml,
+    ownerSubject: `New Inquiry: ${data.name}${data.businessName ? ` — ${data.businessName}` : ""}`,
+    confirmationHtml: confirmHtml,
+  });
 
   contractService
     .processFormSubmission({

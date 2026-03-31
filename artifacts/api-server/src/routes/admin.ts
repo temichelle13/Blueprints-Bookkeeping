@@ -10,6 +10,7 @@ import {
 import type { SuppressionReason } from "@workspace/db";
 import { desc, eq, sql, count } from "drizzle-orm";
 import { addToSuppressionList } from "../lib/email-suppression";
+import { getOutboundEmailAdminCounts } from "../lib/outbound-email-events";
 import { adminAuth } from "../middleware/admin-auth";
 
 const router: IRouter = Router();
@@ -104,6 +105,8 @@ router.get("/admin/stats", async (_req, res): Promise<void> => {
     })
     .from(newsletterSubscribersTable);
 
+  const emailDelivery = await getOutboundEmailAdminCounts();
+
   res.json({
     inquiries: {
       total: inquiryStats?.total ?? 0,
@@ -115,6 +118,7 @@ router.get("/admin/stats", async (_req, res): Promise<void> => {
       total: subscriberStats?.total ?? 0,
       active: subscriberStats?.active ?? 0,
     },
+    emailDelivery,
   });
 });
 

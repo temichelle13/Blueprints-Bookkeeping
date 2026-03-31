@@ -6,6 +6,7 @@ import {
   syncAllPendingAgreements,
 } from "./lib/contract-service";
 import { runNexusCheck, ensureNexusRulesSeeded } from "./lib/nexus-service";
+import { processPendingOutboundEmailEvents } from "./lib/outbound-email-events";
 
 // Validate environment variables at startup
 try {
@@ -20,6 +21,24 @@ const env = getEnv();
 const port = env.PORT;
 
 const REMINDER_INTERVAL_MS = 60 * 60 * 1000;
+
+const OUTBOUND_EMAIL_RETRY_INTERVAL_MS = 60 * 1000;
+
+function startOutboundEmailRetryScheduler() {
+  async function run() {
+    try {
+      const processed = await processPendingOutboundEmailEvents();
+      if (processed > 0) {
+        logger.info("Processed queued outbound email events", { processed });
+      }
+    } catch (err) {
+      logger.error("Outbound email retry scheduler error", err as Error);
+    }
+  }
+
+  setInterval(run, OUTBOUND_EMAIL_RETRY_INTERVAL_MS);
+  setTimeout(run, 15_000);
+}
 
 function startContractScheduler() {
   async function run() {
@@ -101,4 +120,5 @@ app.listen(port, async () => {
 
   startContractScheduler();
   startNexusScheduler();
+  startOutboundEmailRetryScheduler();
 });
