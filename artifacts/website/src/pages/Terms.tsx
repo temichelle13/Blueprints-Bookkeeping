@@ -14,7 +14,7 @@ export default function Terms() {
             Terms of Service
           </h1>
           <p className="text-muted-foreground text-sm">
-            Last updated: March 2026
+            Last updated: March 31, 2026
           </p>
         </div>
       </section>
@@ -98,7 +98,78 @@ export default function Terms() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              6. Disclaimer of Warranties
+              6. Payment Terms
+            </h2>
+            <p className="mb-3">
+              Unless otherwise stated in a signed engagement letter, we accept
+              payment by Stripe and QuickBooks Payments. Invoices are issued
+              electronically and are due within 7 calendar days from the invoice
+              date.
+            </p>
+            <p className="mb-3">
+              Any invoice not paid by its due date may accrue a late fee equal
+              to the lesser of: (a) 1.5% per month on the overdue balance, or
+              (b) the maximum rate permitted by applicable law. We may pause
+              work on active services until overdue balances are paid.
+            </p>
+            <p>
+              If you believe a charge is inaccurate, you agree to contact us at{" "}
+              <a
+                href="mailto:tea@blueprintsandbookkeeping.com"
+                className="text-accent hover:underline"
+              >
+                tea@blueprintsandbookkeeping.com
+              </a>{" "}
+              within 10 days of the invoice date so we can investigate and
+              attempt to resolve the issue before a chargeback is filed.
+              Initiating a chargeback without first contacting us may be treated
+              as a material breach of these Terms and your service agreement.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-white font-bold text-lg mb-3">
+              7. Refunds, Cancellations, and Rescheduling
+            </h2>
+            <p className="mb-3">
+              Fees paid for completed services are non-refundable unless a
+              signed engagement letter states otherwise. For ongoing services,
+              cancellations are effective at the end of the current billing
+              period, and no partial-month refunds are provided.
+            </p>
+            <p className="mb-3">
+              Deposits paid for business-plan engagements reserve strategy,
+              research, and drafting capacity and are generally non-refundable
+              once onboarding begins. If a project is canceled before onboarding
+              begins, the deposit may be credited toward a future engagement,
+              less any documented intake or administrative costs.
+            </p>
+            <p>
+              Rescheduling requests for strategy calls or planning sessions
+              should be made at least 24 hours in advance. Missed meetings or
+              late cancellations may be billed at the scheduled session rate.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-white font-bold text-lg mb-3">
+              8. Expedited and Emergency Services
+            </h2>
+            <p>
+              Expedited, rush, or emergency support may be offered at our sole
+              discretion and subject to team availability. Availability is not
+              guaranteed, including outside standard business hours. Approved
+              expedited work may include premium fees, including after-hours
+              minimums or rush multipliers, which will be disclosed in writing
+              before work begins. Unless we agree otherwise in writing, initial
+              response windows for expedited requests are targeted, not
+              guaranteed service-level commitments.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-white font-bold text-lg mb-3">
+              9. Disclaimer of Warranties
             </h2>
             <p>
               Our website and services are provided "as is" without warranties
@@ -112,7 +183,7 @@ export default function Terms() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              7. Limitation of Liability
+              10. Limitation of Liability
             </h2>
             <p>
               To the fullest extent permitted by law, Blueprints & Bookkeeping
@@ -125,7 +196,7 @@ export default function Terms() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              8. Governing Law
+              11. Governing Law
             </h2>
             <p>
               These Terms are governed by the laws of the State of Oregon. Any
@@ -136,7 +207,7 @@ export default function Terms() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              9. Changes to Terms
+              12. Changes to Terms
             </h2>
             <p>
               We may update these Terms from time to time. Continued use of our
@@ -147,7 +218,7 @@ export default function Terms() {
           </section>
 
           <section>
-            <h2 className="text-white font-bold text-lg mb-3">10. Contact</h2>
+            <h2 className="text-white font-bold text-lg mb-3">13. Contact</h2>
             <p>Questions about these Terms? Contact us:</p>
             <div className="mt-3 pl-4 border-l border-accent/30 space-y-1">
               <p>Blueprints & Bookkeeping LLC</p>
@@ -161,6 +232,11 @@ export default function Terms() {
                 </a>
               </p>
             </div>
+            <p className="mt-4 text-xs text-muted-foreground/80">
+              Important: This policy is provided for general informational
+              purposes and should be reviewed by qualified business counsel
+              before publication or reliance.
+            </p>
           </section>
         </div>
 
