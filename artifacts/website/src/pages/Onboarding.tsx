@@ -20,6 +20,7 @@ import {
   getOnboardingContextFromSearch,
 } from "@/lib/onboarding-url";
 import { getApiRoot } from "@/lib/api";
+import { trackEvent } from "@/lib/analytics";
 
 const US_STATES = [
   { code: "AL", name: "Alabama" },
@@ -149,6 +150,13 @@ export default function Onboarding() {
         throw new Error(err.error || "Submission failed");
       }
 
+      trackEvent("Payment Method Completion", {
+        completion_stage: "onboarding_submitted",
+        payment_method: onboardingContext.paymentMethod || "unknown",
+        plan: onboardingContext.plan || "not_provided",
+        service: onboardingContext.service || "not_provided",
+      });
+
       setSubmitted(true);
       toast({
         title: "Onboarding Complete",
@@ -216,6 +224,11 @@ export default function Onboarding() {
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Help us get to know your business. This information allows us to set
             up your accounts and start delivering value immediately.
+          </p>
+          <p className="text-sm text-muted-foreground max-w-2xl mx-auto mt-4">
+            Payment options remain available throughout onboarding: pay online
+            by card (Stripe) or pay from QuickBooks invoice / ACH (QuickBooks
+            Payments).
           </p>
         </div>
       </section>

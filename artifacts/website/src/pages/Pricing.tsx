@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Check, Shield, ArrowRight, HelpCircle, Calendar } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
+import { buildPaymentsUrl } from "@/lib/payment-domains";
 
 const TECHNOLOGY_SECURITY_SURCHARGE = "$50/mo";
 const TECHNOLOGY_SECURITY_SURCHARGE_COPY = `A mandatory Technology & Security Surcharge of ${TECHNOLOGY_SECURITY_SURCHARGE} applies to all bookkeeping tiers.`;
@@ -135,14 +136,21 @@ function SubscribeButton({
   planKey: string;
   interval: "monthly" | "annual";
 }) {
+  const query = new URLSearchParams({
+    mode: "subscription",
+    source: "pricing",
+    plan: planKey,
+    interval,
+  });
+
   return (
-    <Link
-      href="/contact"
+    <a
+      href={buildPaymentsUrl(`/payments/options?${query.toString()}`)}
       className="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-accent text-white font-semibold text-sm hover:shadow-xl hover:shadow-accent/20 transition-all duration-300"
     >
       <Calendar size={15} />
-      Book a Call to Get Started
-    </Link>
+      Choose Payment Method
+    </a>
   );
 }
 
@@ -153,14 +161,20 @@ function DepositButton({
   serviceKey: string;
   label?: string;
 }) {
+  const query = new URLSearchParams({
+    mode: "deposit",
+    source: "pricing",
+    service: serviceKey,
+  });
+
   return (
-    <Link
-      href="/contact"
+    <a
+      href={buildPaymentsUrl(`/payments/options?${query.toString()}`)}
       className="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-accent text-white font-semibold text-sm hover:shadow-xl hover:shadow-accent/20 transition-all duration-300"
     >
       <Calendar size={15} />
-      {label || "Book a Call to Get Started"}
-    </Link>
+      {label || "Choose Payment Method"}
+    </a>
   );
 }
 
@@ -468,6 +482,10 @@ export default function Pricing() {
           <div className="mt-6 inline-flex items-center gap-2 bg-accent/10 text-accent border border-accent/20 px-4 py-2 rounded-full text-sm font-medium">
             <Shield size={14} /> {TECHNOLOGY_SECURITY_SURCHARGE_COPY}
           </div>
+          <p className="mt-4 text-sm text-muted-foreground max-w-3xl mx-auto">
+            Choose your payment method on the next step: pay online by card
+            (Stripe) or pay from QuickBooks invoice / ACH (QuickBooks Payments).
+          </p>
         </div>
       </section>
 

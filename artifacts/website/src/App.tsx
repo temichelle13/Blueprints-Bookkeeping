@@ -45,6 +45,7 @@ const Onboarding = lazy(() => import("./pages/Onboarding"));
 const BusinessPlanning = lazy(() => import("./pages/BusinessPlanning"));
 const Status = lazy(() => import("./pages/Status"));
 const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
+const PaymentOptions = lazy(() => import("./pages/PaymentOptions"));
 const ServiceBookkeeping = lazy(() => import("./pages/services/Bookkeeping"));
 const ServiceBusinessPlans = lazy(
   () => import("./pages/services/BusinessPlans"),
@@ -174,6 +175,7 @@ function Router() {
           <Route path="/business-planning" component={BusinessPlanning} />
           <Route path="/status" component={Status} />
           <Route path="/payment-success" component={PaymentSuccess} />
+          <Route path="/payments/options" component={PaymentOptions} />
           <Route path="/services/bookkeeping" component={ServiceBookkeeping} />
           <Route
             path="/services/business-plans"

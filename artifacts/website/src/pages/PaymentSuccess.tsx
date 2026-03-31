@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link } from "wouter";
 import { CheckCircle, ArrowRight, Phone, Mail } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
@@ -6,6 +7,7 @@ import {
   buildOnboardingUrl,
   getOnboardingContextFromSearch,
 } from "@/lib/onboarding-url";
+import { trackEvent } from "@/lib/analytics";
 
 const SERVICE_LABELS: Record<string, string> = {
   essentials: "Essentials Bookkeeping",
@@ -17,11 +19,24 @@ const SERVICE_LABELS: Record<string, string> = {
 export default function PaymentSuccess() {
   usePageTitle("Payment Confirmed");
 
-  const { service, plan, sessionId } = getOnboardingContextFromSearch(
-    window.location.search,
-  );
+  const { service, plan, sessionId, paymentMethod } =
+    getOnboardingContextFromSearch(window.location.search);
   const serviceLabel = SERVICE_LABELS[service || ""] || "your selected service";
-  const onboardingHref = buildOnboardingUrl({ service, plan, sessionId });
+  const onboardingHref = buildOnboardingUrl({
+    service,
+    plan,
+    sessionId,
+    paymentMethod,
+  });
+
+  useEffect(() => {
+    trackEvent("Payment Method Completion", {
+      completion_stage: "payment_success_viewed",
+      payment_method: paymentMethod || "stripe_card",
+      plan: plan || "not_provided",
+      service: service || "not_provided",
+    });
+  }, [paymentMethod, plan, service]);
 
   return (
     <div className="pt-24 pb-20">
@@ -39,12 +54,17 @@ export default function PaymentSuccess() {
             <h1 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
               Payment Received!
             </h1>
-            <p className="text-lg text-muted-foreground mb-8">
+            <p className="text-lg text-muted-foreground mb-4">
               Thank you for your deposit for{" "}
               <span className="text-foreground font-medium">
                 {serviceLabel}
               </span>
               . We're excited to work with you.
+            </p>
+            <p className="text-sm text-muted-foreground mb-8">
+              Your payment workflow supports both options: pay online by card
+              (Stripe) or pay from QuickBooks invoice / ACH (QuickBooks
+              Payments).
             </p>
 
             <div className="bg-surface border border-white/[0.06] rounded-xl p-6 text-left mb-8">
