@@ -31,6 +31,13 @@ CORS_ORIGIN=https://blueprintsandbookkeeping.com,https://www.blueprintsandbookke
 # Security
 ADMIN_TOKEN=<generate-with-openssl-rand-hex-32>
 
+# Reverse Proxy / Client IP Configuration (CRITICAL for rate limiting)
+# Set how many trusted proxy hops are in front of the API server.
+# Replit or a single load balancer/CDN in front of Node: 1
+# Multiple proxies (e.g., CDN -> ingress -> Node): set to exact hop count
+# Set to false only when API is exposed directly to the internet (no proxy)
+TRUST_PROXY=1
+
 # Email - Resend
 RESEND_API_KEY=<your-resend-api-key>
 OWNER_EMAIL=tea@blueprintsandbookkeeping.com
@@ -117,6 +124,24 @@ export CORS_ORIGIN=https://blueprintsandbookkeeping.com
 **Previous Issue**: Table cells had minimal padding (p-2/8px) causing text to wrap or overflow.
 
 **Fix**: Increased padding to p-4/16px in `table.tsx` component.
+
+### Issue 6: Legitimate users being blocked by contact form rate limits
+
+**Symptoms**: Different users behind a proxy/CDN appear as one IP, causing unexpected 429 responses.
+
+**Root Causes**:
+
+1. `trust proxy` not configured for real deployment proxy depth
+2. Proxy chain sends `X-Forwarded-For`, but API is using proxy IP for limiter keys
+
+**Solution**:
+
+- Set `TRUST_PROXY` on the API server to match the number of trusted proxy hops.
+- Recommended values:
+  - `TRUST_PROXY=1` for one proxy hop (common: Replit proxy, single reverse proxy, or CDN directly in front of the app)
+  - `TRUST_PROXY=2` or higher only when you can verify multiple trusted hops
+  - `TRUST_PROXY=false` only when there is no reverse proxy/CDN
+- Keep proxy chain controlled by your infrastructure only; do not trust arbitrary client-supplied forwarding headers.
 
 ## Deployment to Cloudflare
 

@@ -51,7 +51,33 @@ function parseAllowedCorsOrigins(
   return [...new Set(allowedOrigins)];
 }
 
+function parseTrustProxy(value: string | undefined): number | boolean {
+  if (!value) {
+    return 1;
+  }
+
+  const normalizedValue = value.trim().toLowerCase();
+  if (["true", "yes", "on"].includes(normalizedValue)) {
+    return true;
+  }
+
+  if (["false", "no", "off", "0"].includes(normalizedValue)) {
+    return false;
+  }
+
+  const parsedNumber = Number.parseInt(normalizedValue, 10);
+  if (Number.isInteger(parsedNumber) && parsedNumber >= 1) {
+    return parsedNumber;
+  }
+
+  throw new Error(
+    `Invalid TRUST_PROXY value: ${value}. Use a positive integer hop count (recommended: 1), true/false, or leave unset.`,
+  );
+}
+
 const app: Express = express();
+
+app.set("trust proxy", parseTrustProxy(process.env.TRUST_PROXY));
 
 app.use(helmet());
 

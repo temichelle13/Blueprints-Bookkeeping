@@ -1,23 +1,13 @@
 import { Router, type IRouter } from "express";
-import rateLimit from "express-rate-limit";
 import { db, contactInquiriesTable } from "@workspace/db";
 import { SubmitContactFormBody } from "@workspace/api-zod";
 import * as contractService from "../lib/contract-service";
 import { isEmailSuppressed } from "../lib/email-suppression";
 import { getResend, getOwnerEmail, EMAIL_FROM } from "../lib/email";
 import { logger } from "../lib/logger";
+import { contactLimiter } from "./contact-rate-limit";
 
 const router: IRouter = Router();
-
-const contactLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 10,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: {
-    error: "Too many submissions from this IP. Please try again later.",
-  },
-});
 
 router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
   if (req.body?.website) {
