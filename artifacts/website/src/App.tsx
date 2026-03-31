@@ -56,6 +56,67 @@ if (import.meta.env.VITE_API_URL) {
 }
 
 const queryClient = new QueryClient();
+const NOINDEX_FALLBACK_PATH_PREFIXES = [
+  "/admin",
+  "/onboarding",
+  "/welcome",
+  "/payment-success",
+  "/status",
+  "/feedback",
+  "/unsubscribe",
+  "/marketing-guide",
+];
+
+function normalizePathname(pathname: string): string {
+  if (!pathname) return "/";
+  return pathname.endsWith("/") && pathname !== "/"
+    ? pathname.slice(0, -1)
+    : pathname;
+}
+
+function isSensitivePath(pathname: string): boolean {
+  const normalizedPath = normalizePathname(pathname);
+  return NOINDEX_FALLBACK_PATH_PREFIXES.some((prefix) => {
+    const normalizedPrefix = normalizePathname(prefix);
+    return (
+      normalizedPath === normalizedPrefix ||
+      normalizedPath.startsWith(`${normalizedPrefix}/`)
+    );
+  });
+}
+
+function SensitiveRouteNoindexFallback() {
+  const [location] = useLocation();
+
+  useEffect(() => {
+    const fallbackMetaId = "sensitive-route-noindex-fallback";
+    const existingFallbackMeta = document.querySelector(
+      `meta[data-source="${fallbackMetaId}"]`,
+    );
+    const shouldNoindex = isSensitivePath(location);
+
+    if (shouldNoindex) {
+      const meta = existingFallbackMeta ?? document.createElement("meta");
+      meta.setAttribute("name", "robots");
+      meta.setAttribute("content", "noindex, nofollow");
+      meta.setAttribute("data-source", fallbackMetaId);
+      if (!meta.parentElement) {
+        document.head.appendChild(meta);
+      }
+      return;
+    }
+
+    if (existingFallbackMeta) {
+      existingFallbackMeta.remove();
+      const currentRobotsMeta = document.querySelector('meta[name="robots"]');
+      if (currentRobotsMeta) {
+        currentRobotsMeta.setAttribute("content", "index, follow");
+      }
+    }
+  }, [location]);
+
+  return null;
+}
 
 // Loading fallback component for lazy-loaded routes
 function RouteLoadingFallback() {
@@ -144,6 +205,7 @@ function Router() {
 
   return (
     <Layout>
+      <SensitiveRouteNoindexFallback />
       <Suspense fallback={<RouteLoadingFallback />}>
         <Switch>
           <Route path="/" component={Home} />

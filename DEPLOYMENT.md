@@ -205,6 +205,21 @@ After deployment, verify:
 - [ ] Check browser console for CORS errors
 - [ ] Check network tab for failed API requests
 
+## Monthly SEO Monitoring (Google Search Console)
+
+To prevent accidental indexing drift, run this check once per month in Google Search Console for `https://blueprintsandbookkeeping.com`:
+
+1. Open **Pages** report.
+2. Filter by reason: **Indexed, though blocked by robots.txt**.
+3. Review each URL:
+   - If it is an admin or transactional URL (`/admin`, `/onboarding`, `/welcome`, `/payment-success`, `/status`, `/feedback`, `/unsubscribe`, `/marketing-guide`), keep it blocked and verify no internal links are promoting crawl demand.
+   - If it is a public marketing URL, fix robots and sitemap consistency before next deployment.
+4. Record findings in your monthly ops log with:
+   - Date checked
+   - Number of affected URLs
+   - URLs remediated
+5. If anomaly count increases month-over-month, create a production incident ticket and run `pnpm run check:website-deploy` before shipping.
+
 ## Troubleshooting
 
 ### CORS Errors in Browser Console
