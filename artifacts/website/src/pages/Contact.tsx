@@ -49,7 +49,7 @@ const bookkeeperIntakeSchema = z.object({
   businessName: z.string().optional(),
   servicesWanted: z.array(z.string()).min(1, "Select at least one service"),
   budgetRange: z.string().optional(),
-  budgetUnknown: z.boolean().default(false),
+  budgetUnknown: z.boolean(),
   deadlinePressure: z.string().min(2, "Please select your timeline"),
   additionalComments: z
     .string()
@@ -400,12 +400,12 @@ function BookkeeperIntakeForm() {
           formType: "detailed",
           name: data.name,
           email: data.email,
-          businessName: data.businessName?.trim() || undefined,
+          businessName: data.businessName?.trim() || null,
           industry: "Bookkeeper Intake",
           servicesInterested: data.servicesWanted,
           monthlyRevenueRange: data.budgetUnknown
             ? "Budget not decided yet"
-            : data.budgetRange?.trim() || undefined,
+            : data.budgetRange?.trim() || null,
           biggestChallenge: [
             `Deadline pressure: ${data.deadlinePressure}`,
             "",

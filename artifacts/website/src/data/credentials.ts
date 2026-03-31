@@ -5,12 +5,11 @@ import {
   Brain,
   Code2,
   FileText,
-  Github,
-  Linkedin,
   Rss,
   ShieldCheck,
   Zap,
 } from "lucide-react";
+import { FaGithub, FaLinkedin } from "react-icons/fa6";
 
 export type CredentialWithBadge = {
   name: string;
@@ -310,10 +309,10 @@ export const leadershipCerts = [
 export const footerCredentialBadges = intuitCerts.slice(0, 3);
 
 export const aboutFeaturedBadges: CredentialWithBadge[] = [
-  intuitCerts[0],
-  intuitCerts[1],
-  intuitCerts[2],
-  intuitCerts[3],
+  intuitCerts[0]!,
+  intuitCerts[1]!,
+  intuitCerts[2]!,
+  intuitCerts[3]!,
 ];
 
 export const academicStudies = [
@@ -368,7 +367,7 @@ export const professionalProfiles = [
     handle: "tealarson-hetrick",
     url: "https://linkedin.com/in/tealarson-hetrick",
     description: "Professional profile, endorsements, and work history",
-    icon: Linkedin,
+    icon: FaLinkedin,
     color: "from-blue-600/10 to-blue-500/5",
     border: "border-blue-500/20",
     iconColor: "text-blue-400",
@@ -378,7 +377,7 @@ export const professionalProfiles = [
     handle: "temichelle13",
     url: "https://github.com/temichelle13",
     description: "Open-source repositories and technical contributions",
-    icon: Github,
+    icon: FaGithub,
     color: "from-slate-500/10 to-slate-400/5",
     border: "border-slate-400/20",
     iconColor: "text-slate-300",

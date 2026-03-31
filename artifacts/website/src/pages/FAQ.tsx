@@ -207,7 +207,7 @@ export default function FAQ() {
               {section.items.map((item) => (
                 <FAQItem
                   key={item.q}
-                  id={item.id}
+                  {...(item.id !== undefined && { id: item.id })}
                   q={item.q}
                   a={item.a}
                   // Deep-linking is explicit per item (for example #taxes).

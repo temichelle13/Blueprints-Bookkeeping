@@ -19,7 +19,7 @@ const referralSchema = z.object({
   referrerName: z.string().min(2, "Your name is required"),
   referrerEmail: z.string().email("Valid email is required"),
   referrerType: z.enum(["client", "partner"], {
-    required_error: "Please select your referral type",
+    error: "Please select your referral type",
   }),
   referredName: z.string().min(2, "Referred person's name is required"),
   referredContact: z.string().min(2, "Contact info is required"),

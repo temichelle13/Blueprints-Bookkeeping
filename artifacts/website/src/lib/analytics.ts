@@ -1,4 +1,5 @@
-import { onLCP, onINP, onCLS, onFCP, onTTFB, type Metric } from "web-vitals";
+import type { Metric } from "web-vitals";
+import { onCLS, onFCP, onINP, onLCP, onTTFB } from "web-vitals";
 
 const PLAUSIBLE_DOMAIN = import.meta.env.VITE_ANALYTICS_ID as
   | string

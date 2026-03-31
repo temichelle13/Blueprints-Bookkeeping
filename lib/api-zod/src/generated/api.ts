@@ -51,8 +51,7 @@ export const SubscribeNewsletterBody = zod.object({
  * @summary Unsubscribe from the newsletter via token
  */
 export const UnsubscribeNewsletterByTokenQueryParams = zod.object({
-  token: zod.coerce
-    .string()
+  token: zod.string()
     .uuid()
     .describe("The unique unsubscribe token for the subscriber"),
 });

@@ -780,7 +780,7 @@ export async function ensureNexusRulesSeeded(): Promise<void> {
   const existing = await db
     .select({ count: sql<number>`count(*)::int` })
     .from(stateNexusRulesTable);
-  if (existing[0]?.count > 0) return;
+  if ((existing[0]?.count ?? 0) > 0) return;
 
   console.log("Seeding state nexus rules...");
   for (const state of STATE_NEXUS_SEED_DATA) {

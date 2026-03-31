@@ -143,6 +143,11 @@ router.post("/openai/conversations", async (req, res): Promise<void> => {
 
   const [conv] = await db.insert(conversations).values({ title }).returning();
 
+  if (!conv) {
+    res.status(500).json({ error: "Failed to create conversation" });
+    return;
+  }
+
   res.status(201).json({
     id: conv.id,
     title: conv.title,

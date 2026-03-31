@@ -82,11 +82,14 @@ async function apiRequest(
     "Content-Type": "application/json",
   };
 
-  const response = await fetch(url, {
+  const requestInit: RequestInit = {
     method,
     headers,
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  };
+  if (body !== undefined) {
+    requestInit.body = JSON.stringify(body);
+  }
+  const response = await fetch(url, requestInit);
 
   if (!response.ok) {
     const text = await response.text();

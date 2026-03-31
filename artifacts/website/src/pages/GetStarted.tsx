@@ -225,7 +225,7 @@ export default function GetStarted() {
           </div>
         )}
 
-        {path.kind === "accountant" ? (
+        {path.kind !== "accountant" ? (
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {path.external ? (
               <a
@@ -327,7 +327,45 @@ export default function GetStarted() {
                 </Link>
               ))}
           </div>
-        ) : null}
+        ) : (
+          <div
+            style={{
+              background: "rgba(255,255,255,0.02)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: 10,
+              padding: "12px 14px",
+              marginBottom: 16,
+            }}
+          >
+            <p
+              style={{
+                fontSize: 11,
+                fontWeight: 600,
+                color: path.color,
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                marginBottom: 8,
+              }}
+            >
+              QuickBooks Online Instructions:
+            </p>
+            <ol
+              style={{
+                margin: 0,
+                paddingLeft: 20,
+                fontSize: 12,
+                color: "rgba(255,255,255,0.7)",
+                lineHeight: 1.6,
+              }}
+            >
+              {path.instructions?.map((step, i) => (
+                <li key={i} style={{ marginBottom: 6 }}>
+                  {step}
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
 
         <div
           style={{

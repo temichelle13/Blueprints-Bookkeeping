@@ -56,6 +56,10 @@ router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
     })
     .returning();
 
+  if (!inquiry) {
+    throw new Error("Failed to insert contact inquiry record");
+  }
+
   const suppressed = await isEmailSuppressed(data.email);
 
   const resend = getResend();

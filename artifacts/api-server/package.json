@@ -19,19 +19,18 @@
     "express-rate-limit": "^8.3.1",
     "helmet": "^8.1.0",
     "multer": "^2.1.1",
-    "resend": "^6.9.3",
-    "stripe": "^20.4.1",
-    "svix": "^1.88.0",
+    "resend": "^6.9.4",
+    "stripe": "^21.0.1",
+    "svix": "^1.89.0",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
-    "@types/express-rate-limit": "^6.0.2",
     "@types/multer": "^2.1.0",
     "@types/node": "catalog:",
-    "esbuild": "^0.27.3",
+    "esbuild": "^0.27.4",
     "tsx": "catalog:"
   }
 }
