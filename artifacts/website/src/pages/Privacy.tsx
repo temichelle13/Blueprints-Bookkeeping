@@ -186,20 +186,23 @@ export default function Privacy() {
               7. Data Retention
             </h2>
             <p>
-              We retain contact inquiry information for as long as necessary to
-              provide our services and comply with legal obligations. Newsletter
-              subscriber information is retained until you unsubscribe. You may
-              request deletion of your data at any time by contacting us.
+              We retain contact and intake records (including consent audit
+              metadata) for up to 7 years unless a longer period is required by
+              law, contract, dispute resolution, or tax/accounting obligations.
+              Newsletter subscriber information is retained until you
+              unsubscribe. You may request deletion of data where applicable law
+              allows.
             </p>
           </section>
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">8. Security</h2>
             <p>
-              We implement industry-standard security measures to protect your
-              information, including encrypted data transmission (HTTPS) and
-              secure database storage. While we take reasonable precautions, no
-              internet transmission is 100% secure.
+              We use practical safeguards to protect your information, including
+              domestic handling, controlled account access, encrypted data
+              transmission (HTTPS), and secure systems for storage and
+              communication. While we take reasonable precautions, no internet
+              transmission is 100% secure.
             </p>
           </section>
 
