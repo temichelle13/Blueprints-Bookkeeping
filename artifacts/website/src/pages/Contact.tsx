@@ -32,7 +32,6 @@ const EMERGENCY_CALENDLY_URL =
 const PHONE_DISPLAY = "(541) 319-8654";
 const PHONE_HREF = "tel:+15413198654";
 const EMAIL_ADDRESS = "tea@blueprintsandbookkeeping.com";
-const BOOKKEEPER_INTENT = "bookkeeper";
 const CONTACT_CONSENT_LANGUAGE =
   "I agree to receive text messages and phone calls from Blueprints & Bookkeeping at my provided contact number. Message and data rates may apply. Reply STOP to opt out.";
 const INQUIRY_PROCESSING_DISCLOSURE =
