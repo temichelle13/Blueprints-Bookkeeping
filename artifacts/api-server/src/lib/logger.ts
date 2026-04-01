@@ -23,13 +23,20 @@ interface LogEntry {
   };
 }
 
+function safeGetNodeEnv(): string {
+  try {
+    return getEnv().NODE_ENV;
+  } catch {
+    return process.env["NODE_ENV"] ?? "development";
+  }
+}
+
 class Logger {
   private minLevel: LogLevel;
 
   constructor() {
-    const env = getEnv();
-    this.minLevel =
-      env.NODE_ENV === "production" ? LogLevel.INFO : LogLevel.DEBUG;
+    const nodeEnv = safeGetNodeEnv();
+    this.minLevel = nodeEnv === "production" ? LogLevel.INFO : LogLevel.DEBUG;
   }
 
   private shouldLog(level: LogLevel): boolean {
@@ -70,9 +77,9 @@ class Logger {
   }
 
   private output(entry: LogEntry): void {
-    const env = getEnv();
+    const nodeEnv = safeGetNodeEnv();
 
-    if (env.NODE_ENV === "production") {
+    if (nodeEnv === "production") {
       // In production, output JSON for log aggregation systems
       console.log(JSON.stringify(entry));
     } else {

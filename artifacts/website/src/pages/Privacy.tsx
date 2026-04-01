@@ -78,7 +78,37 @@ export default function Privacy() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              4. Email Communications
+              4. Communication Consent and Outreach
+            </h2>
+            <p className="mb-3">
+              We use channel-specific consent controls on our contact and intake
+              forms. You can independently choose whether you consent to email,
+              SMS, and phone outreach.
+            </p>
+            <ul className="list-disc list-inside space-y-1 pl-2">
+              <li>
+                Email consent is required for inquiry follow-up so we can
+                respond to your request.
+              </li>
+              <li>
+                SMS and phone outreach are optional and only used when you
+                explicitly opt in.
+              </li>
+              <li>
+                If you do not opt in to SMS, we will not send SMS outreach from
+                contact or intake submissions.
+              </li>
+            </ul>
+            <p className="mt-3">
+              For auditability, we store your consent choices, the form source,
+              timestamp, and the consent language version accepted at submission
+              time.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-white font-bold text-lg mb-3">
+              5. Email Communications
             </h2>
             <p>
               If you subscribe to our newsletter, we will send you periodic
@@ -94,28 +124,31 @@ export default function Privacy() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              5. Data Retention
+              6. Data Retention
             </h2>
             <p>
-              We retain contact inquiry information for as long as necessary to
-              provide our services and comply with legal obligations. Newsletter
-              subscriber information is retained until you unsubscribe. You may
-              request deletion of your data at any time by contacting us.
+              We retain contact and intake records (including consent audit
+              metadata) for up to 7 years unless a longer period is required by
+              law, contract, dispute resolution, or tax/accounting obligations.
+              Newsletter subscriber information is retained until you
+              unsubscribe. You may request deletion of data where applicable law
+              allows.
             </p>
           </section>
 
           <section>
-            <h2 className="text-white font-bold text-lg mb-3">6. Security</h2>
+            <h2 className="text-white font-bold text-lg mb-3">7. Security</h2>
             <p>
-              We implement industry-standard security measures to protect your
-              information, including encrypted data transmission (HTTPS) and
-              secure database storage. While we take reasonable precautions, no
-              internet transmission is 100% secure.
+              We use practical safeguards to protect your information, including
+              domestic handling, controlled account access, encrypted data
+              transmission (HTTPS), and secure systems for storage and
+              communication. While we take reasonable precautions, no internet
+              transmission is 100% secure.
             </p>
           </section>
 
           <section>
-            <h2 className="text-white font-bold text-lg mb-3">7. Cookies</h2>
+            <h2 className="text-white font-bold text-lg mb-3">8. Cookies</h2>
             <p>
               Our website may use essential cookies to maintain website
               functionality. We do not use advertising or tracking cookies. You
@@ -126,7 +159,7 @@ export default function Privacy() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              8. Your Rights Under Oregon Law
+              9. Your Rights Under Oregon Law
             </h2>
             <p className="mb-3">
               Under the Oregon Consumer Privacy Act (OCPA), Oregon residents
@@ -191,7 +224,7 @@ export default function Privacy() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              9. Global Privacy Control (GPC)
+              10. Global Privacy Control (GPC)
             </h2>
             <p className="mb-3">
               We respect the{" "}
@@ -231,7 +264,7 @@ export default function Privacy() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              10. Contact Us
+              11. Contact Us
             </h2>
             <p>
               If you have questions about this Privacy Policy, please reach out:

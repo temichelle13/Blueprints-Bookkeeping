@@ -15,6 +15,7 @@ import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 import { getApiRoot } from "@/lib/api";
 import { trackEvent } from "@/lib/analytics";
+import { BOOKKEEPER_INTENT } from "@/lib/contact-intent";
 
 const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
 const EMAIL_ADDRESS = "tea@blueprintsandbookkeeping.com";
@@ -120,7 +121,7 @@ export default function GetStarted() {
       subtitle:
         "Already have QuickBooks Online? Start the intake process. Once you submit, Tea will review your books, provide recommendations and an estimate, or ask for further information. From there, you can discuss your needs, costs, and contracts.",
       cta: "Start Intake",
-      href: "/contact?intent=bookkeeper-intake",
+      href: `/contact?intent=${BOOKKEEPER_INTENT}`,
       external: false,
       kind: "accountant",
       instructions: [
