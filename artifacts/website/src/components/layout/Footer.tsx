@@ -11,14 +11,27 @@ import {
 import { FooterNewsletterSignup } from "@/components/NewsletterSignup";
 import { openCookieConsentPreferences } from "@/components/CookieConsent";
 import { footerCredentialBadges } from "@/data/credentials";
+import { trackEvent } from "@/lib/analytics";
 
 const BOOKKEEPER_EMAIL = "tea@blueprintsandbookkeeping.com";
 const BUSINESS_PHONE = "(541) 319-8654";
 const BUSINESS_PHONE_HREF = "tel:+15413198654";
 const SCHEDULE_PATH = "/schedule";
 const GET_STARTED_PATH = "/get-started";
+const EMERGENCY_REQUEST_URL =
+  "mailto:tea@blueprintsandbookkeeping.com?subject=Emergency%20%2F%20Expedited%20Request&body=Hi%20Tea%2C%0A%0AI%20need%20an%20urgent%20bookkeeping%20review%20due%20to%20deadline%20pressure%20(tax%2C%20lender%2C%20or%20filing).%20Please%20contact%20me%20as%20soon%20as%20possible.%0A%0AName%3A%0ABusiness%3A%0ABest%20phone%20number%3A";
 
-const contactLinks = [
+interface ContactLink {
+  label: string;
+  href: string;
+  description: string;
+  icon: typeof CalendarDays;
+  isExternal: boolean;
+  newTab?: boolean;
+  analyticsEvent?: string;
+}
+
+const contactLinks: ContactLink[] = [
   {
     label: "Book a discovery call",
     href: SCHEDULE_PATH,
@@ -34,6 +47,16 @@ const contactLinks = [
     isExternal: false,
   },
   {
+    label: "Emergency / Expedited Request",
+    href: EMERGENCY_REQUEST_URL,
+    description:
+      "Use this for urgent deadlines, lender requests, or tax-time pressure.",
+    icon: ClipboardList,
+    isExternal: true,
+    newTab: true,
+    analyticsEvent: "Emergency Request Click",
+  },
+  {
     label: BOOKKEEPER_EMAIL,
     href: `mailto:${BOOKKEEPER_EMAIL}`,
     description: "Email for questions about services.",
@@ -47,7 +70,7 @@ const contactLinks = [
     icon: Phone,
     isExternal: true,
   },
-] as const;
+];
 
 export function Footer() {
   const [location] = useLocation();
@@ -149,7 +172,20 @@ export function Footer() {
                 return (
                   <li key={item.label}>
                     {item.isExternal ? (
-                      <a href={item.href} className={linkClassName}>
+                      <a
+                        href={item.href}
+                        {...(item.newTab
+                          ? { target: "_blank", rel: "noopener noreferrer" }
+                          : {})}
+                        onClick={() => {
+                          if (item.analyticsEvent) {
+                            trackEvent(item.analyticsEvent, {
+                              source: "footer",
+                            });
+                          }
+                        }}
+                        className={linkClassName}
+                      >
                         {content}
                       </a>
                     ) : (

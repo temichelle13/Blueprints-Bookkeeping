@@ -5,21 +5,22 @@ import {
   CalendarDays,
   Video,
   MessageSquare,
-  UserPlus,
   ArrowRight,
   HelpCircle,
   Send,
   CheckCircle,
+  Clock3,
 } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 import { getApiRoot } from "@/lib/api";
+import { trackEvent } from "@/lib/analytics";
 import { BOOKKEEPER_INTENT } from "@/lib/contact-intent";
 
 const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
-const QB_PROADVISOR_URL =
-  "https://quickbooks.intuit.com/accountants/products-solutions/bookkeeping/";
 const EMAIL_ADDRESS = "tea@blueprintsandbookkeeping.com";
+const EMERGENCY_REQUEST_URL =
+  "mailto:tea@blueprintsandbookkeeping.com?subject=Emergency%20%2F%20Expedited%20Request&body=Hi%20Tea%2C%0A%0AI%20need%20an%20urgent%20bookkeeping%20review%20due%20to%20deadline%20pressure%20(tax%2C%20lender%2C%20or%20filing).%20Please%20contact%20me%20as%20soon%20as%20possible.%0A%0AName%3A%0ABusiness%3A%0ABest%20phone%20number%3A";
 
 interface BasePath {
   icon: typeof CalendarDays;
@@ -35,6 +36,7 @@ interface BasePath {
   note?: string;
   secondaryHref?: string;
   secondaryCta?: string;
+  analyticsEvent?: string;
 }
 
 type PathCard = BasePath;
@@ -99,6 +101,18 @@ export default function GetStarted() {
       href: CALENDLY_URL,
       external: true,
       newTab: true,
+    },
+    {
+      icon: Clock3,
+      color: "#EF4444",
+      title: "Emergency / Expedited Request",
+      subtitle:
+        "Use this only when you have urgent tax, lender, investor, or filing pressure and need priority review.",
+      cta: "Submit urgent request",
+      href: EMERGENCY_REQUEST_URL,
+      external: true,
+      newTab: true,
+      analyticsEvent: "Emergency Request Click",
     },
     {
       icon: MessageSquare,
@@ -397,6 +411,11 @@ export default function GetStarted() {
           {...(path.newTab
             ? { target: "_blank", rel: "noopener noreferrer" }
             : {})}
+          onClick={() => {
+            if (path.analyticsEvent) {
+              trackEvent(path.analyticsEvent, { source: "get_started" });
+            }
+          }}
           style={{ textDecoration: "none", display: "block" }}
         >
           {cardBody}
@@ -419,7 +438,7 @@ export default function GetStarted() {
     <div className="min-h-screen py-20 px-4">
       <SEO
         title="Get Started"
-        description="Choose how to begin with Blueprints & Bookkeeping — schedule a call, book a video chat, or start the intake process to add Tea as your accountant."
+        description="Choose how to begin with Blueprints & Bookkeeping — schedule a call, book a video chat, submit an emergency or expedited request, or start the intake process to add Tea as your accountant."
         path="/get-started"
       />
       <div className="max-w-5xl mx-auto">
@@ -430,7 +449,7 @@ export default function GetStarted() {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/20 bg-accent/5 mb-6 text-sm font-medium text-accent">
             <span className="glow-dot" />
-            Three ways to get started
+            Four ways to get started
           </div>
           <h1 className="text-4xl md:text-5xl font-display font-extrabold text-white mb-4">
             How Would You Like to Begin?
