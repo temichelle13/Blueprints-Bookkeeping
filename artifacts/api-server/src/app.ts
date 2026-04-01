@@ -53,6 +53,10 @@ function parseAllowedCorsOrigins(
 
 const app: Express = express();
 
+// Trust exactly one reverse-proxy hop so req.ip / req.ips reflect the real
+// client address rather than the proxy address.
+app.set("trust proxy", 1);
+
 app.use(helmet());
 
 app.use((req, res, next) => {

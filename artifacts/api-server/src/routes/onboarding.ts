@@ -10,6 +10,7 @@ import { eq } from "drizzle-orm";
 import { Resend } from "resend";
 import * as contractService from "../lib/contract-service";
 import { isEmailSuppressed } from "../lib/email-suppression";
+import { getRequestIp, getUserAgent } from "../lib/request-helpers";
 
 const router: IRouter = Router();
 
@@ -222,6 +223,9 @@ router.post("/onboarding", async (req, res): Promise<void> => {
         message: notes ?? null,
         consentTextVersion: "self-service-onboarding-consent-2026-03-31.1",
         consentSourcePage: "/onboarding",
+        requestIp: getRequestIp(req),
+        userAgent: getUserAgent(req),
+        consentTimestamp: new Date(),
       })
       .returning();
 

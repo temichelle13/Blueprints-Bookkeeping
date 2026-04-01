@@ -1,24 +1,22 @@
-import { Router, type IRouter, type Request } from "express";
+import { Router, type IRouter } from "express";
 import rateLimit from "express-rate-limit";
 import { db, contactInquiriesTable } from "@workspace/db";
 import { SubmitContactFormBody } from "@workspace/api-zod";
 import * as contractService from "../lib/contract-service";
 import { isEmailSuppressed } from "../lib/email-suppression";
 import { getResend, getOwnerEmail, EMAIL_FROM } from "../lib/email";
+import { getRequestIp, getUserAgent } from "../lib/request-helpers";
 import { logger } from "../lib/logger";
 
 const router: IRouter = Router();
 
-function getRequestIp(req: Request): string {
-  const forwardedFor = req.headers["x-forwarded-for"];
-  if (typeof forwardedFor === "string" && forwardedFor.length > 0) {
-    return forwardedFor.split(",")[0]?.trim() || req.ip || "unknown";
-  }
-  if (Array.isArray(forwardedFor) && forwardedFor.length > 0) {
-    return forwardedFor[0]?.split(",")[0]?.trim() || req.ip || "unknown";
-  }
-  return req.ip || "unknown";
-}
+const ALLOWED_CONSENT_TEXT_VERSIONS = new Set([
+  "contact-consent-2026-03-31.1",
+  "self-service-onboarding-consent-2026-03-31.1",
+  "legacy-unknown",
+]);
+
+const ALLOWED_CONSENT_SOURCE_PAGES = new Set(["/contact", "/onboarding"]);
 
 const contactLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -49,6 +47,15 @@ router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
 
   const data = parsed.data;
 
+  if (!ALLOWED_CONSENT_TEXT_VERSIONS.has(data.consentTextVersion)) {
+    res.status(400).json({ error: "Invalid consentTextVersion." });
+    return;
+  }
+  if (!ALLOWED_CONSENT_SOURCE_PAGES.has(data.consentSourcePage)) {
+    res.status(400).json({ error: "Invalid consentSourcePage." });
+    return;
+  }
+
   const [inquiry] = await db
     .insert(contactInquiriesTable)
     .values({
@@ -67,7 +74,7 @@ router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
       consentTimestamp: new Date(),
       consentTextVersion: data.consentTextVersion,
       requestIp: getRequestIp(req),
-      userAgent: req.get("user-agent") || "unknown",
+      userAgent: getUserAgent(req),
       consentSourcePage: data.consentSourcePage,
     })
     .returning();

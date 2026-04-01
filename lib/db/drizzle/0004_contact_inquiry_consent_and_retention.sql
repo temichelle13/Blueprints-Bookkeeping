@@ -10,3 +10,6 @@ COMMENT ON COLUMN contact_inquiries.consent_text_version IS 'Version token for t
 COMMENT ON COLUMN contact_inquiries.request_ip IS 'Submitting client IP for abuse prevention and compliance audit records';
 COMMENT ON COLUMN contact_inquiries.user_agent IS 'Submitting browser user-agent for abuse prevention and compliance audit records';
 COMMENT ON COLUMN contact_inquiries.consent_source_page IS 'Website path where consent was captured (for example /contact)';
+
+CREATE INDEX idx_contact_inquiries_status_created_at
+  ON contact_inquiries (status, created_at);

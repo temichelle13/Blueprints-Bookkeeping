@@ -18,7 +18,7 @@ import {
 import { useSubmitContactForm } from "@workspace/api-client-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
-import { useContactMutation } from "@/hooks/use-contact";
+import { useContactMutation, CONTACT_CONSENT_TEXT_VERSION, CONTACT_CONSENT_SOURCE_PAGE } from "@/hooks/use-contact";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
 
@@ -28,8 +28,6 @@ const PHONE_HREF = "tel:+15413198654";
 const SMS_HREF = "sms:+15413198654";
 const EMAIL_ADDRESS = "tea@blueprintsandbookkeeping.com";
 const BOOKKEEPER_INTENT = "bookkeeper";
-const CONTACT_CONSENT_TEXT_VERSION = "contact-consent-2026-03-31.1";
-const CONTACT_CONSENT_SOURCE_PAGE = "/contact";
 const CONTACT_CONSENT_LANGUAGE =
   "I agree to receive text messages and phone calls from Blueprints & Bookkeeping at my provided contact number. Message and data rates may apply. Reply STOP to opt out.";
 const INQUIRY_PROCESSING_DISCLOSURE =

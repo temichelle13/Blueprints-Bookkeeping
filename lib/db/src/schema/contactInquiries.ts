@@ -28,10 +28,10 @@ export const contactInquiriesTable = pgTable("contact_inquiries", {
   consentTimestamp: timestamp("consent_timestamp", { withTimezone: true })
     .notNull()
     .defaultNow(),
-  consentTextVersion: text("consent_text_version").notNull(),
+  consentTextVersion: text("consent_text_version").notNull().default("legacy-unknown"),
   requestIp: text("request_ip").notNull().default("unknown"),
   userAgent: text("user_agent").notNull().default("unknown"),
-  consentSourcePage: text("consent_source_page").notNull(),
+  consentSourcePage: text("consent_source_page").notNull().default("/contact"),
   status: text("status").notNull().default("New"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
