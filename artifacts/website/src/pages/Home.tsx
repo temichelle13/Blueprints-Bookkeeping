@@ -370,7 +370,7 @@ export default function Home() {
                 <p className="text-sm font-semibold tracking-[0.16em] text-accent/80 mb-4">
                   FEATURED CLIENT OUTCOME
                 </p>
-                <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
+                <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground mb-4">
                   From backlog to board-ready reporting in 45 days.
                 </h2>
                 <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-8">
@@ -387,9 +387,9 @@ export default function Home() {
                   ].map((stat, i) => (
                     <div
                       key={i}
-                      className="rounded-xl border border-white/10 bg-white/[0.02] p-4"
+                      className="rounded-xl border border-border bg-foreground/[0.02] p-4"
                     >
-                      <p className="text-xl font-display font-bold text-white mb-1">
+                      <p className="text-xl font-display font-bold text-foreground mb-1">
                         {stat.value}
                       </p>
                       <p className="text-sm text-muted-foreground">
@@ -400,8 +400,8 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-background/40 p-5 sm:p-6">
-                <p className="text-sm font-semibold text-white mb-5">
+              <div className="rounded-2xl border border-border bg-background/40 p-5 sm:p-6">
+                <p className="text-sm font-semibold text-foreground mb-5">
                   Delivery timeline
                 </p>
                 <div className="space-y-5">
@@ -427,7 +427,7 @@ export default function Home() {
                         {i + 1}
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-white mb-1">
+                        <p className="text-sm font-semibold text-foreground mb-1">
                           {item.phase}
                         </p>
                         <p className="text-sm text-muted-foreground leading-relaxed">
