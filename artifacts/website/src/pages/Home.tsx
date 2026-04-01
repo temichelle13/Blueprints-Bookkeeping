@@ -14,19 +14,27 @@ import {
   StatsProofBar,
   CredentialBadgeStrip,
   GoogleReviewsCallout,
+  HeroCtaTrustNote,
+  EngagementClarityPreview,
+  FinalCtaTrustNote,
 } from "@/components/TrustSignals";
 import { SEO } from "@/components/SEO";
+import { trackHomeCtaClick } from "@/hooks/usePageTracking";
 import { localBusinessSchema } from "@/lib/seo-schemas";
 
 export default function Home() {
   usePageTitle();
+  const primaryCtaLabel = "Book a Discovery Call";
+  const secondaryCtaLabel = "View Services";
 
   return (
     <div>
       <SEO
-        description="Your Blueprint to Business Success. Advanced bookkeeping and professional business plans for complex, high-growth businesses. Based in Roseburg, Oregon — serving nationwide."
+        title="Roseburg, Oregon Bookkeeping, Cleanup, Monthly Close & Business Plans"
+        description="Decision-stage bookkeeping support for founders: cleanup and catch-up bookkeeping, monthly close management, and professionally written business plans. Based in Roseburg, Oregon and serving clients nationwide."
         path="/"
-        jsonLd={localBusinessSchema()}
+        ogImage="https://blueprintsandbookkeeping.com/opengraph.jpg"
+        jsonLd={homepageSchemas()}
       />
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -41,8 +49,8 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/70 to-background" />
         </div>
 
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/8 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-primary/20 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-accent/6 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-primary/15 rounded-full blur-[90px] pointer-events-none" />
 
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center pt-32 pb-24">
           <motion.div
@@ -72,8 +80,8 @@ export default function Home() {
             transition={{ delay: 0.2 }}
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed"
           >
-            Advanced bookkeeping and professional business plans for founders
-            who need clean books and a clear path forward.
+            Executive-grade bookkeeping and strategic business planning for
+            founders who need financial clarity, control, and momentum.
           </motion.p>
 
           <motion.div
@@ -83,10 +91,11 @@ export default function Home() {
             className="flex flex-col sm:flex-row gap-4"
           >
             <Link
-              href="/get-started"
+              href="/schedule"
+              onClick={() => trackHomeCtaClick("primary", "hero")}
               className="group px-8 py-4 rounded-xl bg-accent text-white font-semibold text-lg shadow-xl shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
             >
-              Get Started
+              {primaryCtaLabel}
               <ArrowRight
                 size={20}
                 className="group-hover:translate-x-1 transition-transform"
@@ -94,17 +103,56 @@ export default function Home() {
             </Link>
             <Link
               href="/services"
+              onClick={() => trackHomeCtaClick("secondary", "hero")}
               className="px-8 py-4 rounded-xl bg-white/[0.04] text-white backdrop-blur-sm border border-white/10 font-semibold text-lg hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300 flex items-center justify-center"
             >
-              Explore Our Services
+              {secondaryCtaLabel}
             </Link>
           </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="mt-6 w-full max-w-3xl rounded-xl border border-white/15 bg-white/[0.04] backdrop-blur-sm p-4 sm:p-5 text-left"
+          >
+            <p className="text-sm text-foreground">
+              <span className="font-semibold text-white">
+                Data Protection &amp; Professional Boundaries:
+              </span>{" "}
+              Your financial records are handled in the U.S., access is limited
+              to authorized personnel, and we use secure systems with encrypted
+              transmission for client data.
+            </p>
+            <p className="mt-2 text-xs text-muted-foreground">
+              Bookkeeping services are not tax or legal advice. For those
+              matters, work with a licensed tax professional or attorney.
+            </p>
+            <div className="mt-3 flex items-center gap-3 text-xs sm:text-sm">
+              <Link href="/privacy" className="text-accent hover:underline">
+                Privacy Policy
+              </Link>
+              <span className="text-muted-foreground" aria-hidden="true">•</span>
+              <Link href="/terms" className="text-accent hover:underline">
+                Terms of Service
+              </Link>
+            </div>
+          </motion.div>
+          <HeroCtaTrustNote />
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
       </section>
 
       <StatsProofBar />
+
+      <div className="glow-line max-w-5xl mx-auto" />
+
+      <EngagementClarityPreview />
+
+      <div className="glow-line max-w-5xl mx-auto" />
+
+      <CredentialBadgeStrip compact />
 
       <div className="glow-line max-w-5xl mx-auto" />
 
@@ -182,7 +230,7 @@ export default function Home() {
 
       <div className="glow-line max-w-5xl mx-auto" />
 
-      <section className="py-28 relative">
+      <section className="py-24 md:py-28 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
@@ -210,8 +258,8 @@ export default function Home() {
                   },
                   {
                     icon: <Users className="w-5 h-5" />,
-                    title: "20-Client Maximum",
-                    desc: "Strictly capped roster to ensure executive-level dedication and rapid response times.",
+                    title: "Boutique, High-Touch Service",
+                    desc: "A deliberately selective client model ensures executive-level dedication and rapid response times for every engagement.",
                   },
                 ].map((item, i) => (
                   <div key={i} className="flex gap-4 items-start group">
@@ -272,16 +320,17 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-28 relative">
+      <section className="py-24 md:py-28 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center text-center mb-14">
             <div className="accent-bar mb-6" />
             <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
-              Limited to 20 Active Clients
+              Built for Strategic Clarity and Financial Control
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl">
-              This isn't a volume practice. Every client gets direct access to
-              Tea — no handoffs, no junior staff, no outsourcing.
+              A boutique financial partner model delivering executive-level
+              guidance, disciplined reporting, and proactive support as your
+              company scales.
             </p>
           </div>
 
@@ -328,40 +377,124 @@ export default function Home() {
           </div>
 
           <div className="text-center">
-            <Link
-              href="/get-started"
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-accent text-white font-semibold text-sm shadow-lg shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300"
-            >
-              See if there's a spot available
-              <ArrowRight size={16} />
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/schedule"
+                onClick={() => trackHomeCtaClick("primary", "mid_page")}
+                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-accent text-white font-semibold text-sm shadow-lg shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300"
+              >
+                {primaryCtaLabel}
+                <ArrowRight size={16} />
+              </Link>
+              <Link
+                href="/services"
+                onClick={() => trackHomeCtaClick("secondary", "mid_page")}
+                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-white/[0.04] text-white backdrop-blur-sm border border-white/10 font-semibold text-sm hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300"
+              >
+                {secondaryCtaLabel}
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <GoogleReviewsCallout />
+
+      <section className="py-24 md:py-28 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="glass-card rounded-3xl p-6 sm:p-8 md:p-10">
+            <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-12 items-start">
+              <div>
+                <div className="accent-bar mb-5" />
+                <p className="text-sm font-semibold tracking-[0.16em] text-accent/80 mb-4">
+                  FEATURED CLIENT OUTCOME
+                </p>
+                <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground mb-4">
+                  From backlog to board-ready reporting in 45 days.
+                </h2>
+                <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-8">
+                  A multi-entity service business came to us with a five-month
+                  reconciliation backlog and cash flow blind spots. We rebuilt
+                  their close workflow so leadership could make decisions from
+                  reliable numbers every month.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {[
+                    { value: "5 months", label: "Backlog cleared" },
+                    { value: "45 days", label: "To stable monthly close" },
+                    { value: "100%", label: "US-based handling" },
+                  ].map((stat, i) => (
+                    <div
+                      key={i}
+                      className="rounded-xl border border-border bg-foreground/[0.02] p-4"
+                    >
+                      <p className="text-xl font-display font-bold text-foreground mb-1">
+                        {stat.value}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {stat.label}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-border bg-background/40 p-5 sm:p-6">
+                <p className="text-sm font-semibold text-foreground mb-5">
+                  Delivery timeline
+                </p>
+                <div className="space-y-5">
+                  {[
+                    {
+                      phase: "Week 1",
+                      detail:
+                        "Full diagnostic, chart-of-accounts repair plan, and milestone map.",
+                    },
+                    {
+                      phase: "Weeks 2–4",
+                      detail:
+                        "Historical cleanup, reconciliation, and reporting architecture.",
+                    },
+                    {
+                      phase: "Weeks 5–6",
+                      detail:
+                        "Executive dashboard handoff and monthly close rhythm finalized.",
+                    },
+                  ].map((item, i) => (
+                    <div key={i} className="flex gap-4">
+                      <div className="mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-accent/20 text-[11px] font-bold text-accent">
+                        {i + 1}
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground mb-1">
+                          {item.phase}
+                        </p>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {item.detail}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       <div className="glow-line max-w-5xl mx-auto" />
 
-      <CredentialBadgeStrip compact />
-
-      <div className="glow-line max-w-5xl mx-auto" />
-
-      <GoogleReviewsCallout />
-
-      <div className="glow-line max-w-5xl mx-auto" />
-
-      <div className="glow-line max-w-5xl mx-auto" />
-
-      <section className="py-24 relative overflow-hidden">
+      <section className="py-24 md:py-28 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 via-accent/[0.02] to-transparent" />
-        <div className="relative max-w-3xl mx-auto px-4 text-center">
+        <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-6">
             Stop Guessing.
             <br />
             <span className="text-gradient">Start Scaling.</span>
           </h2>
-          <p className="text-xl text-muted-foreground mb-10">
-            Secure your financial infrastructure and map out a profitable future
-            today.
+          <p className="text-xl text-muted-foreground mb-4">
+            Secure your financial infrastructure and make faster, better
+            decisions with confidence.
           </p>
           <Link
             href="/schedule"
@@ -370,6 +503,7 @@ export default function Home() {
             Book Your Consultation
             <ArrowRight size={20} />
           </Link>
+          <FinalCtaTrustNote />
         </div>
       </section>
     </div>
