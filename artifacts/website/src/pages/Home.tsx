@@ -122,7 +122,7 @@ export default function Home() {
               <Link href="/privacy" className="text-accent hover:underline">
                 Privacy Policy
               </Link>
-              <span className="text-muted-foreground">•</span>
+              <span className="text-muted-foreground" aria-hidden="true">•</span>
               <Link href="/terms" className="text-accent hover:underline">
                 Terms of Service
               </Link>
