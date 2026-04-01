@@ -38,82 +38,26 @@ export function localBusinessSchema() {
   };
 }
 
-export function homepageSchemas() {
-  return [
-    localBusinessSchema(),
-    {
-      "@context": "https://schema.org",
-      "@type": "WebPage",
-      "@id": `${BASE_URL}/#webpage`,
-      url: `${BASE_URL}/`,
-      name: "Roseburg Bookkeeping, Cleanup, Monthly Close & Business Plans",
-      description:
-        "Roseburg, Oregon bookkeeping firm serving clients nationwide with cleanup bookkeeping, monthly close support, and professionally written business plans.",
-      isPartOf: {
-        "@type": "WebSite",
-        "@id": `${BASE_URL}/#website`,
-        url: BASE_URL,
-        name: "Blueprints & Bookkeeping",
-      },
-      about: {
-        "@id": `${BASE_URL}/#business`,
-      },
-      primaryImageOfPage: {
-        "@type": "ImageObject",
-        url: `${BASE_URL}/opengraph.jpg`,
-      },
+export function professionalServiceSchema(opts?: {
+  name?: string;
+  description?: string;
+  url?: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "@id": `${opts?.url || BASE_URL}#professional-service`,
+    name: opts?.name || "Blueprints & Bookkeeping, LLC",
+    description:
+      opts?.description ||
+      "Bookkeeping and business planning services for growth-stage and complex businesses.",
+    url: opts?.url || BASE_URL,
+    areaServed: {
+      "@type": "Country",
+      name: "United States",
     },
-    {
-      "@context": "https://schema.org",
-      "@type": "Service",
-      "@id": `${BASE_URL}/#service-bookkeeping`,
-      serviceType: "Bookkeeping",
-      name: "Advanced Bookkeeping Services",
-      description:
-        "Advanced bookkeeping services including cleanup/catch-up projects, monthly close workflows, reconciliations, and ongoing reporting for founders and business owners.",
-      provider: {
-        "@id": `${BASE_URL}/#business`,
-      },
-      areaServed: [
-        {
-          "@type": "City",
-          name: "Roseburg",
-        },
-        {
-          "@type": "State",
-          name: "Oregon",
-        },
-        {
-          "@type": "Country",
-          name: "United States",
-        },
-      ],
-      availableChannel: {
-        "@type": "ServiceChannel",
-        serviceUrl: `${BASE_URL}/services/bookkeeping`,
-      },
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "Service",
-      "@id": `${BASE_URL}/#service-business-plans`,
-      serviceType: "Business Plan Development",
-      name: "Business Plan Services",
-      description:
-        "Professional business plans with financial forecasting, market analysis, and strategic narratives for startups, acquisitions, and growth-stage businesses.",
-      provider: {
-        "@id": `${BASE_URL}/#business`,
-      },
-      areaServed: {
-        "@type": "Country",
-        name: "United States",
-      },
-      availableChannel: {
-        "@type": "ServiceChannel",
-        serviceUrl: `${BASE_URL}/services/business-plans`,
-      },
-    },
-  ];
+    serviceType: ["Bookkeeping", "Business Planning", "Financial Reporting"],
+  };
 }
 
 export function serviceSchema(opts: {

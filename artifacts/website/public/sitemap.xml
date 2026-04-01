@@ -139,27 +139,9 @@
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://blueprintsandbookkeeping.com/blog/why-your-bookkeeper-isnt-enough</loc>
-    <lastmod>2026-03-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://blueprintsandbookkeeping.com/blog/what-makes-a-strong-business-plan</loc>
-    <lastmod>2026-03-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://blueprintsandbookkeeping.com/blog/crypto-accounting-basics-business-owners</loc>
-    <lastmod>2026-02-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://blueprintsandbookkeeping.com/blog/digital-handshake-business-plan-website</loc>
-    <lastmod>2026-02-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <loc>https://blueprintsandbookkeeping.com/compliance-security</loc>
+    <lastmod>2026-03-31</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
   </url>
 </urlset>

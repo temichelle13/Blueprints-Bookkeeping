@@ -135,68 +135,79 @@ export function Footer() {
     <footer className="relative border-t border-border/50">
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12">
-          <div className="lg:col-span-4 space-y-6">
-            <div>
-              <Link href="/" className="inline-block mb-4">
-                <span className="font-display font-bold text-xl tracking-tight">
-                  <span className="text-foreground">Blueprints &</span>
-                  <br />
-                  <span className="text-accent">Bookkeeping</span>
-                </span>
-              </Link>
-              <p className="text-muted-foreground text-sm mb-6 leading-relaxed max-w-md">
-                Advanced bookkeeping and business plans for founders who need
-                clean books and a clear path forward. Based in Roseburg, OR —
-                serving nationwide.
-              </p>
-              <div className="flex flex-col gap-3 text-sm">
-                <a
-                  href={`mailto:${BOOKKEEPER_EMAIL}`}
-                  className="flex items-center gap-2.5 text-muted-foreground hover:text-accent transition-colors"
-                >
-                  <Mail
-                    size={14}
-                    className="text-accent/60 shrink-0"
-                    aria-hidden="true"
-                  />
-                  {BOOKKEEPER_EMAIL}
-                </a>
-                <a
-                  href={BUSINESS_PHONE_HREF}
-                  className="flex items-center gap-2.5 text-muted-foreground hover:text-accent transition-colors"
-                >
-                  <Phone
-                    size={14}
-                    className="text-accent/60 shrink-0"
-                    aria-hidden="true"
-                  />
-                  {BUSINESS_PHONE}
-                </a>
-                <div className="flex items-center gap-2.5 text-muted-foreground">
-                  <MapPin
-                    size={14}
-                    className="text-accent/60 shrink-0"
-                    aria-hidden="true"
-                  />
-                  Roseburg, Oregon (Remote Nationwide)
-                </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+          <div className="lg:col-span-1">
+            <Link href="/" className="inline-block mb-4">
+              <span className="font-display font-bold text-xl tracking-tight">
+                <span className="text-foreground">Blueprints &</span>
+                <br />
+                <span className="text-accent">Bookkeeping</span>
+              </span>
+            </Link>
+            <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
+              Advanced bookkeeping and business plans for founders who need
+              clean books and a clear path forward. Based in Roseburg, OR —
+              serving nationwide.
+            </p>
+            <div className="flex flex-col gap-3 text-sm">
+              <a
+                href="mailto:tea@blueprintsandbookkeeping.com"
+                className="flex items-center gap-2.5 rounded-sm text-muted-foreground hover:text-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                <Mail
+                  size={14}
+                  className="text-accent/60 shrink-0"
+                  aria-hidden="true"
+                />
+                tea@blueprintsandbookkeeping.com
+              </a>
+              <a
+                href="tel:+15413198654"
+                className="flex items-center gap-2.5 rounded-sm text-muted-foreground hover:text-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                <Phone
+                  size={14}
+                  className="text-accent/60 shrink-0"
+                  aria-hidden="true"
+                />
+                (541) 319-8654
+              </a>
+              <div className="flex items-center gap-2.5 text-muted-foreground">
+                <MapPin
+                  size={14}
+                  className="text-accent/60 shrink-0"
+                  aria-hidden="true"
+                />
+                Roseburg, Oregon (Remote Nationwide)
               </div>
             </div>
 
-            <div className="rounded-2xl border border-white/10 bg-card/30 p-5">
-              <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-4">
-                Need Help Now?
-              </h3>
-              <ul className="space-y-3">
-                {urgentLinks.map((item) => {
-                  const Icon = item.icon;
-                  const linkClassName =
-                    "group flex items-start gap-3 text-sm text-muted-foreground transition-colors hover:text-foreground";
-                  const content = (
-                    <>
-                      <span className="mt-0.5 text-accent/70">
-                        <Icon size={15} aria-hidden="true" />
+          <div>
+            <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-5">
+              Contact
+            </h3>
+            <p className="text-sm text-muted-foreground leading-relaxed mb-5">
+              Reach out whichever way feels easiest. We keep the footer simple
+              so the rest of the site can do the talking.
+            </p>
+            <ul className="space-y-3">
+              {contactLinks.map((item) => {
+                const Icon = item.icon;
+                const linkClassName =
+                  "group flex items-start gap-3 rounded-md text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+                const content = (
+                  <>
+                    <span className="mt-0.5 text-accent/70">
+                      <Icon size={15} aria-hidden="true" />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="flex items-center gap-2 font-medium text-foreground/90 group-hover:text-foreground transition-colors">
+                        <span>{item.label}</span>
+                        <ArrowRight
+                          size={12}
+                          className="opacity-0 -translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
+                          aria-hidden="true"
+                        />
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="flex items-center gap-2 font-medium text-foreground/90 group-hover:text-foreground transition-colors">
@@ -283,14 +294,66 @@ export function Footer() {
                           focusable="false"
                         />
                       </Link>
-                    </li>
-                  ))}
-                </ul>
-                {bucket.showCookiePreferences && (
-                  <button
-                    type="button"
-                    onClick={openCookieConsentPreferences}
-                    className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-accent/30 hover:text-foreground"
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+            <button
+              type="button"
+              onClick={openCookieConsentPreferences}
+              className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-accent/30 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              Cookie Preferences
+            </button>
+          </div>
+
+          <div>
+            <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-5">
+              Pages
+            </h3>
+            <ul className="space-y-2.5 mb-7">
+              {[
+                { label: "Services", href: "/services" },
+                { label: "Pricing", href: "/pricing" },
+                { label: "About Tea", href: "/about" },
+                { label: "Industries", href: "/industries" },
+                { label: "Blog", href: "/blog" },
+                { label: "FAQ", href: "/faq" },
+                { label: "Credentials", href: "/about/credentials" },
+              ].map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    onClick={scrollToTopOnSameRoute(item.href)}
+                    className="text-muted-foreground hover:text-accent text-sm transition-colors inline-flex items-center gap-1 group rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  >
+                    {item.label}
+                    <ArrowRight
+                      size={11}
+                      className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all"
+                    />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-3">
+              Services
+            </h3>
+            <ul className="space-y-2.5">
+              {[
+                {
+                  label: "Advanced Bookkeeping",
+                  href: "/services/bookkeeping",
+                },
+                { label: "Business Plans", href: "/services/business-plans" },
+                { label: "Tax Partner Network", href: "/tax-partners" },
+              ].map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    onClick={scrollToTopOnSameRoute(item.href)}
+                    className="text-muted-foreground hover:text-accent text-sm transition-colors inline-flex items-center gap-1 group rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     Cookie Preferences
                   </button>
@@ -344,7 +407,7 @@ export function Footer() {
                   href={badge.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="shrink-0 hover:scale-110 transition-transform"
+                  className="shrink-0 rounded-sm hover:scale-110 transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   <img
                     src={badge.badge}
@@ -359,21 +422,51 @@ export function Footer() {
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             <Link
               href="/privacy"
-              className="hover:text-foreground transition-colors"
+              className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               Privacy
             </Link>
             <Link
               href="/terms"
-              className="hover:text-foreground transition-colors"
+              className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              Terms
+              Terms of Service
+            </Link>
+            <Link
+              href="/accessibility"
+              className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              Accessibility
             </Link>
             <Link
               href="/cookies"
-              className="hover:text-foreground transition-colors"
+              className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               Cookies
+            </Link>
+            <Link
+              href="/compliance-security"
+              className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              Compliance & Security
+            </Link>
+            <Link
+              href="/referral"
+              className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              Referral Program
+            </Link>
+            <Link
+              href="/unsubscribe"
+              className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              Unsubscribe
+            </Link>
+            <Link
+              href="/feedback"
+              className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              Site Feedback
             </Link>
           </div>
         </div>
