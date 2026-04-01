@@ -12,12 +12,19 @@ import {
 import { SEO } from "@/components/SEO";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { BookkeepingDisclaimer } from "@/components/BookkeepingDisclaimer";
-import { serviceSchema, breadcrumbSchema } from "@/lib/seo-schemas";
+import {
+  serviceSchema,
+  breadcrumbSchema,
+  localBusinessSchema,
+  professionalServiceSchema,
+} from "@/lib/seo-schemas";
 
 const BASE_URL = "https://blueprintsandbookkeeping.com";
 
 export default function Bookkeeping() {
   const jsonLd = [
+    localBusinessSchema(),
+    professionalServiceSchema({ url: `${BASE_URL}/services/bookkeeping` }),
     serviceSchema({
       name: "Advanced Bookkeeping & Cleanup",
       description:

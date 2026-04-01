@@ -1,11 +1,32 @@
 import { usePageTitle } from "@/hooks/use-page-title";
+import { SEO } from "@/components/SEO";
+import {
+  breadcrumbSchema,
+  localBusinessSchema,
+  professionalServiceSchema,
+} from "@/lib/seo-schemas";
 import { Link } from "wouter";
 
 export default function Privacy() {
   usePageTitle("Privacy Policy");
+  const BASE_URL = "https://blueprintsandbookkeeping.com";
+  const jsonLd = [
+    localBusinessSchema(),
+    professionalServiceSchema({ url: `${BASE_URL}/privacy` }),
+    breadcrumbSchema([
+      { name: "Home", url: BASE_URL },
+      { name: "Privacy Policy", url: `${BASE_URL}/privacy` },
+    ]),
+  ];
 
   return (
     <div className="pt-24 pb-20">
+      <SEO
+        title="Privacy Policy"
+        path="/privacy"
+        description="Read how Blueprints & Bookkeeping collects, uses, retains, and protects client and visitor information."
+        jsonLd={jsonLd}
+      />
       <section className="py-16 mb-8 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -14,7 +35,7 @@ export default function Privacy() {
             Privacy Policy
           </h1>
           <p className="text-muted-foreground text-sm">
-            Last updated: March 2026
+            Last updated: March 31, 2026
           </p>
         </div>
       </section>
@@ -91,7 +112,45 @@ export default function Privacy() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              4. Email Communications
+              4. Communications Consent, Call/SMS Compliance, and Opt-Out
+            </h2>
+            <p className="mb-3">
+              By submitting our contact, referral, or tax-partner forms, you
+              consent to receive text messages and phone calls from Blueprints
+              &amp; Bookkeeping at the number you provide, including reminders,
+              scheduling updates, and service-related communications. Message
+              and data rates may apply.
+            </p>
+            <p className="mb-3">
+              You may opt out of SMS at any time by replying{" "}
+              <span className="text-white font-medium">STOP</span>. You may also
+              request that we stop non-essential calls or messages by emailing{" "}
+              <a
+                href="mailto:tea@blueprintsandbookkeeping.com"
+                className="text-accent hover:underline"
+              >
+                tea@blueprintsandbookkeeping.com
+              </a>{" "}
+              or calling{" "}
+              <a
+                href="tel:+15413198654"
+                className="text-accent hover:underline"
+              >
+                (541) 319-8654
+              </a>
+              .
+            </p>
+            <p>
+              We maintain records of communication consent and opt-out requests
+              to support compliance, service continuity, and dispute resolution.
+              These records may include timestamped form submissions, message
+              logs, and internal notes related to your request.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-white font-bold text-lg mb-3">
+              5. Email Communications
             </h2>
             <p>
               If you subscribe to our newsletter, we will send you periodic
@@ -107,7 +166,58 @@ export default function Privacy() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              5. Data Retention
+              6. Third-Party Processors and Subprocessors
+            </h2>
+            <p className="mb-3">
+              We use carefully selected third-party processors to operate our
+              business. These providers process data under their own terms and
+              privacy notices:
+            </p>
+            <ul className="list-disc list-inside space-y-2 pl-2">
+              <li>
+                <a
+                  href="https://stripe.com/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-accent hover:underline"
+                >
+                  Stripe
+                </a>{" "}
+                — Payment processing, fraud prevention, and transaction records.
+              </li>
+              <li>
+                <a
+                  href="https://resend.com/legal/privacy-policy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-accent hover:underline"
+                >
+                  Resend
+                </a>{" "}
+                — Delivery of transactional and service communications.
+              </li>
+              <li>
+                <a
+                  href="https://calendly.com/legal/privacy-notice"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-accent hover:underline"
+                >
+                  Calendly
+                </a>{" "}
+                — Scheduling discovery calls and client meetings.
+              </li>
+            </ul>
+            <p className="mt-3">
+              We may update this list from time to time as our tooling changes.
+              Material changes will be reflected in the "Last updated" date of
+              this policy.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-white font-bold text-lg mb-3">
+              7. Data Retention
             </h2>
             <p>
               Inquiry records are retained under our internal compliance
@@ -121,17 +231,18 @@ export default function Privacy() {
           </section>
 
           <section>
-            <h2 className="text-white font-bold text-lg mb-3">6. Security</h2>
+            <h2 className="text-white font-bold text-lg mb-3">8. Security</h2>
             <p>
-              We implement industry-standard security measures to protect your
-              information, including encrypted data transmission (HTTPS) and
-              secure database storage. While we take reasonable precautions, no
-              internet transmission is 100% secure.
+              We use practical safeguards to protect your information, including
+              domestic handling, controlled account access, encrypted data
+              transmission (HTTPS), and secure systems for storage and
+              communication. While we take reasonable precautions, no internet
+              transmission is 100% secure.
             </p>
           </section>
 
           <section>
-            <h2 className="text-white font-bold text-lg mb-3">7. Cookies</h2>
+            <h2 className="text-white font-bold text-lg mb-3">9. Cookies</h2>
             <p>
               Our website may use essential cookies to maintain website
               functionality. We do not use advertising or tracking cookies. You
@@ -142,7 +253,7 @@ export default function Privacy() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              8. Your Rights Under Oregon Law
+              10. Your Rights Under Oregon Law
             </h2>
             <p className="mb-3">
               Under the Oregon Consumer Privacy Act (OCPA), Oregon residents
@@ -207,7 +318,7 @@ export default function Privacy() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              9. Global Privacy Control (GPC)
+              11. Global Privacy Control (GPC)
             </h2>
             <p className="mb-3">
               We respect the{" "}
@@ -247,7 +358,7 @@ export default function Privacy() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              10. Contact Us
+              12. Contact Us
             </h2>
             <p>
               If you have questions about this Privacy Policy, please reach out:
@@ -272,13 +383,29 @@ export default function Privacy() {
                 </a>
               </p>
             </div>
+            <p className="mt-4 text-xs text-muted-foreground/80">
+              Important: This policy is provided for general informational
+              purposes and should be reviewed by qualified business counsel
+              before publication or reliance.
+            </p>
           </section>
         </div>
 
         <div className="text-center">
-          <Link href="/" className="text-accent hover:underline text-sm">
-            ← Back to Home
-          </Link>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
+            <Link href="/" className="text-accent hover:underline">
+              ← Back to Home
+            </Link>
+            <Link href="/terms" className="text-accent hover:underline">
+              Terms of Service
+            </Link>
+            <Link
+              href="/compliance-security"
+              className="text-accent hover:underline"
+            >
+              Compliance & Security
+            </Link>
+          </div>
         </div>
       </div>
     </div>

@@ -20,6 +20,7 @@ import {
   getOnboardingContextFromSearch,
 } from "@/lib/onboarding-url";
 import { getApiRoot } from "@/lib/api";
+import { BookkeepingDisclaimer } from "@/components/BookkeepingDisclaimer";
 
 const US_STATES = [
   { code: "AL", name: "Alabama" },
@@ -526,6 +527,11 @@ export default function Onboarding() {
                 <Send size={18} />
                 {isSubmitting ? "Submitting..." : "Submit Onboarding Form"}
               </button>
+              <p className="text-xs text-muted-foreground text-center">
+                Secure checkout via Stripe. QBO invoice option is available for
+                qualified engagements.
+              </p>
+              <BookkeepingDisclaimer compact title="Scope clarification" />
             </form>
           </div>
         )}

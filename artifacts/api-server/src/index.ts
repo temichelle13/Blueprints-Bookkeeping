@@ -23,6 +23,25 @@ const port = env.PORT;
 const REMINDER_INTERVAL_MS = 60 * 60 * 1000;
 const INQUIRY_RETENTION_INTERVAL_MS = 24 * 60 * 60 * 1000;
 
+const OUTBOUND_EMAIL_RETRY_INTERVAL_MS = 60 * 1000;
+
+function startOutboundEmailRetryScheduler() {
+  async function run() {
+    try {
+      const processed = await processPendingOutboundEmailEvents();
+      if (processed > 0) {
+        logger.info("Processed queued outbound email events", { processed });
+      }
+    } catch (err) {
+      logger.error("Outbound email retry scheduler error", err as Error);
+    } finally {
+      setTimeout(run, OUTBOUND_EMAIL_RETRY_INTERVAL_MS);
+    }
+  }
+
+  setTimeout(run, 15_000);
+}
+
 function startContractScheduler() {
   async function run() {
     try {

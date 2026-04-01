@@ -1,11 +1,32 @@
 import { usePageTitle } from "@/hooks/use-page-title";
+import { SEO } from "@/components/SEO";
+import {
+  breadcrumbSchema,
+  localBusinessSchema,
+  professionalServiceSchema,
+} from "@/lib/seo-schemas";
 import { Link } from "wouter";
 
 export default function Terms() {
   usePageTitle("Terms of Service");
+  const BASE_URL = "https://blueprintsandbookkeeping.com";
+  const jsonLd = [
+    localBusinessSchema(),
+    professionalServiceSchema({ url: `${BASE_URL}/terms` }),
+    breadcrumbSchema([
+      { name: "Home", url: BASE_URL },
+      { name: "Terms of Service", url: `${BASE_URL}/terms` },
+    ]),
+  ];
 
   return (
     <div className="pt-24 pb-20">
+      <SEO
+        title="Terms of Service"
+        path="/terms"
+        description="Review service terms, limitations, and legal conditions for working with Blueprints & Bookkeeping."
+        jsonLd={jsonLd}
+      />
       <section className="py-16 mb-8 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -14,7 +35,7 @@ export default function Terms() {
             Terms of Service
           </h1>
           <p className="text-muted-foreground text-sm">
-            Last updated: March 2026
+            Last updated: March 31, 2026
           </p>
         </div>
       </section>
@@ -62,6 +83,11 @@ export default function Terms() {
               IRS-related advisory services. Our bookkeeping and financial
               planning services are designed to complement your tax
               professional's work, not replace it.
+            </p>
+            <p className="mt-3">
+              We also do not provide legal advice or legal representation.
+              Please work with a licensed tax professional or attorney when
+              legal or tax decisions are required.
             </p>
           </section>
 
@@ -183,13 +209,29 @@ export default function Terms() {
                 </a>
               </p>
             </div>
+            <p className="mt-4 text-xs text-muted-foreground/80">
+              Important: These Terms are provided for general informational
+              purposes and should be reviewed by qualified business counsel
+              before publication or reliance.
+            </p>
           </section>
         </div>
 
         <div className="text-center">
-          <Link href="/" className="text-accent hover:underline text-sm">
-            ← Back to Home
-          </Link>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
+            <Link href="/" className="text-accent hover:underline">
+              ← Back to Home
+            </Link>
+            <Link href="/privacy" className="text-accent hover:underline">
+              Privacy Policy
+            </Link>
+            <Link
+              href="/compliance-security"
+              className="text-accent hover:underline"
+            >
+              Compliance & Security
+            </Link>
+          </div>
         </div>
       </div>
     </div>

@@ -24,6 +24,11 @@ export const contactInquiriesTable = pgTable("contact_inquiries", {
   monthlyRevenueRange: text("monthly_revenue_range"),
   biggestChallenge: text("biggest_challenge"),
   preferredContactMethod: text("preferred_contact_method"),
+  emailConsent: boolean("email_consent").notNull().default(false),
+  emailConsentCapturedAt: timestamp("email_consent_captured_at", {
+    withTimezone: true,
+  }),
+  emailConsentSource: text("email_consent_source"),
   smsConsent: boolean("sms_consent").notNull().default(false),
   consentTimestamp: timestamp("consent_timestamp", { withTimezone: true })
     .notNull()

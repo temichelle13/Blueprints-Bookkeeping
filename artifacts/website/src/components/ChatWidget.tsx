@@ -55,19 +55,18 @@ export default function ChatWidget() {
         signal: controller.signal,
       });
 
-      if (!response.ok) {
-        throw new Error(`Health check failed with status ${response.status}`);
-      }
-
-      setAvailability("available");
-      return true;
-    } catch {
-      setAvailability("unavailable");
-      setStatusMessage(OFFLINE_NOTICE);
-      return false;
-    } finally {
-      window.clearTimeout(timeout);
-    }
+      if (response.ok) {
+    setAvailability("available");
+    setStatusMessage(null);
+    return true;
+  } else {
+    throw new Error(); 
+  }
+} catch {
+  setAvailability("unavailable");
+  setStatusMessage(OFFLINE_NOTICE);
+  return false;
+}
   }, [apiBase]);
 
   useEffect(() => {

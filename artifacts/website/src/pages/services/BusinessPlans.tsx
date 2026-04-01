@@ -12,12 +12,20 @@ import {
 } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { serviceSchema, breadcrumbSchema } from "@/lib/seo-schemas";
+import {
+  serviceSchema,
+  breadcrumbSchema,
+  localBusinessSchema,
+  professionalServiceSchema,
+} from "@/lib/seo-schemas";
+import { BookkeepingDisclaimer } from "@/components/BookkeepingDisclaimer";
 
 const BASE_URL = "https://blueprintsandbookkeeping.com";
 
 export default function BusinessPlans() {
   const jsonLd = [
+    localBusinessSchema(),
+    professionalServiceSchema({ url: `${BASE_URL}/services/business-plans` }),
     serviceSchema({
       name: "Business Plans & Financial Forecasting",
       description:
@@ -225,6 +233,11 @@ export default function BusinessPlans() {
       </section>
 
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <BookkeepingDisclaimer
+          compact
+          title="Service scope note"
+          className="mb-6"
+        />
         <div className="relative rounded-2xl overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-accent/15 to-primary/20" />
           <div className="absolute inset-[1px] rounded-2xl bg-card" />
