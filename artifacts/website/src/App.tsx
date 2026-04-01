@@ -90,28 +90,30 @@ function SensitiveRouteNoindexFallback() {
 
   useEffect(() => {
     const fallbackMetaId = "sensitive-route-noindex-fallback";
-    const existingFallbackMeta = document.querySelector(
-      `meta[data-source="${fallbackMetaId}"]`,
-    );
     const shouldNoindex = isSensitivePath(location);
 
+    // Always operate on a single meta[name="robots"] element.
+    let robotsMeta = document.querySelector('meta[name="robots"]') as
+      | HTMLMetaElement
+      | null;
+
+    if (!robotsMeta) {
+      robotsMeta = document.createElement("meta");
+      robotsMeta.setAttribute("name", "robots");
+      document.head.appendChild(robotsMeta);
+    }
+
     if (shouldNoindex) {
-      const meta = existingFallbackMeta ?? document.createElement("meta");
-      meta.setAttribute("name", "robots");
-      meta.setAttribute("content", "noindex, nofollow");
-      meta.setAttribute("data-source", fallbackMetaId);
-      if (!meta.parentElement) {
-        document.head.appendChild(meta);
-      }
+      robotsMeta.setAttribute("content", "noindex, nofollow");
+      robotsMeta.setAttribute("data-source", fallbackMetaId);
       return;
     }
 
-    if (existingFallbackMeta) {
-      existingFallbackMeta.remove();
-      const currentRobotsMeta = document.querySelector('meta[name="robots"]');
-      if (currentRobotsMeta) {
-        currentRobotsMeta.setAttribute("content", "index, follow");
-      }
+    // Only revert changes if this fallback previously set the robots meta.
+    if (robotsMeta.getAttribute("data-source") === fallbackMetaId) {
+      robotsMeta.removeAttribute("data-source");
+      // Restore a neutral default; other components may overwrite this as needed.
+      robotsMeta.setAttribute("content", "index, follow");
     }
   }, [location]);
 
