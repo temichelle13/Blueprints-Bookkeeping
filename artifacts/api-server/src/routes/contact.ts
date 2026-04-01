@@ -1,8 +1,27 @@
+<<<<<<< codex/harden-contact-rate-limiting
+import { Router, type IRouter } from "express";
+import { db, contactInquiriesTable } from "@workspace/db";
+=======
 import { Router, type IRouter, type Request, type Response } from "express";
 import rateLimit from "express-rate-limit";
+>>>>>>> master
 import { SubmitContactFormBody } from "@workspace/api-zod";
 import { tryGetResend, tryGetOwnerEmail, EMAIL_FROM } from "../lib/email";
 import { logger } from "../lib/logger";
+<<<<<<< codex/harden-contact-rate-limiting
+import { contactLimiter } from "./contact-rate-limit";
+
+const router: IRouter = Router();
+
+router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
+  if (req.body?.website) {
+    res.status(201).json({
+      success: true,
+      message:
+        "Thank you for your inquiry! We will be in touch within 48 hours.",
+      id: 0,
+    });
+=======
 import type { Resend } from "resend";
 
 const router: IRouter = Router();
@@ -97,6 +116,7 @@ async function sendInquiryEmails(
         reason: "resend_unavailable",
       },
     );
+>>>>>>> master
     return;
   }
 
