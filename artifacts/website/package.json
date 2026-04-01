@@ -11,6 +11,7 @@
     "sitemap:generate": "tsx scripts/generate-sitemap.ts",
     "sitemap:check": "tsx scripts/generate-sitemap.ts --check",
     "prebuild": "pnpm run sitemap:generate"
+    "test": "tsx --test \"src/**/*.test.ts\""
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -80,6 +81,7 @@
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "tailwindcss": "catalog:",
+    "tsx": "catalog:",
     "vite": "catalog:"
   }
 }

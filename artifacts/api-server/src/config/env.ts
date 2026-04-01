@@ -25,10 +25,10 @@ const envSchema = z.object({
     .string()
     .min(32, "ADMIN_TOKEN must be at least 32 characters for security"),
 
-  // Email - Resend
-  RESEND_API_KEY: z.string().min(1, "RESEND_API_KEY is required"),
+  // Email - Resend (optional; email delivery is best-effort)
+  RESEND_API_KEY: z.string().min(1).optional(),
   RESEND_WEBHOOK_SECRET: z.string().optional(),
-  OWNER_EMAIL: z.string().email("OWNER_EMAIL must be a valid email"),
+  OWNER_EMAIL: z.string().email().optional(),
   OWNER_PHONE_NUMBER: z.string().optional(),
 
   // Adobe Sign

@@ -21,13 +21,22 @@ import { SEO } from "@/components/SEO";
 import { useContactMutation } from "@/hooks/use-contact";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
+import {
+  BOOKKEEPER_INTENT,
+  isBookkeeperIntentParam,
+} from "@/lib/contact-intent";
 
 const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
+const EMERGENCY_CALENDLY_URL =
+  "https://calendly.com/tea-blueprintsandbookkeeping/emergency-or-other-expedited-request";
 const PHONE_DISPLAY = "(541) 319-8654";
 const PHONE_HREF = "tel:+15413198654";
-const SMS_HREF = "sms:+15413198654";
 const EMAIL_ADDRESS = "tea@blueprintsandbookkeeping.com";
 const BOOKKEEPER_INTENT = "bookkeeper";
+const EMERGENCY_REQUEST_URL =
+  "mailto:tea@blueprintsandbookkeeping.com?subject=Emergency%20%2F%20Expedited%20Request&body=Hi%20Tea%2C%0A%0AI%20need%20an%20urgent%20bookkeeping%20review%20due%20to%20deadline%20pressure%20(tax%2C%20lender%2C%20or%20filing).%20Please%20contact%20me%20as%20soon%20as%20possible.%0A%0AName%3A%0ABusiness%3A%0ABest%20phone%20number%3A";
+const CONTACT_CONSENT_SOURCE = "contact_page";
+const CONTACT_CONSENT_LEGAL_TEXT_VERSION = "contact-consent-v2026-03-31";
 
 const messageSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -35,9 +44,11 @@ const messageSchema = z.object({
   message: z
     .string()
     .min(10, "Please include a message (at least 10 characters)"),
-  smsConsent: z.boolean().refine((val) => val === true, {
-    message: "You must consent to receive text messages and phone calls",
+  emailConsent: z.boolean().refine((val) => val === true, {
+    message: "Email consent is required so we can reply to your inquiry",
   }),
+  smsConsent: z.boolean(),
+  phoneConsent: z.boolean(),
   website: z.string().max(0).optional(),
 });
 
@@ -54,6 +65,11 @@ const bookkeeperIntakeSchema = z.object({
   additionalComments: z
     .string()
     .min(10, "Please include enough detail for Tea to review your request"),
+  emailConsent: z.boolean().refine((val) => val === true, {
+    message: "Email consent is required so we can send your intake follow-up",
+  }),
+  smsConsent: z.boolean(),
+  phoneConsent: z.boolean(),
   website: z.string().max(0).optional(),
 });
 
@@ -120,41 +136,65 @@ const DEADLINE_OPTIONS = [
   },
 ] as const;
 
-const contactCards = [
+interface ContactCard {
+  icon: typeof Video;
+  color: string;
+  title: string;
+  description: string;
+  cta: string;
+  href: string;
+  external: boolean;
+  newTab?: boolean;
+  analyticsEvent?: string;
+}
+
+const contactCards: ContactCard[] = [
   {
     icon: Video,
     color: "#6366F1",
     title: "Book a Free Discovery Call",
     description:
-      "30 minutes with Tea — talk through your situation, get a custom recommendation, zero obligation.",
-    cta: "Pick a Time on Calendly",
+      "Best for new leads and growth-stage businesses. Share your goals, current books, and timeline.",
+    cta: "Schedule Discovery Meeting",
     href: CALENDLY_URL,
-    external: true,
     newTab: true,
   },
   {
-    icon: Phone,
-    color: "#10B981",
-    title: "Call or Text",
+    icon: Clock3,
+    color: "#EF4444",
+    title: "Emergency or Expedited Request",
     description:
-      "(541) 319-8654 — voicemail and text are both welcome. Tea will get back to you within one business day.",
-    cta: "Dial (541) 319-8654",
-    href: "tel:+15413198654",
+      "For urgent filing, lender, payroll, or close deadlines that need same-day or priority attention.",
+    cta: "Request Expedited Meeting",
+    href: EMERGENCY_CALENDLY_URL,
+    newTab: true,
+  },
+  {
+    icon: Clock3,
+    color: "#EF4444",
+    title: "Emergency / Expedited Request",
+    description:
+      "For urgent deadlines only (tax notices, lender requests, filing pressure). This opens a priority request email so Tea can triage urgency quickly.",
+    cta: "Submit Urgent Request",
+    href: EMERGENCY_REQUEST_URL,
     external: true,
-    newTab: false,
+    newTab: true,
+    analyticsEvent: "Emergency Request Click",
   },
   {
     icon: Mail,
     color: "#F59E0B",
     title: "Email",
+    icon: ShieldCheck,
+    color: "#10B981",
+    title: "Current Client Meeting Request",
     description:
-      "Reach out by email if you want to share details or documents before talking.",
-    cta: `Email ${EMAIL_ADDRESS}`,
-    href: `mailto:${EMAIL_ADDRESS}`,
-    external: true,
+      "For existing clients only. Submit business details and Tea will confirm your meeting after matching records.",
+    cta: "Request Client-Only Meeting",
+    href: "#client-meeting-request",
     newTab: false,
   },
-] as const;
+];
 
 const quickbooksSetupSteps = [
   "In QuickBooks Online, open the gear icon and go to Manage users or Users.",
@@ -171,12 +211,16 @@ function MessageForm({ defaultMessage = "" }: { defaultMessage?: string }) {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
     reset,
   } = useForm<MessageValues>({
     resolver: zodResolver(messageSchema),
     defaultValues: {
       message: defaultMessage,
+      emailConsent: true,
+      smsConsent: false,
+      phoneConsent: false,
     },
   });
 
@@ -187,7 +231,9 @@ function MessageForm({ defaultMessage = "" }: { defaultMessage?: string }) {
       name: data.name,
       email: data.email,
       message: data.message,
+      emailConsent: data.emailConsent,
       smsConsent: data.smsConsent,
+      phoneConsent: data.phoneConsent,
       website: data.website || "",
     });
     if (ok) {
@@ -196,7 +242,9 @@ function MessageForm({ defaultMessage = "" }: { defaultMessage?: string }) {
         name: "",
         email: "",
         message: defaultMessage,
+        emailConsent: true,
         smsConsent: false,
+        phoneConsent: false,
         website: "",
       });
       return;
@@ -225,7 +273,11 @@ function MessageForm({ defaultMessage = "" }: { defaultMessage?: string }) {
     "block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5";
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form
+      id="client-meeting-request"
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-4"
+    >
       <input
         type="text"
         {...register("website")}
@@ -304,32 +356,71 @@ function MessageForm({ defaultMessage = "" }: { defaultMessage?: string }) {
         )}
       </div>
 
-      <div className="flex items-start gap-3">
-        <div className="min-h-[44px] min-w-[44px] flex items-center justify-center shrink-0">
+      <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-4 space-y-4">
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Communication consent
+        </p>
+        <div className="flex items-start gap-3">
+          <input
+            id="contact-email-consent"
+            type="checkbox"
+            {...register("emailConsent")}
+            className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer"
+            aria-invalid={!!errors.emailConsent}
+          />
+          <label
+            htmlFor="contact-email-consent"
+            className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
+          >
+            I consent to receive email follow-up about this inquiry from
+            Blueprints &amp; Bookkeeping.
+          </label>
+        </div>
+
+        <div className="flex items-start gap-3">
           <input
             id="contact-sms-consent"
             type="checkbox"
             {...register("smsConsent")}
-            className="h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer"
-            aria-invalid={!!errors.smsConsent}
+            className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer"
           />
+          <label
+            htmlFor="contact-sms-consent"
+            className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
+          >
+            I consent to SMS outreach at my provided number. Message/data rates
+            may apply. Reply STOP to opt out.
+          </label>
         </div>
-        <label
-          htmlFor="contact-sms-consent"
-          className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none min-h-[44px] flex items-center"
-        >
-          I agree to receive text messages and phone calls from Blueprints &amp;
-          Bookkeeping at my provided contact number. Message and data rates may
-          apply. Reply STOP to opt out.
-        </label>
+
+        <div className="flex items-start gap-3">
+          <input
+            id="contact-phone-consent"
+            type="checkbox"
+            {...register("phoneConsent")}
+            className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer"
+          />
+          <label
+            htmlFor="contact-phone-consent"
+            className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
+          >
+            I consent to phone call outreach about this inquiry.
+          </label>
+        </div>
+
+        {!watch("smsConsent") && (
+          <p className="text-[11px] text-muted-foreground">
+            SMS is optional. If left unchecked, we will not send SMS outreach.
+          </p>
+        )}
       </div>
-      {errors.smsConsent && (
+      {errors.emailConsent && (
         <p
-          id="contact-sms-consent-error"
+          id="contact-email-consent-error"
           role="alert"
           className="text-destructive text-xs -mt-2"
         >
-          {errors.smsConsent.message}
+          {errors.emailConsent.message}
         </p>
       )}
       {submitError && (
@@ -376,6 +467,9 @@ function BookkeeperIntakeForm() {
       budgetUnknown: false,
       deadlinePressure: "No hard deadline",
       additionalComments: "",
+      emailConsent: true,
+      smsConsent: false,
+      phoneConsent: false,
       website: "",
     },
   });
@@ -412,7 +506,14 @@ function BookkeeperIntakeForm() {
             "Additional comments:",
             data.additionalComments,
           ].join("\n"),
-          smsConsent: false,
+          smsConsent: data.smsConsent,
+          consent: {
+            email: data.emailConsent,
+            sms: data.smsConsent,
+            phone: data.phoneConsent,
+            source: CONTACT_CONSENT_SOURCE,
+            legalTextVersion: CONTACT_CONSENT_LEGAL_TEXT_VERSION,
+          },
           website: data.website || "",
         },
       });
@@ -718,6 +819,70 @@ function BookkeeperIntakeForm() {
         )}
       </div>
 
+      <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-4 space-y-4">
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Communication consent
+        </p>
+        <div className="flex items-start gap-3">
+          <input
+            id="bookkeeper-email-consent"
+            type="checkbox"
+            {...register("emailConsent")}
+            className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer"
+            aria-invalid={!!errors.emailConsent}
+          />
+          <label
+            htmlFor="bookkeeper-email-consent"
+            className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
+          >
+            I consent to email follow-up regarding this intake request.
+          </label>
+        </div>
+        {errors.emailConsent && (
+          <p role="alert" className="text-destructive text-xs -mt-1">
+            {errors.emailConsent.message}
+          </p>
+        )}
+
+        <div className="flex items-start gap-3">
+          <input
+            id="bookkeeper-sms-consent"
+            type="checkbox"
+            {...register("smsConsent")}
+            className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer"
+          />
+          <label
+            htmlFor="bookkeeper-sms-consent"
+            className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
+          >
+            I consent to SMS outreach. Message/data rates may apply. Reply STOP
+            to opt out.
+          </label>
+        </div>
+
+        <div className="flex items-start gap-3">
+          <input
+            id="bookkeeper-phone-consent"
+            type="checkbox"
+            {...register("phoneConsent")}
+            className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer"
+          />
+          <label
+            htmlFor="bookkeeper-phone-consent"
+            className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
+          >
+            I consent to phone call outreach regarding my intake.
+          </label>
+        </div>
+
+        {!watch("smsConsent") && (
+          <p className="text-[11px] text-muted-foreground">
+            SMS is optional. If unchecked, no SMS outreach will occur from this
+            intake submission.
+          </p>
+        )}
+      </div>
+
       {submitError && (
         <p role="alert" className="text-destructive text-sm -mt-2">
           {submitError}
@@ -742,10 +907,17 @@ function BookkeeperIntakeForm() {
 
 export default function Contact() {
   const search = window.location.search;
+  const searchParams = useMemo(() => new URLSearchParams(search), [search]);
   const isBookkeeperIntent = useMemo(() => {
-    const intent = new URLSearchParams(search).get("intent");
+    const intent = searchParams.get("intent");
     return intent === BOOKKEEPER_INTENT;
-  }, [search]);
+  }, [searchParams]);
+  const defaultClientMeetingMessage = useMemo(() => {
+    const requestedMessage = searchParams.get("message");
+    if (requestedMessage) return requestedMessage;
+
+    return "Current client meeting request: Please include your business name, client email on file, and preferred date/time window. Tea will verify details against the active client roster and send a confirmed meeting invite. If no active record is found, you will still receive follow-up with next-step options.";
+  }, [searchParams]);
 
   usePageTitle(isBookkeeperIntent ? "Add Me as Your Bookkeeper" : "Contact");
 
@@ -788,6 +960,39 @@ export default function Contact() {
         </div>
 
         {!isBookkeeperIntent && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+            <a
+              href={PHONE_HREF}
+              className="glass-card rounded-xl px-5 py-4 flex items-center gap-3 hover:border-accent/30 transition-colors no-underline"
+            >
+              <Phone size={16} className="text-accent shrink-0" />
+              <div>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+                  Call or Text
+                </p>
+                <p className="text-sm font-semibold text-white">
+                  {PHONE_DISPLAY}
+                </p>
+              </div>
+            </a>
+            <a
+              href={`mailto:${EMAIL_ADDRESS}`}
+              className="glass-card rounded-xl px-5 py-4 flex items-center gap-3 hover:border-accent/30 transition-colors no-underline"
+            >
+              <Mail size={16} className="text-accent shrink-0" />
+              <div>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+                  Email
+                </p>
+                <p className="text-sm font-semibold text-white">
+                  {EMAIL_ADDRESS}
+                </p>
+              </div>
+            </a>
+          </div>
+        )}
+
+        {!isBookkeeperIntent && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-14">
             {contactCards.map((card) => {
               const CardIcon = card.icon;
@@ -828,6 +1033,11 @@ export default function Contact() {
                   {...(card.newTab
                     ? { target: "_blank", rel: "noopener noreferrer" }
                     : {})}
+                  onClick={() => {
+                    if (card.analyticsEvent) {
+                      trackEvent(card.analyticsEvent, { source: "contact" });
+                    }
+                  }}
                   className="no-underline"
                 >
                   {inner}
@@ -846,7 +1056,11 @@ export default function Contact() {
               </h2>
             </div>
             <div className="glass-card rounded-2xl p-7">
-              {isBookkeeperIntent ? <BookkeeperIntakeForm /> : <MessageForm />}
+              {isBookkeeperIntent ? (
+                <BookkeeperIntakeForm />
+              ) : (
+                <MessageForm defaultMessage={defaultClientMeetingMessage} />
+              )}
             </div>
           </div>
 
@@ -854,7 +1068,7 @@ export default function Contact() {
             <div className="flex items-center gap-3 mb-3">
               <div className="accent-bar" />
               <h2 className="text-xs font-mono font-semibold uppercase tracking-widest text-accent">
-                {isBookkeeperIntent ? "What Happens Next" : "Direct Contact"}
+                {isBookkeeperIntent ? "What Happens Next" : "What to Expect"}
               </h2>
             </div>
             {isBookkeeperIntent ? (
@@ -914,43 +1128,26 @@ export default function Contact() {
                 </div>
               </div>
             ) : (
-              <div className="glass-card rounded-2xl p-7 space-y-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
-                    <Phone size={16} className="text-accent" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-white">
-                      <a
-                        href="tel:+15413198654"
-                        className="hover:text-accent transition-colors"
-                      >
-                        (541) 319-8654
-                      </a>
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Voicemail & text welcome
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
-                    <Mail size={16} className="text-accent" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-white">
-                      <a
-                        href="mailto:tea@blueprintsandbookkeeping.com"
-                        className="hover:text-accent transition-colors"
-                      >
-                        tea@blueprintsandbookkeeping.com
-                      </a>
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Replies within one business day
-                    </p>
-                  </div>
+              <div className="glass-card rounded-2xl p-7 space-y-5">
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Response within{" "}
+                  <span className="font-semibold text-white">
+                    1 business day
+                  </span>
+                  . You will get a clear next step after submission, whether you
+                  are a new lead or an existing client.
+                </p>
+                <div className="rounded-xl border border-accent/20 bg-accent/[0.06] px-4 py-4">
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    <span className="font-semibold text-white">
+                      Lead routing:
+                    </span>{" "}
+                    Discovery requests are prioritized for onboarding and
+                    brand-growth planning. Client-only meeting requests are
+                    verified against active records before confirmation, while
+                    unmatched requests are still routed to a discovery follow-up
+                    so no opportunity is lost.
+                  </p>
                 </div>
               </div>
             )}

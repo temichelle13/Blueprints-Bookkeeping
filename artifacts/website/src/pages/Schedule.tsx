@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
+import { trackEvent } from "@/lib/analytics";
 
 const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
+const EMERGENCY_REQUEST_URL =
+  "mailto:tea@blueprintsandbookkeeping.com?subject=Emergency%20%2F%20Expedited%20Request&body=Hi%20Tea%2C%0A%0AI%20need%20an%20urgent%20bookkeeping%20review%20due%20to%20deadline%20pressure%20(tax%2C%20lender%2C%20or%20filing).%20Please%20contact%20me%20as%20soon%20as%20possible.%0A%0AName%3A%0ABusiness%3A%0ABest%20phone%20number%3A";
 
 function CalendlyEmbed() {
   const [loaded, setLoaded] = useState(false);
@@ -50,6 +53,27 @@ export default function Schedule() {
       </section>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="rounded-2xl border border-red-400/25 bg-red-500/[0.08] p-5 mb-6">
+          <h2 className="text-lg font-display font-semibold text-white mb-2">
+            Emergency / Expedited Request
+          </h2>
+          <p className="text-sm text-muted-foreground leading-relaxed mb-3">
+            If you are under urgent tax, lender, or filing pressure, use the
+            expedited request link so Tea can triage priority timing separately
+            from standard discovery calls.
+          </p>
+          <a
+            href={EMERGENCY_REQUEST_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() =>
+              trackEvent("Emergency Request Click", { source: "schedule" })
+            }
+            className="inline-flex items-center justify-center rounded-lg bg-red-500 px-4 py-2.5 text-sm font-semibold text-white no-underline hover:opacity-90 transition-opacity"
+          >
+            Open Emergency / Expedited Request
+          </a>
+        </div>
         <div className="glass-card rounded-2xl overflow-hidden">
           <CalendlyEmbed />
         </div>
