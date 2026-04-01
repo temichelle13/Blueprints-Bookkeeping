@@ -97,7 +97,19 @@ function main() {
     (match) => (match[1] ?? "").trim(),
   );
 
-  const sitemapUrls = sitemapLocs.map((loc) => new URL(loc));
+  const sitemapUrls = sitemapLocs.map((loc) => {
+    try {
+      return new URL(loc);
+    } catch (error) {
+      fail(
+        `Invalid <loc> entry in sitemap.xml: "${loc}". Underlying error: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
+    }
+    // This line is unreachable if fail() throws or exits, but satisfies TypeScript.
+    return new URL(PRODUCTION_ORIGIN);
+  });
   const nonProductionSitemapUrls = sitemapUrls.filter(
     (url) => `${url.protocol}//${url.host}` !== PRODUCTION_ORIGIN,
   );
