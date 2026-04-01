@@ -7,12 +7,14 @@ import {
   ArrowRight,
   CalendarDays,
   ClipboardList,
+  AlertCircle,
 } from "lucide-react";
 import { FooterNewsletterSignup } from "@/components/NewsletterSignup";
 import { openCookieConsentPreferences } from "@/components/CookieConsent";
 import { footerCredentialBadges } from "@/data/credentials";
 
 const BOOKKEEPER_EMAIL = "tea@blueprintsandbookkeeping.com";
+const EMERGENCY_EMAIL_SUBJECT = "Urgent%3A%20Emergency%20Bookkeeping%20Help%20Needed";
 const BUSINESS_PHONE = "(541) 319-8654";
 const BUSINESS_PHONE_HREF = "tel:+15413198654";
 const SCHEDULE_PATH = "/schedule";
@@ -172,6 +174,13 @@ export function Footer() {
             >
               Cookie Preferences
             </button>
+            <a
+              href={`mailto:${BOOKKEEPER_EMAIL}?subject=${EMERGENCY_EMAIL_SUBJECT}`}
+              className="mt-3 inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-destructive/5 px-4 py-2 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10"
+            >
+              <AlertCircle size={14} aria-hidden="true" />
+              Emergency? Get urgent help
+            </a>
           </div>
 
           <div>

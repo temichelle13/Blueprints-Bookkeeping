@@ -210,6 +210,11 @@ router.post("/onboarding", async (req, res): Promise<void> => {
       })
       .returning();
 
+    if (!submission) {
+      res.status(500).json({ error: "Failed to save onboarding submission." });
+      return;
+    }
+
     const [inquiry] = await db
       .insert(contactInquiriesTable)
       .values({
@@ -223,17 +228,19 @@ router.post("/onboarding", async (req, res): Promise<void> => {
       })
       .returning();
 
-    contractService
-      .processFormSubmission({
-        formType: "self_service_onboarding",
-        name: clientName,
-        email: clientEmail,
-        servicesInterested: ["bookkeeping"],
-        contactInquiryId: inquiry!.id,
-      })
-      .catch((err) => {
-        console.error("Contract automation error (non-blocking):", err);
-      });
+    if (inquiry) {
+      contractService
+        .processFormSubmission({
+          formType: "self_service_onboarding",
+          name: clientName,
+          email: clientEmail,
+          servicesInterested: ["bookkeeping"],
+          contactInquiryId: inquiry.id,
+        })
+        .catch((err) => {
+          console.error("Contract automation error (non-blocking):", err);
+        });
+    }
 
     const resend = getResend();
     if (resend) {
@@ -281,7 +288,7 @@ router.post("/onboarding", async (req, res): Promise<void> => {
       success: true,
       message:
         "Onboarding form submitted successfully. Contracts will be sent shortly.",
-      id: submission?.id,
+      id: submission.id,
     });
   } catch (err) {
     console.error("Onboarding submission error:", err);

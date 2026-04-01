@@ -1,7 +1,7 @@
 interface OnboardingRouteContext {
-  plan?: string | null | undefined;
-  service?: string | null | undefined;
-  sessionId?: string | null | undefined;
+  plan?: string | null;
+  service?: string | null;
+  sessionId?: string | null;
 }
 
 export function getOnboardingContextFromSearch(
