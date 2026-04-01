@@ -110,6 +110,34 @@ export default function Home() {
             </Link>
           </motion.div>
 
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="mt-6 w-full max-w-3xl rounded-xl border border-white/15 bg-white/[0.04] backdrop-blur-sm p-4 sm:p-5 text-left"
+          >
+            <p className="text-sm text-foreground">
+              <span className="font-semibold text-white">
+                Data Protection &amp; Professional Boundaries:
+              </span>{" "}
+              Your financial records are handled in the U.S., access is limited
+              to authorized personnel, and we use secure systems with encrypted
+              transmission for client data.
+            </p>
+            <p className="mt-2 text-xs text-muted-foreground">
+              Bookkeeping services are not tax or legal advice. For those
+              matters, work with a licensed tax professional or attorney.
+            </p>
+            <div className="mt-3 flex items-center gap-3 text-xs sm:text-sm">
+              <Link href="/privacy" className="text-accent hover:underline">
+                Privacy Policy
+              </Link>
+              <span className="text-muted-foreground" aria-hidden="true">•</span>
+              <Link href="/terms" className="text-accent hover:underline">
+                Terms of Service
+              </Link>
+            </div>
+          </motion.div>
           <HeroCtaTrustNote />
         </div>
 
