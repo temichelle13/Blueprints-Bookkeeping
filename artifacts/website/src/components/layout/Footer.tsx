@@ -45,7 +45,14 @@ const urgentLinks = [
   },
 ] as const;
 
-const footerBuckets = [
+type FooterBucketLink = { label: string; href: string };
+type FooterBucket = {
+  title: string;
+  links: ReadonlyArray<FooterBucketLink>;
+  showCookiePreferences?: boolean;
+};
+
+const footerBuckets: FooterBucket[] = [
   {
     title: "Services",
     links: [
@@ -75,6 +82,7 @@ const footerBuckets = [
   },
   {
     title: "Legal & Support",
+    showCookiePreferences: true,
     links: [
       { label: "Privacy Policy", href: "/privacy" },
       { label: "Terms of Service", href: "/terms" },
@@ -82,7 +90,7 @@ const footerBuckets = [
       { label: "Unsubscribe", href: "/unsubscribe" },
     ],
   },
-] as const;
+];
 
 export function Footer() {
   const [location] = useLocation();
@@ -223,12 +231,14 @@ export function Footer() {
                         <ArrowRight
                           size={11}
                           className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all"
+                          aria-hidden="true"
+                          focusable="false"
                         />
                       </Link>
                     </li>
                   ))}
                 </ul>
-                {bucket.title === "Legal & Support" && (
+                {bucket.showCookiePreferences && (
                   <button
                     type="button"
                     onClick={openCookieConsentPreferences}
