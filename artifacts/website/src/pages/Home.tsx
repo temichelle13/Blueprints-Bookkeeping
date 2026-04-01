@@ -30,9 +30,11 @@ export default function Home() {
   return (
     <div>
       <SEO
-        description="Your Blueprint to Business Success. Advanced bookkeeping and professional business plans for complex, high-growth businesses. Based in Roseburg, Oregon — serving nationwide."
+        title="Roseburg, Oregon Bookkeeping, Cleanup, Monthly Close & Business Plans"
+        description="Decision-stage bookkeeping support for founders: cleanup and catch-up bookkeeping, monthly close management, and professionally written business plans. Based in Roseburg, Oregon and serving clients nationwide."
         path="/"
-        jsonLd={localBusinessSchema()}
+        ogImage="https://blueprintsandbookkeeping.com/opengraph.jpg"
+        jsonLd={homepageSchemas()}
       />
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
