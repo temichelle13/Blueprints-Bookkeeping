@@ -49,8 +49,8 @@ const onboardingLimiter = createSubmissionRateLimiter({
 router.post(
   "/onboarding",
   onboardingLimiter,
-  withSubmissionMonitoring("onboarding"),
   honeypotProtection("onboarding"),
+  withSubmissionMonitoring("onboarding"),
   turnstileProtection({
     routeId: "onboarding",
     required: false,
