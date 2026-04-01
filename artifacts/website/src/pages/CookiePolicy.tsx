@@ -37,7 +37,7 @@ export default function CookiePolicy() {
             Cookie Policy
           </h1>
           <p className="text-muted-foreground text-sm">
-            Last updated: March 2026
+            Last updated: March 31, 2026
           </p>
         </div>
       </section>

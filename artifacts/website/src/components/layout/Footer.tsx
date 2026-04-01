@@ -7,31 +7,62 @@ import {
   ArrowRight,
   CalendarDays,
   ClipboardList,
+  AlertTriangle,
 } from "lucide-react";
 import { FooterNewsletterSignup } from "@/components/NewsletterSignup";
 import { openCookieConsentPreferences } from "@/components/CookieConsent";
 import { footerCredentialBadges } from "@/data/credentials";
+import { trackEvent } from "@/lib/analytics";
 
 const BOOKKEEPER_EMAIL = "tea@blueprintsandbookkeeping.com";
 const BUSINESS_PHONE = "(541) 319-8654";
 const BUSINESS_PHONE_HREF = "tel:+15413198654";
 const SCHEDULE_PATH = "/schedule";
 const GET_STARTED_PATH = "/get-started";
+const EMERGENCY_CALENDLY_URL =
+  "https://calendly.com/tea-blueprintsandbookkeeping/30min";
 
-const contactLinks = [
+const urgentLinks = [
+const EMERGENCY_REQUEST_URL =
+  "mailto:tea@blueprintsandbookkeeping.com?subject=Emergency%20%2F%20Expedited%20Request&body=Hi%20Tea%2C%0A%0AI%20need%20an%20urgent%20bookkeeping%20review%20due%20to%20deadline%20pressure%20(tax%2C%20lender%2C%20or%20filing).%20Please%20contact%20me%20as%20soon%20as%20possible.%0A%0AName%3A%0ABusiness%3A%0ABest%20phone%20number%3A";
+
+interface ContactLink {
+  label: string;
+  href: string;
+  description: string;
+  icon: typeof CalendarDays;
+  isExternal: boolean;
+  newTab?: boolean;
+  analyticsEvent?: string;
+}
+
+const contactLinks: ContactLink[] = [
   {
-    label: "Book a discovery call",
+    label: "Book a call",
     href: SCHEDULE_PATH,
     description: "Choose a time that works for you.",
     icon: CalendarDays,
     isExternal: false,
   },
   {
-    label: "Start the intake",
+    label: "Start intake",
     href: GET_STARTED_PATH,
     description: "Share your details and get started.",
     icon: ClipboardList,
     isExternal: false,
+  },
+  {
+    label: "Emergency / Expedited Request",
+    href: EMERGENCY_CALENDLY_URL,
+    description: "Priority scheduling for urgent bookkeeping support.",
+    icon: AlertTriangle,
+    href: EMERGENCY_REQUEST_URL,
+    description:
+      "Use this for urgent deadlines, lender requests, or tax-time pressure.",
+    icon: ClipboardList,
+    isExternal: true,
+    newTab: true,
+    analyticsEvent: "Emergency Request Click",
   },
   {
     label: BOOKKEEPER_EMAIL,
@@ -40,14 +71,54 @@ const contactLinks = [
     icon: Mail,
     isExternal: true,
   },
-  {
-    label: BUSINESS_PHONE,
-    href: BUSINESS_PHONE_HREF,
-    description: "Call or text for support.",
-    icon: Phone,
-    isExternal: true,
-  },
 ] as const;
+
+type FooterBucketLink = { label: string; href: string };
+type FooterBucket = {
+  title: string;
+  links: ReadonlyArray<FooterBucketLink>;
+  showCookiePreferences?: boolean;
+};
+
+const footerBuckets: FooterBucket[] = [
+  {
+    title: "Services",
+    links: [
+      { label: "Advanced Bookkeeping", href: "/services/bookkeeping" },
+      { label: "Business Plans", href: "/services/business-plans" },
+      { label: "Tax Partner Network", href: "/tax-partners" },
+      { label: "Pricing", href: "/pricing" },
+    ],
+  },
+  {
+    title: "Company",
+    links: [
+      { label: "About Tea", href: "/about" },
+      { label: "Credentials", href: "/about/credentials" },
+      { label: "Industries", href: "/industries" },
+      { label: "Referral Program", href: "/referral" },
+    ],
+  },
+  {
+    title: "Resources",
+    links: [
+      { label: "Blog", href: "/blog" },
+      { label: "FAQ", href: "/faq" },
+      { label: "Accessibility", href: "/accessibility" },
+      { label: "Site Feedback", href: "/feedback" },
+    ],
+  },
+  {
+    title: "Legal & Support",
+    showCookiePreferences: true,
+    links: [
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Terms of Service", href: "/terms" },
+      { label: "Cookie Policy", href: "/cookies" },
+      { label: "Unsubscribe", href: "/unsubscribe" },
+    ],
+  },
+];
 
 export function Footer() {
   const [location] = useLocation();
@@ -110,7 +181,6 @@ export function Footer() {
                 Roseburg, Oregon (Remote Nationwide)
               </div>
             </div>
-          </div>
 
           <div>
             <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-5">
@@ -139,26 +209,90 @@ export function Footer() {
                           aria-hidden="true"
                         />
                       </span>
-                      <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
-                        {item.description}
+                      <span className="min-w-0 flex-1">
+                        <span className="flex items-center gap-2 font-medium text-foreground/90 group-hover:text-foreground transition-colors">
+                          <span>{item.label}</span>
+                          <ArrowRight
+                            size={12}
+                            className="opacity-0 -translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
+                            aria-hidden="true"
+                          />
+                        </span>
+                        <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
+                          {item.description}
+                        </span>
                       </span>
-                    </span>
-                  </>
-                );
+                    </>
+                  );
 
+                  return (
+                    <li key={item.label}>
+                      {item.isExternal ? (
+                        <a
+                          href={item.href}
+                          className={linkClassName}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {content}
+                        </a>
+                      ) : (
+                        <Link
+                          href={item.href}
+                          className={linkClassName}
+                          onClick={scrollToTopOnSameRoute(item.href)}
+                        >
+                          {content}
+                        </Link>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
+
+          <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
+            {footerBuckets.map((bucket) => (
+              <div key={bucket.title}>
+                <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-5">
+                  {bucket.title}
+                </h3>
+                <ul className="space-y-2.5">
+                  {bucket.links.map((item) => (
+                    <li key={item.href}>
                 return (
                   <li key={item.label}>
                     {item.isExternal ? (
-                      <a href={item.href} className={linkClassName}>
+                      <a
+                        href={item.href}
+                        {...(item.newTab
+                          ? { target: "_blank", rel: "noopener noreferrer" }
+                          : {})}
+                        onClick={() => {
+                          if (item.analyticsEvent) {
+                            trackEvent(item.analyticsEvent, {
+                              source: "footer",
+                            });
+                          }
+                        }}
+                        className={linkClassName}
+                      >
                         {content}
                       </a>
                     ) : (
                       <Link
                         href={item.href}
-                        className={linkClassName}
                         onClick={scrollToTopOnSameRoute(item.href)}
+                        className="text-muted-foreground hover:text-accent text-sm transition-colors inline-flex items-center gap-1 group"
                       >
-                        {content}
+                        {item.label}
+                        <ArrowRight
+                          size={11}
+                          className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all"
+                          aria-hidden="true"
+                          focusable="false"
+                        />
                       </Link>
                     )}
                   </li>
@@ -221,26 +355,21 @@ export function Footer() {
                     onClick={scrollToTopOnSameRoute(item.href)}
                     className="text-muted-foreground hover:text-accent text-sm transition-colors inline-flex items-center gap-1 group rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
-                    {item.label}
-                    <ArrowRight
-                      size={11}
-                      className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all"
-                    />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-5">
-              Stay in the Loop
-            </h3>
-            <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
-              Founder-focused financial tips and updates — no spam, unsubscribe
-              any time.
-            </p>
-            <FooterNewsletterSignup />
+                    Cookie Preferences
+                  </button>
+                )}
+              </div>
+            ))}
+            <div className="md:col-span-2 lg:col-span-4 pt-2">
+              <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-4">
+                Stay in the Loop
+              </h3>
+              <p className="text-muted-foreground text-sm mb-4 leading-relaxed max-w-2xl">
+                Founder-focused financial tips and updates — no spam,
+                unsubscribe any time.
+              </p>
+              <FooterNewsletterSignup />
+            </div>
           </div>
         </div>
         <div className="glow-line mb-6" />
@@ -249,14 +378,14 @@ export function Footer() {
           not provide tax preparation, tax filing, legal advice, or licensed
           investment counsel. References to tax forms describe bookkeeping
           contexts only. For tax and legal matters, please consult a licensed
-          professional.{" "}
+          professional.{' '}
           <Link
             href="/faq"
             className="underline underline-offset-2 hover:text-muted-foreground transition-colors"
           >
             Learn more in our FAQ
-          </Link>{" "}
-          or review our{" "}
+          </Link>{' '}
+          or review our{' '}
           <Link
             href="/terms"
             className="underline underline-offset-2 hover:text-muted-foreground transition-colors"
@@ -266,7 +395,7 @@ export function Footer() {
           .
         </p>
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground">
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap justify-center md:justify-start items-center gap-4">
             <p>
               &copy; {new Date().getFullYear()} Blueprints & Bookkeeping, LLC.
               All rights reserved.
@@ -295,7 +424,7 @@ export function Footer() {
               href="/privacy"
               className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              Privacy Policy
+              Privacy
             </Link>
             <Link
               href="/terms"
