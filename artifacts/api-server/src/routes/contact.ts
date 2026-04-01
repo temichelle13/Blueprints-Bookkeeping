@@ -1,14 +1,15 @@
-<<<<<<< codex/harden-contact-rate-limiting
 import { Router, type IRouter } from "express";
 import { db, contactInquiriesTable } from "@workspace/db";
-=======
-import { Router, type IRouter, type Request, type Response } from "express";
-import rateLimit from "express-rate-limit";
->>>>>>> master
 import { SubmitContactFormBody } from "@workspace/api-zod";
 import { tryGetResend, tryGetOwnerEmail, EMAIL_FROM } from "../lib/email";
 import { logger } from "../lib/logger";
-<<<<<<< codex/harden-contact-rate-limiting
+import {
+  honeypotProtection,
+  createSubmissionRateLimiter,
+  enforceMaxLength,
+  validateEmailStrict,
+  withSubmissionMonitoring,
+} from "../middleware/public-submissions";
 import { contactLimiter } from "./contact-rate-limit";
 
 const router: IRouter = Router();
@@ -21,102 +22,86 @@ router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
         "Thank you for your inquiry! We will be in touch within 48 hours.",
       id: 0,
     });
-=======
-import type { Resend } from "resend";
 
 const router: IRouter = Router();
 
-const contactLimiter = rateLimit({
+const contactSubmissionLimiter = createSubmissionRateLimiter({
+  routeId: "contact",
   windowMs: 15 * 60 * 1000,
-  max: 10,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: {
-    error: "Too many submissions from this IP. Please try again later.",
-  },
+  max: 8,
 });
 
-type ContactEmailDeps = {
-  tryGetResend: () => Resend | null;
-  tryGetOwnerEmail: () => string | null;
-};
+router.post(
+  "/contact",
+  contactSubmissionLimiter,
+  honeypotProtection("contact"),
+  withSubmissionMonitoring("contact"),
+  async (req, res): Promise<void> => {
+    if (
+      !enforceMaxLength("contact", req, res, [
+        { key: "name", max: 120, required: true },
+        { key: "email", max: 320, required: true },
+        { key: "phone", max: 32 },
+        { key: "businessName", max: 160 },
+        { key: "industry", max: 120 },
+        { key: "monthlyRevenueRange", max: 64 },
+        { key: "preferredContactMethod", max: 64 },
+        { key: "message", max: 2000 },
+        { key: "biggestChallenge", max: 2000 },
+      ])
+    ) {
+      return;
+    }
 
-type ContactHandlerDeps = ContactEmailDeps & {
-  insertInquiry: (values: Record<string, unknown>) => Promise<{
-    id: number;
-  }>;
-  isEmailSuppressed: (email: string) => Promise<boolean>;
-  logWarn: (message: string, context?: Record<string, unknown>) => void;
-  logError: (
-    message: string,
-    error?: Error,
-    context?: Record<string, unknown>,
-  ) => void;
-  processFormSubmission: (data: {
-    formType: string;
-    name: string;
-    email: string;
-    servicesInterested?: string[] | null;
-    contactInquiryId: number;
-  }) => Promise<unknown>;
-};
+    const parsed = SubmitContactFormBody.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: parsed.error.message });
+      return;
+    }
 
-function createDefaultDeps(): ContactHandlerDeps {
-  return {
-    tryGetResend,
-    tryGetOwnerEmail,
-    insertInquiry: async (values) => {
-      const { db, contactInquiriesTable } = await import("@workspace/db");
-      const [inquiry] = await db
-        .insert(contactInquiriesTable)
-        .values(values)
-        .returning();
-      if (!inquiry) {
-        throw new Error("Failed to insert contact inquiry record");
-      }
-      return { id: inquiry.id };
-    },
-    isEmailSuppressed: async (email) => {
-      const suppression = await import("../lib/email-suppression");
-      return suppression.isEmailSuppressed(email);
-    },
-    logWarn: (message, context) => logger.warn(message, context),
-    logError: (message, error, context) =>
-      logger.error(message, error, context),
-    processFormSubmission: async (data) => {
-      const contractService = await import("../lib/contract-service");
-      return contractService.processFormSubmission(data);
-    },
-  };
-}
+    const normalizedEmail = validateEmailStrict(parsed.data.email);
+    if (!normalizedEmail) {
+      res.status(400).json({ error: "Please provide a valid email address." });
+      return;
+    }
 
-async function sendInquiryEmails(
-  deps: ContactHandlerDeps,
-  inquiryId: number,
-  data: {
-    name: string;
-    email: string;
-    phone?: string | null;
-    businessName?: string | null;
-    industry?: string | null;
-    servicesInterested?: string[] | null;
-    monthlyRevenueRange?: string | null;
-    preferredContactMethod?: string | null;
-    smsConsent: boolean;
-    biggestChallenge?: string | null;
-    message?: string | null;
-  },
-): Promise<void> {
-  const resend = deps.tryGetResend();
-  if (!resend) {
-    deps.logWarn(
-      "Skipping contact inquiry emails because provider is unavailable",
-      {
-        inquiryId,
-        reason: "resend_unavailable",
-      },
-    );
->>>>>>> master
+    const data = {
+      ...parsed.data,
+      email: normalizedEmail,
+    };
+
+    const [inquiry] = await db
+      .insert(contactInquiriesTable)
+      .values({
+        formType: data.formType,
+        name: data.name,
+        email: data.email,
+        phone: data.phone ?? null,
+        message: data.message ?? null,
+        businessName: data.businessName ?? null,
+        industry: data.industry ?? null,
+        servicesInterested: data.servicesInterested ?? null,
+        monthlyRevenueRange: data.monthlyRevenueRange ?? null,
+        biggestChallenge: data.biggestChallenge ?? null,
+        preferredContactMethod: data.preferredContactMethod ?? null,
+        smsConsent: data.smsConsent,
+      })
+      .returning();
+
+    if (!inquiry) {
+      throw new Error("Failed to insert contact inquiry record");
+    }
+
+    const suppressed = await isEmailSuppressed(data.email);
+
+    const resend = getResend();
+    if (resend) {
+      const servicesLabel =
+        Array.isArray(data.servicesInterested) && data.servicesInterested.length
+          ? data.servicesInterested.join(", ")
+          : "Not specified";
+
+      const notifyHtml = `
     return;
   }
 
@@ -181,7 +166,7 @@ async function sendInquiryEmails(
         </div>
       </div>`;
 
-  const confirmHtml = `
+      const confirmHtml = `
       <div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
         <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
           <h1 style="color:white;margin:0;font-size:20px;">We've got your message.</h1>
@@ -201,102 +186,37 @@ async function sendInquiryEmails(
         </div>
       </div>`;
 
-  const emailPromises: Promise<unknown>[] = [
-    resend.emails.send({
-      from: EMAIL_FROM.default,
-      to: ownerEmail,
-      replyTo: data.email,
-      subject: `New Inquiry: ${data.name}${data.businessName ? ` — ${data.businessName}` : ""}`,
-      html: notifyHtml,
-    }),
-  ];
+      const emailPromises: Promise<unknown>[] = [
+        resend.emails.send({
+          from: EMAIL_FROM.default,
+          to: getOwnerEmail(),
+          replyTo: data.email,
+          subject: `New Inquiry: ${data.name}${data.businessName ? ` — ${data.businessName}` : ""}`,
+          html: notifyHtml,
+        }),
+      ];
 
-  if (suppressed) {
-    deps.logWarn(
-      "Skipping confirmation email for suppressed contact inquiry email",
-      {
-        inquiryId,
-        email: data.email,
-        reason: "email_suppressed",
-      },
-    );
-  } else {
-    emailPromises.push(
-      resend.emails.send({
-        from: EMAIL_FROM.default,
-        to: data.email,
-        subject: "We received your message — Blueprints & Bookkeeping",
-        html: confirmHtml,
-      }),
-    );
-  }
+      if (suppressed) {
+        logger.warn("Skipping confirmation email for suppressed address", {
+          email: data.email,
+        });
+      } else {
+        emailPromises.push(
+          resend.emails.send({
+            from: EMAIL_FROM.default,
+            to: data.email,
+            subject: "We received your message — Blueprints & Bookkeeping",
+            html: confirmHtml,
+          }),
+        );
+      }
 
-  const settled = await Promise.allSettled(emailPromises);
-  settled.forEach((result, index) => {
-    if (result.status === "rejected") {
-      deps.logError(
-        "Contact inquiry email send failed",
-        result.reason instanceof Error ? result.reason : undefined,
-        {
-          inquiryId,
-          emailType:
-            index === 0 ? "owner_notification" : "client_confirmation",
-          reason:
-            result.reason instanceof Error
-              ? result.reason.message
-              : String(result.reason),
-        },
-      );
+      await Promise.allSettled(emailPromises);
     }
   });
 }
 
-export function createContactHandler(
-  deps: ContactHandlerDeps = createDefaultDeps(),
-) {
-  return async (req: Request, res: Response): Promise<void> => {
-    if (req.body?.website) {
-      res.status(201).json({
-        success: true,
-        message:
-          "Thank you for your inquiry! We will be in touch within 48 hours.",
-        id: 0,
-      });
-      return;
-    }
-
-    const parsed = SubmitContactFormBody.safeParse(req.body);
-    if (!parsed.success) {
-      res.status(400).json({ error: parsed.error.message });
-      return;
-    }
-
-    const data = parsed.data;
-
-    const inquiry = await deps.insertInquiry({
-      formType: data.formType,
-      name: data.name,
-      email: data.email,
-      phone: data.phone ?? null,
-      message: data.message ?? null,
-      businessName: data.businessName ?? null,
-      industry: data.industry ?? null,
-      servicesInterested: data.servicesInterested ?? null,
-      monthlyRevenueRange: data.monthlyRevenueRange ?? null,
-      biggestChallenge: data.biggestChallenge ?? null,
-      preferredContactMethod: data.preferredContactMethod ?? null,
-      smsConsent: data.smsConsent,
-    });
-
-    sendInquiryEmails(deps, inquiry.id, data).catch((err) => {
-      deps.logError(
-        "Contact inquiry email task failed unexpectedly",
-        err instanceof Error ? err : undefined,
-        { inquiryId: inquiry.id },
-      );
-    });
-
-    deps
+    contractService
       .processFormSubmission({
         formType: data.formType,
         name: data.name,
@@ -314,9 +234,7 @@ export function createContactHandler(
         "Thank you for your inquiry! We will be in touch within 48 hours.",
       id: inquiry.id,
     });
-  };
-}
-
-router.post("/contact", contactLimiter, createContactHandler());
+  },
+);
 
 export default router;
