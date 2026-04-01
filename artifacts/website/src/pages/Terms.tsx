@@ -233,7 +233,7 @@ export default function Terms() {
               </p>
             </div>
             <p className="mt-4 text-xs text-muted-foreground/80">
-              Important: This policy is provided for general informational
+              Important: These Terms are provided for general informational
               purposes and should be reviewed by qualified business counsel
               before publication or reliance.
             </p>
