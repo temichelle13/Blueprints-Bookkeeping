@@ -21,6 +21,10 @@ import { SEO } from "@/components/SEO";
 import { useContactMutation } from "@/hooks/use-contact";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
+import {
+  BOOKKEEPER_INTENT,
+  isBookkeeperIntentParam,
+} from "@/lib/contact-intent";
 
 const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
 const EMERGENCY_CALENDLY_URL =
@@ -29,6 +33,8 @@ const PHONE_DISPLAY = "(541) 319-8654";
 const PHONE_HREF = "tel:+15413198654";
 const EMAIL_ADDRESS = "tea@blueprintsandbookkeeping.com";
 const BOOKKEEPER_INTENT = "bookkeeper";
+const CONTACT_CONSENT_SOURCE = "contact_page";
+const CONTACT_CONSENT_LEGAL_TEXT_VERSION = "contact-consent-v2026-03-31";
 
 const messageSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -36,9 +42,11 @@ const messageSchema = z.object({
   message: z
     .string()
     .min(10, "Please include a message (at least 10 characters)"),
-  smsConsent: z.boolean().refine((val) => val === true, {
-    message: "You must consent to receive text messages and phone calls",
+  emailConsent: z.boolean().refine((val) => val === true, {
+    message: "Email consent is required so we can reply to your inquiry",
   }),
+  smsConsent: z.boolean(),
+  phoneConsent: z.boolean(),
   website: z.string().max(0).optional(),
 });
 
@@ -55,6 +63,11 @@ const bookkeeperIntakeSchema = z.object({
   additionalComments: z
     .string()
     .min(10, "Please include enough detail for Tea to review your request"),
+  emailConsent: z.boolean().refine((val) => val === true, {
+    message: "Email consent is required so we can send your intake follow-up",
+  }),
+  smsConsent: z.boolean(),
+  phoneConsent: z.boolean(),
   website: z.string().max(0).optional(),
 });
 
@@ -169,12 +182,16 @@ function MessageForm({ defaultMessage = "" }: { defaultMessage?: string }) {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
     reset,
   } = useForm<MessageValues>({
     resolver: zodResolver(messageSchema),
     defaultValues: {
       message: defaultMessage,
+      emailConsent: true,
+      smsConsent: false,
+      phoneConsent: false,
     },
   });
 
@@ -185,7 +202,9 @@ function MessageForm({ defaultMessage = "" }: { defaultMessage?: string }) {
       name: data.name,
       email: data.email,
       message: data.message,
+      emailConsent: data.emailConsent,
       smsConsent: data.smsConsent,
+      phoneConsent: data.phoneConsent,
       website: data.website || "",
     });
     if (ok) {
@@ -194,7 +213,9 @@ function MessageForm({ defaultMessage = "" }: { defaultMessage?: string }) {
         name: "",
         email: "",
         message: defaultMessage,
+        emailConsent: true,
         smsConsent: false,
+        phoneConsent: false,
         website: "",
       });
       return;
@@ -306,32 +327,71 @@ function MessageForm({ defaultMessage = "" }: { defaultMessage?: string }) {
         )}
       </div>
 
-      <div className="flex items-start gap-3">
-        <div className="min-h-[44px] min-w-[44px] flex items-center justify-center shrink-0">
+      <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-4 space-y-4">
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Communication consent
+        </p>
+        <div className="flex items-start gap-3">
+          <input
+            id="contact-email-consent"
+            type="checkbox"
+            {...register("emailConsent")}
+            className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer"
+            aria-invalid={!!errors.emailConsent}
+          />
+          <label
+            htmlFor="contact-email-consent"
+            className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
+          >
+            I consent to receive email follow-up about this inquiry from
+            Blueprints &amp; Bookkeeping.
+          </label>
+        </div>
+
+        <div className="flex items-start gap-3">
           <input
             id="contact-sms-consent"
             type="checkbox"
             {...register("smsConsent")}
-            className="h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer"
-            aria-invalid={!!errors.smsConsent}
+            className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer"
           />
+          <label
+            htmlFor="contact-sms-consent"
+            className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
+          >
+            I consent to SMS outreach at my provided number. Message/data rates
+            may apply. Reply STOP to opt out.
+          </label>
         </div>
-        <label
-          htmlFor="contact-sms-consent"
-          className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none min-h-[44px] flex items-center"
-        >
-          I agree to receive text messages and phone calls from Blueprints &amp;
-          Bookkeeping at my provided contact number. Message and data rates may
-          apply. Reply STOP to opt out.
-        </label>
+
+        <div className="flex items-start gap-3">
+          <input
+            id="contact-phone-consent"
+            type="checkbox"
+            {...register("phoneConsent")}
+            className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer"
+          />
+          <label
+            htmlFor="contact-phone-consent"
+            className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
+          >
+            I consent to phone call outreach about this inquiry.
+          </label>
+        </div>
+
+        {!watch("smsConsent") && (
+          <p className="text-[11px] text-muted-foreground">
+            SMS is optional. If left unchecked, we will not send SMS outreach.
+          </p>
+        )}
       </div>
-      {errors.smsConsent && (
+      {errors.emailConsent && (
         <p
-          id="contact-sms-consent-error"
+          id="contact-email-consent-error"
           role="alert"
           className="text-destructive text-xs -mt-2"
         >
-          {errors.smsConsent.message}
+          {errors.emailConsent.message}
         </p>
       )}
       {submitError && (
@@ -378,6 +438,9 @@ function BookkeeperIntakeForm() {
       budgetUnknown: false,
       deadlinePressure: "No hard deadline",
       additionalComments: "",
+      emailConsent: true,
+      smsConsent: false,
+      phoneConsent: false,
       website: "",
     },
   });
@@ -414,7 +477,14 @@ function BookkeeperIntakeForm() {
             "Additional comments:",
             data.additionalComments,
           ].join("\n"),
-          smsConsent: false,
+          smsConsent: data.smsConsent,
+          consent: {
+            email: data.emailConsent,
+            sms: data.smsConsent,
+            phone: data.phoneConsent,
+            source: CONTACT_CONSENT_SOURCE,
+            legalTextVersion: CONTACT_CONSENT_LEGAL_TEXT_VERSION,
+          },
           website: data.website || "",
         },
       });
@@ -716,6 +786,70 @@ function BookkeeperIntakeForm() {
         {errors.additionalComments && (
           <p role="alert" className="text-destructive text-xs mt-2">
             {errors.additionalComments.message}
+          </p>
+        )}
+      </div>
+
+      <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-4 space-y-4">
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Communication consent
+        </p>
+        <div className="flex items-start gap-3">
+          <input
+            id="bookkeeper-email-consent"
+            type="checkbox"
+            {...register("emailConsent")}
+            className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer"
+            aria-invalid={!!errors.emailConsent}
+          />
+          <label
+            htmlFor="bookkeeper-email-consent"
+            className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
+          >
+            I consent to email follow-up regarding this intake request.
+          </label>
+        </div>
+        {errors.emailConsent && (
+          <p role="alert" className="text-destructive text-xs -mt-1">
+            {errors.emailConsent.message}
+          </p>
+        )}
+
+        <div className="flex items-start gap-3">
+          <input
+            id="bookkeeper-sms-consent"
+            type="checkbox"
+            {...register("smsConsent")}
+            className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer"
+          />
+          <label
+            htmlFor="bookkeeper-sms-consent"
+            className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
+          >
+            I consent to SMS outreach. Message/data rates may apply. Reply STOP
+            to opt out.
+          </label>
+        </div>
+
+        <div className="flex items-start gap-3">
+          <input
+            id="bookkeeper-phone-consent"
+            type="checkbox"
+            {...register("phoneConsent")}
+            className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer"
+          />
+          <label
+            htmlFor="bookkeeper-phone-consent"
+            className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
+          >
+            I consent to phone call outreach regarding my intake.
+          </label>
+        </div>
+
+        {!watch("smsConsent") && (
+          <p className="text-[11px] text-muted-foreground">
+            SMS is optional. If unchecked, no SMS outreach will occur from this
+            intake submission.
           </p>
         )}
       </div>
