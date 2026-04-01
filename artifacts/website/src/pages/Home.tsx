@@ -16,10 +16,13 @@ import {
   GoogleReviewsCallout,
 } from "@/components/TrustSignals";
 import { SEO } from "@/components/SEO";
+import { trackHomeCtaClick } from "@/hooks/usePageTracking";
 import { localBusinessSchema } from "@/lib/seo-schemas";
 
 export default function Home() {
   usePageTitle();
+  const primaryCtaLabel = "Book a Discovery Call";
+  const secondaryCtaLabel = "View Services";
 
   return (
     <div>
@@ -72,8 +75,8 @@ export default function Home() {
             transition={{ delay: 0.2 }}
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed"
           >
-            Advanced bookkeeping and professional business plans for founders
-            who need clean books and a clear path forward.
+            Executive-grade bookkeeping and strategic business planning for
+            founders who need financial clarity, control, and momentum.
           </motion.p>
 
           <motion.div
@@ -83,10 +86,11 @@ export default function Home() {
             className="flex flex-col sm:flex-row gap-4"
           >
             <Link
-              href="/get-started"
+              href="/schedule"
+              onClick={() => trackHomeCtaClick("primary", "hero")}
               className="group px-8 py-4 rounded-xl bg-accent text-white font-semibold text-lg shadow-xl shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
             >
-              Get Started
+              {primaryCtaLabel}
               <ArrowRight
                 size={20}
                 className="group-hover:translate-x-1 transition-transform"
@@ -94,9 +98,10 @@ export default function Home() {
             </Link>
             <Link
               href="/services"
+              onClick={() => trackHomeCtaClick("secondary", "hero")}
               className="px-8 py-4 rounded-xl bg-white/[0.04] text-white backdrop-blur-sm border border-white/10 font-semibold text-lg hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300 flex items-center justify-center"
             >
-              Explore Our Services
+              {secondaryCtaLabel}
             </Link>
           </motion.div>
         </div>
@@ -210,8 +215,8 @@ export default function Home() {
                   },
                   {
                     icon: <Users className="w-5 h-5" />,
-                    title: "20-Client Maximum",
-                    desc: "Strictly capped roster to ensure executive-level dedication and rapid response times.",
+                    title: "Boutique, High-Touch Service",
+                    desc: "A deliberately selective client model ensures executive-level dedication and rapid response times for every engagement.",
                   },
                 ].map((item, i) => (
                   <div key={i} className="flex gap-4 items-start group">
@@ -277,11 +282,12 @@ export default function Home() {
           <div className="flex flex-col items-center text-center mb-14">
             <div className="accent-bar mb-6" />
             <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
-              Limited to 20 Active Clients
+              Built for Strategic Clarity and Financial Control
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl">
-              This isn't a volume practice. Every client gets direct access to
-              Tea — no handoffs, no junior staff, no outsourcing.
+              A boutique financial partner model delivering executive-level
+              guidance, disciplined reporting, and proactive support as your
+              company scales.
             </p>
           </div>
 
@@ -328,13 +334,23 @@ export default function Home() {
           </div>
 
           <div className="text-center">
-            <Link
-              href="/get-started"
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-accent text-white font-semibold text-sm shadow-lg shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300"
-            >
-              See if there's a spot available
-              <ArrowRight size={16} />
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/schedule"
+                onClick={() => trackHomeCtaClick("primary", "mid_page")}
+                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-accent text-white font-semibold text-sm shadow-lg shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300"
+              >
+                {primaryCtaLabel}
+                <ArrowRight size={16} />
+              </Link>
+              <Link
+                href="/services"
+                onClick={() => trackHomeCtaClick("secondary", "mid_page")}
+                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-white/[0.04] text-white backdrop-blur-sm border border-white/10 font-semibold text-sm hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300"
+              >
+                {secondaryCtaLabel}
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -437,17 +453,31 @@ export default function Home() {
             <br />
             <span className="text-gradient">Start Scaling.</span>
           </h2>
-          <p className="text-xl text-muted-foreground mb-10">
-            Secure your financial infrastructure and map out a profitable future
-            today.
+          <p className="text-xl text-muted-foreground mb-4">
+            Secure your financial infrastructure and make faster, better
+            decisions with confidence.
           </p>
-          <Link
-            href="/schedule"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-accent text-white font-bold text-lg rounded-xl shadow-xl shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300"
-          >
-            Book Your Consultation
-            <ArrowRight size={20} />
-          </Link>
+          <p className="text-sm text-muted-foreground/80 mb-10">
+            Client roster is intentionally limited to maintain responsive,
+            high-touch service.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              href="/schedule"
+              onClick={() => trackHomeCtaClick("primary", "closing")}
+              className="inline-flex items-center gap-2 px-8 py-4 bg-accent text-white font-bold text-lg rounded-xl shadow-xl shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300"
+            >
+              {primaryCtaLabel}
+              <ArrowRight size={20} />
+            </Link>
+            <Link
+              href="/services"
+              onClick={() => trackHomeCtaClick("secondary", "closing")}
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-white/[0.04] text-white backdrop-blur-sm border border-white/10 font-semibold text-lg hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300"
+            >
+              {secondaryCtaLabel}
+            </Link>
+          </div>
         </div>
       </section>
     </div>
