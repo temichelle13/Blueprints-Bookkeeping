@@ -24,7 +24,7 @@ import { localBusinessSchema } from "@/lib/seo-schemas";
 
 export default function Home() {
   usePageTitle();
-  const primaryCtaLabel = "Book a Discovery Call";
+  const primaryCtaLabel = "Book a Meeting";
   const secondaryCtaLabel = "View Services";
 
   return (
@@ -60,7 +60,7 @@ export default function Home() {
           >
             <span className="glow-dot" />
             <span className="text-sm font-medium text-accent">
-              Roseburg, OR &mdash; Serving Nationwide
+              Based in Roseburg, Oregon &mdash; Serving Clients Nationwide
             </span>
           </motion.div>
 
@@ -80,9 +80,8 @@ export default function Home() {
             transition={{ delay: 0.2 }}
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed"
           >
-            Executive-grade bookkeeping and strategic business planning for
-            founders who need financial clarity, control, and momentum.
-          </motion.p>
+          Bookkeeping and business planning that actually makes sense. 
+            Learn your numbers, find your direction, and grow your business.          </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -120,13 +119,13 @@ export default function Home() {
               <span className="font-semibold text-white">
                 Data Protection &amp; Professional Boundaries:
               </span>{" "}
-              Your financial records are handled in the U.S., access is limited
-              to authorized personnel, and we use secure systems with encrypted
-              transmission for client data.
+              U.S.-based with no offshoring. 
+              Backed by certifications in Cybersecurity, Ethical Hacking, and Networking.
             </p>
             <p className="mt-2 text-xs text-muted-foreground">
-              Bookkeeping services are not tax or legal advice. For those
-              matters, work with a licensed tax professional or attorney.
+              Services offered are not tax or legal advice.
+              Seamless tax preparation is also available through our list of vetted tax professionals we partner with.
+              We take time in Ensuring all are partners are U.S.-based credentialed tax experts. 
             </p>
             <div className="mt-3 flex items-center gap-3 text-xs sm:text-sm">
               <Link href="/privacy" className="text-accent hover:underline">
@@ -161,12 +160,11 @@ export default function Home() {
           <div className="flex flex-col items-center text-center mb-16">
             <div className="accent-bar mb-6" />
             <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
-              Two Core Services
+             Build Your Business Blueprint
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl">
-              Financial infrastructure designed for founders who have outgrown
-              generalist solutions.
-            </p>
+You have to know where you are and where you've been to know where you can go. 
+              Understand your business past, clean up your present, and build the blueprint to meet your goals.            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -175,24 +173,35 @@ export default function Home() {
                 icon: <Calculator className="w-6 h-6" />,
                 title: "Advanced Bookkeeping",
                 description:
-                  "Multi-entity structuring, historical cleanups, and rule-based QBO automation for operations that demand precision.",
-                tag: "ONGOING",
+                  "Ongoing Services provides via QuickBooks Online and tailored to fit each business perfectly.",
+                tag: "ONGOING, ONE-TIME, YEARLY, QUARTERLY",
                 features: [
                   "Multi-entity consolidation",
                   "Historical cleanup & reconciliation",
                   "Monthly close & financial statements",
+                  "A/R & A/P",
+                  "Assets & Depreciation",
+                  "Payroll",
+                  "Information Filings (1099s, W2, etc)",
+                  "Training & Troubleshooting",
+                  "Management Meetings & Business Review on a Scheduled Basis",
                 ],
               },
               {
                 icon: <BookOpen className="w-6 h-6" />,
                 title: "Business Plans",
                 description:
-                  "Professionally written business plans with 3-to-5-year financial forecasting, market analysis, and strategic narrative.",
-                tag: "PROJECT",
+                  "Professional, modern business plans for any scenerio and all businesses. Wether your looking to gain funding, target new markets, or launch a business, we can build your blueprints and help you map your business success.",
+                tag: "PROJECT, ONE-TIME, EMERGENCY",
                 features: [
-                  "Rigorous 3-to-5 year forecasting",
-                  "Comprehensive documentation",
+                  "3-to-5 year forecasting",
+                  "Target Market Analysis",
+                  "Strategy & Roadmaps",
+                  "Risk & Mitigation Analysis",
+                  "Business Plan Summary Website Design with Shareable Link",
                   "Market research & competitive analysis",
+                  "Full PDF Business Plans Ready for Binding",
+                  "Custom Documentation & Research Reports Based on Your Needs",
                 ],
               },
             ].map((pillar, i) => (
@@ -236,12 +245,12 @@ export default function Home() {
             <div>
               <div className="accent-bar mb-6" />
               <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-6">
-                Why High-Value Founders Choose Us
+                Why Choose Us?
               </h2>
               <p className="text-lg text-muted-foreground mb-10 leading-relaxed">
-                Generalist bookkeepers hit a complexity ceiling. Tax practices
-                disappear during Q1. We designed a boutique model that stays
-                available and technically unmatched.
+                Most modern bookkeepers hit a complexity ceiling and lack the capacity to provide services to niche industries, refuse to touch books that dabble in cryptocurrency, and often try to solve everything with a bunch of journal entries (and lets be honest, would you be able to explain those if you got audited? No? your bookkeeper probably couldnt either becuase they jsut wanted the books to look good, but not actually fix them. This is also why they can't seem to explain any concepts to you or help guide you on how to do your books yourself so you understand what is actually happening in your business) . Communication is often vague and rare. Any who provide tax & tax preperation often deprioritize clients books during the tax season, causing miscommunication, inaccuraacies, and the books to fall behind. practices
+               We designed a boutique model that stays
+                available and technically unmatched. With advanced capability & hands on experience, we know exactly what it takes to make a business survive. 
               </p>
 
               <div className="space-y-6">
@@ -258,7 +267,7 @@ export default function Home() {
                   },
                   {
                     icon: <Users className="w-5 h-5" />,
-                    title: "Boutique, High-Touch Service",
+                    title: "Exclusive, High-Touch Service",
                     desc: "A deliberately selective client model ensures executive-level dedication and rapid response times for every engagement.",
                   },
                 ].map((item, i) => (
@@ -285,7 +294,7 @@ export default function Home() {
                 <div className="flex items-center gap-3">
                   <Sparkles className="w-5 h-5 text-accent" />
                   <span className="text-sm font-semibold text-white">
-                    The Blueprints Difference
+                    Why Choose Blueprints & Bookkeeping?
                   </span>
                 </div>
                 <div className="space-y-4">
@@ -328,10 +337,7 @@ export default function Home() {
               Built for Strategic Clarity and Financial Control
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl">
-              A boutique financial partner model delivering executive-level
-              guidance, disciplined reporting, and proactive support as your
-              company scales.
-            </p>
+A specialized partnership offering leadership-level advice, structured financial statements, and forward-thinking assistance as your business grows.            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
@@ -340,7 +346,7 @@ export default function Home() {
                 stat: "Week 1",
                 label: "Books assessed & cleanup scoped",
                 detail:
-                  "You'll know exactly what needs to be fixed and how long it will take before committing.",
+                  "You'll know exactly what needs to be fixed and how long it will take.",
               },
               {
                 stat: "Month 1",
@@ -410,13 +416,13 @@ export default function Home() {
                   FEATURED CLIENT OUTCOME
                 </p>
                 <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground mb-4">
-                  From backlog to board-ready reporting in 45 days.
+                  From backlog to board-ready reporting.
                 </h2>
                 <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-8">
-                  A multi-entity service business came to us with a five-month
-                  reconciliation backlog and cash flow blind spots. We rebuilt
-                  their close workflow so leadership could make decisions from
-                  reliable numbers every month.
+                  A multi-entity service business came to us with a 2-year
+                  reconciliation backlog and cash flow blind spots. Millions in undeposited funds, negative asset and liability accounts, and no hope as they were turned down by 3 accountants when they asked for help. We met with them and understood how their business has been operating, what happened to get behind, and took them on.
+                  Within 30 days, they had up-to-date books and could tell you exactly where each number on their profit and loss or balance sheet came from. That is truly empowering. Now, they meet with us quartertly, but maintain their books themselves monthyl (and correctly), and they just expanded their business model and double their funding. 
+                  Think about knowing yoou have reliable numbers every month. What is that worth to you?
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {[
@@ -490,11 +496,10 @@ export default function Home() {
           <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-6">
             Stop Guessing.
             <br />
-            <span className="text-gradient">Start Scaling.</span>
+            <span className="text-gradient">Start Building Your Blueprint.</span>
           </h2>
           <p className="text-xl text-muted-foreground mb-4">
-            Secure your financial infrastructure and make faster, better
-            decisions with confidence.
+            Success Starts with Our First Meeting. Book Today. 
           </p>
           <Link
             href="/schedule"
