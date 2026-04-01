@@ -260,9 +260,11 @@ router.post(
           })
           .returning();
 
-        if (doc) {
-          results.push({ id: doc.id, fileName: file.originalname, storagePath });
+        if (!doc) {
+          throw new Error("Failed to insert document record");
         }
+
+        results.push({ id: doc.id, fileName: file.originalname, storagePath });
       } catch (err) {
         console.error(`Failed to upload ${file.originalname}:`, err);
         errors.push(file.originalname);
