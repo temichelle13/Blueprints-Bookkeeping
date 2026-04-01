@@ -21,10 +21,7 @@ const HTTP_URL_SCHEMA = z
 const failureStore = new Map<string, { count: number; resetAt: number }>();
 
 function routeKey(routeId: string, req: Request): string {
-  const forwardedFor = req.headers["x-forwarded-for"];
-  const ip = Array.isArray(forwardedFor)
-    ? forwardedFor[0]
-    : (forwardedFor?.split(",")[0]?.trim() ?? req.ip ?? "unknown");
+  const ip = req.ip ?? "unknown";
   return `${routeId}:${ip}`;
 }
 
