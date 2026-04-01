@@ -1,10 +1,11 @@
 import {
   db,
   outboundEmailEventsTable,
+  contactInquiriesTable,
   type OutboundEmailEvent,
   type OutboundEmailEventType,
 } from "@workspace/db";
-import { and, asc, eq, gte, lte, sql } from "drizzle-orm";
+import { and, asc, eq, gte, inArray, lte, notExists, sql } from "drizzle-orm";
 import { EMAIL_FROM, getOwnerEmail, getResend } from "./email";
 import { logger } from "./logger";
 
@@ -126,7 +127,7 @@ async function sendSingleEvent(event: OutboundEmailEvent): Promise<void> {
 
   try {
     const payload =
-      (event.errorPayload as Record<string, unknown> | null) ?? {};
+      (event.emailPayload as Record<string, unknown> | null) ?? {};
     const subject = typeof payload.subject === "string" ? payload.subject : "";
     const html = typeof payload.html === "string" ? payload.html : "";
     const replyTo =
@@ -178,7 +179,7 @@ async function queueEvent(
       attemptCount: 0,
       maxAttempts: MAX_RETRY_ATTEMPTS,
       nextAttemptAt: new Date(),
-      errorPayload: {
+      emailPayload: {
         subject: emailData.subject,
         html: emailData.html,
         ...(emailData.replyTo ? { replyTo: emailData.replyTo } : {}),
@@ -192,10 +193,7 @@ async function queueEvent(
       eventType,
       recipientEmail,
     });
-    return;
   }
-
-  await sendSingleEvent(event);
 }
 
 export async function queueContactInquiryEmails(
@@ -223,23 +221,37 @@ export async function queueContactInquiryEmails(
 export async function processPendingOutboundEmailEvents(
   limit = 25,
 ): Promise<number> {
-  const queued = await db
-    .select()
-    .from(outboundEmailEventsTable)
+  const now = new Date();
+
+  // Atomically claim queued events using a subquery with FOR UPDATE SKIP LOCKED
+  // to prevent concurrent workers from processing the same event.
+  const claimed = await db
+    .update(outboundEmailEventsTable)
+    .set({ status: "sending", updatedAt: now })
     .where(
-      and(
-        eq(outboundEmailEventsTable.status, "queued"),
-        lte(outboundEmailEventsTable.nextAttemptAt, new Date()),
+      inArray(
+        outboundEmailEventsTable.id,
+        db
+          .select({ id: outboundEmailEventsTable.id })
+          .from(outboundEmailEventsTable)
+          .where(
+            and(
+              eq(outboundEmailEventsTable.status, "queued"),
+              lte(outboundEmailEventsTable.nextAttemptAt, now),
+            ),
+          )
+          .orderBy(asc(outboundEmailEventsTable.nextAttemptAt))
+          .limit(limit)
+          .for("update", { skipLocked: true }),
       ),
     )
-    .orderBy(asc(outboundEmailEventsTable.nextAttemptAt))
-    .limit(limit);
+    .returning();
 
-  for (const event of queued) {
+  for (const event of claimed) {
     await sendSingleEvent(event);
   }
 
-  return queued.length;
+  return claimed.length;
 }
 
 export async function getOutboundEmailAdminCounts(): Promise<{
@@ -248,12 +260,21 @@ export async function getOutboundEmailAdminCounts(): Promise<{
 }> {
   const [unnotified] = await db
     .select({ count: sql<number>`count(*)::int` })
-    .from(sql`contact_inquiries ci`).where(sql`not exists (
-      select 1 from outbound_email_events oee
-      where oee.inquiry_id = ci.id
-        and oee.event_type = 'owner_notification'
-        and oee.status = 'sent'
-    )`);
+    .from(contactInquiriesTable)
+    .where(
+      notExists(
+        db
+          .select({ id: outboundEmailEventsTable.id })
+          .from(outboundEmailEventsTable)
+          .where(
+            and(
+              eq(outboundEmailEventsTable.inquiryId, contactInquiriesTable.id),
+              eq(outboundEmailEventsTable.eventType, "owner_notification"),
+              eq(outboundEmailEventsTable.status, "sent"),
+            ),
+          ),
+      ),
+    );
 
   const [failures] = await db
     .select({ count: sql<number>`count(*)::int` })

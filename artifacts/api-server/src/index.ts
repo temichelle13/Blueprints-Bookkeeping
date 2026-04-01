@@ -33,10 +33,11 @@ function startOutboundEmailRetryScheduler() {
       }
     } catch (err) {
       logger.error("Outbound email retry scheduler error", err as Error);
+    } finally {
+      setTimeout(run, OUTBOUND_EMAIL_RETRY_INTERVAL_MS);
     }
   }
 
-  setInterval(run, OUTBOUND_EMAIL_RETRY_INTERVAL_MS);
   setTimeout(run, 15_000);
 }
 

@@ -4,6 +4,7 @@ import { db, contactInquiriesTable } from "@workspace/db";
 import { SubmitContactFormBody } from "@workspace/api-zod";
 import * as contractService from "../lib/contract-service";
 import { isEmailSuppressed } from "../lib/email-suppression";
+import { logger } from "../lib/logger";
 import { queueContactInquiryEmails } from "../lib/outbound-email-events";
 
 const router: IRouter = Router();
@@ -116,13 +117,17 @@ router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
         </div>
       </div>`;
 
-  await queueContactInquiryEmails({
+  queueContactInquiryEmails({
     inquiryId: inquiry.id,
     senderEmail: data.email,
     senderSuppressed: suppressed,
     ownerHtml: notifyHtml,
     ownerSubject: `New Inquiry: ${data.name}${data.businessName ? ` — ${data.businessName}` : ""}`,
     confirmationHtml: confirmHtml,
+  }).catch((err: unknown) => {
+    logger.error("Failed to queue contact inquiry emails", err as Error, {
+      inquiryId: inquiry.id,
+    });
   });
 
   contractService

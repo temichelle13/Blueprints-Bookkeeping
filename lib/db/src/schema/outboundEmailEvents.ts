@@ -13,6 +13,7 @@ import { contactInquiriesTable } from "./contactInquiries";
 
 export const OUTBOUND_EMAIL_EVENT_STATUSES = [
   "queued",
+  "sending",
   "sent",
   "failed",
 ] as const;
@@ -46,6 +47,7 @@ export const outboundEmailEventsTable = pgTable(
       .notNull()
       .defaultNow(),
     sentAt: timestamp("sent_at", { withTimezone: true }),
+    emailPayload: jsonb("email_payload"),
     errorPayload: jsonb("error_payload"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
