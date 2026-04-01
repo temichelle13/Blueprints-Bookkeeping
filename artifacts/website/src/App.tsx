@@ -34,6 +34,7 @@ const Privacy = lazy(() => import("./pages/Privacy"));
 const Terms = lazy(() => import("./pages/Terms"));
 const Accessibility = lazy(() => import("./pages/Accessibility"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
+const ComplianceSecurity = lazy(() => import("./pages/ComplianceSecurity"));
 const Feedback = lazy(() => import("./pages/Feedback"));
 const GetStarted = lazy(() => import("./pages/GetStarted"));
 const TaxPartners = lazy(() => import("./pages/TaxPartners"));
@@ -227,6 +228,7 @@ function Router() {
           <Route path="/terms" component={Terms} />
           <Route path="/accessibility" component={Accessibility} />
           <Route path="/cookies" component={CookiePolicy} />
+          <Route path="/compliance-security" component={ComplianceSecurity} />
           <Route path="/feedback" component={Feedback} />
           <Route path="/get-started" component={GetStarted} />
           <Route path="/tax-partners" component={TaxPartners} />

@@ -1,14 +1,30 @@
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
+import {
+  breadcrumbSchema,
+  localBusinessSchema,
+  professionalServiceSchema,
+} from "@/lib/seo-schemas";
 
 export default function Accessibility() {
   usePageTitle("Accessibility Statement");
+  const BASE_URL = "https://blueprintsandbookkeeping.com";
+  const jsonLd = [
+    localBusinessSchema(),
+    professionalServiceSchema({ url: `${BASE_URL}/accessibility` }),
+    breadcrumbSchema([
+      { name: "Home", url: BASE_URL },
+      { name: "Accessibility Statement", url: `${BASE_URL}/accessibility` },
+    ]),
+  ];
 
   return (
     <div className="pt-24 pb-20">
       <SEO
+        title="Accessibility Statement"
         path="/accessibility"
         description="Blueprints & Bookkeeping is committed to ensuring digital accessibility for people with disabilities. Learn about our accessibility features and how to report issues."
+        jsonLd={jsonLd}
       />
 
       <section className="py-16 mb-8 relative">
