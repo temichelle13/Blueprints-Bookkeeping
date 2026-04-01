@@ -11,6 +11,7 @@ import { ThemeProvider } from "./hooks/use-theme";
 import { Header } from "./components/layout/Header";
 import CookieConsent from "./components/CookieConsent";
 import { Footer } from "./components/layout/Footer";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 
 // Lazy load ChatWidget to reduce initial bundle size
 const ChatWidget = lazy(() => import("./components/ChatWidget"));
@@ -81,8 +82,18 @@ function PageTransition({ children }: { children: React.ReactNode }) {
   const [isVisible, setIsVisible] = useState(true);
   const [displayChildren, setDisplayChildren] = useState(children);
   const previousLocation = useRef(location);
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
+    // On initial mount, always show content immediately
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      setDisplayChildren(children);
+      setIsVisible(true);
+      previousLocation.current = location;
+      return;
+    }
+
     if (location !== previousLocation.current) {
       setIsVisible(false);
       // Use requestAnimationFrame for smoother transitions and reduced INP impact
@@ -191,20 +202,22 @@ function Router() {
 
 function App() {
   return (
-    <ThemeProvider>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-            <Router />
-          </WouterRouter>
-          <Toaster />
-          <Suspense fallback={null}>
-            <ChatWidget />
-          </Suspense>
-          <CookieConsent />
-        </TooltipProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+              <Router />
+            </WouterRouter>
+            <Toaster />
+            <Suspense fallback={null}>
+              <ChatWidget />
+            </Suspense>
+            <CookieConsent />
+          </TooltipProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 

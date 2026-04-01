@@ -118,28 +118,46 @@ export CORS_ORIGIN=https://blueprintsandbookkeeping.com
 
 **Fix**: Increased padding to p-4/16px in `table.tsx` component.
 
-## Deployment to Cloudflare
+## Deployment to Cloudflare Pages
 
-If you want to deploy to Cloudflare instead of Replit, you'll need to:
+The repository now includes Cloudflare Pages configuration files for easy deployment:
 
-1. **Create `wrangler.toml`** in the root directory (for Cloudflare Pages):
+### Configuration Files (Already Created)
 
-```toml
-name = "blueprints-bookkeeping"
-pages_build_output_dir = "artifacts/website/dist/public"
-compatibility_date = "2024-01-01"
-[build]
-command = "pnpm install && pnpm --filter @workspace/website run build"
-```
+1. **`wrangler.toml`** (root directory) - Cloudflare Pages build configuration
+2. **`artifacts/website/public/_redirects`** - SPA routing configuration (redirects all routes to index.html)
+3. **`artifacts/website/public/_headers`** - Security headers and caching rules
 
-2. **Configure Cloudflare Pages** for the frontend:
+### Deployment Steps
+
+1. **Connect to Cloudflare Pages**:
+   - Go to Cloudflare Dashboard → Pages
+   - Connect your GitHub repository
+   - Select the branch to deploy (e.g., `master`)
+
+2. **Configure Build Settings** (should auto-detect from `wrangler.toml`):
    - Build command: `pnpm install && pnpm --filter @workspace/website run build`
    - Build output directory: `artifacts/website/dist/public`
-   - Environment variables: `VITE_API_URL=<your-api-url>`
+   - Root directory: Leave empty (monorepo setup)
 
-3. **Deploy API server separately** (Cloudflare Workers, Cloud Run, etc.)
+3. **Set Environment Variables** in Cloudflare Pages dashboard:
+   - `VITE_API_URL` - Your API backend URL (e.g., `https://api.blueprintsandbookkeeping.com`)
+   - **Important**: This must be set during build, not runtime (Vite bakes it into the bundle)
 
-4. **Configure CORS** on the API server to allow Cloudflare Pages origin
+4. **Deploy API Server Separately**:
+   - Deploy backend to Cloudflare Workers, Cloud Run, or other Node.js hosting
+   - Ensure API server is accessible at the URL specified in `VITE_API_URL`
+
+5. **Configure CORS** on the API server:
+   - Add Cloudflare Pages URL to `CORS_ORIGIN` environment variable
+   - Example: `CORS_ORIGIN=https://blueprints-bookkeeping.pages.dev,https://www.blueprintsandbookkeeping.com`
+
+### What Gets Deployed
+
+- Static website files from `artifacts/website/dist/public/`
+- `_redirects` file ensures all routes work (SPA routing)
+- `_headers` file adds security headers and caching
+- All assets properly cached with immutable headers
 
 ## Deployment Steps
 
