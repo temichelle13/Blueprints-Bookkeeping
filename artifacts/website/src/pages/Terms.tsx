@@ -63,6 +63,11 @@ export default function Terms() {
               planning services are designed to complement your tax
               professional's work, not replace it.
             </p>
+            <p className="mt-3">
+              We also do not provide legal advice or legal representation.
+              Please work with a licensed tax professional or attorney when
+              legal or tax decisions are required.
+            </p>
           </section>
 
           <section>
