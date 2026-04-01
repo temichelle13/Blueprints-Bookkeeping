@@ -1,7 +1,26 @@
 import { useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { hasAcceptedCookies } from "@/components/CookieConsent";
-import { initAnalytics, trackPageview } from "@/lib/analytics";
+import { initAnalytics, trackEvent, trackPageview } from "@/lib/analytics";
+
+type HomeCtaType = "primary" | "secondary";
+type HomeCtaPlacement = "hero" | "mid_page" | "closing";
+
+export function trackHomeCtaClick(
+  type: HomeCtaType,
+  placement: HomeCtaPlacement,
+): void {
+  if (!hasAcceptedCookies()) return;
+
+  initAnalytics();
+
+  const eventName =
+    type === "primary" ? "Home Primary CTA Click" : "Home Secondary CTA Click";
+  trackEvent(eventName, {
+    cta_type: type,
+    cta_placement: placement,
+  });
+}
 
 export function usePageTracking() {
   const [location] = useLocation();

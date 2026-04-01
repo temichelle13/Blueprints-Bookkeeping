@@ -1,9 +1,7 @@
 import { Router, type IRouter } from "express";
 import { db, contactInquiriesTable } from "@workspace/db";
 import { SubmitContactFormBody } from "@workspace/api-zod";
-import * as contractService from "../lib/contract-service";
-import { isEmailSuppressed } from "../lib/email-suppression";
-import { getResend, getOwnerEmail, EMAIL_FROM } from "../lib/email";
+import { tryGetResend, tryGetOwnerEmail, EMAIL_FROM } from "../lib/email";
 import { logger } from "../lib/logger";
 import {
   honeypotProtection,
@@ -12,6 +10,18 @@ import {
   validateEmailStrict,
   withSubmissionMonitoring,
 } from "../middleware/public-submissions";
+import { contactLimiter } from "./contact-rate-limit";
+
+const router: IRouter = Router();
+
+router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
+  if (req.body?.website) {
+    res.status(201).json({
+      success: true,
+      message:
+        "Thank you for your inquiry! We will be in touch within 48 hours.",
+      id: 0,
+    });
 
 const router: IRouter = Router();
 
@@ -92,6 +102,41 @@ router.post(
           : "Not specified";
 
       const notifyHtml = `
+    return;
+  }
+
+  const ownerEmail = deps.tryGetOwnerEmail();
+  if (!ownerEmail) {
+    deps.logWarn(
+      "Skipping contact inquiry emails because owner email is unavailable",
+      {
+        inquiryId,
+        reason: "owner_email_unavailable",
+      },
+    );
+    return;
+  }
+
+  let suppressed = false;
+  try {
+    suppressed = await deps.isEmailSuppressed(data.email);
+  } catch (error) {
+    deps.logWarn(
+      "Failed to check email suppression for contact inquiry",
+      {
+        inquiryId,
+        reason: "suppression_check_failed",
+        error,
+      },
+    );
+  }
+
+  const servicesLabel =
+    Array.isArray(data.servicesInterested) && data.servicesInterested.length
+      ? data.servicesInterested.join(", ")
+      : "Not specified";
+
+  const notifyHtml = `
       <div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
         <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
           <h1 style="color:white;margin:0;font-size:20px;">New Inquiry — Blueprints & Bookkeeping</h1>
@@ -168,6 +213,8 @@ router.post(
 
       await Promise.allSettled(emailPromises);
     }
+  });
+}
 
     contractService
       .processFormSubmission({
