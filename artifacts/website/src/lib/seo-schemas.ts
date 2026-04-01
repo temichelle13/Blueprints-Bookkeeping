@@ -38,6 +38,28 @@ export function localBusinessSchema() {
   };
 }
 
+export function professionalServiceSchema(opts?: {
+  name?: string;
+  description?: string;
+  url?: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "@id": `${opts?.url || BASE_URL}#professional-service`,
+    name: opts?.name || "Blueprints & Bookkeeping, LLC",
+    description:
+      opts?.description ||
+      "Bookkeeping and business planning services for growth-stage and complex businesses.",
+    url: opts?.url || BASE_URL,
+    areaServed: {
+      "@type": "Country",
+      name: "United States",
+    },
+    serviceType: ["Bookkeeping", "Business Planning", "Financial Reporting"],
+  };
+}
+
 export function serviceSchema(opts: {
   name: string;
   description: string;

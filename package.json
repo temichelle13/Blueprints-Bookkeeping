@@ -10,7 +10,7 @@
     "format": "prettier --write .",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
     "check:merge-conflicts": "sh -c \"if grep -rnE '^(<<<<<<<|=======|>>>>>>>)' . --exclude=pnpm-lock.yaml --exclude-dir=.git --exclude-dir=node_modules; then echo 'Unresolved merge conflict markers found.' >&2; exit 1; fi\"",
-    "check:website-deploy": "pnpm run check:merge-conflicts && pnpm run typecheck:libs && pnpm --filter @workspace/website build"
+    "check:website-deploy": "pnpm run check:merge-conflicts && pnpm run typecheck:libs && pnpm --filter @workspace/scripts run check:indexing-guards && pnpm --filter @workspace/website build"
   },
   "private": true,
   "devDependencies": {
@@ -31,7 +31,7 @@
   },
   "packageManager": "pnpm@10.13.1",
   "engines": {
-    "node": "^20.19.0 || ^22.0.0",
+    "node": "^20.19.0 || ^22.0.0 || ^24.0.0",
     "pnpm": "^10.13.1"
   }
 }
