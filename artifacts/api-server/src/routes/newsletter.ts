@@ -147,8 +147,8 @@ const newsletterSubscribeLimiter = createSubmissionRateLimiter({
 router.post(
   "/newsletter/subscribe",
   newsletterSubscribeLimiter,
-  withSubmissionMonitoring("newsletter_subscribe"),
   honeypotProtection("newsletter_subscribe"),
+  withSubmissionMonitoring("newsletter_subscribe"),
   async (req, res): Promise<void> => {
     if (typeof req.body?.email !== "string" || req.body.email.length > 320) {
       res.status(400).json({ error: "Please provide a valid email address." });
