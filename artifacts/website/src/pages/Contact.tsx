@@ -21,13 +21,16 @@ import { SEO } from "@/components/SEO";
 import { useContactMutation } from "@/hooks/use-contact";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
+import {
+  BOOKKEEPER_INTENT,
+  isBookkeeperIntentParam,
+} from "@/lib/contact-intent";
 
 const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
 const PHONE_DISPLAY = "(541) 319-8654";
 const PHONE_HREF = "tel:+15413198654";
 const SMS_HREF = "sms:+15413198654";
 const EMAIL_ADDRESS = "tea@blueprintsandbookkeeping.com";
-const BOOKKEEPER_INTENT = "bookkeeper";
 
 const messageSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -744,7 +747,7 @@ export default function Contact() {
   const search = window.location.search;
   const isBookkeeperIntent = useMemo(() => {
     const intent = new URLSearchParams(search).get("intent");
-    return intent === BOOKKEEPER_INTENT;
+    return isBookkeeperIntentParam(intent);
   }, [search]);
 
   usePageTitle(isBookkeeperIntent ? "Add Me as Your Bookkeeper" : "Contact");
