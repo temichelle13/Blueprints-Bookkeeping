@@ -55,7 +55,7 @@ export default function ChatWidget() {
         signal: controller.signal,
       });
 
-      if (!response.ok) {
+      if (response.ok) {
     setAvailability("available");
     setStatusMessage(null);
     return true;
