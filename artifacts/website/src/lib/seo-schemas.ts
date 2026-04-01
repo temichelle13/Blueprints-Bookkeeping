@@ -45,7 +45,7 @@ export function homepageSchemas() {
       "@context": "https://schema.org",
       "@type": "WebPage",
       "@id": `${BASE_URL}/#webpage`,
-      url: BASE_URL,
+      url: `${BASE_URL}/`,
       name: "Roseburg Bookkeeping, Cleanup, Monthly Close & Business Plans",
       description:
         "Roseburg, Oregon bookkeeping firm serving clients nationwide with cleanup bookkeeping, monthly close support, and professionally written business plans.",
@@ -58,7 +58,10 @@ export function homepageSchemas() {
       about: {
         "@id": `${BASE_URL}/#business`,
       },
-      primaryImageOfPage: `${BASE_URL}/opengraph.jpg`,
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: `${BASE_URL}/opengraph.jpg`,
+      },
     },
     {
       "@context": "https://schema.org",
