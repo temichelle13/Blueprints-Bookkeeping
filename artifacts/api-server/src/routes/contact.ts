@@ -1,11 +1,9 @@
-import { Router, type IRouter } from "express";
+import { Router, type IRouter, type Request, type Response } from "express";
 import rateLimit from "express-rate-limit";
-import { db, contactInquiriesTable } from "@workspace/db";
 import { SubmitContactFormBody } from "@workspace/api-zod";
-import * as contractService from "../lib/contract-service";
-import { isEmailSuppressed } from "../lib/email-suppression";
-import { getResend, getOwnerEmail, EMAIL_FROM } from "../lib/email";
+import { tryGetResend, tryGetOwnerEmail, EMAIL_FROM } from "../lib/email";
 import { logger } from "../lib/logger";
+import type { Resend } from "resend";
 
 const router: IRouter = Router();
 
@@ -19,57 +17,121 @@ const contactLimiter = rateLimit({
   },
 });
 
-router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
-  if (req.body?.website) {
-    res.status(201).json({
-      success: true,
-      message:
-        "Thank you for your inquiry! We will be in touch within 48 hours.",
-      id: 0,
-    });
+type ContactEmailDeps = {
+  tryGetResend: () => Resend | null;
+  tryGetOwnerEmail: () => string | null;
+};
+
+type ContactHandlerDeps = ContactEmailDeps & {
+  insertInquiry: (values: Record<string, unknown>) => Promise<{
+    id: number;
+  }>;
+  isEmailSuppressed: (email: string) => Promise<boolean>;
+  logWarn: (message: string, context?: Record<string, unknown>) => void;
+  logError: (
+    message: string,
+    error?: Error,
+    context?: Record<string, unknown>,
+  ) => void;
+  processFormSubmission: (data: {
+    formType: string;
+    name: string;
+    email: string;
+    servicesInterested?: string[] | null;
+    contactInquiryId: number;
+  }) => Promise<unknown>;
+};
+
+function createDefaultDeps(): ContactHandlerDeps {
+  return {
+    tryGetResend,
+    tryGetOwnerEmail,
+    insertInquiry: async (values) => {
+      const { db, contactInquiriesTable } = await import("@workspace/db");
+      const [inquiry] = await db
+        .insert(contactInquiriesTable)
+        .values(values)
+        .returning();
+      if (!inquiry) {
+        throw new Error("Failed to insert contact inquiry record");
+      }
+      return { id: inquiry.id };
+    },
+    isEmailSuppressed: async (email) => {
+      const suppression = await import("../lib/email-suppression");
+      return suppression.isEmailSuppressed(email);
+    },
+    logWarn: (message, context) => logger.warn(message, context),
+    logError: (message, error, context) =>
+      logger.error(message, error, context),
+    processFormSubmission: async (data) => {
+      const contractService = await import("../lib/contract-service");
+      return contractService.processFormSubmission(data);
+    },
+  };
+}
+
+async function sendInquiryEmails(
+  deps: ContactHandlerDeps,
+  inquiryId: number,
+  data: {
+    name: string;
+    email: string;
+    phone?: string | null;
+    businessName?: string | null;
+    industry?: string | null;
+    servicesInterested?: string[] | null;
+    monthlyRevenueRange?: string | null;
+    preferredContactMethod?: string | null;
+    smsConsent: boolean;
+    biggestChallenge?: string | null;
+    message?: string | null;
+  },
+): Promise<void> {
+  const resend = deps.tryGetResend();
+  if (!resend) {
+    deps.logWarn(
+      "Skipping contact inquiry emails because provider is unavailable",
+      {
+        inquiryId,
+        reason: "resend_unavailable",
+      },
+    );
     return;
   }
 
-  const parsed = SubmitContactFormBody.safeParse(req.body);
-  if (!parsed.success) {
-    res.status(400).json({ error: parsed.error.message });
+  const ownerEmail = deps.tryGetOwnerEmail();
+  if (!ownerEmail) {
+    deps.logWarn(
+      "Skipping contact inquiry emails because owner email is unavailable",
+      {
+        inquiryId,
+        reason: "owner_email_unavailable",
+      },
+    );
     return;
   }
 
-  const data = parsed.data;
-
-  const [inquiry] = await db
-    .insert(contactInquiriesTable)
-    .values({
-      formType: data.formType,
-      name: data.name,
-      email: data.email,
-      phone: data.phone ?? null,
-      message: data.message ?? null,
-      businessName: data.businessName ?? null,
-      industry: data.industry ?? null,
-      servicesInterested: data.servicesInterested ?? null,
-      monthlyRevenueRange: data.monthlyRevenueRange ?? null,
-      biggestChallenge: data.biggestChallenge ?? null,
-      preferredContactMethod: data.preferredContactMethod ?? null,
-      smsConsent: data.smsConsent,
-    })
-    .returning();
-
-  if (!inquiry) {
-    throw new Error("Failed to insert contact inquiry record");
+  let suppressed = false;
+  try {
+    suppressed = await deps.isEmailSuppressed(data.email);
+  } catch (error) {
+    deps.logWarn(
+      "Failed to check email suppression for contact inquiry",
+      {
+        inquiryId,
+        reason: "suppression_check_failed",
+        error,
+      },
+    );
   }
 
-  const suppressed = await isEmailSuppressed(data.email);
+  const servicesLabel =
+    Array.isArray(data.servicesInterested) && data.servicesInterested.length
+      ? data.servicesInterested.join(", ")
+      : "Not specified";
 
-  const resend = getResend();
-  if (resend) {
-    const servicesLabel =
-      Array.isArray(data.servicesInterested) && data.servicesInterested.length
-        ? data.servicesInterested.join(", ")
-        : "Not specified";
-
-    const notifyHtml = `
+  const notifyHtml = `
       <div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
         <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
           <h1 style="color:white;margin:0;font-size:20px;">New Inquiry — Blueprints & Bookkeeping</h1>
@@ -99,7 +161,7 @@ router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
         </div>
       </div>`;
 
-    const confirmHtml = `
+  const confirmHtml = `
       <div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
         <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
           <h1 style="color:white;margin:0;font-size:20px;">We've got your message.</h1>
@@ -119,51 +181,122 @@ router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
         </div>
       </div>`;
 
-    const emailPromises: Promise<unknown>[] = [
+  const emailPromises: Promise<unknown>[] = [
+    resend.emails.send({
+      from: EMAIL_FROM.default,
+      to: ownerEmail,
+      replyTo: data.email,
+      subject: `New Inquiry: ${data.name}${data.businessName ? ` — ${data.businessName}` : ""}`,
+      html: notifyHtml,
+    }),
+  ];
+
+  if (suppressed) {
+    deps.logWarn(
+      "Skipping confirmation email for suppressed contact inquiry email",
+      {
+        inquiryId,
+        email: data.email,
+        reason: "email_suppressed",
+      },
+    );
+  } else {
+    emailPromises.push(
       resend.emails.send({
         from: EMAIL_FROM.default,
-        to: getOwnerEmail(),
-        replyTo: data.email,
-        subject: `New Inquiry: ${data.name}${data.businessName ? ` — ${data.businessName}` : ""}`,
-        html: notifyHtml,
+        to: data.email,
+        subject: "We received your message — Blueprints & Bookkeeping",
+        html: confirmHtml,
       }),
-    ];
-
-    if (suppressed) {
-      logger.warn("Skipping confirmation email for suppressed address", {
-        email: data.email,
-      });
-    } else {
-      emailPromises.push(
-        resend.emails.send({
-          from: EMAIL_FROM.default,
-          to: data.email,
-          subject: "We received your message — Blueprints & Bookkeeping",
-          html: confirmHtml,
-        }),
-      );
-    }
-
-    await Promise.allSettled(emailPromises);
+    );
   }
 
-  contractService
-    .processFormSubmission({
+  const settled = await Promise.allSettled(emailPromises);
+  settled.forEach((result, index) => {
+    if (result.status === "rejected") {
+      deps.logError(
+        "Contact inquiry email send failed",
+        result.reason instanceof Error ? result.reason : undefined,
+        {
+          inquiryId,
+          emailType:
+            index === 0 ? "owner_notification" : "client_confirmation",
+          reason:
+            result.reason instanceof Error
+              ? result.reason.message
+              : String(result.reason),
+        },
+      );
+    }
+  });
+}
+
+export function createContactHandler(
+  deps: ContactHandlerDeps = createDefaultDeps(),
+) {
+  return async (req: Request, res: Response): Promise<void> => {
+    if (req.body?.website) {
+      res.status(201).json({
+        success: true,
+        message:
+          "Thank you for your inquiry! We will be in touch within 48 hours.",
+        id: 0,
+      });
+      return;
+    }
+
+    const parsed = SubmitContactFormBody.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: parsed.error.message });
+      return;
+    }
+
+    const data = parsed.data;
+
+    const inquiry = await deps.insertInquiry({
       formType: data.formType,
       name: data.name,
       email: data.email,
+      phone: data.phone ?? null,
+      message: data.message ?? null,
+      businessName: data.businessName ?? null,
+      industry: data.industry ?? null,
       servicesInterested: data.servicesInterested ?? null,
-      contactInquiryId: inquiry.id,
-    })
-    .catch((err) => {
-      console.error("Contract automation error (non-blocking):", err);
+      monthlyRevenueRange: data.monthlyRevenueRange ?? null,
+      biggestChallenge: data.biggestChallenge ?? null,
+      preferredContactMethod: data.preferredContactMethod ?? null,
+      smsConsent: data.smsConsent,
     });
 
-  res.status(201).json({
-    success: true,
-    message: "Thank you for your inquiry! We will be in touch within 48 hours.",
-    id: inquiry.id,
-  });
-});
+    sendInquiryEmails(deps, inquiry.id, data).catch((err) => {
+      deps.logError(
+        "Contact inquiry email task failed unexpectedly",
+        err instanceof Error ? err : undefined,
+        { inquiryId: inquiry.id },
+      );
+    });
+
+    deps
+      .processFormSubmission({
+        formType: data.formType,
+        name: data.name,
+        email: data.email,
+        servicesInterested: data.servicesInterested ?? null,
+        contactInquiryId: inquiry.id,
+      })
+      .catch((err) => {
+        console.error("Contract automation error (non-blocking):", err);
+      });
+
+    res.status(201).json({
+      success: true,
+      message:
+        "Thank you for your inquiry! We will be in touch within 48 hours.",
+      id: inquiry.id,
+    });
+  };
+}
+
+router.post("/contact", contactLimiter, createContactHandler());
 
 export default router;
