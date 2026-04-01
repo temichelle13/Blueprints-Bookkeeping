@@ -3,6 +3,7 @@ interface OnboardingRouteContext {
   service?: string | null | undefined;
   sessionId?: string | null | undefined;
   paymentMethod?: string | null | undefined;
+  mode?: string | null | undefined;
 }
 
 export function getOnboardingContextFromSearch(
@@ -15,6 +16,7 @@ export function getOnboardingContextFromSearch(
     service: params.get("service"),
     sessionId: params.get("session_id"),
     paymentMethod: params.get("method"),
+    mode: params.get("mode"),
   };
 }
 

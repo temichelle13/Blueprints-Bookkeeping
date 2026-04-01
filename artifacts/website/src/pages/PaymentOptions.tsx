@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Link } from "wouter";
+import { useLocation } from "wouter";
 import { ArrowRight, CreditCard, Landmark, Loader2 } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { usePageTitle } from "@/hooks/use-page-title";
@@ -23,19 +23,24 @@ export default function PaymentOptions() {
   usePageTitle("Choose Payment Method");
   const { toast } = useToast();
   const [isLoadingStripe, setIsLoadingStripe] = useState(false);
+  const [location] = useLocation();
 
   const context = useMemo(() => {
     const search = new URLSearchParams(window.location.search);
+    const rawInterval = getSearchValue(search, "interval");
+    const interval: "monthly" | "annual" =
+      rawInterval === "monthly" || rawInterval === "annual"
+        ? rawInterval
+        : "monthly";
+
     return {
       mode: getSearchValue(search, "mode") || "subscription",
       planKey: getSearchValue(search, "plan"),
       serviceKey: getSearchValue(search, "service"),
-      interval:
-        (getSearchValue(search, "interval") as "monthly" | "annual" | null) ||
-        "monthly",
+      interval,
       source: getSearchValue(search, "source") || "pricing",
     };
-  }, []);
+  }, [location]);
 
   const stripeLabel =
     context.mode === "deposit"
@@ -71,8 +76,16 @@ export default function PaymentOptions() {
       const successParams = new URLSearchParams({
         ...(context.planKey ? { plan: context.planKey } : {}),
         ...(context.serviceKey ? { service: context.serviceKey } : {}),
+        mode: context.mode,
         method: "stripe_card",
       });
+
+      const cancelSearch = new URLSearchParams(
+        window.location.search,
+      ).toString();
+      const cancelPath = cancelSearch
+        ? `/payments/options?${cancelSearch}`
+        : "/payments/options";
 
       const payload = {
         plan: context.planKey,
@@ -80,9 +93,7 @@ export default function PaymentOptions() {
         interval: context.interval,
         source: context.source,
         successUrl: `${buildPaymentsUrl("/payment-success")}?${successParams.toString()}`,
-        cancelUrl: buildPaymentsUrl(
-          `/payments/options?${new URLSearchParams(window.location.search).toString()}`,
-        ),
+        cancelUrl: buildPaymentsUrl(cancelPath),
       };
 
       const response = await fetch(`${getApiRoot()}${endpoint}`, {
@@ -153,6 +164,7 @@ export default function PaymentOptions() {
         title="Choose Payment Method"
         description="Choose card checkout with Stripe or request a QuickBooks invoice with ACH options."
         path="/payments/options"
+        noindex
       />
       <section className="py-16 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
@@ -216,12 +228,12 @@ export default function PaymentOptions() {
             </div>
 
             <div className="mt-8 pt-6 border-t border-white/[0.08] text-center">
-              <Link
-                href="/pricing"
+              <a
+                href={buildMarketingUrl("/pricing")}
                 className="text-sm text-accent hover:underline underline-offset-2"
               >
                 Back to pricing
-              </Link>
+              </a>
             </div>
           </div>
         </div>

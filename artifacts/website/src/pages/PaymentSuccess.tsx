@@ -19,7 +19,7 @@ const SERVICE_LABELS: Record<string, string> = {
 export default function PaymentSuccess() {
   usePageTitle("Payment Confirmed");
 
-  const { service, plan, sessionId, paymentMethod } =
+  const { service, plan, sessionId, paymentMethod, mode } =
     getOnboardingContextFromSearch(window.location.search);
   const serviceLabel = SERVICE_LABELS[service || ""] || "your selected service";
   const onboardingHref = buildOnboardingUrl({
@@ -28,6 +28,11 @@ export default function PaymentSuccess() {
     sessionId,
     paymentMethod,
   });
+
+  const thankYouCopy =
+    mode === "deposit"
+      ? `Thank you for your deposit for`
+      : `Thank you for subscribing to`;
 
   useEffect(() => {
     trackEvent("Payment Method Completion", {
@@ -55,7 +60,7 @@ export default function PaymentSuccess() {
               Payment Received!
             </h1>
             <p className="text-lg text-muted-foreground mb-4">
-              Thank you for your deposit for{" "}
+              {thankYouCopy}{" "}
               <span className="text-foreground font-medium">
                 {serviceLabel}
               </span>
