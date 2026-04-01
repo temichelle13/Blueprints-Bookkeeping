@@ -44,8 +44,8 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/70 to-background" />
         </div>
 
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/8 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-primary/20 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-accent/6 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-primary/15 rounded-full blur-[90px] pointer-events-none" />
 
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center pt-32 pb-24">
           <motion.div
@@ -113,7 +113,7 @@ export default function Home() {
 
       <div className="glow-line max-w-5xl mx-auto" />
 
-      <section className="py-28 relative">
+      <section className="py-24 md:py-28 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center text-center mb-16">
             <div className="accent-bar mb-6" />
@@ -187,7 +187,7 @@ export default function Home() {
 
       <div className="glow-line max-w-5xl mx-auto" />
 
-      <section className="py-28 relative">
+      <section className="py-24 md:py-28 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
@@ -277,7 +277,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-28 relative">
+      <section className="py-24 md:py-28 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center text-center mb-14">
             <div className="accent-bar mb-6" />
@@ -359,17 +359,95 @@ export default function Home() {
 
       <CredentialBadgeStrip compact />
 
-      <div className="glow-line max-w-5xl mx-auto" />
-
       <GoogleReviewsCallout />
 
-      <div className="glow-line max-w-5xl mx-auto" />
+      <section className="py-24 md:py-28 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="glass-card rounded-3xl p-6 sm:p-8 md:p-10">
+            <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-12 items-start">
+              <div>
+                <div className="accent-bar mb-5" />
+                <p className="text-sm font-semibold tracking-[0.16em] text-accent/80 mb-4">
+                  FEATURED CLIENT OUTCOME
+                </p>
+                <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground mb-4">
+                  From backlog to board-ready reporting in 45 days.
+                </h2>
+                <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-8">
+                  A multi-entity service business came to us with a five-month
+                  reconciliation backlog and cash flow blind spots. We rebuilt
+                  their close workflow so leadership could make decisions from
+                  reliable numbers every month.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {[
+                    { value: "5 months", label: "Backlog cleared" },
+                    { value: "45 days", label: "To stable monthly close" },
+                    { value: "100%", label: "US-based handling" },
+                  ].map((stat, i) => (
+                    <div
+                      key={i}
+                      className="rounded-xl border border-border bg-foreground/[0.02] p-4"
+                    >
+                      <p className="text-xl font-display font-bold text-foreground mb-1">
+                        {stat.value}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {stat.label}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-border bg-background/40 p-5 sm:p-6">
+                <p className="text-sm font-semibold text-foreground mb-5">
+                  Delivery timeline
+                </p>
+                <div className="space-y-5">
+                  {[
+                    {
+                      phase: "Week 1",
+                      detail:
+                        "Full diagnostic, chart-of-accounts repair plan, and milestone map.",
+                    },
+                    {
+                      phase: "Weeks 2–4",
+                      detail:
+                        "Historical cleanup, reconciliation, and reporting architecture.",
+                    },
+                    {
+                      phase: "Weeks 5–6",
+                      detail:
+                        "Executive dashboard handoff and monthly close rhythm finalized.",
+                    },
+                  ].map((item, i) => (
+                    <div key={i} className="flex gap-4">
+                      <div className="mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-accent/20 text-[11px] font-bold text-accent">
+                        {i + 1}
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground mb-1">
+                          {item.phase}
+                        </p>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {item.detail}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <div className="glow-line max-w-5xl mx-auto" />
 
-      <section className="py-24 relative overflow-hidden">
+      <section className="py-24 md:py-28 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 via-accent/[0.02] to-transparent" />
-        <div className="relative max-w-3xl mx-auto px-4 text-center">
+        <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-6">
             Stop Guessing.
             <br />
