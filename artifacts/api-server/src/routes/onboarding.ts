@@ -11,6 +11,14 @@ import { Resend } from "resend";
 import * as contractService from "../lib/contract-service";
 import { isEmailSuppressed } from "../lib/email-suppression";
 import { getRequestIp, getUserAgent } from "../lib/request-helpers";
+import {
+  honeypotProtection,
+  createSubmissionRateLimiter,
+  enforceMaxLength,
+  validateEmailStrict,
+  withSubmissionMonitoring,
+  turnstileProtection,
+} from "../middleware/public-submissions";
 
 const router: IRouter = Router();
 
@@ -201,9 +209,6 @@ router.post(
         message: notes ?? null,
         consentTextVersion: "self-service-onboarding-consent-2026-03-31.1",
         consentSourcePage: "/onboarding",
-        requestIp: req.ip ?? null,
-        userAgent: (req.headers["user-agent"] as string | undefined) ?? null,
-        consentTimestamp: new Date(),
         requestIp: getRequestIp(req),
         userAgent: getUserAgent(req),
         consentTimestamp: new Date(),
@@ -211,6 +216,10 @@ router.post(
       .returning();
 
     try {
+      if (!stripe) {
+        res.status(503).json({ error: "Payment processing is not configured." });
+        return;
+      }
       const session = await stripe.checkout.sessions.retrieve(stripeSessionId);
       if (session.payment_status !== "paid") {
         res.status(400).json({
