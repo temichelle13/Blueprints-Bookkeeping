@@ -23,7 +23,22 @@ export const contactInquiriesTable = pgTable("contact_inquiries", {
   monthlyRevenueRange: text("monthly_revenue_range"),
   biggestChallenge: text("biggest_challenge"),
   preferredContactMethod: text("preferred_contact_method"),
+  emailConsent: boolean("email_consent").notNull().default(false),
+  emailConsentCapturedAt: timestamp("email_consent_captured_at", {
+    withTimezone: true,
+  }),
+  emailConsentSource: text("email_consent_source"),
   smsConsent: boolean("sms_consent").notNull().default(false),
+  smsConsentCapturedAt: timestamp("sms_consent_captured_at", {
+    withTimezone: true,
+  }),
+  smsConsentSource: text("sms_consent_source"),
+  phoneConsent: boolean("phone_consent").notNull().default(false),
+  phoneConsentCapturedAt: timestamp("phone_consent_captured_at", {
+    withTimezone: true,
+  }),
+  phoneConsentSource: text("phone_consent_source"),
+  consentLegalTextVersion: text("consent_legal_text_version"),
   status: text("status").notNull().default("New"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
