@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   Clock3,
   Wallet,
+  AlertCircle,
 } from "lucide-react";
 import { useSubmitContactForm } from "@workspace/api-client-react";
 import { usePageTitle } from "@/hooks/use-page-title";
@@ -49,7 +50,7 @@ const bookkeeperIntakeSchema = z.object({
   businessName: z.string().optional(),
   servicesWanted: z.array(z.string()).min(1, "Select at least one service"),
   budgetRange: z.string().optional(),
-  budgetUnknown: z.boolean().default(false),
+  budgetUnknown: z.boolean(),
   deadlinePressure: z.string().min(2, "Please select your timeline"),
   additionalComments: z
     .string()
@@ -400,12 +401,12 @@ function BookkeeperIntakeForm() {
           formType: "detailed",
           name: data.name,
           email: data.email,
-          businessName: data.businessName?.trim() || undefined,
+          businessName: data.businessName?.trim() || null,
           industry: "Bookkeeper Intake",
           servicesInterested: data.servicesWanted,
           monthlyRevenueRange: data.budgetUnknown
             ? "Budget not decided yet"
-            : data.budgetRange?.trim() || undefined,
+            : data.budgetRange?.trim() || null,
           biggestChallenge: [
             `Deadline pressure: ${data.deadlinePressure}`,
             "",
@@ -784,6 +785,30 @@ export default function Contact() {
             </span>{" "}
             — All meetings, consultations, and services are conducted online. No
             in-person visits or physical office location.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3 rounded-xl border border-destructive/30 bg-destructive/5 px-5 py-4 mb-10">
+          <AlertCircle size={20} className="text-destructive shrink-0" />
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            <span className="font-semibold text-destructive">
+              Urgent or emergency?
+            </span>{" "}
+            Call or text{" "}
+            <a
+              href={PHONE_HREF}
+              className="font-medium text-foreground hover:text-destructive transition-colors"
+            >
+              {PHONE_DISPLAY}
+            </a>{" "}
+            directly, or{" "}
+            <a
+              href={`mailto:${EMAIL_ADDRESS}?subject=Urgent%3A%20Emergency%20Bookkeeping%20Help%20Needed`}
+              className="font-medium text-foreground hover:text-destructive transition-colors"
+            >
+              email with "Urgent" in the subject line
+            </a>{" "}
+            for priority response.
           </p>
         </div>
 

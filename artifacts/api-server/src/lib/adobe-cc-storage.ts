@@ -46,7 +46,7 @@ export async function uploadToCreativeCloud(
       "x-api-key": apiKey || "",
       "Content-Type": contentType,
     },
-    body: fileData,
+    body: fileData as BodyInit,
   });
 
   if (!response.ok) {

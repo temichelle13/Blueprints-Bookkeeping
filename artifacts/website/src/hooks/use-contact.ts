@@ -1,6 +1,6 @@
 import { z } from "zod";
 import {
-  ContactFormInput,
+  type ContactFormInput,
   useSubmitContactForm,
 } from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
@@ -59,13 +59,13 @@ export function useContactMutation() {
               formType: "detailed",
               name: data.name,
               email: data.email,
-              phone: data.phone,
+              phone: data.phone ?? null,
               businessName: data.businessName,
               industry: data.industry,
               servicesInterested: data.servicesInterested,
-              monthlyRevenueRange: data.monthlyRevenueRange,
+              monthlyRevenueRange: data.monthlyRevenueRange ?? null,
               biggestChallenge: data.biggestChallenge,
-              preferredContactMethod: data.preferredContactMethod,
+              preferredContactMethod: data.preferredContactMethod ?? null,
               smsConsent: data.smsConsent,
               website: data.website ?? "",
             };

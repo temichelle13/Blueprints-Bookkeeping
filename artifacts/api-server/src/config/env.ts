@@ -81,7 +81,7 @@ export function validateEnv(): Env {
     return cachedEnv;
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
-      const errorMessages = error.errors.map((err: z.ZodIssue) => {
+      const errorMessages = error.issues.map((err: z.ZodIssue) => {
         const path = err.path.join(".");
         return `  - ${path}: ${err.message}`;
       });

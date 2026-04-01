@@ -3,10 +3,9 @@ import {
   ArrowLeft,
   Calendar,
   Clock,
-  Linkedin,
-  Twitter,
   Mail,
 } from "lucide-react";
+import { FaLinkedin, FaXTwitter } from "react-icons/fa6";
 import { blogPosts } from "@/data/blog-posts";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
@@ -37,7 +36,7 @@ function ShareBar({ title, slug }: { title: string; slug: string }) {
         rel="noopener noreferrer"
         className={`${buttonClass} bg-[#0A66C2]/10 border-[#0A66C2]/30 text-[#0A66C2] hover:bg-[#0A66C2] hover:text-white hover:border-[#0A66C2]`}
       >
-        <Linkedin size={16} />
+        <FaLinkedin size={16} />
         LinkedIn
       </a>
       <a
@@ -46,7 +45,7 @@ function ShareBar({ title, slug }: { title: string; slug: string }) {
         rel="noopener noreferrer"
         className={`${buttonClass} bg-foreground/5 border-foreground/10 text-foreground hover:bg-foreground hover:text-background hover:border-foreground`}
       >
-        <Twitter size={16} />X (Twitter)
+        <FaXTwitter size={16} />X (Twitter)
       </a>
       <a
         href={emailUrl}

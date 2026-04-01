@@ -10,6 +10,7 @@ import {
   HelpCircle,
   Send,
   CheckCircle,
+  AlertCircle,
 } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
@@ -225,7 +226,7 @@ export default function GetStarted() {
           </div>
         )}
 
-        {path.kind === "accountant" ? (
+        {path.kind !== "accountant" ? (
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {path.external ? (
               <a
@@ -327,7 +328,45 @@ export default function GetStarted() {
                 </Link>
               ))}
           </div>
-        ) : null}
+        ) : (
+          <div
+            style={{
+              background: "rgba(255,255,255,0.02)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: 10,
+              padding: "12px 14px",
+              marginBottom: 16,
+            }}
+          >
+            <p
+              style={{
+                fontSize: 11,
+                fontWeight: 600,
+                color: path.color,
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                marginBottom: 8,
+              }}
+            >
+              QuickBooks Online Instructions:
+            </p>
+            <ol
+              style={{
+                margin: 0,
+                paddingLeft: 20,
+                fontSize: 12,
+                color: "rgba(255,255,255,0.7)",
+                lineHeight: 1.6,
+              }}
+            >
+              {path.instructions?.map((step, i) => (
+                <li key={i} style={{ marginBottom: 6 }}>
+                  {step}
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
 
         <div
           style={{
@@ -409,6 +448,37 @@ export default function GetStarted() {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"
         >
           {paths.map((path, i) => renderCard(path, i))}
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="mb-8 flex items-center gap-4 rounded-xl border border-destructive/30 bg-destructive/5 px-5 py-4"
+        >
+          <AlertCircle size={20} className="text-destructive shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-destructive mb-0.5">
+              Facing an IRS notice or urgent financial issue?
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Call or text{" "}
+              <a
+                href="tel:+15413198654"
+                className="font-medium text-foreground hover:text-destructive transition-colors"
+              >
+                (541) 319-8654
+              </a>{" "}
+              directly, or{" "}
+              <a
+                href="mailto:tea@blueprintsandbookkeeping.com?subject=Urgent%3A%20Emergency%20Bookkeeping%20Help%20Needed"
+                className="font-medium text-foreground hover:text-destructive transition-colors"
+              >
+                email Tea
+              </a>{" "}
+              with "Urgent" in the subject line for priority response.
+            </p>
+          </div>
         </motion.div>
 
         <motion.div
