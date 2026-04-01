@@ -1,21 +1,11 @@
 import type { Request } from "express";
 import rateLimit, { ipKeyGenerator } from "express-rate-limit";
+import { logger } from "../lib/logger";
 
 export function getContactRateLimitKey(req: Request): string {
-  const forwardedFor = req.headers["x-forwarded-for"];
-  const forwardedValue = Array.isArray(forwardedFor)
-    ? forwardedFor[0]
-    : forwardedFor;
-
-  if (typeof forwardedValue === "string" && forwardedValue.trim().length > 0) {
-    const [firstHop] = forwardedValue.split(",");
-    const clientIp = firstHop?.trim();
-    if (clientIp) {
-      return clientIp;
-    }
-  }
-
-  return ipKeyGenerator(req.ip || req.socket.remoteAddress || "unknown");
+  // Rely on express-rate-limit's ipKeyGenerator, which uses req.ip and
+  // therefore honors Express's trust proxy configuration.
+  return ipKeyGenerator(req);
 }
 
 export const contactLimiter = rateLimit({
@@ -28,7 +18,7 @@ export const contactLimiter = rateLimit({
     error: "Too many submissions from this IP. Please try again later.",
   },
   handler: (req, res, _next, options) => {
-    console.warn("Contact rate limit exceeded", {
+    logger.warn("Contact rate limit exceeded", {
       ip: req.ip,
       key: getContactRateLimitKey(req),
       xForwardedFor: req.headers["x-forwarded-for"],

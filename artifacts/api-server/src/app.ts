@@ -53,7 +53,7 @@ function parseAllowedCorsOrigins(
 
 function parseTrustProxy(value: string | undefined): number | boolean {
   if (!value) {
-    return 1;
+    return false;
   }
 
   const normalizedValue = value.trim().toLowerCase();
@@ -71,7 +71,7 @@ function parseTrustProxy(value: string | undefined): number | boolean {
   }
 
   throw new Error(
-    `Invalid TRUST_PROXY value: ${value}. Use a positive integer hop count (recommended: 1), true/false, or leave unset.`,
+    `Invalid TRUST_PROXY value: ${value}. Use a positive integer hop count (recommended: 1), or true/false.`,
   );
 }
 

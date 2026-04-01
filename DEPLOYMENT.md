@@ -33,9 +33,10 @@ ADMIN_TOKEN=<generate-with-openssl-rand-hex-32>
 
 # Reverse Proxy / Client IP Configuration (CRITICAL for rate limiting)
 # Set how many trusted proxy hops are in front of the API server.
+# Defaults to false (no proxy trust) when unset.
 # Replit or a single load balancer/CDN in front of Node: 1
 # Multiple proxies (e.g., CDN -> ingress -> Node): set to exact hop count
-# Set to false only when API is exposed directly to the internet (no proxy)
+# Must be set explicitly in production to avoid IP spoofing via X-Forwarded-For
 TRUST_PROXY=1
 
 # Email - Resend
@@ -140,7 +141,8 @@ export CORS_ORIGIN=https://blueprintsandbookkeeping.com
 - Recommended values:
   - `TRUST_PROXY=1` for one proxy hop (common: Replit proxy, single reverse proxy, or CDN directly in front of the app)
   - `TRUST_PROXY=2` or higher only when you can verify multiple trusted hops
-  - `TRUST_PROXY=false` only when there is no reverse proxy/CDN
+  - Leave unset (or `TRUST_PROXY=false`) only when there is no reverse proxy/CDN; this is the default and prevents IP spoofing
+- **Always set `TRUST_PROXY` explicitly in production**; leaving it unset disables proxy trust and rate limits will key on the proxy IP, not the real client IP.
 - Keep proxy chain controlled by your infrastructure only; do not trust arbitrary client-supplied forwarding headers.
 
 ## Deployment to Cloudflare
