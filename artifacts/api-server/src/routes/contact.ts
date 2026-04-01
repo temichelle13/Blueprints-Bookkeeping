@@ -57,7 +57,9 @@ router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
     .returning();
 
   if (!inquiry) {
-    throw new Error("Failed to insert contact inquiry record");
+    logger.error("Failed to insert contact inquiry record");
+    res.status(500).json({ error: "Internal server error" });
+    return;
   }
 
   const suppressed = await isEmailSuppressed(data.email);
