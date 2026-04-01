@@ -8,6 +8,9 @@
     "build": "vite build --config vite.config.ts",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
     "typecheck": "tsc -p tsconfig.json --noEmit",
+    "sitemap:generate": "tsx scripts/generate-sitemap.ts",
+    "sitemap:check": "tsx scripts/generate-sitemap.ts --check",
+    "prebuild": "pnpm run sitemap:generate"
     "test": "tsx --test \"src/**/*.test.ts\""
   },
   "dependencies": {
