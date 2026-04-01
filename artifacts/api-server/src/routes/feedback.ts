@@ -37,8 +37,8 @@ const feedbackLimiter = createSubmissionRateLimiter({
 router.post(
   "/feedback",
   feedbackLimiter,
-  withSubmissionMonitoring("feedback"),
   honeypotProtection("feedback"),
+  withSubmissionMonitoring("feedback"),
   async (req, res): Promise<void> => {
     if (
       !enforceMaxLength("feedback", req, res, [
