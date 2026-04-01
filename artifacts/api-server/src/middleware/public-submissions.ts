@@ -144,7 +144,13 @@ export function enforceMaxLength(
       return false;
     }
 
-    if (value.trim().length > field.max) {
+    if (field.required && value.trim().length === 0) {
+      recordFailedSubmission(routeId, req, `missing_${field.key}`);
+      res.status(400).json({ error: `${field.key} is required.` });
+      return false;
+    }
+
+    if (value.length > field.max) {
       recordFailedSubmission(routeId, req, `max_length_${field.key}`);
       res.status(400).json({
         error: `${field.key} must be ${field.max} characters or fewer.`,
