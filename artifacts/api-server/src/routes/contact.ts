@@ -24,8 +24,8 @@ const contactSubmissionLimiter = createSubmissionRateLimiter({
 router.post(
   "/contact",
   contactSubmissionLimiter,
-  withSubmissionMonitoring("contact"),
   honeypotProtection("contact"),
+  withSubmissionMonitoring("contact"),
   async (req, res): Promise<void> => {
     if (
       !enforceMaxLength("contact", req, res, [
