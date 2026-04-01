@@ -11,6 +11,11 @@ let resendInstance: Resend | null = null;
 export function getResend(): Resend {
   if (!resendInstance) {
     const env = getEnv();
+    if (!env.RESEND_API_KEY) {
+      throw new Error(
+        "RESEND_API_KEY is not configured; cannot call getResend(). Set the environment variable to enable email delivery.",
+      );
+    }
     resendInstance = new Resend(env.RESEND_API_KEY);
   }
   return resendInstance;
@@ -39,7 +44,13 @@ export function tryGetResend(): Resend | null {
  * Get the owner email address
  */
 export function getOwnerEmail(): string {
-  return getEnv().OWNER_EMAIL;
+  const ownerEmail = getEnv().OWNER_EMAIL;
+  if (!ownerEmail) {
+    throw new Error(
+      "OWNER_EMAIL is not configured; cannot call getOwnerEmail(). Set the environment variable to enable email delivery.",
+    );
+  }
+  return ownerEmail;
 }
 
 /**

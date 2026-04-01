@@ -112,7 +112,19 @@ async function sendInquiryEmails(
     return;
   }
 
-  const suppressed = await deps.isEmailSuppressed(data.email);
+  let suppressed = false;
+  try {
+    suppressed = await deps.isEmailSuppressed(data.email);
+  } catch (error) {
+    deps.logWarn(
+      "Failed to check email suppression for contact inquiry",
+      {
+        inquiryId,
+        reason: "suppression_check_failed",
+        error,
+      },
+    );
+  }
 
   const servicesLabel =
     Array.isArray(data.servicesInterested) && data.servicesInterested.length
@@ -202,14 +214,19 @@ async function sendInquiryEmails(
   const settled = await Promise.allSettled(emailPromises);
   settled.forEach((result, index) => {
     if (result.status === "rejected") {
-      deps.logError("Contact inquiry email send failed", undefined, {
-        inquiryId,
-        emailType: index === 0 ? "owner_notification" : "client_confirmation",
-        reason:
-          result.reason instanceof Error
-            ? result.reason.message
-            : String(result.reason),
-      });
+      deps.logError(
+        "Contact inquiry email send failed",
+        result.reason instanceof Error ? result.reason : undefined,
+        {
+          inquiryId,
+          emailType:
+            index === 0 ? "owner_notification" : "client_confirmation",
+          reason:
+            result.reason instanceof Error
+              ? result.reason.message
+              : String(result.reason),
+        },
+      );
     }
   });
 }
@@ -251,7 +268,13 @@ export function createContactHandler(
       smsConsent: data.smsConsent,
     });
 
-    await sendInquiryEmails(deps, inquiry.id, data);
+    sendInquiryEmails(deps, inquiry.id, data).catch((err) => {
+      deps.logError(
+        "Contact inquiry email task failed unexpectedly",
+        err instanceof Error ? err : undefined,
+        { inquiryId: inquiry.id },
+      );
+    });
 
     deps
       .processFormSubmission({
