@@ -441,7 +441,7 @@ function ReferralForm() {
           htmlFor="referral-sms-consent"
           className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
         >
-          I agree to receive text messages and phone calls from Blueprints &amp;
+          I agree to receive text messages (SMS) from Blueprints &amp;
           Bookkeeping at my provided contact number. Message and data rates may
           apply. Reply STOP to opt out.
         </label>

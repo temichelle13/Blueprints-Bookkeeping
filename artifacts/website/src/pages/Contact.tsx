@@ -385,7 +385,7 @@ function MessageForm({ defaultMessage = "" }: { defaultMessage?: string }) {
       </div>
       {errors.emailConsent && (
         <p
-          id="contact-sms-consent-error"
+          id="contact-email-consent-error"
           role="alert"
           className="text-destructive text-xs -mt-2"
         >

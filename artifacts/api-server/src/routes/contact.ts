@@ -15,6 +15,15 @@ import { contactLimiter } from "./contact-rate-limit";
 const router: IRouter = Router();
 const CONSENT_FALLBACK_VERSION = "v2026-03-31";
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 type ContactConsent = {
   email: boolean;
   sms: boolean;
@@ -199,30 +208,30 @@ router.post(
         </div>
         <div style="background:#f8f9ff;padding:32px;border-radius:0 0 8px 8px;border:1px solid #e2e5f0;">
           <table style="width:100%;border-collapse:collapse;">
-            <tr><td style="padding:8px 0;color:#666;font-size:14px;width:140px;">Name</td><td style="padding:8px 0;font-weight:600;">${data.name}</td></tr>
-            <tr><td style="padding:8px 0;color:#666;font-size:14px;">Email</td><td style="padding:8px 0;"><a href="mailto:${data.email}" style="color:#6366f1;">${data.email}</a></td></tr>
-            ${data.phone ? `<tr><td style="padding:8px 0;color:#666;font-size:14px;">Phone</td><td style="padding:8px 0;">${data.phone}</td></tr>` : ""}
-            ${data.businessName ? `<tr><td style="padding:8px 0;color:#666;font-size:14px;">Business</td><td style="padding:8px 0;">${data.businessName}</td></tr>` : ""}
-            ${data.industry ? `<tr><td style="padding:8px 0;color:#666;font-size:14px;">Industry</td><td style="padding:8px 0;">${data.industry}</td></tr>` : ""}
-            <tr><td style="padding:8px 0;color:#666;font-size:14px;">Services</td><td style="padding:8px 0;">${servicesLabel}</td></tr>
-            ${data.monthlyRevenueRange ? `<tr><td style="padding:8px 0;color:#666;font-size:14px;">Revenue Range</td><td style="padding:8px 0;">${data.monthlyRevenueRange}</td></tr>` : ""}
-            ${data.preferredContactMethod ? `<tr><td style="padding:8px 0;color:#666;font-size:14px;">Prefers</td><td style="padding:8px 0;">${data.preferredContactMethod}</td></tr>` : ""}
+            <tr><td style="padding:8px 0;color:#666;font-size:14px;width:140px;">Name</td><td style="padding:8px 0;font-weight:600;">${escapeHtml(data.name)}</td></tr>
+            <tr><td style="padding:8px 0;color:#666;font-size:14px;">Email</td><td style="padding:8px 0;"><a href="mailto:${escapeHtml(data.email)}" style="color:#6366f1;">${escapeHtml(data.email)}</a></td></tr>
+            ${data.phone ? `<tr><td style="padding:8px 0;color:#666;font-size:14px;">Phone</td><td style="padding:8px 0;">${escapeHtml(data.phone)}</td></tr>` : ""}
+            ${data.businessName ? `<tr><td style="padding:8px 0;color:#666;font-size:14px;">Business</td><td style="padding:8px 0;">${escapeHtml(data.businessName)}</td></tr>` : ""}
+            ${data.industry ? `<tr><td style="padding:8px 0;color:#666;font-size:14px;">Industry</td><td style="padding:8px 0;">${escapeHtml(data.industry)}</td></tr>` : ""}
+            <tr><td style="padding:8px 0;color:#666;font-size:14px;">Services</td><td style="padding:8px 0;">${escapeHtml(servicesLabel)}</td></tr>
+            ${data.monthlyRevenueRange ? `<tr><td style="padding:8px 0;color:#666;font-size:14px;">Revenue Range</td><td style="padding:8px 0;">${escapeHtml(data.monthlyRevenueRange)}</td></tr>` : ""}
+            ${data.preferredContactMethod ? `<tr><td style="padding:8px 0;color:#666;font-size:14px;">Prefers</td><td style="padding:8px 0;">${escapeHtml(data.preferredContactMethod)}</td></tr>` : ""}
             <tr><td style="padding:8px 0;color:#666;font-size:14px;">Email Consent</td><td style="padding:8px 0;font-weight:600;color:${normalizedConsent.email ? "#10B981" : "#EF4444"};">${normalizedConsent.email ? "Yes" : "No"}</td></tr>
             <tr><td style="padding:8px 0;color:#666;font-size:14px;">SMS Consent</td><td style="padding:8px 0;font-weight:600;color:${normalizedConsent.sms ? "#10B981" : "#EF4444"};">${normalizedConsent.sms ? "Yes" : "No"}</td></tr>
             <tr><td style="padding:8px 0;color:#666;font-size:14px;">Phone Consent</td><td style="padding:8px 0;font-weight:600;color:${normalizedConsent.phone ? "#10B981" : "#EF4444"};">${normalizedConsent.phone ? "Yes" : "No"}</td></tr>
-            <tr><td style="padding:8px 0;color:#666;font-size:14px;">Consent Source</td><td style="padding:8px 0;">${normalizedConsent.source}</td></tr>
-            <tr><td style="padding:8px 0;color:#666;font-size:14px;">Consent Legal Text</td><td style="padding:8px 0;">${normalizedConsent.legalTextVersion}</td></tr>
+            <tr><td style="padding:8px 0;color:#666;font-size:14px;">Consent Source</td><td style="padding:8px 0;">${escapeHtml(normalizedConsent.source)}</td></tr>
+            <tr><td style="padding:8px 0;color:#666;font-size:14px;">Consent Legal Text</td><td style="padding:8px 0;">${escapeHtml(normalizedConsent.legalTextVersion)}</td></tr>
           </table>
           ${
             data.biggestChallenge || data.message
               ? `
           <div style="margin-top:20px;padding:16px;background:white;border-radius:6px;border-left:3px solid #6366f1;">
             <p style="margin:0 0 8px;font-size:13px;color:#666;text-transform:uppercase;letter-spacing:0.05em;">Message</p>
-            <p style="margin:0;line-height:1.6;">${data.biggestChallenge || data.message}</p>
+            <p style="margin:0;line-height:1.6;">${escapeHtml(data.biggestChallenge ?? data.message ?? "")}</p>
           </div>`
               : ""
           }
-          <p style="margin-top:24px;font-size:13px;color:#999;">Reply directly to this email to respond to ${data.name}.</p>
+          <p style="margin-top:24px;font-size:13px;color:#999;">Reply directly to this email to respond to ${escapeHtml(data.name)}.</p>
         </div>
       </div>`;
 
@@ -232,7 +241,7 @@ router.post(
           <h1 style="color:white;margin:0;font-size:20px;">We've got your message.</h1>
         </div>
         <div style="background:#f8f9ff;padding:32px;border-radius:0 0 8px 8px;border:1px solid #e2e5f0;">
-          <p>Hi ${data.name},</p>
+          <p>Hi ${escapeHtml(data.name)},</p>
           <p>Thanks for reaching out to Blueprints & Bookkeeping. Your inquiry has been received and I'll be in touch within <strong>one business day</strong> — usually sooner.</p>
           <p>In the meantime:</p>
           <ul style="line-height:1.8;">
