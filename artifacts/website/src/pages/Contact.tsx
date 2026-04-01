@@ -21,6 +21,10 @@ import { SEO } from "@/components/SEO";
 import { useContactMutation } from "@/hooks/use-contact";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
+import {
+  BOOKKEEPER_INTENT,
+  isBookkeeperIntentParam,
+} from "@/lib/contact-intent";
 
 const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
 const PHONE_DISPLAY = "(541) 319-8654";
@@ -874,7 +878,7 @@ export default function Contact() {
   const search = window.location.search;
   const isBookkeeperIntent = useMemo(() => {
     const intent = new URLSearchParams(search).get("intent");
-    return intent === BOOKKEEPER_INTENT;
+    return isBookkeeperIntentParam(intent);
   }, [search]);
 
   usePageTitle(isBookkeeperIntent ? "Add Me as Your Bookkeeper" : "Contact");
