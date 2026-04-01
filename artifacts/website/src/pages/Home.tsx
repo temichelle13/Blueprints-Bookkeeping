@@ -14,6 +14,9 @@ import {
   StatsProofBar,
   CredentialBadgeStrip,
   GoogleReviewsCallout,
+  HeroCtaTrustNote,
+  EngagementClarityPreview,
+  FinalCtaTrustNote,
 } from "@/components/TrustSignals";
 import { SEO } from "@/components/SEO";
 import { trackHomeCtaClick } from "@/hooks/usePageTracking";
@@ -104,6 +107,8 @@ export default function Home() {
               {secondaryCtaLabel}
             </Link>
           </motion.div>
+
+          <HeroCtaTrustNote />
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
@@ -113,7 +118,15 @@ export default function Home() {
 
       <div className="glow-line max-w-5xl mx-auto" />
 
-      <section className="py-24 md:py-28 relative">
+      <EngagementClarityPreview />
+
+      <div className="glow-line max-w-5xl mx-auto" />
+
+      <CredentialBadgeStrip compact />
+
+      <div className="glow-line max-w-5xl mx-auto" />
+
+      <section className="py-28 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center text-center mb-16">
             <div className="accent-bar mb-6" />
@@ -355,10 +368,6 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="glow-line max-w-5xl mx-auto" />
-
-      <CredentialBadgeStrip compact />
-
       <GoogleReviewsCallout />
 
       <section className="py-24 md:py-28 relative">
@@ -457,27 +466,14 @@ export default function Home() {
             Secure your financial infrastructure and make faster, better
             decisions with confidence.
           </p>
-          <p className="text-sm text-muted-foreground/80 mb-10">
-            Client roster is intentionally limited to maintain responsive,
-            high-touch service.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href="/schedule"
-              onClick={() => trackHomeCtaClick("primary", "closing")}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-accent text-white font-bold text-lg rounded-xl shadow-xl shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300"
-            >
-              {primaryCtaLabel}
-              <ArrowRight size={20} />
-            </Link>
-            <Link
-              href="/services"
-              onClick={() => trackHomeCtaClick("secondary", "closing")}
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-white/[0.04] text-white backdrop-blur-sm border border-white/10 font-semibold text-lg hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300"
-            >
-              {secondaryCtaLabel}
-            </Link>
-          </div>
+          <Link
+            href="/schedule"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-accent text-white font-bold text-lg rounded-xl shadow-xl shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300"
+          >
+            Book Your Consultation
+            <ArrowRight size={20} />
+          </Link>
+          <FinalCtaTrustNote />
         </div>
       </section>
     </div>
