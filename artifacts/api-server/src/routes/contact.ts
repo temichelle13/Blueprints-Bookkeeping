@@ -1,16 +1,10 @@
 import { Router, type IRouter } from "express";
 import { db, contactInquiriesTable } from "@workspace/db";
 import { SubmitContactFormBody } from "@workspace/api-zod";
-import { tryGetResend, tryGetOwnerEmail, EMAIL_FROM } from "../lib/email";
+import * as contractService from "../lib/contract-service";
+import { isEmailSuppressed } from "../lib/email-suppression";
 import { logger } from "../lib/logger";
-import {
-  honeypotProtection,
-  createSubmissionRateLimiter,
-  enforceMaxLength,
-  validateEmailStrict,
-  withSubmissionMonitoring,
-} from "../middleware/public-submissions";
-import { contactLimiter } from "./contact-rate-limit";
+import { queueContactInquiryEmails } from "../lib/outbound-email-events";
 
 const router: IRouter = Router();
 const CONSENT_FALLBACK_VERSION = "v2026-03-31";
@@ -196,6 +190,8 @@ router.post(
     throw new Error("Failed to insert contact inquiry record");
   }
 
+  const suppressed = await isEmailSuppressed(data.email);
+
   const servicesLabel =
     Array.isArray(data.servicesInterested) && data.servicesInterested.length
       ? data.servicesInterested.join(", ")
@@ -235,7 +231,7 @@ router.post(
         </div>
       </div>`;
 
-      const confirmHtml = `
+  const confirmHtml = `
       <div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
         <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
           <h1 style="color:white;margin:0;font-size:20px;">We've got your message.</h1>
@@ -255,47 +251,18 @@ router.post(
         </div>
       </div>`;
 
-      const emailPromises: Promise<unknown>[] = [
-        resend.emails.send({
-          from: EMAIL_FROM.default,
-          to: getOwnerEmail(),
-          replyTo: data.email,
-          subject: `New Inquiry: ${data.name}${data.businessName ? ` — ${data.businessName}` : ""}`,
-          html: notifyHtml,
-        }),
-      ];
-
-      if (suppressed) {
-        logger.warn("Skipping confirmation email for suppressed address", {
-          email: data.email,
-        });
-      } else {
-        emailPromises.push(
-          resend.emails.send({
-            from: EMAIL_FROM.default,
-            to: data.email,
-            subject: "We received your message — Blueprints & Bookkeeping",
-            html: confirmHtml,
-          }),
-        );
-      }
-
-      await Promise.allSettled(emailPromises);
-    }
+  queueContactInquiryEmails({
+    inquiryId: inquiry.id,
+    senderEmail: data.email,
+    senderSuppressed: suppressed,
+    ownerHtml: notifyHtml,
+    ownerSubject: `New Inquiry: ${data.name}${data.businessName ? ` — ${data.businessName}` : ""}`,
+    confirmationHtml: confirmHtml,
+  }).catch((err: unknown) => {
+    logger.error("Failed to queue contact inquiry emails", err as Error, {
+      inquiryId: inquiry.id,
+    });
   });
-}
-
-    contractService
-      .processFormSubmission({
-        formType: data.formType,
-        name: data.name,
-        email: data.email,
-        servicesInterested: data.servicesInterested ?? null,
-        contactInquiryId: inquiry.id,
-      })
-      .catch((err) => {
-        console.error("Contract automation error (non-blocking):", err);
-      });
 
     res.status(201).json({
       success: true,
