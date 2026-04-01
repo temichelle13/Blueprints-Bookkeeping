@@ -6,8 +6,8 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
 
-const CONTACT_CONSENT_SOURCE = "contact_form";
-const CONTACT_CONSENT_LEGAL_TEXT_VERSION = "contact-consent-v2026-03-31";
+export const CONTACT_CONSENT_TEXT_VERSION = "contact-consent-2026-03-31.1";
+export const CONTACT_CONSENT_SOURCE_PAGE = "/contact";
 
 export const quickContactSchema = z.object({
   formType: z.literal("quick"),
@@ -60,13 +60,8 @@ export function useContactMutation() {
               email: data.email,
               message: data.message,
               smsConsent: data.smsConsent,
-              consent: {
-                email: data.emailConsent,
-                sms: data.smsConsent,
-                phone: data.phoneConsent,
-                source: CONTACT_CONSENT_SOURCE,
-                legalTextVersion: CONTACT_CONSENT_LEGAL_TEXT_VERSION,
-              },
+              consentTextVersion: CONTACT_CONSENT_TEXT_VERSION,
+              consentSourcePage: CONTACT_CONSENT_SOURCE_PAGE,
               website: data.website ?? "",
             }
           : {
@@ -81,13 +76,8 @@ export function useContactMutation() {
               biggestChallenge: data.biggestChallenge,
               preferredContactMethod: data.preferredContactMethod ?? null,
               smsConsent: data.smsConsent,
-              consent: {
-                email: data.emailConsent,
-                sms: data.smsConsent,
-                phone: data.phoneConsent,
-                source: CONTACT_CONSENT_SOURCE,
-                legalTextVersion: CONTACT_CONSENT_LEGAL_TEXT_VERSION,
-              },
+              consentTextVersion: CONTACT_CONSENT_TEXT_VERSION,
+              consentSourcePage: CONTACT_CONSENT_SOURCE_PAGE,
               website: data.website ?? "",
             };
       await mutation.mutateAsync({ data: payload });

@@ -62,6 +62,8 @@ export interface ContactFormInput {
     legalTextVersion: string;
   };
   smsConsent: boolean;
+  consentTextVersion: string;
+  consentSourcePage: string;
   website?: string;
 }
 

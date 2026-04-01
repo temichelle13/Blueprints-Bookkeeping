@@ -18,7 +18,7 @@ import {
 import { useSubmitContactForm } from "@workspace/api-client-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
-import { useContactMutation } from "@/hooks/use-contact";
+import { useContactMutation, CONTACT_CONSENT_TEXT_VERSION, CONTACT_CONSENT_SOURCE_PAGE } from "@/hooks/use-contact";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
 import {
@@ -33,10 +33,10 @@ const PHONE_DISPLAY = "(541) 319-8654";
 const PHONE_HREF = "tel:+15413198654";
 const EMAIL_ADDRESS = "tea@blueprintsandbookkeeping.com";
 const BOOKKEEPER_INTENT = "bookkeeper";
-const EMERGENCY_REQUEST_URL =
-  "mailto:tea@blueprintsandbookkeeping.com?subject=Emergency%20%2F%20Expedited%20Request&body=Hi%20Tea%2C%0A%0AI%20need%20an%20urgent%20bookkeeping%20review%20due%20to%20deadline%20pressure%20(tax%2C%20lender%2C%20or%20filing).%20Please%20contact%20me%20as%20soon%20as%20possible.%0A%0AName%3A%0ABusiness%3A%0ABest%20phone%20number%3A";
-const CONTACT_CONSENT_SOURCE = "contact_page";
-const CONTACT_CONSENT_LEGAL_TEXT_VERSION = "contact-consent-v2026-03-31";
+const CONTACT_CONSENT_LANGUAGE =
+  "I agree to receive text messages and phone calls from Blueprints & Bookkeeping at my provided contact number. Message and data rates may apply. Reply STOP to opt out.";
+const INQUIRY_PROCESSING_DISCLOSURE =
+  "By submitting this inquiry, you consent to Blueprints & Bookkeeping processing your contact and business details to respond to your request, provide service recommendations, maintain compliance records, and prevent abuse.";
 
 const messageSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -392,29 +392,18 @@ function MessageForm({ defaultMessage = "" }: { defaultMessage?: string }) {
             may apply. Reply STOP to opt out.
           </label>
         </div>
-
-        <div className="flex items-start gap-3">
-          <input
-            id="contact-phone-consent"
-            type="checkbox"
-            {...register("phoneConsent")}
-            className="mt-1 h-4 w-4 rounded border border-white/20 bg-white/[0.04] accent-accent cursor-pointer"
-          />
-          <label
-            htmlFor="contact-phone-consent"
-            className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
-          >
-            I consent to phone call outreach about this inquiry.
-          </label>
-        </div>
-
-        {!watch("smsConsent") && (
-          <p className="text-[11px] text-muted-foreground">
-            SMS is optional. If left unchecked, we will not send SMS outreach.
-          </p>
-        )}
+        <label
+          htmlFor="contact-sms-consent"
+          className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none min-h-[44px] flex items-center"
+        >
+          {CONTACT_CONSENT_LANGUAGE}
+        </label>
       </div>
-      {errors.emailConsent && (
+      <p className="text-xs text-muted-foreground leading-relaxed -mt-1">
+        {INQUIRY_PROCESSING_DISCLOSURE} Consent language version:{" "}
+        {CONTACT_CONSENT_TEXT_VERSION}.
+      </p>
+      {errors.smsConsent && (
         <p
           id="contact-email-consent-error"
           role="alert"
@@ -506,14 +495,9 @@ function BookkeeperIntakeForm() {
             "Additional comments:",
             data.additionalComments,
           ].join("\n"),
-          smsConsent: data.smsConsent,
-          consent: {
-            email: data.emailConsent,
-            sms: data.smsConsent,
-            phone: data.phoneConsent,
-            source: CONTACT_CONSENT_SOURCE,
-            legalTextVersion: CONTACT_CONSENT_LEGAL_TEXT_VERSION,
-          },
+          smsConsent: false,
+          consentTextVersion: CONTACT_CONSENT_TEXT_VERSION,
+          consentSourcePage: CONTACT_CONSENT_SOURCE_PAGE,
           website: data.website || "",
         },
       });
@@ -888,6 +872,10 @@ function BookkeeperIntakeForm() {
           {submitError}
         </p>
       )}
+      <p className="text-xs text-muted-foreground leading-relaxed -mt-2">
+        {INQUIRY_PROCESSING_DISCLOSURE} Consent language version:{" "}
+        {CONTACT_CONSENT_TEXT_VERSION}.
+      </p>
 
       <button
         type="submit"

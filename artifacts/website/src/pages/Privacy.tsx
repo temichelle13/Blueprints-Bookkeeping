@@ -67,6 +67,11 @@ export default function Privacy() {
                 contact form
               </li>
               <li>
+                Consent metadata tied to inquiry submissions, including consent
+                timestamp, consent text version, source page, request IP, and
+                user-agent details
+              </li>
+              <li>
                 Business name, industry, and financial details shared for
                 service inquiries
               </li>
@@ -86,9 +91,17 @@ export default function Privacy() {
             <ul className="list-disc list-inside space-y-1 pl-2">
               <li>Respond to your inquiries and provide our services</li>
               <li>
+                Document communication consent for TCPA/privacy compliance and
+                defensible audit trails
+              </li>
+              <li>
                 Send newsletters and financial tips you have subscribed to
               </li>
               <li>Improve our website and service offerings</li>
+              <li>
+                Monitor abuse, security events, and fraud attempts on inquiry
+                forms
+              </li>
               <li>Comply with applicable legal obligations</li>
             </ul>
             <p className="mt-3">
@@ -207,12 +220,13 @@ export default function Privacy() {
               7. Data Retention
             </h2>
             <p>
-              We retain contact and intake records (including consent audit
-              metadata) for up to 7 years unless a longer period is required by
-              law, contract, dispute resolution, or tax/accounting obligations.
-              Newsletter subscriber information is retained until you
-              unsubscribe. You may request deletion of data where applicable law
-              allows.
+              Inquiry records are retained under our internal compliance
+              schedule: active records are retained for up to 12 months,
+              inquiries marked Closed are auto-archived and redacted after 12
+              months, and archived records are permanently deleted after 24
+              months unless a legal hold requires longer retention. Newsletter
+              subscriber information is retained until you unsubscribe. You may
+              request deletion of your data at any time by contacting us.
             </p>
           </section>
 

@@ -77,7 +77,9 @@ function parseTrustProxy(value: string | undefined): number | boolean {
 
 const app: Express = express();
 
-app.set("trust proxy", parseTrustProxy(process.env.TRUST_PROXY));
+// Trust exactly one reverse-proxy hop so req.ip / req.ips reflect the real
+// client address rather than the proxy address.
+app.set("trust proxy", 1);
 
 app.use(helmet());
 

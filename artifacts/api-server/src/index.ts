@@ -6,7 +6,7 @@ import {
   syncAllPendingAgreements,
 } from "./lib/contract-service";
 import { runNexusCheck, ensureNexusRulesSeeded } from "./lib/nexus-service";
-import { processPendingOutboundEmailEvents } from "./lib/outbound-email-events";
+import { runInquiryRetentionPolicy } from "./lib/inquiry-retention";
 
 // Validate environment variables at startup
 try {
@@ -21,6 +21,7 @@ const env = getEnv();
 const port = env.PORT;
 
 const REMINDER_INTERVAL_MS = 60 * 60 * 1000;
+const INQUIRY_RETENTION_INTERVAL_MS = 24 * 60 * 60 * 1000;
 
 const OUTBOUND_EMAIL_RETRY_INTERVAL_MS = 60 * 1000;
 
@@ -109,6 +110,19 @@ function startNexusScheduler() {
   scheduleNext();
 }
 
+function startInquiryRetentionScheduler() {
+  async function run() {
+    try {
+      await runInquiryRetentionPolicy();
+    } catch (err) {
+      logger.error("Inquiry retention scheduler error", err as Error);
+    }
+  }
+
+  setInterval(run, INQUIRY_RETENTION_INTERVAL_MS);
+  setTimeout(run, 15_000);
+}
+
 app.listen(port, async () => {
   logger.info("Server started", { port, environment: env.NODE_ENV });
 
@@ -121,5 +135,5 @@ app.listen(port, async () => {
 
   startContractScheduler();
   startNexusScheduler();
-  startOutboundEmailRetryScheduler();
+  startInquiryRetentionScheduler();
 });

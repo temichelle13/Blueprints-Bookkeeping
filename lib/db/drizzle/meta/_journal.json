@@ -26,15 +26,8 @@
     {
       "idx": 3,
       "version": "7",
-      "when": 1773692500000,
-      "tag": "0003_add_foreign_keys_and_indexes",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1774950150648,
-      "tag": "0004_add_contact_consent_audit_fields",
+      "when": 1774953600000,
+      "tag": "0004_contact_inquiry_consent_and_retention",
       "breakpoints": true
     }
   ]

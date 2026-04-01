@@ -43,6 +43,8 @@ export const SubmitContactFormBody = zod.object({
     })
     .optional(),
   smsConsent: zod.boolean(),
+  consentTextVersion: zod.string(),
+  consentSourcePage: zod.string(),
   website: zod.string().optional(),
 });
 

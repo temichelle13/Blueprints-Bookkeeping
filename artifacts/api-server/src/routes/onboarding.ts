@@ -10,14 +10,7 @@ import { eq } from "drizzle-orm";
 import { Resend } from "resend";
 import * as contractService from "../lib/contract-service";
 import { isEmailSuppressed } from "../lib/email-suppression";
-import {
-  createSubmissionRateLimiter,
-  enforceMaxLength,
-  honeypotProtection,
-  turnstileProtection,
-  validateEmailStrict,
-  withSubmissionMonitoring,
-} from "../middleware/public-submissions";
+import { getRequestIp, getUserAgent } from "../lib/request-helpers";
 
 const router: IRouter = Router();
 
@@ -196,12 +189,26 @@ router.post(
     let subscriptionId: number | null = null;
     const stripe = getStripe();
 
-    if (!stripe) {
-      res
-        .status(503)
-        .json({ error: "Payment verification is not configured." });
-      return;
-    }
+    const [inquiry] = await db
+      .insert(contactInquiriesTable)
+      .values({
+        formType: "self_service_onboarding",
+        name: clientName,
+        email: clientEmail,
+        phone: phone ?? null,
+        businessName: businessName,
+        servicesInterested: plan ? [plan] : null,
+        message: notes ?? null,
+        consentTextVersion: "self-service-onboarding-consent-2026-03-31.1",
+        consentSourcePage: "/onboarding",
+        requestIp: req.ip ?? null,
+        userAgent: (req.headers["user-agent"] as string | undefined) ?? null,
+        consentTimestamp: new Date(),
+        requestIp: getRequestIp(req),
+        userAgent: getUserAgent(req),
+        consentTimestamp: new Date(),
+      })
+      .returning();
 
     try {
       const session = await stripe.checkout.sessions.retrieve(stripeSessionId);

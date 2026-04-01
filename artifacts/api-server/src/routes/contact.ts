@@ -3,46 +3,31 @@ import { db, contactInquiriesTable } from "@workspace/db";
 import { SubmitContactFormBody } from "@workspace/api-zod";
 import * as contractService from "../lib/contract-service";
 import { isEmailSuppressed } from "../lib/email-suppression";
+import { getResend, getOwnerEmail, EMAIL_FROM } from "../lib/email";
+import { getRequestIp, getUserAgent } from "../lib/request-helpers";
 import { logger } from "../lib/logger";
 import { queueContactInquiryEmails } from "../lib/outbound-email-events";
 
 const router: IRouter = Router();
 const CONSENT_FALLBACK_VERSION = "v2026-03-31";
 
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
+const ALLOWED_CONSENT_TEXT_VERSIONS = new Set([
+  "contact-consent-2026-03-31.1",
+  "self-service-onboarding-consent-2026-03-31.1",
+  "legacy-unknown",
+]);
 
-type ContactConsent = {
-  email: boolean;
-  sms: boolean;
-  phone: boolean;
-  source: string;
-  legalTextVersion: string;
-};
+const ALLOWED_CONSENT_SOURCE_PAGES = new Set(["/contact", "/onboarding"]);
 
-function normalizeConsent(data: {
-  consent?: ContactConsent | undefined;
-  smsConsent: boolean;
-  formType: "quick" | "detailed";
-}): ContactConsent {
-  if (data.consent) {
-    return data.consent;
-  }
-
-  return {
-    email: true,
-    sms: data.smsConsent,
-    phone: data.smsConsent,
-    source: `legacy_${data.formType}_form`,
-    legalTextVersion: CONSENT_FALLBACK_VERSION,
-  };
-}
+const contactLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error: "Too many submissions from this IP. Please try again later.",
+  },
+});
 
 router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
   if (req.body?.website) {
@@ -151,6 +136,15 @@ router.post(
   const normalizedConsent = normalizeConsent(data);
   const consentCapturedAt = new Date();
 
+  if (!ALLOWED_CONSENT_TEXT_VERSIONS.has(data.consentTextVersion)) {
+    res.status(400).json({ error: "Invalid consentTextVersion." });
+    return;
+  }
+  if (!ALLOWED_CONSENT_SOURCE_PAGES.has(data.consentSourcePage)) {
+    res.status(400).json({ error: "Invalid consentSourcePage." });
+    return;
+  }
+
   const [inquiry] = await db
     .insert(contactInquiriesTable)
     .values({
@@ -165,24 +159,12 @@ router.post(
       monthlyRevenueRange: data.monthlyRevenueRange ?? null,
       biggestChallenge: data.biggestChallenge ?? null,
       preferredContactMethod: data.preferredContactMethod ?? null,
-      emailConsent: normalizedConsent.email,
-      emailConsentCapturedAt: normalizedConsent.email
-        ? consentCapturedAt
-        : null,
-      emailConsentSource: normalizedConsent.email
-        ? normalizedConsent.source
-        : null,
-      smsConsent: normalizedConsent.sms,
-      smsConsentCapturedAt: normalizedConsent.sms ? consentCapturedAt : null,
-      smsConsentSource: normalizedConsent.sms ? normalizedConsent.source : null,
-      phoneConsent: normalizedConsent.phone,
-      phoneConsentCapturedAt: normalizedConsent.phone
-        ? consentCapturedAt
-        : null,
-      phoneConsentSource: normalizedConsent.phone
-        ? normalizedConsent.source
-        : null,
-      consentLegalTextVersion: normalizedConsent.legalTextVersion,
+      smsConsent: data.smsConsent,
+      consentTimestamp: new Date(),
+      consentTextVersion: data.consentTextVersion,
+      requestIp: getRequestIp(req),
+      userAgent: getUserAgent(req),
+      consentSourcePage: data.consentSourcePage,
     })
     .returning();
 
