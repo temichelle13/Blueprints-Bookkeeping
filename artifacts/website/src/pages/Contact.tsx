@@ -162,18 +162,6 @@ const contactCards: ContactCard[] = [
     newTab: true,
   },
   {
-    icon: Clock3,
-    color: "#EF4444",
-    title: "Emergency / Expedited Request",
-    description:
-      "For urgent deadlines only (tax notices, lender requests, filing pressure). This opens a priority request email so Tea can triage urgency quickly.",
-    cta: "Submit Urgent Request",
-    href: EMERGENCY_REQUEST_URL,
-    external: true,
-    newTab: true,
-    analyticsEvent: "Emergency Request Click",
-  },
-  {
     icon: Mail,
     color: "#F59E0B",
     title: "Email",
@@ -971,7 +959,7 @@ export default function Contact() {
         )}
 
         {!isBookkeeperIntent && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-14">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-14 max-w-4xl mx-auto">
             {contactCards.map((card) => {
               const CardIcon = card.icon;
               const inner = (
