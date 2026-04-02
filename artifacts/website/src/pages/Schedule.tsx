@@ -1,11 +1,8 @@
 import { useState } from "react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
-import { trackEvent } from "@/lib/analytics";
 
 const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
-const EMERGENCY_CALENDLY_URL =
-  "https://calendly.com/tea-blueprintsandbookkeeping/emergency-or-other-expedited-request";
 
 function CalendlyEmbed() {
   const [loaded, setLoaded] = useState(false);
@@ -53,26 +50,6 @@ export default function Schedule() {
       </section>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-2xl border border-red-400/25 bg-red-500/[0.08] p-5 mb-6">
-          <h2 className="text-lg font-display font-semibold text-white mb-2">
-            Emergency / Expedited Request
-          </h2>
-          <p className="text-sm text-muted-foreground leading-relaxed mb-3">
-            If you are under urgent tax, lender, or filing pressure, book a
-            15-minute emergency slot on Tea's calendar for immediate triage.
-          </p>
-          <a
-            href={EMERGENCY_CALENDLY_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() =>
-              trackEvent("Emergency Request Click", { source: "schedule" })
-            }
-            className="inline-flex items-center justify-center rounded-lg bg-red-500 px-4 py-2.5 text-sm font-semibold text-white no-underline hover:opacity-90 transition-opacity"
-          >
-            Book Emergency Meeting
-          </a>
-        </div>
         <div className="glass-card rounded-2xl overflow-hidden">
           <CalendlyEmbed />
         </div>
