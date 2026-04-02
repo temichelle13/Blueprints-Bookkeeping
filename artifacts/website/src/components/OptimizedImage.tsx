@@ -1,4 +1,4 @@
-import { ImgHTMLAttributes } from 'react';
+import type { ImgHTMLAttributes } from 'react';
 
 interface OptimizedImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   src: string;
