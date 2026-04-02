@@ -18,6 +18,7 @@ import {
   EngagementClarityPreview,
   FinalCtaTrustNote,
 } from "@/components/TrustSignals";
+import { OptimizedImage } from "@/components/OptimizedImage";
 import { SEO } from "@/components/SEO";
 import { trackHomeCtaClick } from "@/hooks/usePageTracking";
 import { localBusinessSchema } from "@/lib/seo-schemas";
@@ -38,7 +39,7 @@ export default function Home() {
       />
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img
+          <OptimizedImage
             src={`${import.meta.env.BASE_URL}images/hero-bg.png`}
             alt="Blueprints & Bookkeeping — professional bookkeeping and business plan services for founders"
             width={1920}
