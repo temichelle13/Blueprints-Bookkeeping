@@ -81,8 +81,8 @@ export default function Home() {
             transition={{ delay: 0.2 }}
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed"
           >
-          Bookkeeping and business planning that actually makes sense. 
-            Learn your numbers, find your direction, and grow your business.          </motion.p>
+            Bookkeeping and business planning that actually makes sense. Learn your numbers, find your direction, and grow your business.
+          </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -126,7 +126,7 @@ export default function Home() {
             <p className="mt-2 text-xs text-muted-foreground">
               Services offered are not tax or legal advice.
               Seamless tax preparation is also available through our list of vetted tax professionals we partner with.
-              We take time in Ensuring all are partners are U.S.-based credentialed tax experts. 
+              We take time in ensuring all our partners are U.S.-based credentialed tax experts. 
             </p>
             <div className="mt-3 flex items-center gap-3 text-xs sm:text-sm">
               <Link href="/privacy" className="text-accent hover:underline">
@@ -146,15 +146,7 @@ export default function Home() {
 
       <StatsProofBar />
 
-      <div className="glow-line max-w-5xl mx-auto" />
-
-      <EngagementClarityPreview />
-
-      <div className="glow-line max-w-5xl mx-auto" />
-
       <CredentialBadgeStrip compact />
-
-      <div className="glow-line max-w-5xl mx-auto" />
 
       <section className="py-28 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -164,8 +156,8 @@ export default function Home() {
              Build Your Business Blueprint
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl">
-You have to know where you are and where you've been to know where you can go. 
-              Understand your business past, clean up your present, and build the blueprint to meet your goals.            </p>
+              You have to know where you are and where you've been to know where you can go. Understand your business past, clean up your present, and build the blueprint to meet your goals.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -174,7 +166,7 @@ You have to know where you are and where you've been to know where you can go.
                 icon: <Calculator className="w-6 h-6" />,
                 title: "Advanced Bookkeeping",
                 description:
-                  "Ongoing Services provides via QuickBooks Online and tailored to fit each business perfectly.",
+                  "Ongoing services provided via QuickBooks Online and tailored to fit each business perfectly.",
                 tag: "ONGOING, ONE-TIME, YEARLY, QUARTERLY",
                 features: [
                   "Multi-entity consolidation",
@@ -237,8 +229,6 @@ You have to know where you are and where you've been to know where you can go.
           </div>
         </div>
       </section>
-
-      <div className="glow-line max-w-5xl mx-auto" />
 
       <section className="py-24 md:py-28 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -394,8 +384,6 @@ A specialized partnership offering leadership-level advice, structured financial
         </div>
       </section>
 
-      <GoogleReviewsCallout />
-
       <section className="py-24 md:py-28 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="glass-card rounded-3xl p-6 sm:p-8 md:p-10">
@@ -409,10 +397,7 @@ A specialized partnership offering leadership-level advice, structured financial
                   From backlog to board-ready reporting.
                 </h2>
                 <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-8">
-                  A multi-entity service business came to us with a 2-year
-                  reconciliation backlog and cash flow blind spots. Millions in undeposited funds, negative asset and liability accounts, and no hope as they were turned down by 3 accountants when they asked for help. We met with them and understood how their business has been operating, what happened to get behind, and took them on.
-                  Within 30 days, they had up-to-date books and could tell you exactly where each number on their profit and loss or balance sheet came from. That is truly empowering. Now, they meet with us quartertly, but maintain their books themselves monthyl (and correctly), and they just expanded their business model and double their funding. 
-                  Think about knowing yoou have reliable numbers every month. What is that worth to you?
+                  A multi-entity service business came to us with a 2-year reconciliation backlog and cash flow blind spots. Millions in undeposited funds, negative asset and liability accounts, and no hope after being turned down by 3 accountants. We met with them, understood how their business had been operating, what caused them to fall behind, and took them on. Within 30 days, they had up-to-date books and could explain exactly where each number on their profit and loss or balance sheet came from. That is truly empowering. Now, they meet with us quarterly but maintain their books themselves monthly (and correctly), and they just expanded their business model and doubled their funding. Think about knowing you have reliable numbers every month. What is that worth to you?
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {[
@@ -477,6 +462,8 @@ A specialized partnership offering leadership-level advice, structured financial
           </div>
         </div>
       </section>
+
+      <GoogleReviewsCallout />
 
       <div className="glow-line max-w-5xl mx-auto" />
 

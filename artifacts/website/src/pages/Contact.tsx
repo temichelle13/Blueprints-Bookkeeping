@@ -32,8 +32,6 @@ const EMERGENCY_CALENDLY_URL =
 const PHONE_DISPLAY = "(541) 319-8654";
 const PHONE_HREF = "tel:+15413198654";
 const EMAIL_ADDRESS = "tea@blueprintsandbookkeeping.com";
-const EMERGENCY_REQUEST_URL =
-  "mailto:tea@blueprintsandbookkeeping.com?subject=Emergency%20%2F%20Expedited%20Request&body=Hi%20Tea%2C%0A%0AI%20need%20an%20urgent%20bookkeeping%20review%20due%20to%20deadline%20pressure%20(tax%2C%20lender%2C%20or%20filing).%20Please%20contact%20me%20as%20soon%20as%20possible.%0A%0AName%3A%0ABusiness%3A%0ABest%20phone%20number%3A";
 const CONTACT_CONSENT_LANGUAGE =
   "I agree to receive text messages and phone calls from Blueprints & Bookkeeping at my provided contact number. Message and data rates may apply. Reply STOP to opt out.";
 const INQUIRY_PROCESSING_DISCLOSURE =
@@ -162,15 +160,16 @@ const contactCards: ContactCard[] = [
     newTab: true,
   },
   {
-    icon: Mail,
-    color: "#F59E0B",
-    title: "Email",
+    icon: Clock3,
+    color: "#EF4444",
+    title: "Emergency / Expedited Request",
     description:
-      "Reach out by email if you want to share details or documents before talking.",
-    cta: `Email ${EMAIL_ADDRESS}`,
-    href: `mailto:${EMAIL_ADDRESS}`,
+      "For urgent deadlines only (tax notices, lender requests, filing pressure). Book a 15-minute emergency slot on Tea's calendar for immediate triage.",
+    cta: "Schedule Emergency Meeting",
+    href: EMERGENCY_CALENDLY_URL,
     external: true,
-    newTab: false,
+    newTab: true,
+    analyticsEvent: "Emergency Request Click",
   },
 ];
 
@@ -959,7 +958,7 @@ export default function Contact() {
         )}
 
         {!isBookkeeperIntent && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-14 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-14">
             {contactCards.map((card) => {
               const CardIcon = card.icon;
               const inner = (
