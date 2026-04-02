@@ -145,15 +145,7 @@ export default function Home() {
 
       <StatsProofBar />
 
-      <div className="glow-line max-w-5xl mx-auto" />
-
-      <EngagementClarityPreview />
-
-      <div className="glow-line max-w-5xl mx-auto" />
-
       <CredentialBadgeStrip compact />
-
-      <div className="glow-line max-w-5xl mx-auto" />
 
       <section className="py-28 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -237,8 +229,6 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="glow-line max-w-5xl mx-auto" />
-
       <section className="py-24 md:py-28 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -247,8 +237,11 @@ export default function Home() {
               <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-6">
                 Why Choose Us?
               </h2>
-              <p className="text-lg text-muted-foreground mb-10 leading-relaxed">
-                Most modern bookkeepers hit a complexity ceiling and lack the capacity to provide services to niche industries, refuse to touch books that involve cryptocurrency, and often try to solve everything with journal entries that can't be properly explained during an audit. Communication is often vague and infrequent. Those who provide tax preparation often deprioritize client books during tax season, causing miscommunication, inaccuracies, and backlogs. We designed a boutique model that stays available and technically unmatched. With advanced capability and hands-on experience, we know exactly what it takes to make a business survive. 
+              <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
+                We built a boutique bookkeeping practice specifically for businesses that need more than basic data entry.
+              </p>
+              <p className="text-base text-muted-foreground mb-10 leading-relaxed">
+                Our clients often come to us after hitting limitations with traditional bookkeepers — whether it's cryptocurrency complexity, multi-entity structures, or simply needing clear explanations instead of vague journal entries.
               </p>
 
               <div className="space-y-6">
@@ -402,8 +395,6 @@ A specialized partnership offering leadership-level advice, structured financial
         </div>
       </section>
 
-      <GoogleReviewsCallout />
-
       <section className="py-24 md:py-28 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="glass-card rounded-3xl p-6 sm:p-8 md:p-10">
@@ -482,6 +473,8 @@ A specialized partnership offering leadership-level advice, structured financial
           </div>
         </div>
       </section>
+
+      <GoogleReviewsCallout />
 
       <div className="glow-line max-w-5xl mx-auto" />
 
