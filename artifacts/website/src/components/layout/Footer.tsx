@@ -7,7 +7,6 @@ import {
   ArrowRight,
   CalendarDays,
   ClipboardList,
-  AlertTriangle,
 } from "lucide-react";
 import { FooterNewsletterSignup } from "@/components/NewsletterSignup";
 import { openCookieConsentPreferences } from "@/components/CookieConsent";
@@ -205,6 +204,16 @@ export function Footer() {
                       {item.isExternal ? (
                         <a
                           href={item.href}
+                          {...(item.newTab
+                            ? { target: "_blank", rel: "noopener noreferrer" }
+                            : {})}
+                          onClick={() => {
+                            if (item.analyticsEvent) {
+                              trackEvent(item.analyticsEvent, {
+                                source: "footer",
+                              });
+                            }
+                          }}
                           className={linkClassName}
                           {...(item.newTab
                             ? { target: "_blank", rel: "noopener noreferrer" }
@@ -247,7 +256,7 @@ export function Footer() {
                       <Link
                         href={item.href}
                         onClick={scrollToTopOnSameRoute(item.href)}
-                        className="text-muted-foreground hover:text-accent text-sm transition-colors inline-flex items-center gap-1 group"
+                        className="text-muted-foreground hover:text-accent text-sm transition-colors inline-flex items-center gap-1 group rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                       >
                         {item.label}
                         <ArrowRight
