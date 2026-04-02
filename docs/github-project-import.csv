@@ -1,0 +1,516 @@
+Title,Description,Epic,Priority,Estimate,Phase,Area,Status,Acceptance Criteria
+Environment Variable Audit,"Audit all production environment variables against .env.example. Create deployment checklist.",Launch Readiness,Critical,1d,Pre-Launch,DevOps,Backlog,"- All required env vars documented in .env.example
+- Production environment variable checklist created
+- All critical vars (DATABASE_URL ADMIN_TOKEN STRIPE keys) verified
+- CORS_ORIGIN configured for production domain
+- TRUST_PROXY set correctly for hosting environment"
+Database Migration Verification,"Verify all database schema changes are applied correctly. Test migration rollback.",Launch Readiness,Critical,1d,Pre-Launch,Database,Backlog,"- Run pnpm --filter db push successfully in staging
+- Verify all foreign key constraints exist
+- Verify all indexes are created
+- Test data integrity after migration
+- Document migration process in DEPLOYMENT.md"
+Stripe Integration Testing,"Thoroughly test all Stripe payment flows (subscriptions deposits webhooks).",Launch Readiness,Critical,3d,Pre-Launch,Backend,Backlog,"- Test subscription checkout (Essentials Monthly/Annual Growth Monthly/Annual)
+- Test deposit checkout (all 4 service types)
+- Test webhook handling (checkout.session.completed subscription events)
+- Verify email notifications sent correctly
+- Test webhook signature verification
+- Verify subscription records created in database
+- Test payment failure scenarios"
+Email Deliverability Testing,"Test all transactional email flows with Resend. Verify SPF/DKIM/DMARC.",Launch Readiness,Critical,2d,Pre-Launch,Backend,Backlog,"- Test contact form confirmation emails (to user and owner)
+- Test newsletter welcome email
+- Test payment confirmation emails
+- Test contract emails
+- Test onboarding emails
+- Verify SPF/DKIM/DMARC records for sending domain
+- Test email suppression list functionality
+- Verify List-Unsubscribe headers work"
+Contact Form Rate Limiting Testing,"Test rate limiting with TRUST_PROXY configuration. Verify legitimate users not blocked.",Launch Readiness,High,2d,Pre-Launch,Backend,Backlog,"- Test rate limiting from single IP (should trigger after 8 requests/15min)
+- Test rate limiting from multiple IPs behind proxy
+- Verify TRUST_PROXY=1 correctly identifies real client IP
+- Test honeypot protection blocks bot submissions
+- Verify failed submission tracking works
+- Document rate limit behavior in DEPLOYMENT.md"
+Adobe Sign Contract Testing,"Test contract automation flow end-to-end if Adobe Sign is configured.",Launch Readiness,High,3d,Pre-Launch,Backend,Backlog,"- Test onboarding form triggers correct contract template
+- Test contract sending API endpoint
+- Test contract status checking
+- Test contract reminder emails (2-day and 5-day)
+- Test contract expiration handling
+- Verify database records created correctly
+- Test edge cases (missing template invalid email)"
+AI Chat Assistant Testing,"Test Aria AI assistant with all 4 system prompt paths.",Launch Readiness,Medium,2d,Pre-Launch,Frontend,Backlog,"- Test chat widget loads correctly
+- Test all 4 system prompts (Strategic Planning Bookkeeping Setup Growth Plan Revenue Tracking)
+- Test conversation persistence
+- Test rate limiting on chat endpoint
+- Verify OpenAI API key works
+- Test graceful degradation if API fails
+- Test chat widget on mobile devices"
+Form Validation Testing,"Test all forms with edge cases invalid inputs and malicious inputs.",Launch Readiness,High,2d,Pre-Launch,Frontend,Backlog,"- Test contact form (quick and detailed versions)
+- Test newsletter signup
+- Test onboarding form
+- Test feedback form
+- Test with invalid emails XSS attempts SQL injection attempts
+- Verify Zod validation catches all invalid inputs
+- Test max length enforcement
+- Verify HTML escaping in emails"
+SEO Indexing Validation,"Run indexing guards check. Verify sitemap and robots.txt consistency.",Launch Readiness,High,1d,Pre-Launch,Frontend,Backlog,"- Run pnpm run check:website-deploy successfully
+- Verify check:indexing-guards passes
+- Verify sitemap.xml includes all 36 public routes
+- Verify robots.txt blocks private routes (/admin /onboarding /welcome etc.)
+- Verify noindex meta tags on sensitive pages
+- Test sitemap.xml is accessible at /sitemap.xml"
+Cross-Browser Testing,"Test website in all major browsers and mobile devices.",Launch Readiness,Medium,2d,Pre-Launch,Frontend,Backlog,"- Test in Chrome (desktop and mobile)
+- Test in Safari (desktop and mobile)
+- Test in Firefox
+- Test in Edge
+- Verify all forms work in all browsers
+- Verify animations work (or gracefully degrade)
+- Verify responsive layouts on various screen sizes
+- Test page transitions"
+Load Testing & Performance Baseline,"Establish performance baseline and test under load.",Launch Readiness,Medium,3d,Pre-Launch,DevOps,Backlog,"- Run load test on contact form endpoint (simulate 100 concurrent users)
+- Test rate limiting holds under load
+- Measure API response times (p50 p95 p99)
+- Measure frontend Web Vitals (LCP INP CLS)
+- Document performance baseline
+- Identify performance bottlenecks"
+Deployment Runbook Creation,"Create comprehensive deployment runbook with rollback procedures.",Launch Readiness,High,2d,Pre-Launch,Documentation,Backlog,"- Document deployment steps for Replit
+- Create pre-deployment checklist
+- Create post-deployment verification checklist
+- Document rollback procedure
+- Document emergency procedures
+- Create deployment troubleshooting guide
+- Update DEPLOYMENT.md with final steps"
+Testing Framework Setup,"Add Vitest testing framework to monorepo.",Testing Infrastructure,Critical,1d,Pre-Launch,Testing,Backlog,"- Install Vitest in root and workspace packages
+- Configure vitest.config.ts for each package
+- Set up test coverage reporting
+- Configure CI/CD to run tests
+- Update package.json scripts
+- Document testing conventions"
+API Route Testing - Contact Endpoints,"Write comprehensive tests for contact form endpoints.",Testing Infrastructure,Critical,3d,Pre-Launch,Testing,Backlog,"- Test POST /api/contact with valid data
+- Test with invalid data (validation errors)
+- Test rate limiting behavior
+- Test honeypot protection
+- Test email suppression check
+- Test database insertion
+- Test email queuing
+- Mock external dependencies (Resend)
+- Achieve 80%+ code coverage"
+API Route Testing - Newsletter Endpoints,"Write tests for newsletter subscription and unsubscribe flows.",Testing Infrastructure,High,2d,Pre-Launch,Testing,Backlog,"- Test POST /api/newsletter/subscribe
+- Test GET /api/newsletter/unsubscribe with token
+- Test POST /api/newsletter/unsubscribe
+- Test duplicate subscription handling
+- Test unsubscribe token generation
+- Test rate limiting
+- Mock Resend API"
+API Route Testing - Payment Endpoints,"Write tests for Stripe payment endpoints and webhook handling.",Testing Infrastructure,Critical,3d,Pre-Launch,Testing,Backlog,"- Test POST /api/payments/create-checkout-session
+- Test POST /api/payments/create-deposit-session
+- Test POST /api/payments/webhook with valid signature
+- Test webhook with invalid signature (should reject)
+- Test all webhook event types
+- Test idempotent webhook processing
+- Mock Stripe API
+- Test database updates"
+API Route Testing - Contract Endpoints,"Write tests for contract automation endpoints.",Testing Infrastructure,High,3d,Pre-Launch,Testing,Backlog,"- Test POST /api/contracts/send
+- Test GET /api/contracts/status/:agreementId
+- Test POST /api/contracts/sync/:agreementId
+- Test POST /api/contracts/reminder/:agreementId
+- Test contract state transitions
+- Test reminder scheduling
+- Test expiration handling
+- Mock Adobe Sign API"
+API Route Testing - Admin Endpoints,"Write tests for admin endpoints and authentication.",Testing Infrastructure,High,2d,Pre-Launch,Testing,Backlog,"- Test admin auth middleware (valid token)
+- Test admin auth middleware (invalid token)
+- Test admin auth middleware (missing token)
+- Test timing attack resistance
+- Test rate limiting on admin endpoints
+- Test GET /api/admin/inquiries
+- Test PATCH /api/admin/inquiries/:id/status"
+Webhook Signature Verification Tests,"Write comprehensive tests for webhook signature verification (Stripe Cal.com Resend).",Testing Infrastructure,Critical,2d,Pre-Launch,Testing,Backlog,"- Test Stripe webhook signature verification (valid)
+- Test Stripe webhook signature verification (invalid)
+- Test Cal.com webhook HMAC verification
+- Test Resend webhook Svix verification
+- Test replay attack prevention
+- Test timestamp validation"
+Email Suppression Logic Tests,"Write tests for email suppression list functionality.",Testing Infrastructure,High,2d,Pre-Launch,Testing,Backlog,"- Test adding email to suppression list
+- Test checking if email is suppressed
+- Test different suppression reasons (bounced complained unsubscribed)
+- Test suppression list blocks email sends
+- Test normalization (case-insensitive)"
+Rate Limiting Behavior Tests,"Write tests for rate limiting across all endpoints.",Testing Infrastructure,High,2d,Pre-Launch,Testing,Backlog,"- Test general API rate limit (1000/15min)
+- Test admin rate limit (100/15min)
+- Test contact form rate limit (8/15min)
+- Test newsletter rate limit (20/hour)
+- Test rate limit reset after time window
+- Test rate limit with trusted proxy (X-Forwarded-For)"
+Database Integration Tests,"Write tests for database operations and schema integrity.",Testing Infrastructure,Medium,3d,Post-Launch,Testing,Backlog,"- Test contact inquiry insertion
+- Test subscription creation
+- Test contract creation with foreign key constraints
+- Test contract template lookup
+- Test email suppression list queries
+- Test outbound email events queue
+- Use in-memory database for tests (pg-mem or similar)"
+Frontend Component Tests,"Write tests for critical frontend components.",Testing Infrastructure,Medium,1w,Post-Launch,Testing,Backlog,"- Test ContactForm component (quick and detailed)
+- Test NewsletterSignup component
+- Test ChatWidget component
+- Test SEO component (meta tags)
+- Test form validation with react-hook-form + Zod
+- Test error handling
+- Use Vitest + Testing Library"
+End-to-End Tests Setup,"Set up Playwright for E2E testing of critical user flows.",Testing Infrastructure,Medium,3d,Post-Launch,Testing,Backlog,"- Install Playwright
+- Configure Playwright for CI/CD
+- Set up test database seeding
+- Create test fixtures
+- Document E2E testing conventions"
+E2E Test - Contact Form Submission,"Write E2E test for complete contact form flow.",Testing Infrastructure,High,2d,Post-Launch,Testing,Backlog,"- Test filling out quick contact form
+- Test filling out detailed contact form
+- Test form validation errors
+- Test successful submission
+- Test rate limiting (multiple submissions)
+- Verify database record created
+- Verify email queued"
+E2E Test - Payment Flow,"Write E2E test for Stripe checkout flow.",Testing Infrastructure,High,3d,Post-Launch,Testing,Backlog,"- Test creating subscription checkout session
+- Test creating deposit checkout session
+- Test redirect to Stripe (mock in test)
+- Test successful payment redirect to /welcome or /payment-success
+- Test webhook processing creates subscription record
+- Use Stripe test mode"
+Test Coverage Goals & CI Integration,"Set test coverage goals and enforce in CI/CD.",Testing Infrastructure,High,2d,Post-Launch,Testing,Backlog,"- Set coverage threshold (minimum 70% overall)
+- Configure coverage reporting in CI/CD
+- Fail CI if coverage drops below threshold
+- Generate coverage reports (HTML JSON)
+- Add coverage badge to README (optional)"
+Request Tracing Middleware,"Add request ID middleware to correlate logs across multi-step flows.",Observability & Monitoring,High,1d,Launch,Backend,Backlog,"- Install uuid package
+- Create request ID middleware (generates UUID for each request)
+- Add request ID to all log statements
+- Include request ID in response headers (X-Request-ID)
+- Update logger to accept request context
+- Document request tracing in DEPLOYMENT.md"
+Sentry Error Tracking - Backend,"Integrate Sentry for backend error tracking.",Observability & Monitoring,High,2d,Launch,Backend,Backlog,"- Install @sentry/node
+- Configure Sentry DSN (environment variable)
+- Add Sentry error handler middleware
+- Configure source maps upload
+- Add user context (IP request ID)
+- Add breadcrumbs for key operations
+- Test error reporting"
+Sentry Error Tracking - Frontend,"Integrate Sentry for frontend error tracking.",Observability & Monitoring,High,2d,Launch,Frontend,Backlog,"- Install @sentry/react
+- Configure Sentry DSN (environment variable)
+- Add React error boundary
+- Configure source maps upload
+- Add user context (session ID page)
+- Add breadcrumbs for user actions
+- Test error reporting
+- Respect user privacy (no PII in error reports)"
+Application Performance Monitoring (APM),"Add performance monitoring for API endpoints.",Observability & Monitoring,Medium,3d,Post-Launch,Backend,Backlog,"- Enable Sentry APM (or alternative)
+- Track API response times (p50 p95 p99)
+- Track database query times
+- Track external API call times (Stripe Resend OpenAI)
+- Set performance budgets
+- Create performance dashboard"
+Database Query Performance Monitoring,"Add slow query logging and monitoring.",Observability & Monitoring,Medium,2d,Post-Launch,Database,Backlog,"- Enable PostgreSQL slow query logging
+- Configure slow query threshold (e.g. 500ms)
+- Log slow queries to logger
+- Add database query tracking in APM
+- Identify slow queries
+- Document query optimization process"
+Background Job Health Checks,"Add health checks and monitoring for scheduled background jobs.",Observability & Monitoring,High,2d,Post-Launch,Backend,Backlog,"- Add try/catch error handling to all schedulers
+- Log job start/end with duration
+- Send alert if job fails
+- Track last successful run time
+- Create health check endpoint that reports scheduler status
+- Add dead letter queue for failed email sends"
+API Metrics Dashboard,"Create metrics dashboard (Datadog Prometheus or similar).",Observability & Monitoring,Medium,3d,Post-Launch,DevOps,Backlog,"- Set up metrics collection (choose tool)
+- Track API request count (by endpoint)
+- Track API error rate (by endpoint)
+- Track API response time (by endpoint)
+- Track database connection pool stats
+- Track rate limit hits
+- Create dashboard visualizations"
+Email Deliverability Monitoring,"Set up monitoring for email delivery bounces and complaints.",Observability & Monitoring,Medium,1d,Post-Launch,Backend,Backlog,"- Monitor Resend webhook events (delivered bounced complained)
+- Track email delivery rate
+- Alert on bounce rate > 5%
+- Alert on complaint rate > 0.1%
+- Track email queue depth
+- Track email retry attempts"
+Uptime Monitoring,"Set up external uptime monitoring (UptimeRobot Pingdom or similar).",Observability & Monitoring,Medium,1d,Launch,DevOps,Backlog,"- Monitor /api/healthz endpoint (every 5 minutes)
+- Monitor homepage (every 5 minutes)
+- Monitor from multiple geographic locations
+- Alert on downtime (email/SMS)
+- Track uptime percentage
+- Create public status page (optional)"
+Stripe Payment Monitoring,"Monitor Stripe payment success/failure rates.",Observability & Monitoring,Medium,2d,Post-Launch,Backend,Backlog,"- Track checkout session creation rate
+- Track payment success rate
+- Track payment failure rate (by reason)
+- Alert on payment failure rate > 10%
+- Track subscription creation rate
+- Track subscription churn rate"
+Web Vitals Monitoring Enhancement,"Enhance Web Vitals tracking and alerting.",Observability & Monitoring,Medium,2d,Post-Launch,Frontend,Backlog,"- Send Web Vitals to analytics (already implemented verify working)
+- Track LCP INP CLS by page
+- Set performance budgets (LCP < 2.5s INP < 200ms CLS < 0.1)
+- Alert on budget violations
+- Create Web Vitals dashboard"
+Log Aggregation Setup,"Set up log aggregation (Datadog LogRocket or similar).",Observability & Monitoring,Medium,3d,Post-Launch,DevOps,Backlog,"- Choose log aggregation tool
+- Configure log shipping from Replit
+- Index logs by severity request ID endpoint
+- Create saved searches for common queries
+- Set up log retention policy
+- Create alerting rules"
+Security Event Monitoring,"Monitor security-related events and anomalies.",Observability & Monitoring,High,2d,Post-Launch,Backend,Backlog,"- Log all admin authentication attempts (success and failure)
+- Alert on multiple failed admin auth attempts (> 5 in 1 hour)
+- Log rate limit violations
+- Alert on unusual rate limit patterns
+- Log honeypot catches (bot submissions)
+- Track IP addresses with repeated failures"
+Monthly Reporting Automation,"Automate monthly reporting (SEO analytics performance).",Observability & Monitoring,Low,2d,Scale,DevOps,Backlog,"- Create script to fetch Google Search Console data
+- Create script to fetch Google Analytics data
+- Create script to fetch Web Vitals data
+- Create script to fetch uptime data
+- Generate monthly report (PDF or HTML)
+- Email report to owner
+- Schedule to run first of each month"
+Webhook Signature Verification Hardening,"Require webhook signature verification in production (no fallback).",Security Hardening,High,1d,Post-Launch,Backend,Backlog,"- Remove fallback for unsigned Cal.com webhooks
+- Require CAL_WEBHOOK_SECRET in production
+- Reject unsigned webhooks with 401 Unauthorized
+- Add warning if secret not configured in development
+- Document webhook security in DEPLOYMENT.md"
+Token Rotation for Adobe Sign,"Implement token rotation for Adobe Sign refresh token.",Security Hardening,Medium,3d,Post-Launch,Backend,Backlog,"- Move Adobe Sign tokens to secrets manager (AWS Secrets Manager HashiCorp Vault or similar)
+- Implement automatic refresh token rotation
+- Encrypt access tokens in memory
+- Add token expiration handling
+- Document token management in DEPLOYMENT.md"
+Content Security Policy (CSP) Enhancement,"Strengthen CSP headers to prevent XSS attacks.",Security Hardening,Medium,2d,Post-Launch,Backend,Backlog,"- Review current CSP headers (Helmet.js)
+- Tighten script-src (remove unsafe-inline if possible)
+- Add nonce-based CSP for inline scripts
+- Test CSP doesn't break functionality (analytics Calendly Stripe)
+- Add CSP violation reporting endpoint
+- Monitor CSP violations"
+Input Sanitization Audit,"Audit all user inputs for proper sanitization and validation.",Security Hardening,High,2d,Post-Launch,Backend,Backlog,"- Review all API endpoints for input validation
+- Ensure all inputs use Zod validation
+- Verify HTML escaping in email templates
+- Test XSS prevention in all forms
+- Test SQL injection prevention (Drizzle ORM should prevent but verify)
+- Document input validation patterns"
+Secrets Management Improvement,"Move sensitive credentials to secrets manager.",Security Hardening,Medium,3d,Post-Launch,DevOps,Backlog,"- Choose secrets manager (AWS Secrets Manager GCP Secret Manager or HashiCorp Vault)
+- Migrate ADMIN_TOKEN to secrets manager
+- Migrate Stripe keys to secrets manager
+- Migrate OpenAI API key to secrets manager
+- Update application to fetch secrets at runtime
+- Implement secret rotation policy
+- Document secrets management in DEPLOYMENT.md"
+Database Connection Security,"Ensure PostgreSQL connection uses SSL in production.",Security Hardening,Medium,1d,Post-Launch,Database,Backlog,"- Configure DATABASE_URL with sslmode=require
+- Verify SSL connection in production
+- Test connection pooling with SSL
+- Document SSL requirements in DEPLOYMENT.md"
+API Authentication for User Endpoints (Future),"Plan for user authentication if needed in future.",Security Hardening,Low,2w,Scale,Backend,Backlog,"- Research authentication solutions (Clerk Auth0 NextAuth.js)
+- Design user authentication flow
+- Create user table schema
+- Document authentication requirements
+- Estimate implementation effort
+- Add to backlog (do not implement unless requested)"
+Rate Limiting with Redis,"Replace in-memory rate limiter with Redis for multi-instance deployments.",Security Hardening,Medium,3d,Scale,Backend,Backlog,"- Install Redis client
+- Configure Redis connection (environment variable)
+- Implement Redis-backed rate limiter
+- Test rate limiting across multiple instances
+- Add Redis health check
+- Document Redis setup in DEPLOYMENT.md"
+Security Audit,"Conduct comprehensive security audit of codebase.",Security Hardening,High,1w,Post-Launch,Backend,Backlog,"- Run automated security scanner (npm audit Snyk or similar)
+- Fix all critical and high severity vulnerabilities
+- Review all authentication and authorization code
+- Review all input validation
+- Review all database queries
+- Review all external API calls
+- Document security findings and fixes"
+Penetration Testing (Optional),"Hire external penetration testing service.",Security Hardening,Low,1w,Scale,DevOps,Backlog,"- Research penetration testing services
+- Get quotes from 3+ services
+- Schedule penetration test after launch
+- Review and remediate findings
+- Document findings and fixes"
+Extract Email Templates to React Email,"Extract inline HTML email templates to React Email components.",Developer Experience,Medium,1w,Post-Launch,Backend,Backlog,"- Install React Email
+- Create email template components (contact newsletter payment contract onboarding feedback)
+- Replace inline HTML with React Email rendering
+- Test all email templates
+- Add email preview server (http://localhost:3000/preview)
+- Document email template development"
+API Documentation with OpenAPI/Swagger,"Generate interactive API documentation from OpenAPI spec.",Developer Experience,Medium,3d,Post-Launch,Documentation,Backlog,"- Enhance OpenAPI spec in lib/api-spec
+- Add Swagger UI endpoint (/api/docs)
+- Document all endpoints with descriptions parameters responses
+- Add example requests and responses
+- Test API documentation is accurate
+- Link from README"
+Local Development Environment Improvements,"Improve local development setup (Docker Compose better README).",Developer Experience,Low,2d,Scale,DevOps,Backlog,"- Create Docker Compose file (PostgreSQL Redis optional)
+- Add .env.local.example for local development
+- Update README with setup instructions
+- Document common development tasks
+- Add troubleshooting section to README"
+Code Quality Tools - Linting & Formatting,"Add ESLint and enforce code quality rules.",Developer Experience,Medium,1d,Post-Launch,DevOps,Backlog,"- Install ESLint and TypeScript ESLint
+- Configure ESLint rules (recommend strict)
+- Add lint script to package.json
+- Fix all linting errors
+- Add ESLint to CI/CD (fail on errors)
+- Document linting conventions"
+Pre-commit Hooks,"Add Husky pre-commit hooks for code quality.",Developer Experience,Low,1d,Scale,DevOps,Backlog,"- Install Husky
+- Add pre-commit hook (runs lint format type-check on staged files)
+- Add commit message linting (conventional commits)
+- Test hooks work correctly
+- Document commit conventions"
+Storybook for UI Component Development,"Set up Storybook for component development and documentation.",Developer Experience,Low,1w,Scale,Frontend,Backlog,"- Install Storybook
+- Create stories for shadcn/ui components
+- Create stories for custom components
+- Add interaction tests
+- Deploy Storybook to static hosting
+- Document component development workflow"
+Database Seeding for Development,"Create database seeding scripts for local development and testing.",Developer Experience,Medium,2d,Post-Launch,Database,Backlog,"- Create seed script with realistic test data
+- Seed contact inquiries (10-20 records)
+- Seed newsletter subscribers (20-30 records)
+- Seed contracts (5-10 records)
+- Seed subscriptions (3-5 records)
+- Seed state nexus rules (already exists verify)
+- Document seeding process"
+Migration from Schema Push to Migration Files,"Migrate from drizzle-kit push to proper migration files.",Developer Experience,Low,1w,Scale,Database,Backlog,"- Generate migration files from current schema
+- Test migrations on fresh database
+- Test rollback
+- Update deployment process
+- Document migration workflow
+- Add to backlog (do not implement unless scaling needs it)"
+Monorepo Optimization,"Optimize pnpm workspace for faster installs and builds.",Developer Experience,Low,3d,Scale,DevOps,Backlog,"- Review package dependencies (remove unused)
+- Optimize workspace configuration
+- Add Turborepo for build caching (optional)
+- Measure install time improvement
+- Measure build time improvement
+- Document optimization techniques"
+Development Documentation,"Create comprehensive developer documentation.",Developer Experience,Medium,3d,Post-Launch,Documentation,Backlog,"- Create CONTRIBUTING.md
+- Document architecture and design decisions
+- Document API endpoints
+- Document database schema
+- Document deployment process
+- Document testing guidelines
+- Create onboarding guide for new developers"
+Refactor Code Duplication,"Refactor remaining code duplication and improve code organization.",Developer Experience,Low,1w,Scale,Backend,Backlog,"- Identify remaining code duplication
+- Extract shared utilities
+- Consolidate email sending logic
+- Consolidate validation logic
+- Improve module organization
+- Update imports"
+Frontend Bundle Size Optimization,"Analyze and reduce frontend bundle size.",Performance Optimization,Medium,3d,Post-Launch,Frontend,Backlog,"- Run bundle analyzer (vite-bundle-visualizer)
+- Identify large dependencies
+- Optimize code splitting (already good but verify)
+- Remove unused dependencies
+- Lazy load heavy components (Recharts ChatWidget)
+- Measure bundle size reduction
+- Document bundle size budget"
+Image Optimization,"Optimize images for web (WebP lazy loading responsive).",Performance Optimization,Medium,2d,Post-Launch,Frontend,Backlog,"- Convert images to WebP format
+- Add responsive image sizes (srcset)
+- Implement lazy loading for below-fold images
+- Add loading=eager for hero images
+- Compress images (80-90% quality)
+- Measure page load improvement"
+API Response Compression,"Add gzip/brotli compression to API responses.",Performance Optimization,Medium,1d,Post-Launch,Backend,Backlog,"- Install compression middleware
+- Configure gzip/brotli compression
+- Test compression works
+- Measure response size reduction
+- Document compression in DEPLOYMENT.md"
+Database Query Optimization,"Optimize slow database queries.",Performance Optimization,Medium,1w,Post-Launch,Database,Backlog,"- Identify slow queries (from monitoring)
+- Add indexes where needed (already good but verify)
+- Optimize N+1 queries (use joins)
+- Add query result caching where appropriate
+- Measure query time improvement
+- Document optimization techniques"
+Caching Strategy Implementation,"Implement caching for static content and API responses.",Performance Optimization,Medium,3d,Post-Launch,Backend,Backlog,"- Add Cache-Control headers for static assets (1 year)
+- Add ETag headers for API responses
+- Implement API response caching (Redis or in-memory)
+- Cache database query results (for static data like state nexus rules)
+- Test cache invalidation
+- Document caching strategy"
+CDN Configuration,"Configure CDN for static assets (Cloudflare Fastly or similar).",Performance Optimization,Medium,1d,Scale,DevOps,Backlog,"- Set up CDN (may already be done by Replit)
+- Configure cache rules
+- Test cache hit rate
+- Measure latency improvement
+- Document CDN configuration"
+Database Connection Pooling Optimization,"Optimize PostgreSQL connection pool configuration.",Performance Optimization,Low,1d,Scale,Database,Backlog,"- Review current pool configuration (pg driver defaults)
+- Tune pool size based on load testing results
+- Add connection pool monitoring
+- Test under high load
+- Document pool configuration"
+Service Worker for Offline Support (Optional),"Add service worker for offline support and faster load times.",Performance Optimization,Low,1w,Scale,Frontend,Backlog,"- Install Workbox
+- Configure service worker
+- Cache static assets
+- Cache API responses (selectively)
+- Test offline functionality
+- Add update notification
+- Document service worker behavior"
+Performance Budget Enforcement,"Set and enforce performance budgets in CI/CD.",Performance Optimization,Medium,1d,Post-Launch,DevOps,Backlog,"- Set performance budgets (bundle size LCP INP CLS)
+- Add performance budget checks to CI/CD
+- Fail CI if budgets exceeded
+- Document performance budgets
+- Create performance monitoring dashboard"
+Dark Mode Implementation (Optional),"Implement dark mode support (only if requested by owner).",Technical Debt & Future,Low,1w,Scale,Frontend,Backlog,"- Add dark mode color scheme to TailwindCSS
+- Add theme toggle component
+- Persist theme preference (localStorage)
+- Test all components in dark mode
+- Update design tokens
+- Document theme customization"
+Internationalization (i18n) Preparation,"Prepare codebase for internationalization (if future expansion planned).",Technical Debt & Future,Low,2w,Scale,Frontend,Backlog,"- Install i18n library (react-i18next)
+- Extract all hardcoded strings
+- Create translation files (en-US as base)
+- Test language switching
+- Document i18n workflow
+- Add to backlog (do not implement unless requested)"
+Mobile App Consideration,"Research mobile app options (React Native PWA).",Technical Debt & Future,Low,3m,Scale,Documentation,Backlog,"- Research React Native vs PWA
+- Estimate development effort
+- Document pros/cons
+- Create implementation plan
+- Add to backlog (do not implement unless requested)"
+CRM Integration Research,"Research CRM integration options (HubSpot Salesforce custom).",Technical Debt & Future,Low,1w,Scale,Documentation,Backlog,"- Research CRM options
+- Evaluate integration complexity
+- Estimate costs
+- Document recommendation
+- Add to backlog (do not implement unless requested)"
+Email Marketing Automation,"Plan email marketing automation (drip campaigns nurture sequences).",Technical Debt & Future,Low,2w,Scale,Backend,Backlog,"- Research email marketing platforms (Mailchimp SendGrid Resend advanced features)
+- Design email sequences (onboarding nurture re-engagement)
+- Create email templates
+- Document automation workflow
+- Add to backlog (do not implement unless requested)"
+Client Portal (if needed in future),"Plan client portal for document sharing invoices reports.",Technical Debt & Future,Low,2m,Scale,Documentation,Backlog,"- Define client portal requirements
+- Design user authentication flow
+- Design portal features (document upload/download invoice viewing report access)
+- Estimate implementation effort
+- Document design decisions
+- Add to backlog (do not implement unless requested)"
+QuickBooks Online Integration,"Research QuickBooks Online API integration for automated data sync.",Technical Debt & Future,Low,1m,Scale,Backend,Backlog,"- Research QuickBooks Online API
+- Understand OAuth 2.0 flow
+- Identify data sync requirements
+- Estimate implementation effort
+- Document integration design
+- Add to backlog (do not implement unless requested)"
+Automated Invoicing (future),"Plan automated invoicing system (may integrate with Stripe or QBO).",Technical Debt & Future,Low,1w,Scale,Backend,Backlog,"- Define invoicing requirements
+- Design invoice template
+- Research invoice delivery (email PDF generation)
+- Estimate implementation effort
+- Document design decisions
+- Add to backlog (do not implement unless requested)"
+Blog CMS Migration (optional),"Consider migrating blog from hardcoded posts to CMS (Contentful Sanity).",Technical Debt & Future,Low,1w,Scale,Frontend,Backlog,"- Research headless CMS options
+- Estimate migration effort
+- Evaluate costs
+- Document recommendation
+- Add to backlog (do not implement unless requested)"
+A/B Testing Framework,"Add A/B testing capability for landing pages and CTAs.",Technical Debt & Future,Low,1w,Scale,Frontend,Backlog,"- Research A/B testing tools (Google Optimize Optimizely custom)
+- Design experiment framework
+- Implement feature flagging
+- Document testing workflow
+- Add to backlog (do not implement unless requested)"
+Affiliate Program (future),"Plan affiliate program for referrals.",Technical Debt & Future,Low,1m,Scale,Documentation,Backlog,"- Define affiliate program structure
+- Design tracking system
+- Design payout system
+- Estimate implementation effort
+- Document program design
+- Add to backlog (do not implement unless requested)"
+Advanced Analytics (custom dashboards),"Create custom analytics dashboards for business insights.",Technical Debt & Future,Low,2w,Scale,Frontend,Backlog,"- Define key business metrics
+- Design dashboard wireframes
+- Choose visualization library (Recharts already included)
+- Implement dashboard pages
+- Add filtering and date range selection
+- Add to backlog (do not implement unless requested)"
+Compliance Automation (GDPR CCPA),"Enhance compliance automation (data export deletion consent management).",Technical Debt & Future,Medium,1w,Post-Launch,Backend,Backlog,"- Implement data export endpoint (user can request their data)
+- Implement data deletion endpoint (right to be forgotten)
+- Implement consent withdrawal endpoint
+- Create compliance dashboard for owner
+- Document compliance procedures
+- Test compliance workflows"
