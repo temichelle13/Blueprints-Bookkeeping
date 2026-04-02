@@ -18,9 +18,9 @@ import { trackEvent } from "@/lib/analytics";
 import { BOOKKEEPER_INTENT } from "@/lib/contact-intent";
 
 const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
+const EMERGENCY_CALENDLY_URL =
+  "https://calendly.com/tea-blueprintsandbookkeeping/emergency-or-other-expedited-request";
 const EMAIL_ADDRESS = "tea@blueprintsandbookkeeping.com";
-const EMERGENCY_REQUEST_URL =
-  "mailto:tea@blueprintsandbookkeeping.com?subject=Emergency%20%2F%20Expedited%20Request&body=Hi%20Tea%2C%0A%0AI%20need%20an%20urgent%20bookkeeping%20review%20due%20to%20deadline%20pressure%20(tax%2C%20lender%2C%20or%20filing).%20Please%20contact%20me%20as%20soon%20as%20possible.%0A%0AName%3A%0ABusiness%3A%0ABest%20phone%20number%3A";
 
 interface BasePath {
   icon: typeof CalendarDays;
@@ -107,9 +107,9 @@ export default function GetStarted() {
       color: "#EF4444",
       title: "Emergency / Expedited Request",
       subtitle:
-        "Use this only when you have urgent tax, lender, investor, or filing pressure and need priority review.",
-      cta: "Submit urgent request",
-      href: EMERGENCY_REQUEST_URL,
+        "Book a 15-minute emergency slot when you have urgent tax, lender, investor, or filing pressure and need priority review.",
+      cta: "Book emergency meeting",
+      href: EMERGENCY_CALENDLY_URL,
       external: true,
       newTab: true,
       analyticsEvent: "Emergency Request Click",
