@@ -162,17 +162,6 @@ const contactCards: ContactCard[] = [
     newTab: true,
   },
   {
-    icon: Clock3,
-    color: "#EF4444",
-    title: "Emergency / Expedited Request",
-    description:
-      "For urgent deadlines only (tax notices, lender requests, filing pressure). This opens a priority request email so Tea can triage urgency quickly.",
-    cta: "Submit Urgent Request",
-    href: EMERGENCY_REQUEST_URL,
-    external: true,
-    newTab: true,
-  },
-  {
     icon: Mail,
     color: "#F59E0B",
     title: "Email",
@@ -887,7 +876,7 @@ export default function Contact() {
   const searchParams = useMemo(() => new URLSearchParams(search), [search]);
   const isBookkeeperIntent = useMemo(() => {
     const intent = searchParams.get("intent");
-    return isBookkeeperIntentParam(intent);
+    return intent === BOOKKEEPER_INTENT;
   }, [searchParams]);
   const defaultClientMeetingMessage = useMemo(() => {
     const requestedMessage = searchParams.get("message");

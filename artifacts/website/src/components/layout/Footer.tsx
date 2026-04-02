@@ -21,7 +21,7 @@ const GET_STARTED_PATH = "/get-started";
 const EMERGENCY_REQUEST_URL =
   "mailto:tea@blueprintsandbookkeeping.com?subject=Emergency%20%2F%20Expedited%20Request&body=Hi%20Tea%2C%0A%0AI%20need%20an%20urgent%20bookkeeping%20review%20due%20to%20deadline%20pressure%20(tax%2C%20lender%2C%20or%20filing).%20Please%20contact%20me%20as%20soon%20as%20possible.%0A%0AName%3A%0ABusiness%3A%0ABest%20phone%20number%3A";
 
-interface UrgentLink {
+interface ContactLink {
   label: string;
   href: string;
   description: string;
@@ -31,7 +31,7 @@ interface UrgentLink {
   analyticsEvent?: string;
 }
 
-const urgentLinks: UrgentLink[] = [
+const contactLinks: ContactLink[] = [
   {
     label: "Book a call",
     href: SCHEDULE_PATH,
@@ -47,14 +47,11 @@ const urgentLinks: UrgentLink[] = [
     isExternal: false,
   },
   {
-    label: "Emergency / Expedited Request",
-    href: EMERGENCY_REQUEST_URL,
-    description:
-      "Use this for urgent deadlines, lender requests, or tax-time pressure.",
-    icon: AlertTriangle,
+    label: BOOKKEEPER_EMAIL,
+    href: `mailto:${BOOKKEEPER_EMAIL}`,
+    description: "Email for questions about services.",
+    icon: Mail,
     isExternal: true,
-    newTab: true,
-    analyticsEvent: "Emergency Request Click",
   },
 ];
 
@@ -174,10 +171,10 @@ export function Footer() {
                 Need Help Now?
               </h3>
               <ul className="space-y-3">
-                {urgentLinks.map((item) => {
+                {contactLinks.map((item) => {
                   const Icon = item.icon;
                   const linkClassName =
-                    "group flex items-start gap-3 text-sm text-muted-foreground transition-colors hover:text-foreground";
+                    "group flex items-start gap-3 rounded-md text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
                   const content = (
                     <>
                       <span className="mt-0.5 text-accent/70">
@@ -215,16 +212,6 @@ export function Footer() {
                             }
                           }}
                           className={linkClassName}
-                          {...(item.newTab
-                            ? { target: "_blank", rel: "noopener noreferrer" }
-                            : {})}
-                          onClick={() => {
-                            if (item.analyticsEvent) {
-                              trackEvent(item.analyticsEvent, {
-                                source: "footer",
-                              });
-                            }
-                          }}
                         >
                           {content}
                         </a>

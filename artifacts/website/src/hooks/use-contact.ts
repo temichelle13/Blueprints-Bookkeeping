@@ -52,6 +52,13 @@ export function useContactMutation() {
     data: QuickContactValues | DetailedContactValues,
   ): Promise<boolean> => {
     try {
+      const consent = {
+        email: data.emailConsent,
+        sms: data.smsConsent,
+        phone: data.phoneConsent,
+        source: CONTACT_CONSENT_SOURCE_PAGE,
+        legalTextVersion: CONTACT_CONSENT_TEXT_VERSION,
+      };
       const payload: ContactFormInput =
         data.formType === "quick"
           ? {
@@ -59,6 +66,7 @@ export function useContactMutation() {
               name: data.name,
               email: data.email,
               message: data.message,
+              consent,
               smsConsent: data.smsConsent,
               consentTextVersion: CONTACT_CONSENT_TEXT_VERSION,
               consentSourcePage: CONTACT_CONSENT_SOURCE_PAGE,
@@ -75,6 +83,7 @@ export function useContactMutation() {
               monthlyRevenueRange: data.monthlyRevenueRange ?? null,
               biggestChallenge: data.biggestChallenge,
               preferredContactMethod: data.preferredContactMethod ?? null,
+              consent,
               smsConsent: data.smsConsent,
               consentTextVersion: CONTACT_CONSENT_TEXT_VERSION,
               consentSourcePage: CONTACT_CONSENT_SOURCE_PAGE,
