@@ -47,16 +47,6 @@ const contactLinks: ContactLink[] = [
     isExternal: false,
   },
   {
-    label: "Emergency / Expedited Request",
-    href: EMERGENCY_REQUEST_URL,
-    description:
-      "Use this for urgent deadlines, lender requests, or tax-time pressure.",
-    icon: ClipboardList,
-    isExternal: true,
-    newTab: true,
-    analyticsEvent: "Emergency Request Click",
-  },
-  {
     label: BOOKKEEPER_EMAIL,
     href: `mailto:${BOOKKEEPER_EMAIL}`,
     description: "Email for questions about services.",
@@ -174,70 +164,6 @@ export function Footer() {
                   Roseburg, Oregon (Remote Nationwide)
                 </div>
               </div>
-            </div>
-
-            <div className="rounded-2xl border border-white/10 bg-card/30 p-5">
-              <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-4">
-                Need Help Now?
-              </h3>
-              <ul className="space-y-3">
-                {contactLinks.map((item) => {
-                  const Icon = item.icon;
-                  const linkClassName =
-                    "group flex items-start gap-3 rounded-md text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
-                  const content = (
-                    <>
-                      <span className="mt-0.5 text-accent/70">
-                        <Icon size={15} aria-hidden="true" />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="flex items-center gap-2 font-medium text-foreground/90 group-hover:text-foreground transition-colors">
-                          <span>{item.label}</span>
-                          <ArrowRight
-                            size={12}
-                            className="opacity-0 -translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0"
-                            aria-hidden="true"
-                          />
-                        </span>
-                        <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
-                          {item.description}
-                        </span>
-                      </span>
-                    </>
-                  );
-
-                  return (
-                    <li key={item.label}>
-                      {item.isExternal ? (
-                        <a
-                          href={item.href}
-                          {...(item.newTab
-                            ? { target: "_blank", rel: "noopener noreferrer" }
-                            : {})}
-                          onClick={() => {
-                            if (item.analyticsEvent) {
-                              trackEvent(item.analyticsEvent, {
-                                source: "footer",
-                              });
-                            }
-                          }}
-                          className={linkClassName}
-                        >
-                          {content}
-                        </a>
-                      ) : (
-                        <Link
-                          href={item.href}
-                          className={linkClassName}
-                          onClick={scrollToTopOnSameRoute(item.href)}
-                        >
-                          {content}
-                        </Link>
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
             </div>
           </div>
 
