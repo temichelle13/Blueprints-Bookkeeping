@@ -47,16 +47,6 @@ const contactLinks: ContactLink[] = [
     isExternal: false,
   },
   {
-    label: "Emergency / Expedited Request",
-    href: EMERGENCY_REQUEST_URL,
-    description:
-      "Use this for urgent deadlines, lender requests, or tax-time pressure.",
-    icon: ClipboardList,
-    isExternal: true,
-    newTab: true,
-    analyticsEvent: "Emergency Request Click",
-  },
-  {
     label: BOOKKEEPER_EMAIL,
     href: `mailto:${BOOKKEEPER_EMAIL}`,
     description: "Email for questions about services.",
