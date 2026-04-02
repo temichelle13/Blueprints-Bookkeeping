@@ -5,7 +5,7 @@ import { logger } from "../lib/logger";
 export function getContactRateLimitKey(req: Request): string {
   // Rely on express-rate-limit's ipKeyGenerator, which uses req.ip and
   // therefore honors Express's trust proxy configuration.
-  return ipKeyGenerator(req);
+  return ipKeyGenerator(req.ip ?? "unknown");
 }
 
 export const contactLimiter = rateLimit({

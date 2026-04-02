@@ -3,10 +3,16 @@ import { db, contactInquiriesTable } from "@workspace/db";
 import { SubmitContactFormBody } from "@workspace/api-zod";
 import * as contractService from "../lib/contract-service";
 import { isEmailSuppressed } from "../lib/email-suppression";
-import { getResend, getOwnerEmail, EMAIL_FROM } from "../lib/email";
 import { getRequestIp, getUserAgent } from "../lib/request-helpers";
 import { logger } from "../lib/logger";
 import { queueContactInquiryEmails } from "../lib/outbound-email-events";
+import {
+  honeypotProtection,
+  createSubmissionRateLimiter,
+  enforceMaxLength,
+  validateEmailStrict,
+  withSubmissionMonitoring,
+} from "../middleware/public-submissions";
 
 const router: IRouter = Router();
 const CONSENT_FALLBACK_VERSION = "v2026-03-31";
@@ -19,26 +25,40 @@ const ALLOWED_CONSENT_TEXT_VERSIONS = new Set([
 
 const ALLOWED_CONSENT_SOURCE_PAGES = new Set(["/contact", "/onboarding"]);
 
-const contactLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 10,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: {
-    error: "Too many submissions from this IP. Please try again later.",
-  },
-});
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
 
-router.post("/contact", contactLimiter, async (req, res): Promise<void> => {
-  if (req.body?.website) {
-    res.status(201).json({
-      success: true,
-      message:
-        "Thank you for your inquiry! We will be in touch within 48 hours.",
-      id: 0,
-    });
+type ContactConsent = {
+  email: boolean;
+  sms: boolean;
+  phone: boolean;
+  source: string;
+  legalTextVersion: string;
+};
 
-const router: IRouter = Router();
+function normalizeConsent(data: {
+  consent?: ContactConsent | undefined;
+  smsConsent: boolean;
+  formType: "quick" | "detailed";
+}): ContactConsent {
+  if (data.consent) {
+    return data.consent;
+  }
+
+  return {
+    email: true,
+    sms: data.smsConsent,
+    phone: data.smsConsent,
+    source: `legacy_${data.formType}_form`,
+    legalTextVersion: CONSENT_FALLBACK_VERSION,
+  };
+}
 
 const contactSubmissionLimiter = createSubmissionRateLimiter({
   routeId: "contact",
@@ -85,6 +105,18 @@ router.post(
       email: normalizedEmail,
     };
 
+    if (!ALLOWED_CONSENT_TEXT_VERSIONS.has(data.consentTextVersion)) {
+      res.status(400).json({ error: "Invalid consentTextVersion." });
+      return;
+    }
+    if (!ALLOWED_CONSENT_SOURCE_PAGES.has(data.consentSourcePage)) {
+      res.status(400).json({ error: "Invalid consentSourcePage." });
+      return;
+    }
+
+    const normalizedConsent = normalizeConsent(data);
+    const consentCapturedAt = new Date();
+
     const [inquiry] = await db
       .insert(contactInquiriesTable)
       .values({
@@ -99,7 +131,19 @@ router.post(
         monthlyRevenueRange: data.monthlyRevenueRange ?? null,
         biggestChallenge: data.biggestChallenge ?? null,
         preferredContactMethod: data.preferredContactMethod ?? null,
-        smsConsent: data.smsConsent,
+        emailConsent: normalizedConsent.email,
+        emailConsentCapturedAt: normalizedConsent.email
+          ? consentCapturedAt
+          : null,
+        emailConsentSource: normalizedConsent.email
+          ? normalizedConsent.source
+          : null,
+        smsConsent: normalizedConsent.sms,
+        consentTimestamp: consentCapturedAt,
+        consentTextVersion: data.consentTextVersion,
+        requestIp: getRequestIp(req),
+        userAgent: getUserAgent(req),
+        consentSourcePage: data.consentSourcePage,
       })
       .returning();
 
@@ -109,77 +153,12 @@ router.post(
 
     const suppressed = await isEmailSuppressed(data.email);
 
-    const resend = getResend();
-    if (resend) {
-      const servicesLabel =
-        Array.isArray(data.servicesInterested) && data.servicesInterested.length
-          ? data.servicesInterested.join(", ")
-          : "Not specified";
+    const servicesLabel =
+      Array.isArray(data.servicesInterested) && data.servicesInterested.length
+        ? data.servicesInterested.join(", ")
+        : "Not specified";
 
-      const notifyHtml = `
-    return;
-  }
-
-  const ownerEmail = deps.tryGetOwnerEmail();
-  if (!ownerEmail) {
-    deps.logWarn(
-      "Skipping contact inquiry emails because owner email is unavailable",
-      {
-        inquiryId,
-        reason: "owner_email_unavailable",
-      },
-    );
-    return;
-  }
-
-  const data = parsed.data;
-  const normalizedConsent = normalizeConsent(data);
-  const consentCapturedAt = new Date();
-
-  if (!ALLOWED_CONSENT_TEXT_VERSIONS.has(data.consentTextVersion)) {
-    res.status(400).json({ error: "Invalid consentTextVersion." });
-    return;
-  }
-  if (!ALLOWED_CONSENT_SOURCE_PAGES.has(data.consentSourcePage)) {
-    res.status(400).json({ error: "Invalid consentSourcePage." });
-    return;
-  }
-
-  const [inquiry] = await db
-    .insert(contactInquiriesTable)
-    .values({
-      formType: data.formType,
-      name: data.name,
-      email: data.email,
-      phone: data.phone ?? null,
-      message: data.message ?? null,
-      businessName: data.businessName ?? null,
-      industry: data.industry ?? null,
-      servicesInterested: data.servicesInterested ?? null,
-      monthlyRevenueRange: data.monthlyRevenueRange ?? null,
-      biggestChallenge: data.biggestChallenge ?? null,
-      preferredContactMethod: data.preferredContactMethod ?? null,
-      smsConsent: data.smsConsent,
-      consentTimestamp: new Date(),
-      consentTextVersion: data.consentTextVersion,
-      requestIp: getRequestIp(req),
-      userAgent: getUserAgent(req),
-      consentSourcePage: data.consentSourcePage,
-    })
-    .returning();
-
-  if (!inquiry) {
-    throw new Error("Failed to insert contact inquiry record");
-  }
-
-  const suppressed = await isEmailSuppressed(data.email);
-
-  const servicesLabel =
-    Array.isArray(data.servicesInterested) && data.servicesInterested.length
-      ? data.servicesInterested.join(", ")
-      : "Not specified";
-
-  const notifyHtml = `
+    const notifyHtml = `
       <div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
         <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
           <h1 style="color:white;margin:0;font-size:20px;">New Inquiry — Blueprints & Bookkeeping</h1>
@@ -213,7 +192,7 @@ router.post(
         </div>
       </div>`;
 
-  const confirmHtml = `
+    const confirmHtml = `
       <div style="font-family:Inter,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;">
         <div style="background:#6366f1;padding:24px 32px;border-radius:8px 8px 0 0;">
           <h1 style="color:white;margin:0;font-size:20px;">We've got your message.</h1>
@@ -233,18 +212,30 @@ router.post(
         </div>
       </div>`;
 
-  queueContactInquiryEmails({
-    inquiryId: inquiry.id,
-    senderEmail: data.email,
-    senderSuppressed: suppressed,
-    ownerHtml: notifyHtml,
-    ownerSubject: `New Inquiry: ${data.name}${data.businessName ? ` — ${data.businessName}` : ""}`,
-    confirmationHtml: confirmHtml,
-  }).catch((err: unknown) => {
-    logger.error("Failed to queue contact inquiry emails", err as Error, {
+    queueContactInquiryEmails({
       inquiryId: inquiry.id,
+      senderEmail: data.email,
+      senderSuppressed: suppressed,
+      ownerHtml: notifyHtml,
+      ownerSubject: `New Inquiry: ${data.name}${data.businessName ? ` — ${data.businessName}` : ""}`,
+      confirmationHtml: confirmHtml,
+    }).catch((err: unknown) => {
+      logger.error("Failed to queue contact inquiry emails", err as Error, {
+        inquiryId: inquiry.id,
+      });
     });
-  });
+
+    contractService
+      .processFormSubmission({
+        formType: data.formType,
+        name: data.name,
+        email: data.email,
+        servicesInterested: data.servicesInterested ?? null,
+        contactInquiryId: inquiry.id,
+      })
+      .catch((err) => {
+        console.error("Contract automation error (non-blocking):", err);
+      });
 
     res.status(201).json({
       success: true,

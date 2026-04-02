@@ -32,7 +32,8 @@ const EMERGENCY_CALENDLY_URL =
 const PHONE_DISPLAY = "(541) 319-8654";
 const PHONE_HREF = "tel:+15413198654";
 const EMAIL_ADDRESS = "tea@blueprintsandbookkeeping.com";
-const BOOKKEEPER_INTENT = "bookkeeper";
+const EMERGENCY_REQUEST_URL =
+  "mailto:tea@blueprintsandbookkeeping.com?subject=Emergency%20%2F%20Expedited%20Request&body=Hi%20Tea%2C%0A%0AI%20need%20an%20urgent%20bookkeeping%20review%20due%20to%20deadline%20pressure%20(tax%2C%20lender%2C%20or%20filing).%20Please%20contact%20me%20as%20soon%20as%20possible.%0A%0AName%3A%0ABusiness%3A%0ABest%20phone%20number%3A";
 const CONTACT_CONSENT_LANGUAGE =
   "I agree to receive text messages and phone calls from Blueprints & Bookkeeping at my provided contact number. Message and data rates may apply. Reply STOP to opt out.";
 const INQUIRY_PROCESSING_DISCLOSURE =
@@ -157,16 +158,7 @@ const contactCards: ContactCard[] = [
       "Best for new leads and growth-stage businesses. Share your goals, current books, and timeline.",
     cta: "Schedule Discovery Meeting",
     href: CALENDLY_URL,
-    newTab: true,
-  },
-  {
-    icon: Clock3,
-    color: "#EF4444",
-    title: "Emergency or Expedited Request",
-    description:
-      "For urgent filing, lender, payroll, or close deadlines that need same-day or priority attention.",
-    cta: "Request Expedited Meeting",
-    href: EMERGENCY_CALENDLY_URL,
+    external: true,
     newTab: true,
   },
   {
@@ -185,13 +177,11 @@ const contactCards: ContactCard[] = [
     icon: Mail,
     color: "#F59E0B",
     title: "Email",
-    icon: ShieldCheck,
-    color: "#10B981",
-    title: "Current Client Meeting Request",
     description:
-      "For existing clients only. Submit business details and Tea will confirm your meeting after matching records.",
-    cta: "Request Client-Only Meeting",
-    href: "#client-meeting-request",
+      "Reach out by email if you want to share details or documents before talking.",
+    cta: `Email ${EMAIL_ADDRESS}`,
+    href: `mailto:${EMAIL_ADDRESS}`,
+    external: true,
     newTab: false,
   },
 ];
@@ -409,7 +399,7 @@ function MessageForm({ defaultMessage = "" }: { defaultMessage?: string }) {
           role="alert"
           className="text-destructive text-xs -mt-2"
         >
-          {errors.emailConsent.message}
+          {errors.smsConsent.message}
         </p>
       )}
       {submitError && (

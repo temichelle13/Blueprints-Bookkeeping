@@ -7,6 +7,7 @@ import {
 } from "./lib/contract-service";
 import { runNexusCheck, ensureNexusRulesSeeded } from "./lib/nexus-service";
 import { runInquiryRetentionPolicy } from "./lib/inquiry-retention";
+import { processPendingOutboundEmailEvents } from "./lib/outbound-email-events";
 
 // Validate environment variables at startup
 try {
