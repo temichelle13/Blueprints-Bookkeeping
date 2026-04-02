@@ -171,17 +171,6 @@ const contactCards: ContactCard[] = [
     newTab: true,
     analyticsEvent: "Emergency Request Click",
   },
-  {
-    icon: Mail,
-    color: "#F59E0B",
-    title: "Email",
-    description:
-      "Reach out by email if you want to share details or documents before talking.",
-    cta: `Email ${EMAIL_ADDRESS}`,
-    href: `mailto:${EMAIL_ADDRESS}`,
-    external: true,
-    newTab: false,
-  },
 ];
 
 const quickbooksSetupSteps = [
@@ -969,7 +958,7 @@ export default function Contact() {
         )}
 
         {!isBookkeeperIntent && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-14">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-14">
             {contactCards.map((card) => {
               const CardIcon = card.icon;
               const inner = (
