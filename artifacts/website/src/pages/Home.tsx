@@ -34,7 +34,7 @@ export default function Home() {
         description="Decision-stage bookkeeping support for founders: cleanup and catch-up bookkeeping, monthly close management, and professionally written business plans. Based in Roseburg, Oregon and serving clients nationwide."
         path="/"
         ogImage="https://blueprintsandbookkeeping.com/opengraph.jpg"
-        jsonLd={homepageSchemas()}
+        jsonLd={localBusinessSchema()}
       />
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
