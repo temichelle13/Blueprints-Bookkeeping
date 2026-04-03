@@ -125,7 +125,7 @@ export const technologyAndSecurityCerts: CredentialEntry[] = [
     url: "https://www.coursera.org/account/accomplishments/specialization/AFOGOQ19VBCK",
   },
   {
-    name: "Cybersecurity Operations",
+    name: "Cybersecurity",
     issuer: "Google",
     description:
       "Google-certified cybersecurity training covering threat landscapes, security frameworks, network defense, and data protection best practices.",
@@ -145,7 +145,7 @@ export const technologyAndSecurityCerts: CredentialEntry[] = [
     url: "https://www.credly.com/badges/e2823194-36dc-4ab3-ab1d-155b9189714f/public_url",
   },
   {
-    name: "Business Intelligence Analytics",
+    name: "Business Intelligence",
     issuer: "Google",
     description:
       "Google-certified BI training covering data modeling, dashboard design, stakeholder communication, and analytics-driven decision making.",
@@ -155,7 +155,7 @@ export const technologyAndSecurityCerts: CredentialEntry[] = [
     url: "https://www.coursera.org/account/accomplishments/verify/E8HX7LY389H8",
   },
   {
-    name: "Project Management Systems",
+    name: "Project Management",
     issuer: "Google",
     description:
       "Google-certified project management training covering methodologies, stakeholder management, risk analysis, and Agile frameworks.",
@@ -175,7 +175,7 @@ export const technologyAndSecurityCerts: CredentialEntry[] = [
     url: "https://learn.microsoft.com/api/achievements/share/en-us/tealarson-hetrick/2DMNZC8V?sharingId=3B49CB782E364529",
   },
   {
-    name: "Generative AI Fundamentals",
+    name: "AI Agent Fundamentals",
     issuer: "Databricks",
     description:
       "Databricks Academy accreditation covering large language models, generative AI architecture, prompt engineering, and responsible AI deployment.",
