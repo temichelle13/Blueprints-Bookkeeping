@@ -145,28 +145,114 @@ export CORS_ORIGIN=https://blueprintsandbookkeeping.com
 - **Always set `TRUST_PROXY` explicitly in production**; leaving it unset disables proxy trust and rate limits will key on the proxy IP, not the real client IP.
 - Keep proxy chain controlled by your infrastructure only; do not trust arbitrary client-supplied forwarding headers.
 
-## Deployment to Cloudflare
+## Deployment to Cloudflare Pages (Active Configuration)
 
-If you want to deploy to Cloudflare instead of Replit, you'll need to:
+The site is deployed on Cloudflare Pages. The frontend is built from
+`artifacts/website/dist/public` and the API layer is provided by
+**Cloudflare Pages Functions** in the `functions/` directory. No separate
+Express server needs to be deployed — all `/api/*` routes are handled by
+Workers running server-side.
 
-1. **Create `wrangler.toml`** in the root directory (for Cloudflare Pages):
+### API Routes Implemented
 
-```toml
-name = "blueprints-bookkeeping"
-pages_build_output_dir = "artifacts/website/dist/public"
-compatibility_date = "2024-01-01"
-[build]
-command = "pnpm install && pnpm --filter @workspace/website run build"
+| Method | Path | Handler |
+|--------|------|---------|
+| `GET` | `/api/healthz` | `functions/api/healthz.ts` |
+| `POST` | `/api/contact` | `functions/api/contact.ts` |
+| `POST` | `/api/newsletter/subscribe` | `functions/api/newsletter/subscribe.ts` |
+| `GET` | `/api/newsletter/unsubscribe?token=` | `functions/api/newsletter/unsubscribe.ts` |
+| `POST` | `/api/newsletter/unsubscribe` | `functions/api/newsletter/unsubscribe.ts` |
+| `POST` | `/api/openai/conversations` | `functions/api/openai/conversations.ts` |
+| `GET` | `/api/openai/conversations/:id` | `functions/api/openai/conversations/[id].ts` |
+| `POST` | `/api/openai/conversations/:id/messages` | `functions/api/openai/conversations/[id]/messages.ts` |
+
+### Cloudflare Pages Dashboard Setup
+
+#### Build Configuration
+
+| Setting | Value |
+|---------|-------|
+| Build command | `pnpm install --no-frozen-lockfile && pnpm --filter @workspace/website build` |
+| Build output directory | `artifacts/website/dist/public` |
+| Root directory | *(leave empty — repo root)* |
+| Node.js version | 20 or later |
+
+#### Environment Variables
+
+Set these in **Cloudflare Pages → Settings → Environment variables**. Mark
+secrets as **Encrypted**.
+
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `RESEND_API_KEY` | Secret | ✅ | Resend API key for sending emails |
+| `OPENAI_API_KEY` | Secret | ✅ | OpenAI API key for Aria chat |
+| `OWNER_EMAIL` | Plaintext | Optional | Notification recipient (default: `tea@blueprintsandbookkeeping.com`) |
+| `SITE_URL` | Plaintext | Optional | Canonical site URL (default: `https://blueprintsandbookkeeping.com`) |
+| `OPENAI_CHAT_MODEL` | Plaintext | Optional | OpenAI model ID (default: `gpt-4.1-mini`) |
+| `VITE_API_URL` | Plaintext | Optional | Leave **empty** — functions run same-origin |
+
+> **Important**: `VITE_API_URL` must be **empty** (or not set) when using
+> Cloudflare Pages Functions so the frontend calls same-origin `/api/*` routes.
+> If it is set to an external URL, the Pages Functions are bypassed.
+
+#### Optional: Durable Chat Storage (KV)
+
+By default, chat conversation history is stored in memory per Worker isolate
+and is ephemeral (reset on Worker restart). For durable chat history:
+
+1. Create a KV namespace in Cloudflare dashboard: **Workers & Pages → KV**.
+2. Bind it to your Pages project: **Pages → Settings → Functions → KV bindings**
+   - Variable name: `CHAT_KV`
+   - KV namespace: *(select the namespace you created)*
+
+The messages handler automatically detects and uses `CHAT_KV` when bound.
+
+#### Optional: Newsletter Subscriber Database (D1)
+
+Currently, newsletter signups trigger emails only (no persistent subscriber
+list). To persist subscribers:
+
+1. Create a D1 database in Cloudflare dashboard.
+2. Bind it to your Pages project with variable name `DB`.
+3. Update `functions/api/newsletter/subscribe.ts` to insert into D1.
+
+### `wrangler.toml`
+
+A `wrangler.toml` is included at the repo root. Its primary purpose is to
+document the configuration. Cloudflare Pages reads build settings from the
+dashboard, not from `wrangler.toml`, but the file is useful for local
+development with `wrangler pages dev`.
+
+### Local Development with Wrangler
+
+To test Pages Functions locally:
+
+```bash
+# Install wrangler globally
+npm install -g wrangler
+
+# Build the frontend first
+pnpm --filter @workspace/website build
+
+# Start local Pages Functions dev server
+wrangler pages dev artifacts/website/dist/public \
+  --binding RESEND_API_KEY=re_test_xxx \
+  --binding OPENAI_API_KEY=sk-xxx
 ```
 
-2. **Configure Cloudflare Pages** for the frontend:
-   - Build command: `pnpm install && pnpm --filter @workspace/website run build`
-   - Build output directory: `artifacts/website/dist/public`
-   - Environment variables: `VITE_API_URL=<your-api-url>`
+### Known Limitations (Cloudflare Pages vs. Express)
 
-3. **Deploy API server separately** (Cloudflare Workers, Cloud Run, etc.)
+| Feature | Express backend | Cloudflare Pages |
+|---------|----------------|-----------------|
+| Newsletter subscriber list | PostgreSQL database | Email-only (no DB by default) |
+| Chat conversation history | PostgreSQL, fully durable | In-memory per isolate (ephemeral) or KV (durable) |
+| Rate limiting | In-process middleware | Not implemented (use Cloudflare WAF rules) |
+| IP-based tracking / honeypot | Express middleware | Basic honeypot field only |
+| Contact inquiry DB record | PostgreSQL | Not persisted (email only) |
 
-4. **Configure CORS** on the API server to allow Cloudflare Pages origin
+For full feature parity with the Express backend, deploy the Express server
+(`artifacts/api-server`) on a Node.js host (Replit, Render, Fly.io) and set
+`VITE_API_URL` to that server's origin.
 
 ## Deployment Steps
 
