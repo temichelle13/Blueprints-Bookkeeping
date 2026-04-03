@@ -274,18 +274,12 @@ export function GoogleReviewsCallout() {
 
 export function HeroCtaTrustNote() {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.45 }}
-      className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 text-xs text-muted-foreground"
-    >
+    <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 text-xs text-muted-foreground">
       <CheckCircle2 className="h-4 w-4 text-accent" />
       <span>
-        Scoped engagements, documented deliverables, and no guaranteed-results
-        claims.
+        Scoped engagements, documented deliverables, no guaranteed-results claims.
       </span>
-    </motion.div>
+    </div>
   );
 }
 

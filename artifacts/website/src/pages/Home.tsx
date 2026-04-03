@@ -18,6 +18,7 @@ import {
   EngagementClarityPreview,
   FinalCtaTrustNote,
 } from "@/components/TrustSignals";
+import { OptimizedImage } from "@/components/OptimizedImage";
 import { SEO } from "@/components/SEO";
 import { trackHomeCtaClick } from "@/hooks/usePageTracking";
 import { localBusinessSchema } from "@/lib/seo-schemas";
@@ -38,7 +39,7 @@ export default function Home() {
       />
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img
+          <OptimizedImage
             src={`${import.meta.env.BASE_URL}images/hero-bg.png`}
             alt="Blueprints & Bookkeeping — professional bookkeeping and business plan services for founders"
             width={1920}
@@ -237,12 +238,20 @@ export default function Home() {
               <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-6">
                 Why Choose Us?
               </h2>
-              <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-                We built a boutique bookkeeping practice specifically for businesses that need more than basic data entry.
-              </p>
-              <p className="text-base text-muted-foreground mb-10 leading-relaxed">
-                Our clients often come to us after hitting limitations with traditional bookkeepers — whether it's cryptocurrency complexity, multi-entity structures, or simply needing clear explanations instead of vague journal entries.
-              </p>
+              <div className="space-y-4 text-lg text-muted-foreground mb-10 leading-relaxed">
+                <p>
+                  Most modern bookkeepers hit a complexity ceiling and lack the capacity to provide services to niche industries. They refuse to touch books that dabble in cryptocurrency, and often try to solve everything with journal entries—without truly understanding the underlying issues.
+                </p>
+                <p>
+                  Let's be honest: if you got audited, could your bookkeeper explain those entries? Probably not, because they just wanted the books to look good, not actually fix them. This is why they can't explain concepts to you or help you understand what's actually happening in your business.
+                </p>
+                <p>
+                  Communication is often vague and rare. Bookkeepers who also provide tax preparation frequently deprioritize client books during tax season, causing miscommunication, inaccuracies, and backlogs.
+                </p>
+                <p>
+                  We designed a boutique model that stays available and technically unmatched. With advanced capability and hands-on experience, we know exactly what it takes to make a business survive.
+                </p>
+              </div>
 
               <div className="space-y-6">
                 {[
@@ -371,26 +380,6 @@ A specialized partnership offering leadership-level advice, structured financial
                 </p>
               </motion.div>
             ))}
-          </div>
-
-          <div className="text-center">
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/schedule"
-                onClick={() => trackHomeCtaClick("primary", "mid_page")}
-                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-accent text-white font-semibold text-sm shadow-lg shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300"
-              >
-                {primaryCtaLabel}
-                <ArrowRight size={16} />
-              </Link>
-              <Link
-                href="/services"
-                onClick={() => trackHomeCtaClick("secondary", "mid_page")}
-                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-white/[0.04] text-white backdrop-blur-sm border border-white/10 font-semibold text-sm hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300"
-              >
-                {secondaryCtaLabel}
-              </Link>
-            </div>
           </div>
         </div>
       </section>
