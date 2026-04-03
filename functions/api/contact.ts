@@ -299,7 +299,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     JSON.stringify({
       success: true,
       message:
-        "Thank you for your inquiry! We will be in touch within 48 hours.",
+        "Thank you for your inquiry! We will be in touch within one business day.",
     }),
     { status: 201, headers },
   );
