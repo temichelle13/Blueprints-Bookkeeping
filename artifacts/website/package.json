@@ -83,6 +83,7 @@
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "tailwindcss": "catalog:",
+    "sharp": "^0.34.5",
     "tsx": "catalog:",
     "vite": "catalog:"
   }

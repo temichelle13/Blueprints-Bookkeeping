@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 import sharp from 'sharp';
 import { readdir, stat } from 'fs/promises';
-import { join } from 'path';
+import { join, basename } from 'path';
 
 const imagesDir = join(import.meta.dirname, '../public/images');
 
@@ -17,7 +17,7 @@ async function convertToWebP(pngPath: string): Promise<void> {
     const webpStats = await stat(webpPath);
     const savings = ((1 - webpStats.size / originalStats.size) * 100).toFixed(1);
 
-    console.log(`✓ ${pngPath.split('/').pop()}`);
+    console.log(`✓ ${basename(pngPath)}`);
     console.log(`  ${(originalStats.size / 1024).toFixed(0)}KB → ${(webpStats.size / 1024).toFixed(0)}KB (${savings}% smaller)`);
   } catch (error) {
     console.error(`✗ Failed to convert ${pngPath}:`, error);
