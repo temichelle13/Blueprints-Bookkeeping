@@ -5,6 +5,7 @@ import {
 } from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
+import { queueLeadFailover } from "@/lib/lead-failover";
 
 export const CONTACT_CONSENT_TEXT_VERSION = "contact-consent-2026-03-31.1";
 export const CONTACT_CONSENT_SOURCE_PAGE = "/contact";
@@ -51,35 +52,36 @@ export function useContactMutation() {
   const submit = async (
     data: QuickContactValues | DetailedContactValues,
   ): Promise<boolean> => {
+    const payload: ContactFormInput =
+      data.formType === "quick"
+        ? {
+            formType: "quick",
+            name: data.name,
+            email: data.email,
+            message: data.message,
+            smsConsent: data.smsConsent,
+            consentTextVersion: CONTACT_CONSENT_TEXT_VERSION,
+            consentSourcePage: CONTACT_CONSENT_SOURCE_PAGE,
+            website: data.website ?? "",
+          }
+        : {
+            formType: "detailed",
+            name: data.name,
+            email: data.email,
+            phone: data.phone ?? null,
+            businessName: data.businessName,
+            industry: data.industry,
+            servicesInterested: data.servicesInterested,
+            monthlyRevenueRange: data.monthlyRevenueRange ?? null,
+            biggestChallenge: data.biggestChallenge,
+            preferredContactMethod: data.preferredContactMethod ?? null,
+            smsConsent: data.smsConsent,
+            consentTextVersion: CONTACT_CONSENT_TEXT_VERSION,
+            consentSourcePage: CONTACT_CONSENT_SOURCE_PAGE,
+            website: data.website ?? "",
+          };
+
     try {
-      const payload: ContactFormInput =
-        data.formType === "quick"
-          ? {
-              formType: "quick",
-              name: data.name,
-              email: data.email,
-              message: data.message,
-              smsConsent: data.smsConsent,
-              consentTextVersion: CONTACT_CONSENT_TEXT_VERSION,
-              consentSourcePage: CONTACT_CONSENT_SOURCE_PAGE,
-              website: data.website ?? "",
-            }
-          : {
-              formType: "detailed",
-              name: data.name,
-              email: data.email,
-              phone: data.phone ?? null,
-              businessName: data.businessName,
-              industry: data.industry,
-              servicesInterested: data.servicesInterested,
-              monthlyRevenueRange: data.monthlyRevenueRange ?? null,
-              biggestChallenge: data.biggestChallenge,
-              preferredContactMethod: data.preferredContactMethod ?? null,
-              smsConsent: data.smsConsent,
-              consentTextVersion: CONTACT_CONSENT_TEXT_VERSION,
-              consentSourcePage: CONTACT_CONSENT_SOURCE_PAGE,
-              website: data.website ?? "",
-            };
       await mutation.mutateAsync({ data: payload });
       trackEvent("Contact Form Submission", { form_type: data.formType });
       toast({
@@ -88,10 +90,11 @@ export function useContactMutation() {
       });
       return true;
     } catch (error) {
+      queueLeadFailover("contact", payload as unknown as Record<string, unknown>);
       toast({
-        title: "Submission Failed",
+        title: "Temporary Outage — Saved Safely",
         description:
-          "There was an error submitting your inquiry. Please try again.",
+          "Your inquiry was saved on this device and will retry automatically when service returns.",
         variant: "destructive",
       });
       return false;

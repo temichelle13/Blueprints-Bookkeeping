@@ -6,6 +6,7 @@ import { setApiBaseUrl } from "@workspace/api-client-react";
 import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import NotFound from "@/pages/not-found";
 import { usePageTracking } from "./hooks/usePageTracking";
+import { useLeadFailoverRetry } from "./hooks/use-lead-failover";
 
 import { ThemeProvider } from "./hooks/use-theme";
 import { Header } from "./components/layout/Header";
@@ -94,9 +95,9 @@ function SensitiveRouteNoindexFallback() {
     const shouldNoindex = isSensitivePath(location);
 
     // Always operate on a single meta[name="robots"] element.
-    let robotsMeta = document.querySelector('meta[name="robots"]') as
-      | HTMLMetaElement
-      | null;
+    let robotsMeta = document.querySelector(
+      'meta[name="robots"]',
+    ) as HTMLMetaElement | null;
 
     if (!robotsMeta) {
       robotsMeta = document.createElement("meta");
@@ -256,6 +257,8 @@ function Router() {
 }
 
 function App() {
+  useLeadFailoverRetry();
+
   return (
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>

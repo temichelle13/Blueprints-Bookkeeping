@@ -1,0 +1,6 @@
+name = "blueprints-bookkeeping"
+compatibility_date = "2026-04-05"
+pages_build_output_dir = "artifacts/website/dist/public"
+
+[build]
+command = "bash ./scripts/cloudflare-pages-build.sh"

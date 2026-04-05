@@ -17,6 +17,9 @@ const envSchema = z.object({
   // CORS Configuration
   CORS_ORIGIN: z.string().optional(),
 
+  // Reverse proxy trust configuration
+  TRUST_PROXY: z.string().optional(),
+
   // Site URL
   SITE_URL: z.string().url().optional(),
 

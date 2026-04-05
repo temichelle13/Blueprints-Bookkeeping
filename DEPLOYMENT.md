@@ -145,6 +145,20 @@ export CORS_ORIGIN=https://blueprintsandbookkeeping.com
 - **Always set `TRUST_PROXY` explicitly in production**; leaving it unset disables proxy trust and rate limits will key on the proxy IP, not the real client IP.
 - Keep proxy chain controlled by your infrastructure only; do not trust arbitrary client-supplied forwarding headers.
 
+### Cloudflare Lockfile Failures (pnpm)
+
+If Cloudflare Pages fails with `pnpm-lock.yaml` errors, the platform is usually running a different pnpm/Node combo than this repository expects.
+
+Use the repository build script to guarantee parity:
+
+```bash
+bash ./scripts/cloudflare-pages-build.sh
+```
+
+This script pins `pnpm@10.13.1`, installs with `--frozen-lockfile`, and builds only the website package.
+
+If the lockfile is stale, run the GitHub workflow **Fix PNPM Lockfile** and retry deployment.
+
 ## Deployment to Cloudflare
 
 If you want to deploy to Cloudflare instead of Replit, you'll need to:
@@ -156,11 +170,11 @@ name = "blueprints-bookkeeping"
 pages_build_output_dir = "artifacts/website/dist/public"
 compatibility_date = "2024-01-01"
 [build]
-command = "pnpm install && pnpm --filter @workspace/website run build"
+command = "bash ./scripts/cloudflare-pages-build.sh"
 ```
 
 2. **Configure Cloudflare Pages** for the frontend:
-   - Build command: `pnpm install && pnpm --filter @workspace/website run build`
+   - Build command: `bash ./scripts/cloudflare-pages-build.sh`
    - Build output directory: `artifacts/website/dist/public`
    - Environment variables: `VITE_API_URL=<your-api-url>`
 
@@ -216,6 +230,15 @@ command = "pnpm install && pnpm --filter @workspace/website run build"
    ```bash
    pnpm --filter db push
    ```
+
+## Lead-Capture Failover (API outage resilience)
+
+The website now stores failed contact/newsletter submissions in local browser storage when API requests fail, then automatically retries when the visitor comes back online.
+
+- Contact submissions retry to `POST /api/contact`
+- Newsletter submissions retry to `POST /api/newsletter/subscribe`
+
+This prevents lead loss during short API interruptions while keeping the current backend as the source of truth.
 
 ## Verification Checklist
 
