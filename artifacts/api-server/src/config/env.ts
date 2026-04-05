@@ -46,8 +46,7 @@ const envSchema = z.object({
   STRIPE_GROWTH_MONTHLY_PRICE_ID: z.string().optional(),
   STRIPE_GROWTH_ANNUAL_PRICE_ID: z.string().optional(),
 
-  // Cal.com / Booking
-  CAL_WEBHOOK_SECRET: z.string().optional(),
+  // Booking webhook
   BOOKING_WEBHOOK_SECRET: z.string().optional(),
 
   // Twilio
