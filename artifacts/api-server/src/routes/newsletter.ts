@@ -6,10 +6,12 @@ import {
 } from "@workspace/api-zod";
 import { eq } from "drizzle-orm";
 import { Resend } from "resend";
+import rateLimit from "express-rate-limit";
 import {
   isEmailSuppressed,
   addToSuppressionList,
 } from "../lib/email-suppression";
+import { logger } from "../lib/logger";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_EMAIL_LENGTH = 320;
@@ -113,121 +115,239 @@ async function sendWelcomeEmail(
   unsubscribeToken: string,
 ): Promise<void> {
   const { html, headers } = buildWelcomeEmail(unsubscribeToken);
-  await resend.emails
+  const result = await resend.emails
     .send({
       from: FROM_ADDRESS,
       to: email,
       subject: "Welcome to Blueprints & Bookkeeping",
       html,
       headers,
+      tags: [
+        { name: "flow", value: "newsletter" },
+        { name: "template", value: "welcome" },
+      ],
     })
     .catch((err: unknown) => {
-      console.error(
-        "[Resend] Welcome email failed for",
+      logger.warn("Welcome email send failed", {
         email,
-        "—",
-        err instanceof Error ? err.message : String(err),
-      );
+        error: err instanceof Error ? err.message : String(err),
+      });
+      return null;
     });
+
+  const providerMessageId =
+    result && typeof result === "object" && "data" in result
+      ? (result.data as { id?: string } | null)?.id
+      : undefined;
+
+  logger.info("Welcome email send attempted", {
+    email,
+    provider: "resend",
+    providerMessageId,
+  });
 }
 
 const router: IRouter = Router();
 
-router.post("/newsletter/subscribe", async (req, res): Promise<void> => {
-  if (req.body?.website) {
-    res.status(201).json({
-      success: true,
-      message: "You're subscribed! Thank you for signing up.",
-    });
-    return;
+const newsletterSubscribeLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error: "Too many newsletter signups from this IP. Please try again later.",
+  },
+});
+
+type IdempotencyCacheEntry = {
+  status: number;
+  body: { success: true; message: string };
+  expiresAt: number;
+};
+
+const newsletterIdempotencyCache = new Map<string, IdempotencyCacheEntry>();
+const IDEMPOTENCY_TTL_MS = 24 * 60 * 60 * 1000;
+
+setInterval(() => {
+  const now = Date.now();
+  for (const [cacheKey, entry] of newsletterIdempotencyCache.entries()) {
+    if (now > entry.expiresAt) {
+      newsletterIdempotencyCache.delete(cacheKey);
+    }
+  }
+}, 60_000);
+
+function buildIdempotencyCacheKey(
+  idempotencyKey: string,
+  email: string,
+  signupSource: string,
+): string {
+  return `${idempotencyKey.trim()}::${email}::${signupSource}`;
+}
+
+function getCachedIdempotentResponse(
+  cacheKey: string,
+): IdempotencyCacheEntry | null {
+  const cached = newsletterIdempotencyCache.get(cacheKey);
+  if (!cached) return null;
+
+  if (Date.now() > cached.expiresAt) {
+    newsletterIdempotencyCache.delete(cacheKey);
+    return null;
   }
 
-  const parsed = SubscribeNewsletterBody.safeParse(req.body);
-  if (!parsed.success) {
-    res.status(400).json({ error: parsed.error.message });
-    return;
-  }
+  return cached;
+}
 
-  const { signupSource } = parsed.data;
-  const email = parsed.data.email.trim().toLowerCase();
+function storeIdempotentResponse(
+  cacheKey: string,
+  response: Pick<IdempotencyCacheEntry, "status" | "body">,
+): void {
+  newsletterIdempotencyCache.set(cacheKey, {
+    ...response,
+    expiresAt: Date.now() + IDEMPOTENCY_TTL_MS,
+  });
+}
 
-  if (!isValidEmail(email)) {
-    res.status(400).json({ error: "Please provide a valid email address." });
-    return;
-  }
+router.post(
+  "/newsletter/subscribe",
+  newsletterSubscribeLimiter,
+  async (req, res): Promise<void> => {
+    if (req.body?.website) {
+      res.status(201).json({
+        success: true,
+        message: "You're subscribed! Thank you for signing up.",
+      });
+      return;
+    }
 
-  const existing = await db
-    .select()
-    .from(newsletterSubscribersTable)
-    .where(eq(newsletterSubscribersTable.email, email))
-    .limit(1);
+    const parsed = SubscribeNewsletterBody.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: parsed.error.message });
+      return;
+    }
 
-  if (existing.length > 0) {
-    const existingEntry = existing[0]!;
-    if (!existingEntry.active) {
-      await db
-        .update(newsletterSubscribersTable)
-        .set({ active: true, signupSource })
-        .where(eq(newsletterSubscribersTable.email, email));
+    const { signupSource } = parsed.data;
+    const email = parsed.data.email.trim().toLowerCase();
+    const idempotencyKeyRaw =
+      req.get("Idempotency-Key") ?? parsed.data.idempotencyKey;
+    const idempotencyKey =
+      typeof idempotencyKeyRaw === "string" ? idempotencyKeyRaw.trim() : "";
+    const idempotencyCacheKey = idempotencyKey
+      ? buildIdempotencyCacheKey(idempotencyKey, email, signupSource)
+      : null;
 
-      const suppressed = await isEmailSuppressed(email);
-      if (suppressed) {
-        console.warn(
-          "[Newsletter] Skipping welcome email for reactivated subscriber — address is suppressed:",
+    if (idempotencyCacheKey) {
+      const cachedResponse = getCachedIdempotentResponse(idempotencyCacheKey);
+      if (cachedResponse) {
+        logger.info("Newsletter subscribe idempotent replay served", {
           email,
-        );
-      } else {
-        const resend = getResend();
-        if (resend) {
-          await sendWelcomeEmail(resend, email, existingEntry.unsubscribeToken);
-        }
+          signupSource,
+        });
+        res.status(cachedResponse.status).json(cachedResponse.body);
+        return;
       }
     }
-    res.status(201).json({
+
+    if (!isValidEmail(email)) {
+      res.status(400).json({ error: "Please provide a valid email address." });
+      return;
+    }
+
+    const existing = await db
+      .select()
+      .from(newsletterSubscribersTable)
+      .where(eq(newsletterSubscribersTable.email, email))
+      .limit(1);
+
+    if (existing.length > 0) {
+      const existingEntry = existing[0]!;
+      if (!existingEntry.active) {
+        await db
+          .update(newsletterSubscribersTable)
+          .set({ active: true, signupSource })
+          .where(eq(newsletterSubscribersTable.email, email));
+
+        const suppressed = await isEmailSuppressed(email);
+        if (suppressed) {
+          logger.warn(
+            "Skipping welcome email for reactivated newsletter subscriber due to suppression",
+            { email },
+          );
+        } else {
+          const resend = getResend();
+          if (resend) {
+            await sendWelcomeEmail(
+              resend,
+              email,
+              existingEntry.unsubscribeToken,
+            );
+          }
+        }
+      }
+      const response = {
+        success: true,
+        message: "You're subscribed! Thank you for signing up.",
+      } as const;
+      if (idempotencyCacheKey) {
+        storeIdempotentResponse(idempotencyCacheKey, {
+          status: 201,
+          body: response,
+        });
+      }
+      res.status(201).json(response);
+      return;
+    }
+
+    const [inserted] = await db
+      .insert(newsletterSubscribersTable)
+      .values({
+        email,
+        signupSource,
+      })
+      .returning({
+        unsubscribeToken: newsletterSubscribersTable.unsubscribeToken,
+      });
+
+    const suppressed = await isEmailSuppressed(email);
+    if (suppressed) {
+      logger.warn("Skipping welcome email for suppressed newsletter address", {
+        email,
+      });
+      const response = {
+        success: true,
+        message: "You're subscribed! Thank you for signing up.",
+      } as const;
+      if (idempotencyCacheKey) {
+        storeIdempotentResponse(idempotencyCacheKey, {
+          status: 201,
+          body: response,
+        });
+      }
+      res.status(201).json(response);
+      return;
+    }
+
+    const resend = getResend();
+    if (resend && inserted) {
+      await sendWelcomeEmail(resend, email, inserted.unsubscribeToken);
+    } else {
+      logger.warn("RESEND_API_KEY not set — skipping welcome email", { email });
+    }
+
+    const response = {
       success: true,
       message: "You're subscribed! Thank you for signing up.",
-    });
-    return;
-  }
-
-  const [inserted] = await db
-    .insert(newsletterSubscribersTable)
-    .values({
-      email,
-      signupSource,
-    })
-    .returning({
-      unsubscribeToken: newsletterSubscribersTable.unsubscribeToken,
-    });
-
-  const suppressed = await isEmailSuppressed(email);
-  if (suppressed) {
-    console.warn(
-      "[Newsletter] Skipping welcome email — address is suppressed:",
-      email,
-    );
-    res.status(201).json({
-      success: true,
-      message: "You're subscribed! Thank you for signing up.",
-    });
-    return;
-  }
-
-  const resend = getResend();
-  if (resend && inserted) {
-    await sendWelcomeEmail(resend, email, inserted.unsubscribeToken);
-  } else {
-    console.warn(
-      "[Newsletter] RESEND_API_KEY not set — skipping welcome email for",
-      email,
-    );
-  }
-
-  res.status(201).json({
-    success: true,
-    message: "You're subscribed! Thank you for signing up.",
-  });
-});
+    } as const;
+    if (idempotencyCacheKey) {
+      storeIdempotentResponse(idempotencyCacheKey, {
+        status: 201,
+        body: response,
+      });
+    }
+    res.status(201).json(response);
+  },
+);
 
 router.get("/newsletter/unsubscribe", async (req, res): Promise<void> => {
   const result = await unsubscribeByToken(req.query.token);

@@ -72,6 +72,13 @@ paths:
       tags: [newsletter]
       summary: Subscribe to the newsletter
       description: Adds an email to the newsletter subscriber list
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: false
+          schema:
+            type: string
+          description: Optional idempotency key to safely retry duplicate subscription requests
       requestBody:
         required: true
         content:
@@ -716,6 +723,10 @@ components:
         signupSource:
           type: string
           enum: [footer, lead_magnet]
+        website:
+          type: string
+        idempotencyKey:
+          type: string
       required:
         - email
         - signupSource

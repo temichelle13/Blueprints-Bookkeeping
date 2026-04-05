@@ -1,6 +1,7 @@
 import { Router, type IRouter, type Request } from "express";
 import { Webhook } from "svix";
 import { addToSuppressionList } from "../lib/email-suppression";
+import { logger } from "../lib/logger";
 
 interface RawBodyRequest extends Request {
   rawBody?: Buffer;
@@ -65,23 +66,31 @@ router.post(
     }
 
     try {
+      const recipients: string[] = extractRecipients(event.data);
+      const isNewsletterWelcome = hasNewsletterWelcomeTag(event.data);
+      if (isNewsletterWelcome) {
+        logger.info("Newsletter welcome provider event received", {
+          eventType: event.type,
+          recipients,
+          providerMessageId: extractProviderMessageId(event.data),
+        });
+      }
+
       if (event.type === "email.bounced") {
-        const recipients: string[] = extractRecipients(event.data);
         for (const email of recipients) {
           await addToSuppressionList(email, "bounced");
-          console.log(
-            "[Resend Webhook] Added bounced email to suppression list:",
+          logger.info("Added bounced email to suppression list", {
             email,
-          );
+            source: "resend_webhook",
+          });
         }
       } else if (event.type === "email.complained") {
-        const recipients: string[] = extractRecipients(event.data);
         for (const email of recipients) {
           await addToSuppressionList(email, "spam_complaint");
-          console.log(
-            "[Resend Webhook] Added spam complaint email to suppression list:",
+          logger.info("Added spam complaint email to suppression list", {
             email,
-          );
+            source: "resend_webhook",
+          });
         }
       }
 
@@ -109,6 +118,33 @@ function extractRecipients(data: Record<string, unknown>): string[] {
   }
 
   return [];
+}
+
+function hasNewsletterWelcomeTag(data: Record<string, unknown>): boolean {
+  const tags = data["tags"];
+  if (!Array.isArray(tags)) return false;
+
+  return tags.some((tag) => {
+    if (!tag || typeof tag !== "object") return false;
+    const name = "name" in tag ? tag.name : undefined;
+    const value = "value" in tag ? tag.value : undefined;
+    return (
+      (name === "flow" && value === "newsletter") ||
+      (name === "template" && value === "welcome")
+    );
+  });
+}
+
+function extractProviderMessageId(
+  data: Record<string, unknown>,
+): string | undefined {
+  if (typeof data["email_id"] === "string") {
+    return data["email_id"];
+  }
+  if (typeof data["id"] === "string") {
+    return data["id"];
+  }
+  return undefined;
 }
 
 export default router;

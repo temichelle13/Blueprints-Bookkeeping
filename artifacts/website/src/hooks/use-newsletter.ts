@@ -6,6 +6,7 @@ interface SubscribeParams {
   email: string;
   signupSource: "footer" | "lead_magnet";
   website?: string;
+  idempotencyKey?: string;
 }
 
 export function useNewsletterMutation() {
@@ -14,9 +15,14 @@ export function useNewsletterMutation() {
 
   const subscribe = async (data: SubscribeParams) => {
     try {
-      const { website: _honeypot, ...payload } = data;
+      const payload = {
+        email: data.email,
+        signupSource: data.signupSource,
+        ...(data.website ? { website: data.website } : {}),
+        ...(data.idempotencyKey ? { idempotencyKey: data.idempotencyKey } : {}),
+      };
       const result = await mutation.mutateAsync({
-        data: { ...payload, website: _honeypot } as any,
+        data: payload,
       });
       const eventName =
         data.signupSource === "lead_magnet"
