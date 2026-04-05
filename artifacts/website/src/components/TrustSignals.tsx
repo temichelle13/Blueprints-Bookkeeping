@@ -17,6 +17,7 @@ import {
   TrendingUp,
   FileCheck,
   Newspaper,
+  CheckCircle2,
 } from "lucide-react";
 
 function AnimatedCounter({
@@ -268,6 +269,96 @@ export function GoogleReviewsCallout() {
         </motion.div>
       </div>
     </section>
+  );
+}
+
+export function HeroCtaTrustNote() {
+  return (
+    <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 text-xs text-muted-foreground">
+      <CheckCircle2 className="h-4 w-4 text-accent" />
+      <span>
+        Scoped engagements, documented deliverables, no guaranteed-results claims.
+      </span>
+    </div>
+  );
+}
+
+export function EngagementClarityPreview() {
+  const items = [
+    {
+      headline: "Defined month-end close workflow",
+      proof:
+        "Documented close checklist, owner responsibilities, and delivery calendar for financial statements.",
+      context:
+        "Business type: multi-location service business · Complexity: medium/high (inventory + payroll) · Scope: workflow setup + close cadence alignment",
+    },
+    {
+      headline: "Category and rule governance",
+      proof:
+        "Account map standards, transaction coding rules, and exception-handling process to reduce avoidable rework.",
+      context:
+        "Business type: agency with multiple revenue streams · Complexity: medium · Scope: chart-of-accounts refactor + rules governance",
+    },
+    {
+      headline: "Lender and advisor packet readiness",
+      proof:
+        "Standardized report pack structure and source-document checklist so requests can be fulfilled consistently.",
+      context:
+        "Business type: contractor preparing for financing · Complexity: high (job costing + backlog reconciliation) · Scope: historical cleanup + reporting packet framework",
+    },
+  ];
+
+  return (
+    <section className="py-24 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-center text-center mb-12">
+          <div className="accent-bar mb-6" />
+          <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
+            Engagement Clarity by Business Context
+          </h2>
+          <p className="text-muted-foreground text-base md:text-lg max-w-3xl">
+            We do not publish outcome guarantees. Instead, we define concrete
+            deliverables and scope by business model, system complexity, and
+            engagement type.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {items.map((item, i) => (
+            <motion.div
+              key={item.headline}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.08 }}
+              className="glass-card rounded-2xl p-6"
+            >
+              <p className="text-[10px] uppercase tracking-[0.2em] text-accent/90 font-semibold mb-3">
+                Example {i + 1}
+              </p>
+              <h3 className="text-lg font-semibold text-white mb-3">
+                {item.headline}
+              </h3>
+              <p className="text-sm text-foreground leading-relaxed mb-4">
+                {item.proof}
+              </p>
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                {item.context}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function FinalCtaTrustNote() {
+  return (
+    <div className="mt-5 text-xs text-muted-foreground">
+      Trusted process: clear scope, written assumptions, and transparent
+      timelines before any engagement starts.
+    </div>
   );
 }
 

@@ -119,6 +119,10 @@ interface Stats {
     total: number;
     active: number;
   };
+  emailDelivery: {
+    unnotifiedInquiries: number;
+    emailFailuresLast24h: number;
+  };
 }
 
 interface NexusSummaryItem {
@@ -593,7 +597,7 @@ export default function AdminDashboard() {
           </div>
 
           {stats && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
               <StatCard
                 label="Total Inquiries"
                 value={stats.inquiries.total}
@@ -620,6 +624,18 @@ export default function AdminDashboard() {
                 value={stats.newsletter.active}
                 icon={<Mail className="w-5 h-5" />}
                 color="emerald"
+              />
+              <StatCard
+                label="Unnotified Inquiries"
+                value={stats.emailDelivery.unnotifiedInquiries}
+                icon={<AlertTriangle className="w-5 h-5" />}
+                color="amber"
+              />
+              <StatCard
+                label="Email Failures (24h)"
+                value={stats.emailDelivery.emailFailuresLast24h}
+                icon={<ShieldAlert className="w-5 h-5" />}
+                color="rose"
               />
             </div>
           )}
@@ -1298,6 +1314,8 @@ function StatCard({
     blue: "bg-blue-500/20 text-blue-400",
     purple: "bg-purple-500/20 text-purple-400",
     emerald: "bg-emerald-500/20 text-emerald-400",
+    amber: "bg-amber-500/20 text-amber-400",
+    rose: "bg-rose-500/20 text-rose-400",
   };
   return (
     <div className="bg-[#111827] border border-white/10 rounded-xl p-4">

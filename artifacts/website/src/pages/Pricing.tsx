@@ -3,9 +3,19 @@ import { Link } from "wouter";
 import { Check, Shield, ArrowRight, HelpCircle, Calendar } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
+import { BookkeepingDisclaimer } from "@/components/BookkeepingDisclaimer";
 
 const TECHNOLOGY_SECURITY_SURCHARGE = "$50/mo";
 const TECHNOLOGY_SECURITY_SURCHARGE_COPY = `A mandatory Technology & Security Surcharge of ${TECHNOLOGY_SECURITY_SURCHARGE} applies to all bookkeeping tiers.`;
+
+function PaymentTrustMicrocopy() {
+  return (
+    <p className="text-xs text-muted-foreground">
+      Secure checkout via Stripe. QBO invoice option available for approved
+      workflows.
+    </p>
+  );
+}
 
 const bookkeepingTiers = [
   {
@@ -245,6 +255,7 @@ function BookkeepingTierCard({
           >
             {tier.cta} <ArrowRight size={15} />
           </Link>
+          <PaymentTrustMicrocopy />
         </div>
       </div>
     );
@@ -317,6 +328,7 @@ function BookkeepingTierCard({
         >
           {tier.cta}
         </Link>
+        <PaymentTrustMicrocopy />
       </div>
     </div>
   );
@@ -381,6 +393,7 @@ function TierCard({
           >
             {tier.cta} <ArrowRight size={15} />
           </Link>
+          <PaymentTrustMicrocopy />
         </div>
       </div>
     );
@@ -436,6 +449,7 @@ function TierCard({
         >
           {tier.cta}
         </Link>
+        <PaymentTrustMicrocopy />
       </div>
     </div>
   );
@@ -608,6 +622,11 @@ export default function Pricing() {
               Read the FAQ
             </Link>
           </div>
+          <BookkeepingDisclaimer
+            compact
+            title="Scope clarification"
+            className="mt-6 text-left"
+          />
         </div>
       </section>
     </div>

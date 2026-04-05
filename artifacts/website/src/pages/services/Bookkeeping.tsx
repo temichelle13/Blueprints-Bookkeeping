@@ -12,12 +12,19 @@ import {
 import { SEO } from "@/components/SEO";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { BookkeepingDisclaimer } from "@/components/BookkeepingDisclaimer";
-import { serviceSchema, breadcrumbSchema } from "@/lib/seo-schemas";
+import {
+  serviceSchema,
+  breadcrumbSchema,
+  localBusinessSchema,
+  professionalServiceSchema,
+} from "@/lib/seo-schemas";
 
 const BASE_URL = "https://blueprintsandbookkeeping.com";
 
 export default function Bookkeeping() {
   const jsonLd = [
+    localBusinessSchema(),
+    professionalServiceSchema({ url: `${BASE_URL}/services/bookkeeping` }),
     serviceSchema({
       name: "Advanced Bookkeeping & Cleanup",
       description:
@@ -159,20 +166,12 @@ export default function Bookkeeping() {
               Schedule a free discovery call and we'll assess your current
               setup, identify gaps, and build a custom plan.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link
-                href="/schedule"
-                className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-accent text-white font-semibold rounded-lg hover:shadow-xl hover:shadow-accent/20 transition-all duration-300"
-              >
-                Book a Discovery Call <ArrowRight size={16} />
-              </Link>
-              <Link
-                href="/pricing"
-                className="inline-flex items-center justify-center gap-2 px-8 py-3 border border-accent/30 text-accent font-semibold rounded-lg hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
-              >
-                View Pricing
-              </Link>
-            </div>
+            <Link
+              href="/schedule"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-accent text-white font-semibold rounded-lg hover:shadow-xl hover:shadow-accent/20 transition-all duration-300"
+            >
+              Book a Discovery Call <ArrowRight size={16} />
+            </Link>
           </div>
         </div>
       </section>

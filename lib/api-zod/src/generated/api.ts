@@ -33,7 +33,18 @@ export const SubmitContactFormBody = zod.object({
   monthlyRevenueRange: zod.string().nullish(),
   biggestChallenge: zod.string().nullish(),
   preferredContactMethod: zod.string().nullish(),
+  consent: zod
+    .object({
+      email: zod.boolean(),
+      sms: zod.boolean(),
+      phone: zod.boolean(),
+      source: zod.string(),
+      legalTextVersion: zod.string(),
+    })
+    .optional(),
   smsConsent: zod.boolean(),
+  consentTextVersion: zod.string(),
+  consentSourcePage: zod.string(),
   website: zod.string().optional(),
 });
 

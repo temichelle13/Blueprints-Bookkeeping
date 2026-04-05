@@ -12,12 +12,20 @@ import {
 } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { serviceSchema, breadcrumbSchema } from "@/lib/seo-schemas";
+import {
+  serviceSchema,
+  breadcrumbSchema,
+  localBusinessSchema,
+  professionalServiceSchema,
+} from "@/lib/seo-schemas";
+import { BookkeepingDisclaimer } from "@/components/BookkeepingDisclaimer";
 
 const BASE_URL = "https://blueprintsandbookkeeping.com";
 
 export default function BusinessPlans() {
   const jsonLd = [
+    localBusinessSchema(),
+    professionalServiceSchema({ url: `${BASE_URL}/services/business-plans` }),
     serviceSchema({
       name: "Business Plans & Financial Forecasting",
       description:
@@ -225,6 +233,11 @@ export default function BusinessPlans() {
       </section>
 
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <BookkeepingDisclaimer
+          compact
+          title="Service scope note"
+          className="mb-6"
+        />
         <div className="relative rounded-2xl overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-accent/15 to-primary/20" />
           <div className="absolute inset-[1px] rounded-2xl bg-card" />
@@ -236,20 +249,12 @@ export default function BusinessPlans() {
               Book a free discovery call and we'll scope the right plan for your
               business goals and timeline.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link
-                href="/schedule"
-                className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-accent text-white font-semibold rounded-lg hover:shadow-xl hover:shadow-accent/20 transition-all duration-300"
-              >
-                Book a Discovery Call <ArrowRight size={16} />
-              </Link>
-              <Link
-                href="/business-planning"
-                className="inline-flex items-center justify-center gap-2 px-8 py-3 border border-accent/30 text-accent font-semibold rounded-lg hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
-              >
-                Compare Plan Tiers
-              </Link>
-            </div>
+            <Link
+              href="/schedule"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-accent text-white font-semibold rounded-lg hover:shadow-xl hover:shadow-accent/20 transition-all duration-300"
+            >
+              Book a Discovery Call <ArrowRight size={16} />
+            </Link>
           </div>
         </div>
       </section>

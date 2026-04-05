@@ -12,6 +12,12 @@ import {
   addToSuppressionList,
 } from "../lib/email-suppression";
 import { logger } from "../lib/logger";
+import {
+  createSubmissionRateLimiter,
+  honeypotProtection,
+  validateEmailStrict,
+  withSubmissionMonitoring,
+} from "../middleware/public-submissions";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_EMAIL_LENGTH = 320;
@@ -148,76 +154,20 @@ async function sendWelcomeEmail(
 }
 
 const router: IRouter = Router();
-
-const newsletterSubscribeLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 10,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: {
-    error: "Too many newsletter signups from this IP. Please try again later.",
-  },
+const newsletterSubscribeLimiter = createSubmissionRateLimiter({
+  routeId: "newsletter_subscribe",
+  windowMs: 60 * 60 * 1000,
+  max: 20,
 });
-
-type IdempotencyCacheEntry = {
-  status: number;
-  body: { success: true; message: string };
-  expiresAt: number;
-};
-
-const newsletterIdempotencyCache = new Map<string, IdempotencyCacheEntry>();
-const IDEMPOTENCY_TTL_MS = 24 * 60 * 60 * 1000;
-
-setInterval(() => {
-  const now = Date.now();
-  for (const [cacheKey, entry] of newsletterIdempotencyCache.entries()) {
-    if (now > entry.expiresAt) {
-      newsletterIdempotencyCache.delete(cacheKey);
-    }
-  }
-}, 60_000);
-
-function buildIdempotencyCacheKey(
-  idempotencyKey: string,
-  email: string,
-  signupSource: string,
-): string {
-  return `${idempotencyKey.trim()}::${email}::${signupSource}`;
-}
-
-function getCachedIdempotentResponse(
-  cacheKey: string,
-): IdempotencyCacheEntry | null {
-  const cached = newsletterIdempotencyCache.get(cacheKey);
-  if (!cached) return null;
-
-  if (Date.now() > cached.expiresAt) {
-    newsletterIdempotencyCache.delete(cacheKey);
-    return null;
-  }
-
-  return cached;
-}
-
-function storeIdempotentResponse(
-  cacheKey: string,
-  response: Pick<IdempotencyCacheEntry, "status" | "body">,
-): void {
-  newsletterIdempotencyCache.set(cacheKey, {
-    ...response,
-    expiresAt: Date.now() + IDEMPOTENCY_TTL_MS,
-  });
-}
 
 router.post(
   "/newsletter/subscribe",
   newsletterSubscribeLimiter,
+  honeypotProtection("newsletter_subscribe"),
+  withSubmissionMonitoring("newsletter_subscribe"),
   async (req, res): Promise<void> => {
-    if (req.body?.website) {
-      res.status(201).json({
-        success: true,
-        message: "You're subscribed! Thank you for signing up.",
-      });
+    if (typeof req.body?.email !== "string" || req.body.email.length > 320) {
+      res.status(400).json({ error: "Please provide a valid email address." });
       return;
     }
 
@@ -228,28 +178,9 @@ router.post(
     }
 
     const { signupSource } = parsed.data;
-    const email = parsed.data.email.trim().toLowerCase();
-    const idempotencyKeyRaw =
-      req.get("Idempotency-Key") ?? parsed.data.idempotencyKey;
-    const idempotencyKey =
-      typeof idempotencyKeyRaw === "string" ? idempotencyKeyRaw.trim() : "";
-    const idempotencyCacheKey = idempotencyKey
-      ? buildIdempotencyCacheKey(idempotencyKey, email, signupSource)
-      : null;
+    const email = validateEmailStrict(parsed.data.email);
 
-    if (idempotencyCacheKey) {
-      const cachedResponse = getCachedIdempotentResponse(idempotencyCacheKey);
-      if (cachedResponse) {
-        logger.info("Newsletter subscribe idempotent replay served", {
-          email,
-          signupSource,
-        });
-        res.status(cachedResponse.status).json(cachedResponse.body);
-        return;
-      }
-    }
-
-    if (!isValidEmail(email)) {
+    if (!email || !isValidEmail(email)) {
       res.status(400).json({ error: "Please provide a valid email address." });
       return;
     }

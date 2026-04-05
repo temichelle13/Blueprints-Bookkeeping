@@ -26,6 +26,15 @@ export interface ContactFormInput {
   biggestChallenge?: string | null;
   /** @nullable */
   preferredContactMethod?: string | null;
+  consent?: {
+    email: boolean;
+    sms: boolean;
+    phone: boolean;
+    source: string;
+    legalTextVersion: string;
+  };
   smsConsent: boolean;
+  consentTextVersion: string;
+  consentSourcePage: string;
   website?: string;
 }

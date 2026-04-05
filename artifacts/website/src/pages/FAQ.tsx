@@ -5,7 +5,12 @@ import { Link } from "wouter";
 import { cn } from "@/lib/utils";
 import { SEO } from "@/components/SEO";
 import { BookkeepingDisclaimer } from "@/components/BookkeepingDisclaimer";
-import { faqPageSchema } from "@/lib/seo-schemas";
+import {
+  faqPageSchema,
+  breadcrumbSchema,
+  localBusinessSchema,
+  professionalServiceSchema,
+} from "@/lib/seo-schemas";
 
 interface FAQItemData {
   id?: string;
@@ -163,10 +168,19 @@ export default function FAQ() {
   usePageTitle("FAQ");
 
   const jsonLd = useMemo(() => {
+    const BASE_URL = "https://blueprintsandbookkeeping.com";
     const allItems = faqs.flatMap((section) =>
       section.items.map((item) => ({ question: item.q, answer: item.a })),
     );
-    return faqPageSchema(allItems);
+    return [
+      localBusinessSchema(),
+      professionalServiceSchema({ url: `${BASE_URL}/faq` }),
+      faqPageSchema(allItems),
+      breadcrumbSchema([
+        { name: "Home", url: BASE_URL },
+        { name: "FAQ", url: `${BASE_URL}/faq` },
+      ]),
+    ];
   }, []);
 
   return (

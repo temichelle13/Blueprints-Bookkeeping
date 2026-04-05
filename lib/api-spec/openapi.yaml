@@ -693,8 +693,33 @@ components:
           type: ["string", "null"]
         preferredContactMethod:
           type: ["string", "null"]
+        consent:
+          type: object
+          properties:
+            email:
+              type: boolean
+            sms:
+              type: boolean
+            phone:
+              type: boolean
+            source:
+              type: string
+            legalTextVersion:
+              type: string
+          required:
+            - email
+            - sms
+            - phone
+            - source
+            - legalTextVersion
         smsConsent:
           type: boolean
+        consentTextVersion:
+          type: string
+          description: Version identifier for the exact consent language shown at submit time
+        consentSourcePage:
+          type: string
+          description: Public page path where consent was captured (for example /contact)
         website:
           type: string
       required:
@@ -702,6 +727,8 @@ components:
         - name
         - email
         - smsConsent
+        - consentTextVersion
+        - consentSourcePage
     ContactFormResponse:
       type: object
       properties:
