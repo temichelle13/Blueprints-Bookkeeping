@@ -3720,7 +3720,7 @@ packages:
       sugarss: ^5.0.0
       terser: ^5.16.0
       tsx: ^4.8.1
-      yaml: ^2.8.3
+      yaml: ^2.8.2
       
     peerDependenciesMeta:
       '@types/node':
@@ -4961,7 +4961,7 @@ snapshots:
     dependencies:
       '@scalar/helpers': 0.2.18
       pathe: 2.0.3
-      yaml: 2.8.3
+      yaml: 2.8.2
 
   '@scalar/openapi-parser@0.24.17':
     dependencies:
@@ -4974,7 +4974,7 @@ snapshots:
       ajv-formats: 3.0.1
       jsonpointer: 5.0.1
       leven: 4.1.0
-      yaml: 2.8.3
+      yaml: 2.8.2
 
   '@scalar/openapi-types@0.5.3':
     dependencies:
@@ -7039,7 +7039,7 @@ snapshots:
       markdown-it: 14.1.1
       minimatch: 9.0.9
       typescript: 6.0.2
-      yaml: 2.8.3
+      yaml: 2.8.2
 
   typescript@6.0.2: {}
 
