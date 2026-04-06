@@ -1,0 +1,19 @@
+# Security Policy for Blueprints & Bookkeeping
+
+# If you discover a security vulnerability, please report it to:
+Contact: mailto:tea@blueprintsandbookkeeping.com
+
+# Preferred contact language
+Preferred-Languages: en
+
+# Our security page (when implemented, link to a dedicated security page)
+# For now, vulnerabilities can be reported via email
+
+# We aim to respond to security reports within 5 business days
+Acknowledgments: We appreciate responsible disclosure of security vulnerabilities
+
+# Expires one year from creation
+Expires: 2027-03-22T00:00:00.000Z
+
+# Canonical URL for this file
+Canonical: https://blueprintsandbookkeeping.com/.well-known/security.txt

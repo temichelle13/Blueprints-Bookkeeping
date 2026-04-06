@@ -1,0 +1,34 @@
+kind = "web"
+previewPath = "/"
+title = "Blueprints & Bookkeeping"
+version = "1.0.0"
+id = "artifacts/website"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+localPort = 19161
+name = "web"
+paths = ["/"]
+
+[services.development]
+run = "pnpm --filter @workspace/website run dev"
+
+[services.env]
+PORT = "19161"
+BASE_PATH = "/"
+# Set VITE_API_URL to the API server URL if frontend and backend are on different origins
+# Leave empty for same-origin deployments (defaults to /api relative path)
+VITE_API_URL = ""
+
+[services.production]
+build = ["pnpm", "--filter", "@workspace/website", "run", "build"]
+publicDir = "artifacts/website/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"

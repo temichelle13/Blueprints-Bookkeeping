@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1773625506373,
+      "tag": "0000_add_inquiry_status",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1773691794520,
+      "tag": "0001_add_unsubscribe_token",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1773692412733,
+      "tag": "0002_equal_marvel_apes",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1774953600000,
+      "tag": "0004_contact_inquiry_consent_and_retention",
+      "breakpoints": true
+    }
+  ]
+}
