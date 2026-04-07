@@ -1,0 +1,112 @@
+const BASE_URL = "https://blueprintsandbookkeeping.com";
+
+export function localBusinessSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": `${BASE_URL}/#business`,
+    name: "Blueprints & Bookkeeping, LLC",
+    description:
+      "Advanced bookkeeping and professional business plans for complex, high-growth businesses.",
+    url: BASE_URL,
+    telephone: "+1-541-319-8654",
+    email: "tea@blueprintsandbookkeeping.com",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Roseburg",
+      addressRegion: "OR",
+      addressCountry: "US",
+    },
+    areaServed: [
+      {
+        "@type": "State",
+        name: "Oregon",
+      },
+      {
+        "@type": "Country",
+        name: "United States",
+      },
+    ],
+    priceRange: "$$",
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      opens: "09:00",
+      closes: "17:00",
+    },
+    sameAs: [],
+  };
+}
+
+export function professionalServiceSchema(opts?: {
+  name?: string;
+  description?: string;
+  url?: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "@id": `${opts?.url || BASE_URL}#professional-service`,
+    name: opts?.name || "Blueprints & Bookkeeping, LLC",
+    description:
+      opts?.description ||
+      "Bookkeeping and business planning services for growth-stage and complex businesses.",
+    url: opts?.url || BASE_URL,
+    areaServed: {
+      "@type": "Country",
+      name: "United States",
+    },
+    serviceType: ["Bookkeeping", "Business Planning", "Financial Reporting"],
+  };
+}
+
+export function serviceSchema(opts: {
+  name: string;
+  description: string;
+  url: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: opts.name,
+    description: opts.description,
+    url: opts.url,
+    provider: {
+      "@type": "LocalBusiness",
+      name: "Blueprints & Bookkeeping, LLC",
+      url: BASE_URL,
+    },
+    areaServed: {
+      "@type": "Country",
+      name: "United States",
+    },
+  };
+}
+
+export function faqPageSchema(items: { question: string; answer: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+}
+
+export function breadcrumbSchema(items: { name: string; url: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+}

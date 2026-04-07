@@ -1,0 +1,17 @@
+User-agent: *
+Disallow:
+
+Disallow: /admin
+Disallow: /admin/
+Disallow: /onboarding
+Disallow: /welcome
+Disallow: /payment-success
+Disallow: /status
+Disallow: /feedback
+Disallow: /unsubscribe
+Disallow: /marketing-guide
+
+Sitemap: https://blueprintsandbookkeeping.com/sitemap.xml
+
+User-agent: CCBot
+Disallow: /

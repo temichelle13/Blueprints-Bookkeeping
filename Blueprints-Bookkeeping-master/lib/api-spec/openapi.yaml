@@ -1,0 +1,1229 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: contact
+    description: Contact form operations
+  - name: newsletter
+    description: Newsletter subscription operations
+  - name: openai
+    description: OpenAI AI chat operations
+  - name: contracts
+    description: Contract management and Adobe Acrobat Sign operations
+  - name: scheduling
+    description: Cal.com scheduling and booking operations
+  - name: admin
+    description: Admin dashboard and state nexus monitoring operations
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+        "503":
+          description: Degraded — one or more dependencies are unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /contact:
+    post:
+      operationId: submitContactForm
+      tags: [contact]
+      summary: Submit a contact form inquiry
+      description: Accepts quick contact or detailed intake form submissions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContactFormInput"
+      responses:
+        "201":
+          description: Inquiry submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactFormResponse"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /newsletter/subscribe:
+    post:
+      operationId: subscribeNewsletter
+      tags: [newsletter]
+      summary: Subscribe to the newsletter
+      description: Adds an email to the newsletter subscriber list
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewsletterSubscribeInput"
+      responses:
+        "201":
+          description: Successfully subscribed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsletterSubscribeResponse"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /newsletter/unsubscribe:
+    get:
+      operationId: unsubscribeNewsletterByToken
+      tags: [newsletter]
+      summary: Unsubscribe from the newsletter via token
+      description: Looks up a subscriber by unsubscribe token and marks them as inactive
+      parameters:
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The unique unsubscribe token for the subscriber
+      responses:
+        "200":
+          description: Successfully unsubscribed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsletterUnsubscribeResponse"
+        "400":
+          description: Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Subscriber not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      operationId: unsubscribeNewsletter
+      tags: [newsletter]
+      summary: Unsubscribe from the newsletter
+      description: Marks a subscriber as inactive
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewsletterUnsubscribeInput"
+      responses:
+        "200":
+          description: Successfully unsubscribed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsletterUnsubscribeResponse"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /openai/conversations:
+    get:
+      operationId: listOpenaiConversations
+      tags: [openai]
+      summary: List all conversations
+      responses:
+        "200":
+          description: List of conversations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OpenaiConversation"
+    post:
+      operationId: createOpenaiConversation
+      tags: [openai]
+      summary: Create a new conversation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOpenaiConversationBody"
+      responses:
+        "201":
+          description: Created conversation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OpenaiConversation"
+  /openai/conversations/{id}:
+    get:
+      operationId: getOpenaiConversation
+      tags: [openai]
+      summary: Get conversation with messages
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Conversation with messages
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OpenaiConversationWithMessages"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OpenaiError"
+    delete:
+      operationId: deleteOpenaiConversation
+      tags: [openai]
+      summary: Delete a conversation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OpenaiError"
+  /openai/conversations/{id}/messages:
+    get:
+      operationId: listOpenaiMessages
+      tags: [openai]
+      summary: List messages in a conversation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OpenaiMessage"
+    post:
+      operationId: sendOpenaiMessage
+      tags: [openai]
+      summary: Send a text message and receive a streaming text response
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendOpenaiMessageBody"
+      responses:
+        "200":
+          description: SSE stream of assistant text chunks
+          content:
+            text/event-stream: {}
+  /contracts:
+    get:
+      operationId: listContracts
+      tags: [contracts]
+      summary: List all contracts
+      responses:
+        "200":
+          description: List of contracts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contract"
+  /contracts/send:
+    post:
+      operationId: sendContract
+      tags: [contracts]
+      summary: Manually send a contract
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendContractInput"
+      responses:
+        "201":
+          description: Contract sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SendContractResponse"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /contracts/{id}:
+    get:
+      operationId: getContract
+      tags: [contracts]
+      summary: Get a single contract
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Contract details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /contracts/{id}/sync:
+    post:
+      operationId: syncContract
+      tags: [contracts]
+      summary: Sync contract status with Adobe Sign
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Updated contract
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contract"
+  /contracts/sync-all:
+    post:
+      operationId: syncAllContracts
+      tags: [contracts]
+      summary: Sync all pending contracts
+      responses:
+        "200":
+          description: Sync result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SyncResult"
+  /contracts/process-reminders:
+    post:
+      operationId: processContractReminders
+      tags: [contracts]
+      summary: Process contract reminders
+      responses:
+        "200":
+          description: Reminder results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReminderResult"
+  /contracts/templates/list:
+    get:
+      operationId: listContractTemplates
+      tags: [contracts]
+      summary: List contract templates
+      responses:
+        "200":
+          description: List of templates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ContractTemplate"
+  /contracts/templates:
+    post:
+      operationId: createContractTemplate
+      tags: [contracts]
+      summary: Create a contract template
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractTemplateInput"
+      responses:
+        "201":
+          description: Template created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractTemplate"
+  /contracts/templates/{id}:
+    put:
+      operationId: updateContractTemplate
+      tags: [contracts]
+      summary: Update a contract template
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContractTemplateInput"
+      responses:
+        "200":
+          description: Template updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContractTemplate"
+    delete:
+      operationId: deleteContractTemplate
+      tags: [contracts]
+      summary: Delete a contract template
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+  /contracts/webhooks/booking:
+    post:
+      operationId: bookingWebhook
+      tags: [contracts]
+      summary: Webhook for service bookings (Calendly or manual)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event:
+                  type: string
+                payload:
+                  type: object
+                clientName:
+                  type: string
+                clientEmail:
+                  type: string
+                serviceType:
+                  type: string
+      responses:
+        "201":
+          description: Contracts triggered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  contracts:
+                    type: array
+                    items:
+                      type: object
+  /contracts/{id}/document:
+    get:
+      operationId: getContractDocument
+      tags: [contracts]
+      summary: Download signed contract PDF
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Signed PDF document
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Contract or signed document not found
+  /contracts/adobe/status:
+    get:
+      operationId: getAdobeSignStatus
+      tags: [contracts]
+      summary: Check Adobe Sign API status
+      responses:
+        "200":
+          description: API status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdobeSignStatus"
+  /webhooks/cal:
+    post:
+      operationId: calWebhook
+      tags: [scheduling]
+      summary: Cal.com booking webhook
+      description: Receives booking events from Cal.com (created, rescheduled, cancelled). Verifies HMAC signature, upserts booking record, and triggers notifications.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CalWebhookPayload"
+      responses:
+        "200":
+          description: Webhook processed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CalWebhookResponse"
+        "401":
+          description: Invalid signature
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /admin/nexus/summary:
+    get:
+      operationId: getNexusSummary
+      tags: [admin]
+      summary: Get state nexus summary with client counts and risk levels
+      security:
+        - adminToken: []
+      responses:
+        "200":
+          description: Nexus summary for all states
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NexusSummaryItem"
+        "401":
+          description: Unauthorized
+  /admin/nexus/rules:
+    get:
+      operationId: getNexusRules
+      tags: [admin]
+      summary: Get all state nexus rules
+      security:
+        - adminToken: []
+      responses:
+        "200":
+          description: List of nexus rules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StateNexusRule"
+        "401":
+          description: Unauthorized
+  /admin/nexus/rules/{stateCode}:
+    patch:
+      operationId: updateNexusRule
+      tags: [admin]
+      summary: Update nexus rule thresholds for a state
+      security:
+        - adminToken: []
+      parameters:
+        - name: stateCode
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateNexusRuleInput"
+      responses:
+        "200":
+          description: Updated rule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StateNexusRule"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+        "404":
+          description: State not found
+  /admin/nexus/check:
+    post:
+      operationId: runNexusCheck
+      tags: [admin]
+      summary: Trigger a manual nexus threshold check and send pending notifications
+      security:
+        - adminToken: []
+      responses:
+        "200":
+          description: Check result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NexusCheckResult"
+        "401":
+          description: Unauthorized
+  /admin/nexus/notifications:
+    get:
+      operationId: getNexusNotifications
+      tags: [admin]
+      summary: View nexus notification history
+      security:
+        - adminToken: []
+      responses:
+        "200":
+          description: List of notification log entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NexusNotificationLog"
+        "401":
+          description: Unauthorized
+components:
+  securitySchemes:
+    adminToken:
+      type: apiKey
+      in: header
+      name: x-admin-token
+      description: Admin authentication token
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [ok, degraded]
+        db:
+          type: string
+          enum: [ok, error]
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - status
+        - db
+        - timestamp
+    ContactFormInput:
+      type: object
+      properties:
+        formType:
+          type: string
+          enum: [quick, detailed]
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        message:
+          type: ["string", "null"]
+        businessName:
+          type: ["string", "null"]
+        industry:
+          type: ["string", "null"]
+        servicesInterested:
+          type: array
+          items:
+            type: string
+        monthlyRevenueRange:
+          type: ["string", "null"]
+        biggestChallenge:
+          type: ["string", "null"]
+        preferredContactMethod:
+          type: ["string", "null"]
+        consent:
+          type: object
+          properties:
+            email:
+              type: boolean
+            sms:
+              type: boolean
+            phone:
+              type: boolean
+            source:
+              type: string
+            legalTextVersion:
+              type: string
+          required:
+            - email
+            - sms
+            - phone
+            - source
+            - legalTextVersion
+        smsConsent:
+          type: boolean
+        consentTextVersion:
+          type: string
+          description: Version identifier for the exact consent language shown at submit time
+        consentSourcePage:
+          type: string
+          description: Public page path where consent was captured (for example /contact)
+        website:
+          type: string
+      required:
+        - formType
+        - name
+        - email
+        - smsConsent
+        - consentTextVersion
+        - consentSourcePage
+    ContactFormResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        id:
+          type: integer
+      required:
+        - success
+        - message
+        - id
+    NewsletterSubscribeInput:
+      type: object
+      properties:
+        email:
+          type: string
+        signupSource:
+          type: string
+          enum: [footer, lead_magnet]
+      required:
+        - email
+        - signupSource
+    NewsletterSubscribeResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+      required:
+        - success
+        - message
+    NewsletterUnsubscribeInput:
+      type: object
+      properties:
+        email:
+          type: string
+      required:
+        - email
+    NewsletterUnsubscribeResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+      required:
+        - success
+        - message
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+    OpenaiConversation:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - createdAt
+    OpenaiMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+        conversationId:
+          type: integer
+        role:
+          type: string
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - conversationId
+        - role
+        - content
+        - createdAt
+    CreateOpenaiConversationBody:
+      type: object
+      properties:
+        title:
+          type: string
+      required:
+        - title
+    SendOpenaiMessageBody:
+      type: object
+      properties:
+        content:
+          type: string
+      required:
+        - content
+    OpenaiConversationWithMessages:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/OpenaiMessage"
+      required:
+        - id
+        - title
+        - createdAt
+        - messages
+    OpenaiError:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+    Contract:
+      type: object
+      properties:
+        id:
+          type: integer
+        clientName:
+          type: string
+        clientEmail:
+          type: string
+        contractType:
+          type: string
+        templateId:
+          type: ["integer", "null"]
+        adobeAgreementId:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [draft, sent, viewed, signed, expired, cancelled]
+        serviceType:
+          type: ["string", "null"]
+        pricingTier:
+          type: ["string", "null"]
+        startDate:
+          type: ["string", "null"]
+        sentAt:
+          type: ["string", "null"]
+          format: date-time
+        signedAt:
+          type: ["string", "null"]
+          format: date-time
+        expiredAt:
+          type: ["string", "null"]
+          format: date-time
+        signedDocumentUrl:
+          type: ["string", "null"]
+        remindersSent:
+          type: integer
+        lastReminderAt:
+          type: ["string", "null"]
+          format: date-time
+        contactInquiryId:
+          type: ["integer", "null"]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - clientName
+        - clientEmail
+        - contractType
+        - status
+        - remindersSent
+        - createdAt
+        - updatedAt
+    SendContractInput:
+      type: object
+      properties:
+        clientName:
+          type: string
+        clientEmail:
+          type: string
+        contractType:
+          type: string
+        serviceType:
+          type: string
+        pricingTier:
+          type: string
+        startDate:
+          type: string
+      required:
+        - clientName
+        - clientEmail
+        - contractType
+    SendContractResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        contractId:
+          type: integer
+        adobeAgreementId:
+          type: ["string", "null"]
+      required:
+        - success
+        - message
+        - contractId
+    SyncResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        synced:
+          type: integer
+      required:
+        - success
+        - synced
+    ReminderResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        remindersProcessed:
+          type: integer
+        expired:
+          type: integer
+      required:
+        - success
+        - remindersProcessed
+        - expired
+    ContractTemplate:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        contractType:
+          type: string
+        adobeTemplateId:
+          type: ["string", "null"]
+        triggerCondition:
+          type: string
+        description:
+          type: ["string", "null"]
+        prefillFields:
+          type: ["array", "null"]
+          items:
+            type: string
+        active:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - contractType
+        - triggerCondition
+        - active
+        - createdAt
+        - updatedAt
+    ContractTemplateInput:
+      type: object
+      properties:
+        name:
+          type: string
+        contractType:
+          type: string
+        adobeTemplateId:
+          type: string
+        triggerCondition:
+          type: string
+        description:
+          type: string
+        prefillFields:
+          type: array
+          items:
+            type: string
+        active:
+          type: string
+      required:
+        - name
+        - contractType
+        - triggerCondition
+    AdobeSignStatus:
+      type: object
+      properties:
+        configured:
+          type: boolean
+        message:
+          type: string
+      required:
+        - configured
+        - message
+    CalWebhookPayload:
+      type: object
+      properties:
+        triggerEvent:
+          type: string
+          enum: [BOOKING_CREATED, BOOKING_RESCHEDULED, BOOKING_CANCELLED]
+        payload:
+          type: object
+      required:
+        - triggerEvent
+        - payload
+    CalWebhookResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        bookingId:
+          type: integer
+      required:
+        - success
+        - bookingId
+    Booking:
+      type: object
+      properties:
+        id:
+          type: integer
+        calBookingId:
+          type: string
+        calEventTypeId:
+          type: ["string", "null"]
+        clientName:
+          type: string
+        clientEmail:
+          type: string
+        clientPhone:
+          type: ["string", "null"]
+        meetingType:
+          type: string
+          enum: [video, phone, async]
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [confirmed, cancelled, rescheduled]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - calBookingId
+        - clientName
+        - clientEmail
+        - meetingType
+        - startTime
+        - endTime
+        - status
+        - createdAt
+        - updatedAt
+    NexusSummaryItem:
+      type: object
+      properties:
+        stateCode:
+          type: string
+        stateName:
+          type: string
+        clientCount:
+          type: integer
+        foreignQualificationThreshold:
+          type: integer
+        bookkeepingLicenseRequired:
+          type: boolean
+        bookkeepingLicenseNotes:
+          type: ["string", "null"]
+        authorityName:
+          type: ["string", "null"]
+        authorityUrl:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        warningThresholdPercent:
+          type: integer
+        riskLevel:
+          type: string
+          enum: [safe, warning, alert]
+        lastNotificationSent:
+          type: ["string", "null"]
+          format: date-time
+        lastNotificationType:
+          type: ["string", "null"]
+      required:
+        - stateCode
+        - stateName
+        - clientCount
+        - foreignQualificationThreshold
+        - bookkeepingLicenseRequired
+        - warningThresholdPercent
+        - riskLevel
+    StateNexusRule:
+      type: object
+      properties:
+        id:
+          type: integer
+        stateCode:
+          type: string
+        stateName:
+          type: string
+        foreignQualificationThreshold:
+          type: integer
+        bookkeepingLicenseRequired:
+          type: boolean
+        bookkeepingLicenseNotes:
+          type: ["string", "null"]
+        authorityName:
+          type: ["string", "null"]
+        authorityUrl:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        warningThresholdPercent:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - stateCode
+        - stateName
+        - foreignQualificationThreshold
+        - bookkeepingLicenseRequired
+        - warningThresholdPercent
+        - createdAt
+        - updatedAt
+    UpdateNexusRuleInput:
+      type: object
+      properties:
+        foreignQualificationThreshold:
+          type: integer
+        warningThresholdPercent:
+          type: integer
+        bookkeepingLicenseRequired:
+          type: boolean
+        notes:
+          type: string
+        authorityUrl:
+          type: string
+    NexusCheckResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        warnings:
+          type: integer
+        alerts:
+          type: integer
+      required:
+        - success
+        - warnings
+        - alerts
+    NexusNotificationLog:
+      type: object
+      properties:
+        id:
+          type: integer
+        stateCode:
+          type: string
+        notificationType:
+          type: string
+        clientCount:
+          type: integer
+        threshold:
+          type: integer
+        sentAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - stateCode
+        - notificationType
+        - clientCount
+        - threshold
+        - sentAt
