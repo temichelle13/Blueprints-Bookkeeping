@@ -1,0 +1,38 @@
+{
+  "name": "workspace",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "preinstall": "sh -c 'rm -f package-lock.json yarn.lock; case \"$npm_config_user_agent\" in pnpm/*) ;; *) echo \"Use pnpm instead\" >&2; exit 1 ;; esac'",
+    "install": "pnpm install --no-frozen-lockfile",
+    "build": "pnpm run typecheck && pnpm -r --if-present run build",
+    "typecheck:libs": "tsc --build",
+    "lint": "prettier --check .",
+    "format": "prettier --write .",
+    "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
+    "check:merge-conflicts": "sh -c \"if grep -rnE '^(<<<<<<<|=======|>>>>>>>)' . --exclude=pnpm-lock.yaml --exclude-dir=.git --exclude-dir=node_modules; then echo 'Unresolved merge conflict markers found.' >&2; exit 1; fi\"",
+    "check:website-deploy": "pnpm run check:merge-conflicts && pnpm run typecheck:libs && pnpm --filter @workspace/scripts run check:indexing-guards && pnpm --filter @workspace/website build"
+  },
+  "private": true,
+  "devDependencies": {
+    "prettier": "^3.8.1",
+    "tsx": "catalog:",
+    "typescript": "~6.0.2",
+    "@types/node": "catalog:"
+  },
+  "dependencies": {
+    "@types/adm-zip": "^0.5.8",
+    "adm-zip": "^0.5.16",
+    "archiver": "^7.0.1",
+    "pdfkit": "^0.18.0",
+    "pngjs": "^7.0.0",
+    "sharp": "^0.34.5",
+    "stripe": "^21.0.1",
+    "stripe-replit-sync": "^1.0.0"
+  },
+  "packageManager": "pnpm@10.13.1",
+  "engines": {
+    "node": "^20.19.0 || ^22.0.0 || ^24.0.0",
+    "pnpm": "^10.13.1"
+  }
+}

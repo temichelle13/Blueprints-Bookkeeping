@@ -1,0 +1,29 @@
+packages:
+  "framer-motion": "For smooth page transitions and scroll-reveals that add a premium feel."
+  "react-hook-form": "For robust contact form state management."
+  "@hookform/resolvers": "To integrate Zod validation with react-hook-form."
+  "zod": "For contact form schema validation."
+  "clsx": "Utility for constructing className strings conditionally."
+  "tailwind-merge": "Utility to merge tailwind classes without style conflicts."
+
+images:
+  - path: "artifacts/website/public/images/hero-bg.png"
+    description: "Abstract, subtle, premium gradient background blending deep navy blue and soft periwinkle. Clean, professional, resembling a sleek corporate or financial firm's modern branding. No text."
+    aspect_ratio: "16:9"
+  - path: "artifacts/website/public/images/tea-portrait.png"
+    description: "Professional, warm, and confident headshot of a female business consultant in her 30s. Dressed in modern business attire, natural lighting, soft office background. Exudes trust and high-level expertise."
+    aspect_ratio: "1:1"
+  - path: "artifacts/website/public/images/portfolio-1.png"
+    description: "Mockup of a clean, modern business website displayed on a sleek laptop screen. The site design features agricultural or timber industry themes with data charts and strategic planning elements. Deep navy and periwinkle accents."
+    aspect_ratio: "16:9"
+  - path: "artifacts/website/public/images/portfolio-2.png"
+    description: "Mockup of a premium tech startup business plan website displayed on a sleek monitor. Shows clean typography, modern layouts, and financial forecasting graphs. Deep navy and periwinkle accents."
+    aspect_ratio: "16:9"
+  - path: "artifacts/website/public/images/portfolio-3.png"
+    description: "Mockup of an e-commerce or digital asset strategy dashboard on a tablet screen. Clean interface, professional data visualization, minimalist design. Deep navy and periwinkle accents."
+    aspect_ratio: "16:9"
+
+notes:
+  - The contact form submits to POST /api/contact which is handled by the existing express server.
+  - The site uses wouter for routing.
+  - The design is tailored to be modular so the user can easily inspect the DOM and copy sections into WordPress/Elementor.
