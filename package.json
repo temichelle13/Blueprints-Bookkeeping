@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "install": "pnpm install --no-frozen-lockfile",
+    "install": "pnpm install",
     "build": "pnpm run typecheck && pnpm -r --if-present run build",
     "typecheck:libs": "tsc --build",
     "lint": "prettier --check .",
