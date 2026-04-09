@@ -465,7 +465,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       ...corsHeaders,
       "Content-Type": "text/event-stream",
       "Cache-Control": "no-cache",
-      Connection: "keep-alive",
     },
   });
 };
