@@ -216,8 +216,8 @@ pnpm install
 cp .env.example .env
 # Edit .env with your values (see Environment Variables below)
 
-# Run database migrations
-pnpm --filter @workspace/db migrate
+# Push database schema
+pnpm --filter @workspace/db push
 
 # Start development
 pnpm run dev
