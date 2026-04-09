@@ -5,26 +5,26 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { NexusSummaryItemRiskLevel } from "./nexusSummaryItemRiskLevel";
+import type {NexusSummaryItemRiskLevel} from "./nexusSummaryItemRiskLevel";
 
 export interface NexusSummaryItem {
-  stateCode: string;
-  stateName: string;
-  clientCount: number;
-  foreignQualificationThreshold: number;
-  bookkeepingLicenseRequired: boolean;
-  /** @nullable */
-  bookkeepingLicenseNotes?: string | null;
-  /** @nullable */
-  authorityName?: string | null;
-  /** @nullable */
-  authorityUrl?: string | null;
-  /** @nullable */
-  notes?: string | null;
-  warningThresholdPercent: number;
-  riskLevel: NexusSummaryItemRiskLevel;
-  /** @nullable */
-  lastNotificationSent?: Date | null;
-  /** @nullable */
-  lastNotificationType?: string | null;
+    stateCode: string;
+    stateName: string;
+    clientCount: number;
+    foreignQualificationThreshold: number;
+    bookkeepingLicenseRequired: boolean;
+    /** @nullable */
+    bookkeepingLicenseNotes?: string | null;
+    /** @nullable */
+    authorityName?: string | null;
+    /** @nullable */
+    authorityUrl?: string | null;
+    /** @nullable */
+    notes?: string | null;
+    warningThresholdPercent: number;
+    riskLevel: NexusSummaryItemRiskLevel;
+    /** @nullable */
+    lastNotificationSent?: Date | null;
+    /** @nullable */
+    lastNotificationType?: string | null;
 }

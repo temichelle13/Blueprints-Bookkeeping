@@ -19,6 +19,7 @@ export * from "./calWebhookPayloadPayload";
 export * from "./calWebhookPayloadTriggerEvent";
 export * from "./calWebhookResponse";
 export * from "./contactFormInput";
+export * from "./contactFormInputConsent";
 export * from "./contactFormInputFormType";
 export * from "./contactFormResponse";
 export * from "./contract";
