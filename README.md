@@ -143,7 +143,7 @@ Blueprints-Bookkeeping/
 <td>
 
 React 19<br>
-TypeScript 5<br>
+TypeScript 6<br>
 Vite 8<br>
 Tailwind CSS 4<br>
 Framer Motion<br>
@@ -226,15 +226,16 @@ pnpm run dev
 ### Key Commands
 
 ```bash
-pnpm run dev                        # Start development servers
-pnpm run build                      # Full production build
-pnpm run typecheck                  # TypeScript validation
-pnpm run lint                       # Check formatting (Prettier)
-pnpm run format                     # Auto-format code
-pnpm run check:website-deploy       # Full pre-deployment validation
-git grep -nE '^(<<<<<<<|=======|>>>>>>>)'    # Scan for merge conflict artifacts
+pnpm run dev                                    # Start API server (Express)
+pnpm --filter @workspace/website dev            # Start website dev server (Vite)
+pnpm run build                                  # Full production build
+pnpm run typecheck                              # TypeScript validation
+pnpm run lint                                   # Check formatting (Prettier)
+pnpm run format                                 # Auto-format code
+pnpm run check:website-deploy                   # Full pre-deployment validation
 pnpm --filter @workspace/website build          # Build frontend only
 pnpm --filter @workspace/api-server build       # Build backend only
+git grep -nE '^(<<<<<<<|=======|>>>>>>>)'       # Scan for merge conflict artifacts
 ```
 
 ---
@@ -260,7 +261,7 @@ Create a `.env` file from `.env.example`. Key variables:
 | `STRIPE_WEBHOOK_SECRET` | ✅ | Stripe webhook signing secret |
 | `RESEND_API_KEY` | ✅ | Resend email service key |
 | `OPENAI_API_KEY` | ✅ | OpenAI key required for server startup (used by the Aria chatbot) |
-| `OPENAI_CHAT_MODEL` | ⬚ | Model name (default: `gpt-4o-mini`) |
+| `OPENAI_CHAT_MODEL` | ⬚ | Model name (default: `gpt-4.1-mini`) |
 | `TRUST_PROXY` | ⬚ | Set to `1` behind reverse proxy |
 
 > See `.env.example` for the complete list including Stripe price IDs and Adobe Sign configuration.
@@ -306,7 +307,7 @@ This is a private business platform. Contributions are managed internally. If yo
 
 1. **Branch** from the latest `main`
 2. **Follow** existing code conventions (TypeScript strict, Prettier formatting)
-3. **Test** your changes: `pnpm run typecheck && pnpm run check:merge-conflicts`
+3. **Test** your changes: `pnpm run typecheck`
 4. **Build** before pushing: `pnpm run check:website-deploy`
 5. **Open a PR** with a clear description of changes
 
