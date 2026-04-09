@@ -121,6 +121,26 @@ export const intuitCerts: CredentialWithBadge[] = [
     border: "border-blue-500/20",
     url: "https://www.credly.com/badges/abc7661b-7147-4ccf-8fce-926ac6d32572/public_url",
   },
+  {
+    name: "Advanced Crypto Accounting Certified",
+    issuer: "Intuit",
+    description:
+      "Specialized certification covering digital asset taxation, cost-basis methodology, transaction reconciliation, and crypto income reporting.",
+    badge: `${base}images/badge-crypto-tax.png`,
+    color: "from-orange-500/10 to-amber-500/5",
+    border: "border-orange-500/20",
+    url: "https://www.credly.com/badges/44179f58-1ad3-4b02-9f5d-6bf2258a3c49/public_url",
+  },
+  {
+    name: "Client Advisory Services Foundations",
+    issuer: "Intuit",
+    description:
+      "Certification in delivering strategic advisory services to clients — moving beyond bookkeeping to actionable financial guidance and business insights.",
+    badge: `${base}images/badge-client-advisory.png`,
+    color: "from-accent/10 to-primary/5",
+    border: "border-accent/20",
+    verificationNote: "Public badge link still needs manual confirmation.",
+  },
 ];
 
 export const technologyAndSecurityCerts: CredentialEntry[] = [
@@ -256,29 +276,6 @@ export const aboutSecurityBadges: CredentialWithBadge[] = [
     color: "from-yellow-500/20 to-amber-500/20",
     border: "border-yellow-500/20",
     url: "https://www.credly.com/badges/e2823194-36dc-4ab3-ab1d-155b9189714f/public_url",
-  },
-];
-
-export const specializedCerts: CredentialWithBadge[] = [
-  {
-    name: "Advanced Crypto Accounting Certified",
-    issuer: "Intuit",
-    description:
-      "Specialized certification covering digital asset taxation, cost-basis methodology, transaction reconciliation, and crypto income reporting.",
-    badge: `${base}images/badge-crypto-tax.png`,
-    color: "from-orange-500/10 to-amber-500/5",
-    border: "border-orange-500/20",
-    url: "https://www.credly.com/badges/44179f58-1ad3-4b02-9f5d-6bf2258a3c49/public_url",
-  },
-  {
-    name: "Client Advisory Services Foundations",
-    issuer: "Intuit",
-    description:
-      "Certification in delivering strategic advisory services to clients — moving beyond bookkeeping to actionable financial guidance and business insights.",
-    badge: `${base}images/badge-client-advisory.png`,
-    color: "from-accent/10 to-primary/5",
-    border: "border-accent/20",
-    verificationNote: "Public badge link still needs manual confirmation.",
   },
 ];
 
