@@ -199,7 +199,7 @@ QuickBooks Online
 | Tool | Version |
 |:-----|:--------|
 | **Node.js** | `^20.19.0` · `^22.0.0` · `^24.0.0` |
-| **pnpm** | `10.13.1` |
+| **pnpm** | `10.33.0` |
 | **PostgreSQL** | `16+` |
 
 ### Installation
