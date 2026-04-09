@@ -4,12 +4,14 @@
   "license": "MIT",
   "scripts": {
     "bootstrap": "pnpm install --frozen-lockfile",
-    "build": "pnpm run typecheck && pnpm -r --if-present run build",
-    "typecheck:libs": "tsc --build",
+    "codegen": "pnpm --filter @workspace/api-spec run codegen",
+    "build": "pnpm run codegen && pnpm run typecheck && pnpm -r --if-present run build",
+    "dev": "pnpm --filter @workspace/api-server run dev",
+    "typecheck:libs": "pnpm --filter \"./lib/**\" --if-present run typecheck",
     "lint": "prettier --check .",
     "format": "prettier --write .",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
-    "check:website-deploy": "pnpm run check:merge-conflicts && pnpm run typecheck:libs && pnpm --filter @workspace/scripts run check:indexing-guards && pnpm --filter @workspace/website build"
+    "check:website-deploy": "pnpm run typecheck && pnpm --filter @workspace/scripts run check:indexing-guards && pnpm --filter @workspace/website build"
   },
   "private": true,
   "devDependencies": {
