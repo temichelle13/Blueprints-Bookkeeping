@@ -314,9 +314,9 @@ This is a private business platform. Contributions are managed internally. If yo
 
 ## 📄 License
 
-This project is proprietary software. All rights reserved by **Blueprints & Bookkeeping, LLC**.
+This project is licensed under the **MIT License**.
 
-Unauthorized use, reproduction, or distribution of this codebase is prohibited.
+See the `LICENSE` file for the full license text.
 
 ---
 
