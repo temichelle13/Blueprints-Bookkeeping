@@ -259,8 +259,8 @@ Create a `.env` file from `.env.example`. Key variables:
 | `STRIPE_SECRET_KEY` | ✅ | Stripe secret key |
 | `STRIPE_WEBHOOK_SECRET` | ✅ | Stripe webhook signing secret |
 | `RESEND_API_KEY` | ✅ | Resend email service key |
-| `OPENAI_API_KEY` | ⬚ | OpenAI key (for Aria chatbot) |
-| `OPENAI_CHAT_MODEL` | ⬚ | Model name (default: `gpt-4.1-mini`) |
+| `OPENAI_API_KEY` | ✅ | OpenAI key required for server startup (used by the Aria chatbot) |
+| `OPENAI_CHAT_MODEL` | ⬚ | Model name (default: `gpt-4o-mini`) |
 | `TRUST_PROXY` | ⬚ | Set to `1` behind reverse proxy |
 
 > See `.env.example` for the complete list including Stripe price IDs and Adobe Sign configuration.
