@@ -126,7 +126,7 @@ export const intuitCerts: CredentialWithBadge[] = [
 export const technologyAndSecurityCerts: CredentialEntry[] = [
   {
     name: "Certified Ethical Hacker (CEH) v12",
-    issuer: "Coursera / EC-Council",
+    issuer: "Packt",
     description:
       "Three-course specialization covering ethical hacking reconnaissance, system hacking and malware analysis, advanced network attacks, web hacking, and cryptography — directly applied to client data protection.",
     icon: ShieldCheck,
