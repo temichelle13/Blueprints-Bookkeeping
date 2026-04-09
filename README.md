@@ -232,7 +232,7 @@ pnpm run typecheck                  # TypeScript validation
 pnpm run lint                       # Check formatting (Prettier)
 pnpm run format                     # Auto-format code
 pnpm run check:website-deploy       # Full pre-deployment validation
-pnpm run check:merge-conflicts      # Scan for merge conflict artifacts
+git grep -nE '^(<<<<<<<|=======|>>>>>>>)'    # Scan for merge conflict artifacts
 pnpm --filter @workspace/website build          # Build frontend only
 pnpm --filter @workspace/api-server build       # Build backend only
 ```
