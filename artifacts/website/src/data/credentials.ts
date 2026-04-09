@@ -326,7 +326,7 @@ export const leadershipCerts = [
   },
   {
     title: "Notary Public Commission",
-    school: "OR Secretary of State's Office",
+    school: "Oregon Secretary of State's Office",
     focus:
       "Oregon Notary Public Commission — Commission No. 1053057, issued November 2024.",
   },
