@@ -14,8 +14,6 @@ import {
   StatsProofBar,
   CredentialBadgeStrip,
   GoogleReviewsCallout,
-  HeroCtaTrustNote,
-  EngagementClarityPreview,
   FinalCtaTrustNote,
 } from "@/components/TrustSignals";
 import { OptimizedImage } from "@/components/OptimizedImage";
@@ -110,7 +108,6 @@ export default function Home() {
             </Link>
           </motion.div>
 
-          <HeroCtaTrustNote />
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
