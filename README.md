@@ -279,10 +279,9 @@ pnpm run check:website-deploy
 ```
 
 This runs, in order:
-1. **Merge conflict scan** — catches leftover conflict markers
-2. **TypeScript check** — full type validation across the monorepo
-3. **Indexing guards** — ensures no sensitive routes are indexable
-4. **Website build** — Vite production build with code splitting
+1. **TypeScript check** — full type validation across the monorepo
+2. **Indexing guards** — ensures no sensitive routes are indexable
+3. **Website build** — Vite production build with code splitting
 
 > 📖 See [`DEPLOYMENT.md`](./DEPLOYMENT.md) for the complete deployment guide, environment setup, and troubleshooting.
 
