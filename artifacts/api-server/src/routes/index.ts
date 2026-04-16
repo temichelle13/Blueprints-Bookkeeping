@@ -9,7 +9,6 @@ import paymentsRouter from "./payments";
 import onboardingRouter from "./onboarding";
 import documentsRouter from "./documents";
 import adminRouter from "./admin";
-import calWebhookRouter from "./cal-webhook";
 import nexusRouter from "./nexus";
 import resendWebhookRouter from "./resend-webhook";
 
@@ -25,7 +24,6 @@ router.use(paymentsRouter);
 router.use(onboardingRouter);
 router.use(documentsRouter);
 router.use(adminRouter);
-router.use(calWebhookRouter);
 router.use(nexusRouter);
 router.use(resendWebhookRouter);
 export default router;

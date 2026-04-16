@@ -51,7 +51,7 @@ STRIPE_WEBHOOK_SECRET=<your-stripe-webhook-secret>
 OPENAI_API_KEY=<your-openai-api-key>
 OPENAI_CHAT_MODEL=gpt-4.1-mini
 
-# Optional: Adobe Sign, Cal.com, Apollo.io
+# Optional: Adobe Sign, Calendly webhook, Apollo.io
 # See .env.example for complete list
 ```
 
