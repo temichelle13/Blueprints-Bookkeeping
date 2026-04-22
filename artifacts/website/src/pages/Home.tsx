@@ -14,8 +14,6 @@ import {
   StatsProofBar,
   CredentialBadgeStrip,
   GoogleReviewsCallout,
-  HeroCtaTrustNote,
-  EngagementClarityPreview,
   FinalCtaTrustNote,
 } from "@/components/TrustSignals";
 import { OptimizedImage } from "@/components/OptimizedImage";
@@ -110,35 +108,6 @@ export default function Home() {
             </Link>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="mt-6 w-full max-w-3xl rounded-xl border border-white/15 bg-white/[0.04] backdrop-blur-sm p-4 sm:p-5 text-left"
-          >
-            <p className="text-sm text-foreground">
-              <span className="font-semibold text-white">
-                Data Protection &amp; Professional Boundaries:
-              </span>{" "}
-              U.S.-based with no offshoring. 
-              Backed by certifications in Cybersecurity, Ethical Hacking, and Networking.
-            </p>
-            <p className="mt-2 text-xs text-muted-foreground">
-              Services offered are not tax or legal advice.
-              Seamless tax preparation is also available through our list of vetted tax professionals we partner with.
-              We take time in ensuring all our partners are U.S.-based credentialed tax experts. 
-            </p>
-            <div className="mt-3 flex items-center gap-3 text-xs sm:text-sm">
-              <Link href="/privacy" className="text-accent hover:underline">
-                Privacy Policy
-              </Link>
-              <span className="text-muted-foreground" aria-hidden="true">•</span>
-              <Link href="/terms" className="text-accent hover:underline">
-                Terms of Service
-              </Link>
-            </div>
-          </motion.div>
-          <HeroCtaTrustNote />
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
