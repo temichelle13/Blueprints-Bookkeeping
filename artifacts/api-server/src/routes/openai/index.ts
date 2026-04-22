@@ -17,6 +17,7 @@ const OWNER_EMAIL = "tea@blueprintsandbookkeeping.com";
 const FROM_ADDRESS =
   "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
 const CHAT_MODEL = process.env["OPENAI_CHAT_MODEL"] || "gpt-4.1-mini";
+const CHAT_TOKEN_LIMIT = 4096;
 const isOpenAiConfigured = Boolean(openai);
 
 const SYSTEM_PROMPT = `You are Aria, the friendly AI assistant for Blueprints & Bookkeeping, LLC — a premium remote financial services firm founded by Tea Larson-Hetrick in Roseburg, Oregon.
@@ -259,6 +260,9 @@ router.post(
     try {
       const stream = await openai.chat.completions.create({
         model: CHAT_MODEL,
+        ...(CHAT_MODEL.startsWith("o")
+          ? { max_completion_tokens: CHAT_TOKEN_LIMIT }
+          : { max_tokens: CHAT_TOKEN_LIMIT }),
         messages: [{ role: "system", content: SYSTEM_PROMPT }, ...chatMessages],
         stream: true,
       });
