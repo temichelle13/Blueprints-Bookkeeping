@@ -886,7 +886,7 @@ export default function Contact() {
   }, [searchParams]);
   const defaultClientMeetingMessage = useMemo(() => {
     const requestedMessage = searchParams.get("message");
-    return requestedMessage?.trim() ?? "";
+    return requestedMessage?.trim() || undefined;
   }, [searchParams]);
 
   usePageTitle(isBookkeeperIntent ? "Add Me as Your Bookkeeper" : "Contact");
@@ -1029,9 +1029,7 @@ export default function Contact() {
               {isBookkeeperIntent ? (
                 <BookkeeperIntakeForm />
               ) : (
-                <MessageForm
-                  defaultMessage={defaultClientMeetingMessage || undefined}
-                />
+                <MessageForm defaultMessage={defaultClientMeetingMessage} />
               )}
             </div>
           </div>
