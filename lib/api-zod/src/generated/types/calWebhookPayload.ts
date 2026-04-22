@@ -5,10 +5,10 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { CalWebhookPayloadPayload } from "./calWebhookPayloadPayload";
-import type { CalWebhookPayloadTriggerEvent } from "./calWebhookPayloadTriggerEvent";
+import type {CalWebhookPayloadPayload} from "./calWebhookPayloadPayload";
+import type {CalWebhookPayloadTriggerEvent} from "./calWebhookPayloadTriggerEvent";
 
 export interface CalWebhookPayload {
-  triggerEvent: CalWebhookPayloadTriggerEvent;
-  payload: CalWebhookPayloadPayload;
+    triggerEvent: CalWebhookPayloadTriggerEvent;
+    payload: CalWebhookPayloadPayload;
 }
