@@ -16,7 +16,6 @@ import {
   GoogleReviewsCallout,
   FinalCtaTrustNote,
 } from "@/components/TrustSignals";
-import { OptimizedImage } from "@/components/OptimizedImage";
 import { SEO } from "@/components/SEO";
 import { trackHomeCtaClick } from "@/hooks/usePageTracking";
 import { localBusinessSchema } from "@/lib/seo-schemas";
@@ -36,18 +35,6 @@ export default function Home() {
         jsonLd={localBusinessSchema()}
       />
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <OptimizedImage
-            src={`${import.meta.env.BASE_URL}images/hero-bg.png`}
-            alt="Blueprints & Bookkeeping — professional bookkeeping and business plan services for founders"
-            width={1920}
-            height={1080}
-            className="w-full h-full object-cover opacity-30"
-            fetchPriority="high"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/70 to-background" />
-        </div>
-
         <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-accent/6 rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-primary/15 rounded-full blur-[90px] pointer-events-none" />
 
