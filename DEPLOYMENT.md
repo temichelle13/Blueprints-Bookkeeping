@@ -281,7 +281,7 @@ Access to fetch at 'https://api.example.com/api/...' from origin 'https://exampl
 
 ## Support
 
-For deployment issues, contact Tea at tea@blueprintsandbookkeeping.com or check:
+For deployment issues, contact Tea at <tea@blueprintsandbookkeeping.com> or check:
 
 - `.env.example` - List of all environment variables
 - `artifacts/website/.replit-artifact/artifact.toml` - Frontend configuration
