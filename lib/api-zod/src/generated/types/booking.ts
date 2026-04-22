@@ -5,22 +5,22 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type {BookingMeetingType} from "./bookingMeetingType";
-import type {BookingStatus} from "./bookingStatus";
+import type { BookingMeetingType } from "./bookingMeetingType";
+import type { BookingStatus } from "./bookingStatus";
 
 export interface Booking {
-    id: number;
-    calBookingId: string;
-    /** @nullable */
-    calEventTypeId?: string | null;
-    clientName: string;
-    clientEmail: string;
-    /** @nullable */
-    clientPhone?: string | null;
-    meetingType: BookingMeetingType;
-    startTime: Date;
-    endTime: Date;
-    status: BookingStatus;
-    createdAt: Date;
-    updatedAt: Date;
+  id: number;
+  calBookingId: string;
+  /** @nullable */
+  calEventTypeId?: string | null;
+  clientName: string;
+  clientEmail: string;
+  /** @nullable */
+  clientPhone?: string | null;
+  meetingType: BookingMeetingType;
+  startTime: Date;
+  endTime: Date;
+  status: BookingStatus;
+  createdAt: Date;
+  updatedAt: Date;
 }
