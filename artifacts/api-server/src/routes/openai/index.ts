@@ -259,7 +259,6 @@ router.post(
     try {
       const stream = await openai.chat.completions.create({
         model: CHAT_MODEL,
-        max_completion_tokens: 4096,
         messages: [{ role: "system", content: SYSTEM_PROMPT }, ...chatMessages],
         stream: true,
       });
