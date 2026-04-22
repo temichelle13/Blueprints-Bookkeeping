@@ -5,33 +5,33 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type {ContactFormInputConsent} from "./contactFormInputConsent";
-import type {ContactFormInputFormType} from "./contactFormInputFormType";
+import type { ContactFormInputConsent } from "./contactFormInputConsent";
+import type { ContactFormInputFormType } from "./contactFormInputFormType";
 
 export interface ContactFormInput {
-    formType: ContactFormInputFormType;
-    name: string;
-    email: string;
-    /** @nullable */
-    phone?: string | null;
-    /** @nullable */
-    message?: string | null;
-    /** @nullable */
-    businessName?: string | null;
-    /** @nullable */
-    industry?: string | null;
-    servicesInterested?: string[];
-    /** @nullable */
-    monthlyRevenueRange?: string | null;
-    /** @nullable */
-    biggestChallenge?: string | null;
-    /** @nullable */
-    preferredContactMethod?: string | null;
-    consent?: ContactFormInputConsent;
-    smsConsent: boolean;
-    /** Version identifier for the exact consent language shown at submit time */
-    consentTextVersion: string;
-    /** Public page path where consent was captured (for example /contact) */
-    consentSourcePage: string;
-    website?: string;
+  formType: ContactFormInputFormType;
+  name: string;
+  email: string;
+  /** @nullable */
+  phone?: string | null;
+  /** @nullable */
+  message?: string | null;
+  /** @nullable */
+  businessName?: string | null;
+  /** @nullable */
+  industry?: string | null;
+  servicesInterested?: string[];
+  /** @nullable */
+  monthlyRevenueRange?: string | null;
+  /** @nullable */
+  biggestChallenge?: string | null;
+  /** @nullable */
+  preferredContactMethod?: string | null;
+  consent?: ContactFormInputConsent;
+  smsConsent: boolean;
+  /** Version identifier for the exact consent language shown at submit time */
+  consentTextVersion: string;
+  /** Public page path where consent was captured (for example /contact) */
+  consentSourcePage: string;
+  website?: string;
 }
