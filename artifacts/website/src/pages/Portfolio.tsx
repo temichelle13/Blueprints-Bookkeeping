@@ -13,7 +13,6 @@ import {
   nationalSecurityCerts,
   professionalProfiles,
   researchAndWork,
-  specializedCerts,
   technologyAndSecurityCerts,
 } from "@/data/credentials";
 
@@ -420,26 +419,6 @@ export default function CredentialsPage() {
           ))}
         </div>
       </section>
-
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-20">
-        <motion.div {...fadeUp} className="mb-10">
-          <div className="accent-bar mb-4" />
-          <h2 className="text-2xl font-display font-bold text-white">
-            Specialized Services
-          </h2>
-          <p className="text-muted-foreground mt-2">
-            Advanced certifications for niche financial services.
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {specializedCerts.map((cert, i) => (
-            <CredentialCard key={cert.name} cert={cert} delay={i * 0.07} />
-          ))}
-        </div>
-      </section>
-
-      <div className="glow-line max-w-5xl mx-auto" />
 
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 my-20 text-center">
         <motion.div {...fadeUp}>

@@ -109,15 +109,6 @@ app.use(
 app.use("/api/payments/webhook", express.raw({ type: "application/json" }));
 
 app.use(
-  "/api/webhooks/cal",
-  express.json({
-    verify: (req: any, _res, buf) => {
-      req.rawBody = buf;
-    },
-  }),
-);
-
-app.use(
   "/api/webhooks/resend",
   express.json({
     verify: (req: RawBodyRequest, _res, buf) => {
