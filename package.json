@@ -30,7 +30,7 @@
     "stripe": "^21.0.1",
     "stripe-replit-sync": "^1.0.0"
   },
-  "packageManager": "pnpm@10.13.1",
+  "packageManager": "pnpm@10.33.2",
   "engines": {
     "node": "^20.19.0 || ^22.0.0 || ^24.0.0",
     "pnpm": "^10.13.1"
