@@ -16,9 +16,11 @@ export interface Env {
 }
 
 function generateConversationId(): number {
-  const buf = new Uint32Array(1);
+  const buf = new Uint32Array(2);
   crypto.getRandomValues(buf);
-  return buf[0];
+  // Combine two random values into a 53-bit safe integer:
+  // (21 high-order bits of buf[0]) * 2^32 + buf[1]
+  return (buf[0] >>> 11) * 0x100000000 + buf[1];
 }
 
 const corsHeaders = {

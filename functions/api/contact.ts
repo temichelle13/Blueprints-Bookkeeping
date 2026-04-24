@@ -298,7 +298,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   return new Response(
     JSON.stringify({
       success: true,
-      id: 0,
+      id: Date.now(),
       message:
         "Thank you for your inquiry! We will be in touch within one business day.",
     }),

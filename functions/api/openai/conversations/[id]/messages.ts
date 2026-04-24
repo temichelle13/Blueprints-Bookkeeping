@@ -230,13 +230,17 @@ const SITE_ORIGIN_DEFAULT = "https://blueprintsandbookkeeping.com";
 function buildCorsHeaders(request: Request, siteUrl?: string): Record<string, string> {
   const allowedOrigin = siteUrl ?? SITE_ORIGIN_DEFAULT;
   const requestOrigin = request.headers.get("Origin") ?? "";
-  // Reflect the request origin only if it matches the allowed site origin
-  const origin = requestOrigin === allowedOrigin ? requestOrigin : allowedOrigin;
-  return {
-    "Access-Control-Allow-Origin": origin,
+  const headers: Record<string, string> = {
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
+    "Vary": "Origin",
   };
+  // Only set ACAO when the request origin matches the allowed site origin.
+  // Omitting it for non-matching origins causes browsers to block the response.
+  if (requestOrigin === allowedOrigin) {
+    headers["Access-Control-Allow-Origin"] = requestOrigin;
+  }
+  return headers;
 }
 
 const OFFLINE_MESSAGE =
