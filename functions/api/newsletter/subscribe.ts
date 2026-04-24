@@ -115,6 +115,14 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
   const data = body as Record<string, unknown>;
 
+  // Honeypot: silently succeed if bot filled the website field
+  if (data.website && typeof data.website === "string" && data.website.trim()) {
+    return new Response(
+      JSON.stringify({ success: true, message: "You're subscribed! Thank you for signing up." }),
+      { status: 201, headers: corsHeaders },
+    );
+  }
+
   // Validate email
   if (typeof data.email !== "string" || data.email.length > 320) {
     return new Response(

@@ -48,6 +48,12 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          # Deploy the pre-built static assets directly (no re-build by Cloudflare)
-          command: pages deploy artifacts/website/dist/public --project-name=blueprints-bookkeeping --commit-dirty=true
+          # Deploy the pre-built static assets directly (no re-build by Cloudflare).
+          # For PRs, --branch sets a preview deployment; for pushes to master it
+          # defaults to the production deployment.
+          command: >-
+            pages deploy artifacts/website/dist/public
+            --project-name=blueprints-bookkeeping
+            --commit-dirty=true
+            --branch=${{ github.head_ref || github.ref_name }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}

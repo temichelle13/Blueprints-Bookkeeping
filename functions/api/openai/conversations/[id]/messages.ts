@@ -26,6 +26,7 @@ export interface Env {
   OPENAI_CHAT_MODEL?: string;
   RESEND_API_KEY?: string;
   OWNER_EMAIL?: string;
+  SITE_URL?: string;
   CHAT_KV?: KVNamespace;
 }
 
@@ -224,6 +225,20 @@ async function notifyOwnerOfLead(
   }).catch(() => {});
 }
 
+const SITE_ORIGIN_DEFAULT = "https://blueprintsandbookkeeping.com";
+
+function buildCorsHeaders(request: Request, siteUrl?: string): Record<string, string> {
+  const allowedOrigin = siteUrl ?? SITE_ORIGIN_DEFAULT;
+  const requestOrigin = request.headers.get("Origin") ?? "";
+  // Reflect the request origin only if it matches the allowed site origin
+  const origin = requestOrigin === allowedOrigin ? requestOrigin : allowedOrigin;
+  return {
+    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+  };
+}
+
 const OFFLINE_MESSAGE =
   "Aria is temporarily offline right now. Please use the contact form, email tea@blueprintsandbookkeeping.com, or book a discovery call and Tea will follow up personally.";
 
@@ -231,13 +246,8 @@ function sseChunk(data: object): string {
   return `data: ${JSON.stringify(data)}\n\n`;
 }
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
-};
-
 export const onRequestGet: PagesFunction<Env> = async (context) => {
+  const corsHeaders = buildCorsHeaders(context.request, context.env.SITE_URL);
   const idParam = (context.params as Record<string, string>).id;
   const id = parseInt(idParam ?? "", 10);
 
@@ -264,6 +274,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   const env = context.env;
+  const corsHeaders = buildCorsHeaders(context.request, env.SITE_URL);
   const idParam = (context.params as Record<string, string>).id;
   const id = parseInt(idParam ?? "", 10);
 
@@ -469,13 +480,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   });
 };
 
-export const onRequestOptions: PagesFunction<Env> = async () => {
-  return new Response(null, {
-    status: 204,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-    },
-  });
+export const onRequestOptions: PagesFunction<Env> = async (context) => {
+  const corsHeaders = buildCorsHeaders(context.request, context.env.SITE_URL);
+  return new Response(null, { status: 204, headers: corsHeaders });
 };

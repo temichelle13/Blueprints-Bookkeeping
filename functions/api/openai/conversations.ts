@@ -15,9 +15,11 @@ export interface Env {
   CHAT_KV?: KVNamespace;
 }
 
-// Module-level counter — ephemeral, resets on Worker restart.
-// Good enough for issuing unique IDs within a session.
-let nextId = 1;
+function generateConversationId(): number {
+  const buf = new Uint32Array(1);
+  crypto.getRandomValues(buf);
+  return buf[0];
+}
 
 const corsHeaders = {
   "Content-Type": "application/json",
@@ -49,9 +51,17 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     typeof body === "object" && body !== null
       ? (body as Record<string, unknown>)
       : {};
-  const title = typeof data.title === "string" ? data.title.slice(0, 200) : "Chat";
 
-  const id = nextId++;
+  if (typeof data.title !== "string" || data.title.trim().length === 0) {
+    return new Response(JSON.stringify({ error: "title is required." }), {
+      status: 400,
+      headers: corsHeaders,
+    });
+  }
+
+  const title = data.title.slice(0, 200);
+
+  const id = generateConversationId();
   const createdAt = new Date().toISOString();
 
   return new Response(
