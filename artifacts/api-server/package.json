@@ -14,15 +14,15 @@
     "@workspace/db": "workspace:*",
     "@workspace/integrations-openai-ai-server": "workspace:*",
     "cookie-parser": "^1.4.7",
-    "cors": "^2",
+    "cors": "^2.8.6",
     "drizzle-orm": "catalog:",
-    "express": "^5",
-    "express-rate-limit": "^8.3.1",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.4.0",
     "helmet": "^8.1.0",
     "multer": "^2.1.1",
-    "resend": "^6.9.4",
-    "stripe": "^21.0.1",
-    "svix": "^1.89.0",
+    "resend": "^6.12.2",
+    "stripe": "^22.1.0",
+    "svix": "^1.92.2",
     "zod": "catalog:"
   },
   "devDependencies": {
@@ -31,7 +31,7 @@
     "@types/express": "^5.0.6",
     "@types/multer": "^2.1.0",
     "@types/node": "catalog:",
-    "esbuild": "^0.27.4",
+    "esbuild": "^0.28.0",
     "tsx": "catalog:"
   }
 }
