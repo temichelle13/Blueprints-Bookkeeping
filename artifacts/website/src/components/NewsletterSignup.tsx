@@ -60,7 +60,7 @@ export function FooterNewsletterSignup() {
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Enter your email"
         required
-        className="flex-1 min-w-0 px-3 py-2.5 rounded-lg bg-white/[0.04] border border-white/10 text-sm text-white placeholder:text-muted-foreground focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/30 transition-colors"
+        className="flex-1 min-w-0 px-3 py-2.5 rounded-lg bg-white/[0.04] border border-white/10 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/30 transition-colors"
       />
       <button
         type="submit"

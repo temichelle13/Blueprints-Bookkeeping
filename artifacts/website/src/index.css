@@ -230,6 +230,50 @@
     box-shadow: 0 8px 32px -4px hsl(238 50% 52% / 0.1);
 }
 
+/* ================================================================
+   LIGHT MODE — hardcoded-dark overrides
+   Placed outside @layer so they beat Tailwind utilities.
+   ================================================================ */
+
+/* text-white → foreground in light mode */
+.light .text-white {
+    color: hsl(var(--foreground));
+}
+
+/* Preserve white text on always-colored backgrounds (buttons, badges) */
+.light .bg-accent .text-white,
+.light .bg-accent.text-white,
+.light .bg-primary .text-white,
+.light .bg-primary.text-white {
+    color: white;
+}
+
+/* Ghost / translucent dark-mode backgrounds → light-mode surface colors */
+.light .bg-white\/\[0\.02\]  { background-color: transparent; }
+.light .bg-white\/\[0\.03\]  { background-color: hsl(var(--surface) / 0.5); }
+.light .bg-white\/\[0\.04\]  { background-color: hsl(var(--surface)); }
+.light .bg-white\/\[0\.06\]  { background-color: hsl(var(--secondary)); }
+.light .bg-white\/\[0\.08\]  { background-color: hsl(var(--muted)); }
+.light .bg-white\/\[0\.1\]   { background-color: hsl(var(--muted)); }
+.light .bg-white\/\[0\.10\]  { background-color: hsl(var(--muted)); }
+
+/* Hover ghost backgrounds */
+.light .hover\:bg-white\/\[0\.08\]:hover { background-color: hsl(var(--muted)); }
+.light .hover\:bg-white\/\[0\.1\]:hover  { background-color: hsl(var(--muted)); }
+.light .hover\:bg-white\/\[0\.10\]:hover { background-color: hsl(var(--muted)); }
+
+/* Ghost borders → themed border color */
+.light .border-white\/5          { border-color: hsl(var(--border) / 0.6); }
+.light .border-white\/10         { border-color: hsl(var(--border)); }
+.light .border-white\/15         { border-color: hsl(var(--border)); }
+.light .border-white\/20         { border-color: hsl(var(--border)); }
+.light .border-white\/\[0\.06\]  { border-color: hsl(var(--border) / 0.7); }
+.light .border-white\/\[0\.08\]  { border-color: hsl(var(--border)); }
+.light .border-white\/\[0\.10\]  { border-color: hsl(var(--border)); }
+
+/* Hover ghost borders */
+.light .hover\:border-white\/20:hover { border-color: hsl(var(--accent) / 0.35); }
+
 input,
 textarea,
 select {
