@@ -54,8 +54,15 @@ Thumbs.db
 .env.*
 !.env.example
 /node_modules/
-<<<<<<< HEAD
-!/node_modules/
-node_modules
-=======
->>>>>>> c8ac877c75ad94bc0308604c014432e1cb7198d9
+
+# Temp / debug artifacts (created during development sessions)
+_tmp_*
+tmp-*.html
+tmp-*.png
+tmp-*.jpg
+*-debug.*.log
+home-dom.html
+services-dom.html
+
+# Skills system lock file (Copilot agent runtime state, not project source)
+skills-lock.json

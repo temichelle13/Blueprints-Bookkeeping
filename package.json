@@ -11,7 +11,8 @@
     "lint": "prettier --check .",
     "format": "prettier --write .",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
-    "check:website-deploy": "pnpm run typecheck && pnpm --filter @workspace/scripts run check:indexing-guards && pnpm --filter @workspace/website build"
+    "check:merge-conflicts": "pnpm --filter @workspace/scripts run check:merge-conflicts",
+    "check:website-deploy": "pnpm run check:merge-conflicts && pnpm run typecheck && pnpm --filter @workspace/scripts run check:indexing-guards && pnpm --filter @workspace/website build"
   },
   "private": true,
   "devDependencies": {

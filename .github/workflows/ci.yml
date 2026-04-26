@@ -15,7 +15,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 9 
+          version: 10.13.1
 
       # 2. Setup Node.js and tell it to cache pnpm dependencies to make it fast
       - name: Setup Node.js
@@ -26,7 +26,7 @@ jobs:
 
       # 3. Install packages and build the project
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build the project
         run: pnpm run build

@@ -53,6 +53,7 @@
 
 - Install: `pnpm install --frozen-lockfile`
 - Regenerate API clients/schemas after contract edits: `pnpm run codegen`
+- Check for merge conflict markers: `pnpm run check:merge-conflicts`
 - Typecheck everything: `pnpm run typecheck`
 - Build everything: `pnpm run build`
 - Website deployment gate: `pnpm run check:website-deploy`
