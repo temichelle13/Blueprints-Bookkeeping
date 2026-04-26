@@ -13,9 +13,9 @@ jobs:
 
       # 1. We have to install pnpm first!
       - name: Install pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
         with:
-          version: 9 
+          version: 10.13.1
 
       # 2. Setup Node.js and tell it to cache pnpm dependencies to make it fast
       - name: Setup Node.js

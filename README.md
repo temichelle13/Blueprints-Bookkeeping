@@ -199,8 +199,36 @@ QuickBooks Online
 | Tool | Version |
 |:-----|:--------|
 | **Node.js** | `^20.19.0` · `^22.0.0` · `^24.0.0` |
-| **pnpm** | `10.33.0` |
+| **pnpm** | `10.13.1` |
 | **PostgreSQL** | `16+` |
+
+### Installing pnpm
+
+This project uses [pnpm](https://pnpm.io) as its package manager (version `10.13.1`).
+
+The recommended way to install pnpm and ensure it is on your `PATH` is via **Corepack**, which ships with Node.js 16.9+:
+
+```bash
+# Enable Corepack (one-time system setup, may need sudo on Linux/macOS)
+corepack enable
+
+# Activate the exact pnpm version declared in package.json
+corepack prepare pnpm@10.13.1 --activate
+```
+
+After running these commands `pnpm` will be available as a global command.
+
+**Alternative — install via npm:**
+
+```bash
+npm install -g pnpm@10.13.1
+```
+
+> **Troubleshooting PATH issues:** If `pnpm` is not found after installation, add the pnpm
+> global bin directory to your shell's `PATH`. Run `pnpm bin -g` to find the directory, then
+> add it to `~/.bashrc`, `~/.zshrc`, or your system's environment variables.
+> On Windows you may need to restart your terminal or run `pnpm setup` which automatically
+> updates the `PATH` for you.
 
 ### Installation
 

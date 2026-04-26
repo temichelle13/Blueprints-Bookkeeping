@@ -51,6 +51,7 @@
 
 ## Verified workflows
 
+- Bootstrap pnpm (first-time): `corepack enable && corepack prepare pnpm@10.13.1 --activate`
 - Install: `pnpm install --frozen-lockfile`
 - Regenerate API clients/schemas after contract edits: `pnpm run codegen`
 - Typecheck everything: `pnpm run typecheck`
