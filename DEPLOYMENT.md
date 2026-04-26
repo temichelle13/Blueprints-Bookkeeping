@@ -10,6 +10,8 @@ The application is currently configured for **Replit deployment**, not Cloudflar
 - **Website**: React + Vite frontend (`artifacts/website`)
 - **Database**: PostgreSQL
 
+> ⚠️ **Not runtime**: legacy `functions/api/*` placeholders are not part of production request handling. The authoritative API runtime is `artifacts/api-server/src/index.ts`, built to `artifacts/api-server/dist/index.cjs`.
+
 ## Required Environment Variables
 
 ### Backend (API Server)
@@ -287,3 +289,4 @@ For deployment issues, contact Tea at <tea@blueprintsandbookkeeping.com> or chec
 - `.env.example` - List of all environment variables
 - `artifacts/website/.replit-artifact/artifact.toml` - Frontend configuration
 - `.replit` - Main deployment configuration
+```
