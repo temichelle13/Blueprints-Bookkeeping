@@ -20,11 +20,18 @@ const result = spawnSync(
 );
 
 // git grep exits 0 when matches are found, 1 when no matches, 2+ on error
-if (result.status === 0) {
+// result.status is null when the process failed to start or was killed by a signal
+if (result.error != null || result.status === null) {
+  console.error(
+    "Failed to run git grep:",
+    result.error?.message ?? `process terminated by signal ${result.signal}`,
+  );
+  process.exit(2);
+} else if (result.status === 0) {
   console.error("Merge conflict markers found:");
   console.error(result.stdout.trim());
   process.exit(1);
-} else if (result.status !== null && result.status > 1) {
+} else if (result.status > 1) {
   console.error("Error running git grep:", result.stderr);
   process.exit(1);
 }
