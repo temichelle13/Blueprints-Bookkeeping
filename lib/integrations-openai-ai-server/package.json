@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
   "exports": {
     ".": "./src/index.ts",
     "./batch": "./src/batch/index.ts",
@@ -10,7 +13,7 @@
     "./audio": "./src/audio/index.ts"
   },
   "dependencies": {
-    "openai": "^6.33.0",
+    "openai": "^6.34.0",
     "p-limit": "^7.3.0",
     "p-retry": "^8.0.0"
   }

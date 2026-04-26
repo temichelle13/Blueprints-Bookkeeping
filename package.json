@@ -4,29 +4,32 @@
   "license": "MIT",
   "scripts": {
     "preinstall": "sh -c 'rm -f package-lock.json yarn.lock; case \"$npm_config_user_agent\" in pnpm/*) ;; *) echo \"Use pnpm instead\" >&2; exit 1 ;; esac'",
-    "build": "pnpm run typecheck && pnpm -r --if-present run build",
-    "typecheck:libs": "tsc --build",
+    "bootstrap": "pnpm install --frozen-lockfile",
+    "codegen": "pnpm --filter @workspace/api-spec run codegen",
+    "build": "pnpm run codegen && pnpm run typecheck && pnpm -r --if-present run build",
+    "dev": "pnpm --filter @workspace/api-server run dev",
+    "typecheck:libs": "pnpm --filter \"./lib/**\" --if-present run typecheck",
     "lint": "prettier --check .",
     "format": "prettier --write .",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
-    "check:merge-conflicts": "sh -c \"if grep -rnE '^(<<<<<<<|=======|>>>>>>>)' . --exclude=pnpm-lock.yaml --exclude-dir=.git --exclude-dir=node_modules; then echo 'Unresolved merge conflict markers found.' >&2; exit 1; fi\"",
-    "check:website-deploy": "pnpm run check:merge-conflicts && pnpm run typecheck:libs && pnpm --filter @workspace/scripts run check:indexing-guards && pnpm --filter @workspace/website build"
+    "check:merge-conflicts": "pnpm --filter @workspace/scripts run check:merge-conflicts",
+    "check:website-deploy": "pnpm run check:merge-conflicts && pnpm run typecheck && pnpm --filter @workspace/scripts run check:indexing-guards && pnpm --filter @workspace/website build"
   },
   "private": true,
   "devDependencies": {
-    "prettier": "^3.8.1",
+    "@types/node": "catalog:",
+    "prettier": "^3.8.3",
     "tsx": "catalog:",
-    "typescript": "~6.0.2",
-    "@types/node": "catalog:"
+    "typescript": "~6.0.3"
   },
   "dependencies": {
     "@types/adm-zip": "^0.5.8",
-    "adm-zip": "^0.5.16",
+    "adm-zip": "^0.5.17",
     "archiver": "^7.0.1",
     "pdfkit": "^0.18.0",
     "pngjs": "^7.0.0",
     "sharp": "^0.34.5",
-    "stripe": "^21.0.1",
+    "stripe": "^22.1.0",
     "stripe-replit-sync": "^1.0.0"
   },
   "packageManager": "pnpm@10.13.1",
