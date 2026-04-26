@@ -15,13 +15,9 @@
   },
   "private": true,
   "devDependencies": {
-<<<<<<< copilot/implement-cloudflare-pages-functions
     "@cloudflare/workers-types": "^4.20260403.1",
-    "prettier": "^3.8.1",
-=======
     "@types/node": "catalog:",
     "prettier": "^3.8.3",
->>>>>>> master
     "tsx": "catalog:",
     "typescript": "~6.0.3"
   },
