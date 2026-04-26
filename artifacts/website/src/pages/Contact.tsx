@@ -18,7 +18,11 @@ import {
 import { useSubmitContactForm } from "@workspace/api-client-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
-import { useContactMutation, CONTACT_CONSENT_TEXT_VERSION, CONTACT_CONSENT_SOURCE_PAGE } from "@/hooks/use-contact";
+import {
+  useContactMutation,
+  CONTACT_CONSENT_TEXT_VERSION,
+  CONTACT_CONSENT_SOURCE_PAGE,
+} from "@/hooks/use-contact";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
 import {

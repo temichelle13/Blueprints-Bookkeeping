@@ -46,7 +46,13 @@ export async function uploadToCreativeCloud(
       "x-api-key": apiKey || "",
       "Content-Type": contentType,
     },
-    body: fileData instanceof ArrayBuffer ? fileData : fileData.buffer.slice(fileData.byteOffset, fileData.byteOffset + fileData.byteLength) as ArrayBuffer,
+    body:
+      fileData instanceof ArrayBuffer
+        ? fileData
+        : (fileData.buffer.slice(
+            fileData.byteOffset,
+            fileData.byteOffset + fileData.byteLength,
+          ) as ArrayBuffer),
   });
 
   if (!response.ok) {

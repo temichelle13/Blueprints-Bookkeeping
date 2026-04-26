@@ -4,11 +4,12 @@
   "license": "MIT",
   "scripts": {
     "preinstall": "sh -c 'rm -f package-lock.json yarn.lock; case \"$npm_config_user_agent\" in pnpm/*) ;; *) echo \"Use pnpm instead\" >&2; exit 1 ;; esac'",
-    "install": "pnpm install --no-frozen-lockfile",
+    "install": "echo \"Install script intentionally empty to avoid recursive pnpm install\"",
     "build": "pnpm run typecheck && pnpm -r --if-present run build",
     "typecheck:libs": "tsc --build",
     "lint": "prettier --check .",
     "format": "prettier --write .",
+    "format:files": "prettier --write --ignore-unknown --no-error-on-unmatched-pattern",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
     "check:merge-conflicts": "sh -c \"if grep -rnE '^(<<<<<<<|=======|>>>>>>>)' . --exclude=pnpm-lock.yaml --exclude-dir=.git --exclude-dir=node_modules; then echo 'Unresolved merge conflict markers found.' >&2; exit 1; fi\"",
     "check:website-deploy": "pnpm run check:merge-conflicts && pnpm run typecheck:libs && pnpm --filter @workspace/scripts run check:indexing-guards && pnpm --filter @workspace/website build"

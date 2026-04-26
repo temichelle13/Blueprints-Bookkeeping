@@ -126,7 +126,9 @@ export async function processBooking(data: {
         clientName: data.clientName,
         clientEmail: data.clientEmail,
         contractType,
-        ...(data.serviceType !== undefined && { serviceType: data.serviceType }),
+        ...(data.serviceType !== undefined && {
+          serviceType: data.serviceType,
+        }),
       });
       results.push({ ...result, contractType });
     } catch (err) {
@@ -372,8 +374,13 @@ export async function processFormSubmission(data: {
         clientName: data.name,
         clientEmail: data.email,
         contractType,
-        ...(data.servicesInterested !== undefined && data.servicesInterested !== null && { serviceType: data.servicesInterested.join(", ") }),
-        ...(data.contactInquiryId !== undefined && { contactInquiryId: data.contactInquiryId }),
+        ...(data.servicesInterested !== undefined &&
+          data.servicesInterested !== null && {
+            serviceType: data.servicesInterested.join(", "),
+          }),
+        ...(data.contactInquiryId !== undefined && {
+          contactInquiryId: data.contactInquiryId,
+        }),
       });
       results.push({ ...result, contractType });
     } catch (err) {

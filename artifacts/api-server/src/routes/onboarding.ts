@@ -217,7 +217,9 @@ router.post(
 
     try {
       if (!stripe) {
-        res.status(503).json({ error: "Payment processing is not configured." });
+        res
+          .status(503)
+          .json({ error: "Payment processing is not configured." });
         return;
       }
       const session = await stripe.checkout.sessions.retrieve(stripeSessionId);

@@ -221,14 +221,14 @@ export function Footer() {
           not provide tax preparation, tax filing, legal advice, or licensed
           investment counsel. References to tax forms describe bookkeeping
           contexts only. For tax and legal matters, please consult a licensed
-          professional.{' '}
+          professional.{" "}
           <Link
             href="/faq"
             className="underline underline-offset-2 hover:text-muted-foreground transition-colors"
           >
             Learn more in our FAQ
-          </Link>{' '}
-          or review our{' '}
+          </Link>{" "}
+          or review our{" "}
           <Link
             href="/terms"
             className="underline underline-offset-2 hover:text-muted-foreground transition-colors"
