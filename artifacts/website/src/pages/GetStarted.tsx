@@ -247,6 +247,11 @@ export default function GetStarted() {
                 href={path.href}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => {
+                  if (path.analyticsEvent) {
+                    trackEvent(path.analyticsEvent, { source: "get_started" });
+                  }
+                }}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -343,95 +348,72 @@ export default function GetStarted() {
               ))}
           </div>
         ) : (
-          <div
-            style={{
-              background: "rgba(255,255,255,0.02)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              borderRadius: 10,
-              padding: "12px 14px",
-              marginBottom: 16,
-            }}
-          >
-            <p
+          <>
+            <div
               style={{
-                fontSize: 11,
+                background: "rgba(255,255,255,0.02)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: 10,
+                padding: "12px 14px",
+                marginBottom: 16,
+              }}
+            >
+              <p
+                style={{
+                  fontSize: 11,
+                  fontWeight: 600,
+                  color: path.color,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                  marginBottom: 8,
+                }}
+              >
+                QuickBooks Online Instructions:
+              </p>
+              <ol
+                style={{
+                  margin: 0,
+                  paddingLeft: 20,
+                  fontSize: 12,
+                  color: "rgba(255,255,255,0.7)",
+                  lineHeight: 1.6,
+                }}
+              >
+                {path.instructions?.map((step, i) => (
+                  <li key={i} style={{ marginBottom: 6 }}>
+                    {step}
+                  </li>
+                ))}
+              </ol>
+            </div>
+            <Link
+              href={path.href}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+                padding: "12px 20px",
+                borderRadius: 10,
+                background: path.color,
+                color: "white",
                 fontWeight: 600,
-                color: path.color,
-                textTransform: "uppercase",
-                letterSpacing: "0.05em",
-                marginBottom: 8,
+                fontSize: 14,
+                textDecoration: "none",
+                transition: "opacity 0.15s",
               }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
             >
-              QuickBooks Online Instructions:
-            </p>
-            <ol
-              style={{
-                margin: 0,
-                paddingLeft: 20,
-                fontSize: 12,
-                color: "rgba(255,255,255,0.7)",
-                lineHeight: 1.6,
-              }}
-            >
-              {path.instructions?.map((step, i) => (
-                <li key={i} style={{ marginBottom: 6 }}>
-                  {step}
-                </li>
-              ))}
-            </ol>
-          </div>
+              {path.cta}
+              <ArrowRight size={16} />
+            </Link>
+          </>
         )}
-
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 8,
-            padding: "12px 20px",
-            borderRadius: 10,
-            background: path.color,
-            color: "white",
-            fontWeight: 600,
-            fontSize: 14,
-            textDecoration: "none",
-          }}
-        >
-          {path.cta}
-          <ArrowRight size={16} />
-        </div>
       </motion.div>
     );
 
-    if (path.external) {
-      return (
-        <a
-          key={index}
-          href={path.href}
-          {...(path.newTab
-            ? { target: "_blank", rel: "noopener noreferrer" }
-            : {})}
-          onClick={() => {
-            if (path.analyticsEvent) {
-              trackEvent(path.analyticsEvent, { source: "get_started" });
-            }
-          }}
-          style={{ textDecoration: "none", display: "block" }}
-        >
-          {cardBody}
-        </a>
-      );
-    }
-
-    return (
-      <Link
-        key={index}
-        href={path.href}
-        style={{ textDecoration: "none", display: "block" }}
-      >
-        {cardBody}
-      </Link>
-    );
+    return <div key={index}>{cardBody}</div>;
   };
 
   return (
