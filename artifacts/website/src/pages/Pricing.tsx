@@ -249,12 +249,14 @@ function BookkeepingTierCard({
               interval={billingInterval}
             />
           )}
-          <Link
-            href="/schedule"
-            className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
-          >
-            {tier.cta} <ArrowRight size={15} />
-          </Link>
+          {tier.cta !== "Get a Quote" && (
+            <Link
+              href="/schedule"
+              className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
+            >
+              {tier.cta} <ArrowRight size={15} />
+            </Link>
+          )}
           <PaymentTrustMicrocopy />
         </div>
       </div>
@@ -322,12 +324,14 @@ function BookkeepingTierCard({
         {tier.subscribable && (
           <SubscribeButton planKey={tier.planKey} interval={billingInterval} />
         )}
-        <Link
-          href="/schedule"
-          className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
-        >
-          {tier.cta}
-        </Link>
+        {tier.cta !== "Get a Quote" && (
+          <Link
+            href="/schedule"
+            className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
+          >
+            {tier.cta}
+          </Link>
+        )}
         <PaymentTrustMicrocopy />
       </div>
     </div>
