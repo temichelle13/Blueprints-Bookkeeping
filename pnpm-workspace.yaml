@@ -7,15 +7,15 @@ packages:
 autoInstallPeers: false
 
 catalog:
-  '@replit/vite-plugin-cartographer': ^0.5.5
-  '@replit/vite-plugin-dev-banner': ^0.1.2
-  '@replit/vite-plugin-runtime-error-modal': ^0.0.6
-  '@tailwindcss/vite': ^4.2.4
-  '@tanstack/react-query': ^5.100.1
-  '@types/node': ^25.6.0
-  '@types/react': ^19.2.14
-  '@types/react-dom': ^19.2.3
-  '@vitejs/plugin-react': ^6.0.1
+  "@replit/vite-plugin-cartographer": ^0.5.5
+  "@replit/vite-plugin-dev-banner": ^0.1.2
+  "@replit/vite-plugin-runtime-error-modal": ^0.0.6
+  "@tailwindcss/vite": ^4.2.4
+  "@tanstack/react-query": ^5.100.1
+  "@types/node": ^25.6.0
+  "@types/react": ^19.2.14
+  "@types/react-dom": ^19.2.3
+  "@vitejs/plugin-react": ^6.0.1
   class-variance-authority: ^0.7.1
   clsx: 2.1.1
   drizzle-orm: ^0.45.2
@@ -29,17 +29,20 @@ catalog:
   vite: ^8.0.10
   zod: 4.3.6
 ignoredBuiltDependencies:
-  - sharp
+  - "@swc/core"
+  - esbuild
+  - msw
+  - unrs-resolver
 
 minimumReleaseAge: 1440
 
 onlyBuiltDependencies:
-  - '@swc/core'
+  - "@swc/core"
   - esbuild
   - msw
   - unrs-resolver
 
 overrides:
-  '@esbuild-kit/esm-loader': npm:tsx@^4.21.0
+  "@esbuild-kit/esm-loader": npm:tsx@^4.21.0
   esbuild: 0.28.0
   yaml: 2.8.3
