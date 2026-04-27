@@ -157,6 +157,18 @@ router.post("/openai/conversations", async (req, res): Promise<void> => {
   });
 });
 
+router.get("/openai/conversations", async (_req, res): Promise<void> => {
+  const allConversations = await db.select().from(conversations);
+
+  res.json(
+    allConversations.map((conversation) => ({
+      id: conversation.id,
+      title: conversation.title,
+      createdAt: conversation.createdAt,
+    })),
+  );
+});
+
 router.get("/openai/conversations/:id", async (req, res): Promise<void> => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id)) {
@@ -192,6 +204,62 @@ router.get("/openai/conversations/:id", async (req, res): Promise<void> => {
     })),
   });
 });
+
+router.delete("/openai/conversations/:id", async (req, res): Promise<void> => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) {
+    res.status(400).json({ error: "Invalid id" });
+    return;
+  }
+
+  const [deletedConversation] = await db
+    .delete(conversations)
+    .where(eq(conversations.id, id))
+    .returning({ id: conversations.id });
+
+  if (!deletedConversation) {
+    res.status(404).json({ error: "Conversation not found" });
+    return;
+  }
+
+  res.status(204).send();
+});
+
+router.get(
+  "/openai/conversations/:id/messages",
+  async (req, res): Promise<void> => {
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) {
+      res.status(400).json({ error: "Invalid id" });
+      return;
+    }
+
+    const [conv] = await db
+      .select({ id: conversations.id })
+      .from(conversations)
+      .where(eq(conversations.id, id));
+
+    if (!conv) {
+      res.status(404).json({ error: "Conversation not found" });
+      return;
+    }
+
+    const convMessages = await db
+      .select()
+      .from(messages)
+      .where(eq(messages.conversationId, id));
+
+    res.json(
+      convMessages.map((message) => ({
+        id: message.id,
+        conversationId: message.conversationId,
+        role: message.role,
+        content: message.content,
+        createdAt: message.createdAt,
+      })),
+    );
+  },
+);
 
 router.post(
   "/openai/conversations/:id/messages",
