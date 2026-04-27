@@ -2,7 +2,7 @@ name: CI Build & Test
 
 on:
   pull_request:
-    branches: [ "master" ] # Running on master since that's your default branch
+    branches: ["master"] # Running on master since that's your default branch
 
 jobs:
   build:
@@ -21,12 +21,15 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'pnpm'
+          node-version: "20"
+          cache: "pnpm"
 
       # 3. Install packages and build the project
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Check route references
+        run: pnpm run check:route-references
 
       - name: Build the project
         run: pnpm run build

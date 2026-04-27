@@ -12,7 +12,8 @@
     "format": "prettier --write .",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
     "check:merge-conflicts": "pnpm --filter @workspace/scripts run check:merge-conflicts",
-    "check:website-deploy": "pnpm run check:merge-conflicts && pnpm run typecheck && pnpm --filter @workspace/scripts run check:indexing-guards && pnpm --filter @workspace/website build"
+    "check:website-deploy": "pnpm run check:merge-conflicts && pnpm run typecheck && pnpm --filter @workspace/scripts run check:indexing-guards && pnpm --filter @workspace/website build",
+    "check:route-references": "pnpm --filter @workspace/scripts run check:route-references"
   },
   "private": true,
   "devDependencies": {
