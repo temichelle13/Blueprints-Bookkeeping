@@ -472,7 +472,14 @@ function BookkeeperIntakeForm() {
             "Additional comments:",
             data.additionalComments,
           ].join("\n"),
-          smsConsent: false,
+          consent: {
+            email: data.emailConsent,
+            sms: data.smsConsent,
+            phone: data.phoneConsent,
+            source: CONTACT_CONSENT_SOURCE_PAGE,
+            legalTextVersion: CONTACT_CONSENT_TEXT_VERSION,
+          },
+          smsConsent: data.smsConsent,
           consentTextVersion: CONTACT_CONSENT_TEXT_VERSION,
           consentSourcePage: CONTACT_CONSENT_SOURCE_PAGE,
           website: data.website || "",
@@ -879,9 +886,7 @@ export default function Contact() {
   }, [searchParams]);
   const defaultClientMeetingMessage = useMemo(() => {
     const requestedMessage = searchParams.get("message");
-    if (requestedMessage) return requestedMessage;
-
-    return "Current client meeting request: Please include your business name, client email on file, and preferred date/time window. Tea will verify details against the active client roster and send a confirmed meeting invite. If no active record is found, you will still receive follow-up with next-step options.";
+    return requestedMessage?.trim() || undefined;
   }, [searchParams]);
 
   usePageTitle(isBookkeeperIntent ? "Add Me as Your Bookkeeper" : "Contact");
@@ -1024,7 +1029,11 @@ export default function Contact() {
               {isBookkeeperIntent ? (
                 <BookkeeperIntakeForm />
               ) : (
-                <MessageForm defaultMessage={defaultClientMeetingMessage} />
+                <MessageForm
+                  {...(defaultClientMeetingMessage
+                    ? { defaultMessage: defaultClientMeetingMessage }
+                    : {})}
+                />
               )}
             </div>
           </div>
