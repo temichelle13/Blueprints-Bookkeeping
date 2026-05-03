@@ -6,7 +6,9 @@
   "scripts": {
     "hello": "tsx ./src/hello.ts",
     "check:indexing-guards": "tsx ./src/check-indexing-guards.ts",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "check:merge-conflicts": "tsx ./src/check-merge-conflicts.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "check:route-references": "tsx ./src/check-route-references.ts"
   },
   "devDependencies": {
     "@types/node": "catalog:",

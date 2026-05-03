@@ -207,6 +207,30 @@ export default function Privacy() {
                 </a>{" "}
                 — Scheduling discovery calls and client meetings.
               </li>
+              <li>
+                <a
+                  href="https://policies.google.com/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-accent hover:underline"
+                >
+                  Google (Google Analytics and Google Tag Manager)
+                </a>{" "}
+                — Optional website analytics and tag management, enabled only
+                when you accept analytics in our cookie banner.
+              </li>
+              <li>
+                <a
+                  href="https://www.apollo.io/privacy-policy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-accent hover:underline"
+                >
+                  Apollo.io
+                </a>{" "}
+                — Optional website visitor analytics and lead intelligence,
+                enabled only when you accept analytics in our cookie banner.
+              </li>
             </ul>
             <p className="mt-3">
               We may update this list from time to time as our tooling changes.
@@ -243,11 +267,25 @@ export default function Privacy() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">9. Cookies</h2>
+            <p className="mb-3">
+              We use essential storage and cookies needed for core site
+              functionality, including remembering your cookie preference
+              selection.
+            </p>
+            <p className="mb-3">
+              If you choose{" "}
+              <span className="text-white font-medium">Accept analytics</span>{" "}
+              in our cookie banner, we enable optional analytics technologies
+              (including Google Analytics, Google Tag Manager, Apollo.io, and
+              Plausible where configured) to measure site performance and
+              engagement. If you choose{" "}
+              <span className="text-white font-medium">Essential only</span>,
+              these optional analytics technologies remain disabled.
+            </p>
             <p>
-              Our website may use essential cookies to maintain website
-              functionality. We do not use advertising or tracking cookies. You
-              can configure your browser to refuse cookies, though this may
-              affect certain website features.
+              We do not use your cookie choices to serve targeted advertising
+              across other websites. You can also configure your browser to
+              refuse cookies, though this may affect certain website features.
             </p>
           </section>
 

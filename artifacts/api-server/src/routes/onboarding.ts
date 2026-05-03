@@ -19,6 +19,7 @@ import {
   withSubmissionMonitoring,
   turnstileProtection,
 } from "../middleware/public-submissions";
+import { finalizeOnboardingSubmission } from "./onboarding-workflow";
 
 const router: IRouter = Router();
 
@@ -194,166 +195,151 @@ router.post(
       return;
     }
 
-    let subscriptionId: number | null = null;
-    const stripe = getStripe();
-
-    const [inquiry] = await db
-      .insert(contactInquiriesTable)
-      .values({
-        formType: "self_service_onboarding",
-        name: clientName,
-        email: clientEmail,
-        phone: phone ?? null,
-        businessName: businessName,
-        servicesInterested: plan ? [plan] : null,
-        message: notes ?? null,
-        consentTextVersion: "self-service-onboarding-consent-2026-03-31.1",
-        consentSourcePage: "/onboarding",
-        requestIp: getRequestIp(req),
-        userAgent: getUserAgent(req),
-        consentTimestamp: new Date(),
-      })
-      .returning();
-
     try {
-      if (!stripe) {
+      const result = await finalizeOnboardingSubmission(
+        {
+          clientName,
+          normalizedClientEmail,
+          businessName,
+          ownerName,
+          phone,
+          einBusinessType,
+          currentBookkeepingSoftware,
+          notes,
+          plan,
+          stripeSessionId,
+          normalizedState,
+          requestIp: getRequestIp(req),
+          userAgent: getUserAgent(req),
+        },
+        {
+          getExistingSubmissionByStripeSessionId: async (sessionId) => {
+            const [existing] = await db
+              .select({ id: onboardingSubmissionsTable.id })
+              .from(onboardingSubmissionsTable)
+              .where(eq(onboardingSubmissionsTable.stripeSessionId, sessionId))
+              .limit(1);
+            return existing ?? null;
+          },
+          verifyStripeSession: async (sessionId) => {
+            const stripe = getStripe();
+            if (!stripe) {
+              throw new Error("stripe_not_configured");
+            }
+            let session: Stripe.Checkout.Session;
+            try {
+              session = await stripe.checkout.sessions.retrieve(sessionId);
+            } catch (error) {
+              console.error("Stripe session verification failed:", error);
+              throw new Error("stripe_verification_failed");
+            }
+            return {
+              paymentStatus: session.payment_status ?? null,
+              customerEmail: session.customer_details?.email ?? null,
+              stripeSubscriptionId:
+                typeof session.subscription === "string"
+                  ? session.subscription
+                  : null,
+            };
+          },
+          getSubscriptionIdByStripeSubscriptionId: async (
+            stripeSubscriptionId,
+          ) => {
+            const subs = await db
+              .select({ id: subscriptionsTable.id })
+              .from(subscriptionsTable)
+              .where(
+                eq(
+                  subscriptionsTable.stripeSubscriptionId,
+                  stripeSubscriptionId,
+                ),
+              )
+              .limit(1);
+            return subs[0]?.id ?? null;
+          },
+          insertOnboardingSubmission: async (values) => {
+            const [submission] = await db
+              .insert(onboardingSubmissionsTable)
+              .values(values)
+              .returning({ id: onboardingSubmissionsTable.id });
+            return submission!;
+          },
+          insertContactInquiry: async (values) => {
+            const [inquiry] = await db
+              .insert(contactInquiriesTable)
+              .values(values)
+              .returning({ id: contactInquiriesTable.id });
+            return inquiry!;
+          },
+          processContractSubmission: async (contactInquiryId) => {
+            await contractService.processFormSubmission({
+              formType: "self_service_onboarding",
+              name: clientName,
+              email: normalizedClientEmail,
+              servicesInterested: ["bookkeeping"],
+              contactInquiryId,
+            });
+          },
+          sendOnboardingEmails: async () => {
+            const resend = getResend();
+            if (!resend) return;
+            const suppressed = await isEmailSuppressed(normalizedClientEmail);
+            const emailPromises: Promise<unknown>[] = [
+              resend.emails.send({
+                from: FROM_ADDRESS,
+                to: OWNER_EMAIL,
+                replyTo: normalizedClientEmail,
+                subject: `Onboarding Form Submitted: ${clientName} — ${businessName}`,
+                html: buildAdminOnboardingEmail(
+                  clientName,
+                  normalizedClientEmail,
+                  businessName,
+                  ownerName,
+                  phone,
+                  einBusinessType,
+                  currentBookkeepingSoftware,
+                  notes,
+                  plan,
+                ),
+              }),
+            ];
+            if (suppressed) {
+              console.warn(
+                "[Onboarding] Skipping client confirmation email — address is suppressed:",
+                normalizedClientEmail,
+              );
+            } else {
+              emailPromises.push(
+                resend.emails.send({
+                  from: FROM_ADDRESS,
+                  to: normalizedClientEmail,
+                  subject: "Onboarding Received — Blueprints & Bookkeeping",
+                  html: buildClientOnboardingConfirmation(clientName, plan),
+                }),
+              );
+            }
+            await Promise.allSettled(emailPromises);
+          },
+        },
+      );
+
+      res.status(result.status).json(result.body);
+    } catch (err) {
+      if (err instanceof Error && err.message === "stripe_not_configured") {
         res
           .status(503)
           .json({ error: "Payment processing is not configured." });
         return;
       }
-      const session = await stripe.checkout.sessions.retrieve(stripeSessionId);
-      if (session.payment_status !== "paid") {
-        res.status(400).json({
-          error:
-            "Payment has not been completed. Please complete checkout first.",
-        });
-        return;
-      }
-      const sessionEmail = session.customer_details?.email;
       if (
-        sessionEmail &&
-        sessionEmail.toLowerCase() !== normalizedClientEmail
+        err instanceof Error &&
+        err.message === "stripe_verification_failed"
       ) {
         res.status(400).json({
-          error:
-            "Email does not match the checkout session. Please use the email you checked out with.",
+          error: "Could not verify payment session. Please contact support.",
         });
         return;
       }
-      const stripeSubId =
-        typeof session.subscription === "string" ? session.subscription : "";
-      if (stripeSubId) {
-        const subs = await db
-          .select()
-          .from(subscriptionsTable)
-          .where(eq(subscriptionsTable.stripeSubscriptionId, stripeSubId))
-          .limit(1);
-        if (subs.length > 0) {
-          subscriptionId = subs[0]!.id;
-        }
-      }
-    } catch (err) {
-      console.error("Stripe session verification failed:", err);
-      res.status(400).json({
-        error: "Could not verify payment session. Please contact support.",
-      });
-      return;
-    }
-
-    try {
-      const [submission] = await db
-        .insert(onboardingSubmissionsTable)
-        .values({
-          clientName,
-          clientEmail: normalizedClientEmail,
-          businessName,
-          ownerName,
-          phone: phone ?? null,
-          einBusinessType: einBusinessType ?? null,
-          currentBookkeepingSoftware: currentBookkeepingSoftware ?? null,
-          notes: notes ?? null,
-          plan: plan ?? null,
-          businessState: normalizedState,
-          stripeSessionId: stripeSessionId ?? null,
-          subscriptionId,
-        })
-        .returning();
-
-      const [inquiry] = await db
-        .insert(contactInquiriesTable)
-        .values({
-          formType: "self_service_onboarding",
-          name: clientName,
-          email: normalizedClientEmail,
-          phone: phone ?? null,
-          businessName,
-          servicesInterested: plan ? [plan] : null,
-          message: notes ?? null,
-        })
-        .returning();
-
-      contractService
-        .processFormSubmission({
-          formType: "self_service_onboarding",
-          name: clientName,
-          email: normalizedClientEmail,
-          servicesInterested: ["bookkeeping"],
-          contactInquiryId: inquiry!.id,
-        })
-        .catch((err) => {
-          console.error("Contract automation error (non-blocking):", err);
-        });
-
-      const resend = getResend();
-      if (resend) {
-        const suppressed = await isEmailSuppressed(normalizedClientEmail);
-        const emailPromises: Promise<unknown>[] = [
-          resend.emails.send({
-            from: FROM_ADDRESS,
-            to: OWNER_EMAIL,
-            replyTo: normalizedClientEmail,
-            subject: `Onboarding Form Submitted: ${clientName} — ${businessName}`,
-            html: buildAdminOnboardingEmail(
-              clientName,
-              normalizedClientEmail,
-              businessName,
-              ownerName,
-              phone,
-              einBusinessType,
-              currentBookkeepingSoftware,
-              notes,
-              plan,
-            ),
-          }),
-        ];
-
-        if (suppressed) {
-          console.warn(
-            "[Onboarding] Skipping client confirmation email — address is suppressed:",
-            normalizedClientEmail,
-          );
-        } else {
-          emailPromises.push(
-            resend.emails.send({
-              from: FROM_ADDRESS,
-              to: normalizedClientEmail,
-              subject: "Onboarding Received — Blueprints & Bookkeeping",
-              html: buildClientOnboardingConfirmation(clientName, plan),
-            }),
-          );
-        }
-
-        await Promise.allSettled(emailPromises);
-      }
-
-      res.status(201).json({
-        success: true,
-        message:
-          "Onboarding form submitted successfully. Contracts will be sent shortly.",
-        id: submission?.id,
-      });
-    } catch (err) {
       console.error("Onboarding submission error:", err);
       res.status(500).json({ error: "Failed to save onboarding data." });
     }

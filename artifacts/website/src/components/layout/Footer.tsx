@@ -196,9 +196,15 @@ export function Footer() {
                   <button
                     type="button"
                     onClick={openCookieConsentPreferences}
-                    className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-accent/30 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    className="mt-2.5 text-muted-foreground hover:text-accent text-sm transition-colors inline-flex items-center gap-1 group rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     Cookie Preferences
+                    <ArrowRight
+                      size={11}
+                      className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all"
+                      aria-hidden="true"
+                      focusable="false"
+                    />
                   </button>
                 )}
               </div>
@@ -217,7 +223,7 @@ export function Footer() {
         </div>
         <div className="glow-line mb-6" />
         <p className="text-xs text-muted-foreground/60 text-center mb-4 leading-relaxed max-w-3xl mx-auto">
-          Blueprints &amp; Bookkeeping LLC is not a licensed CPA firm and does
+          Blueprints & Bookkeeping LLC is not a licensed CPA firm and does
           not provide tax preparation, tax filing, legal advice, or licensed
           investment counsel. References to tax forms describe bookkeeping
           contexts only. For tax and legal matters, please consult a licensed

@@ -378,9 +378,7 @@ export async function processFormSubmission(data: {
           data.servicesInterested !== null && {
             serviceType: data.servicesInterested.join(", "),
           }),
-        ...(data.contactInquiryId !== undefined && {
-          contactInquiryId: data.contactInquiryId,
-        }),
+        contactInquiryId: data.contactInquiryId,
       });
       results.push({ ...result, contractType });
     } catch (err) {
