@@ -4,6 +4,9 @@ on:
   pull_request:
     branches: ["master"] # Running on master since that's your default branch
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest

@@ -11,6 +11,7 @@
     "typecheck:libs": "pnpm --filter \"./lib/**\" --if-present run typecheck",
     "lint": "prettier --check .",
     "format": "prettier --write .",
+    "format:files": "prettier --write --ignore-unknown --no-error-on-unmatched-pattern",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
     "check:merge-conflicts": "pnpm --filter @workspace/scripts run check:merge-conflicts",
     "check:website-deploy": "pnpm run check:merge-conflicts && pnpm run typecheck && pnpm --filter @workspace/scripts run check:indexing-guards && pnpm --filter @workspace/website build",
