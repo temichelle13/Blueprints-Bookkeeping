@@ -18,6 +18,7 @@ interface Message {
 }
 
 type ChatAvailability = "unknown" | "checking" | "available" | "unavailable";
+type ChatFeedbackStatus = "idle" | "sending" | "sent" | "error";
 
 const OFFLINE_NOTICE =
   "Aria is temporarily offline right now. Please use the contact form, email tea@blueprintsandbookkeeping.com, or book a discovery call and Tea will follow up personally.";
@@ -33,6 +34,8 @@ export default function ChatWidget() {
   const [hasNewMessage, setHasNewMessage] = useState(false);
   const [availability, setAvailability] = useState<ChatAvailability>("unknown");
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [feedbackStatus, setFeedbackStatus] =
+    useState<ChatFeedbackStatus>("idle");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const apiBase = getApiRoot();
@@ -56,17 +59,19 @@ export default function ChatWidget() {
       });
 
       if (response.ok) {
-    setAvailability("available");
-    setStatusMessage(null);
-    return true;
-  } else {
-    throw new Error(); 
-  }
-} catch {
-  setAvailability("unavailable");
-  setStatusMessage(OFFLINE_NOTICE);
-  return false;
-}
+        setAvailability("available");
+        setStatusMessage(null);
+        return true;
+      }
+
+      throw new Error();
+    } catch {
+      setAvailability("unavailable");
+      setStatusMessage(OFFLINE_NOTICE);
+      return false;
+    } finally {
+      clearTimeout(timeout);
+    }
   }, [apiBase]);
 
   useEffect(() => {
@@ -250,6 +255,36 @@ export default function ChatWidget() {
       sendMessage();
     }
   };
+
+  const submitAssistantFeedback = useCallback(
+    async (category: "assistant_helpful" | "assistant_issue") => {
+      const lastAssistantMessage = [...messages]
+        .reverse()
+        .find((message) => message.role === "assistant" && message.content);
+      if (!lastAssistantMessage || feedbackStatus === "sending") return;
+
+      setFeedbackStatus("sending");
+      try {
+        const res = await fetch(`${apiBase}/assistant/feedback`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            source: "assistant",
+            category,
+            page: window.location.pathname,
+            description: lastAssistantMessage.content,
+            conversationId,
+          }),
+        });
+
+        if (!res.ok) throw new Error("Feedback failed");
+        setFeedbackStatus("sent");
+      } catch {
+        setFeedbackStatus("error");
+      }
+    },
+    [apiBase, conversationId, feedbackStatus, messages],
+  );
 
   const GREETING = messages.length === 0 && !loading;
   const chatUnavailable = availability === "unavailable";
@@ -581,9 +616,82 @@ export default function ChatWidget() {
                               background: "#6366F1",
                               marginLeft: 2,
                               verticalAlign: "text-bottom",
-                              animation: "blink 0.8s step-end infinite",
+                            animation: "blink 0.8s step-end infinite",
+                          }}
+                        />
+                        )}
+                        {!msg.streaming && i === messages.length - 1 && (
+                          <div
+                            style={{
+                              display: "flex",
+                              flexWrap: "wrap",
+                              gap: 8,
+                              marginTop: 10,
+                              paddingTop: 8,
+                              borderTop: "1px solid rgba(255,255,255,0.08)",
                             }}
-                          />
+                          >
+                            <button
+                              type="button"
+                              onClick={() =>
+                                void submitAssistantFeedback(
+                                  "assistant_helpful",
+                                )
+                              }
+                              disabled={feedbackStatus === "sending"}
+                              style={{
+                                background: "rgba(99, 102, 241, 0.14)",
+                                color: "#C7D2FE",
+                                border: "1px solid rgba(129, 140, 248, 0.35)",
+                                borderRadius: 999,
+                                padding: "5px 9px",
+                                fontSize: 11,
+                                cursor: "pointer",
+                              }}
+                            >
+                              Helpful
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                void submitAssistantFeedback("assistant_issue")
+                              }
+                              disabled={feedbackStatus === "sending"}
+                              style={{
+                                background: "rgba(239, 68, 68, 0.12)",
+                                color: "#FECACA",
+                                border: "1px solid rgba(248, 113, 113, 0.35)",
+                                borderRadius: 999,
+                                padding: "5px 9px",
+                                fontSize: 11,
+                                cursor: "pointer",
+                              }}
+                            >
+                              Report issue
+                            </button>
+                            {feedbackStatus === "sent" && (
+                              <span
+                                style={{
+                                  color: "#A7F3D0",
+                                  fontSize: 11,
+                                  alignSelf: "center",
+                                }}
+                              >
+                                Sent to Tea
+                              </span>
+                            )}
+                            {feedbackStatus === "error" && (
+                              <span
+                                style={{
+                                  color: "#FECACA",
+                                  fontSize: 11,
+                                  alignSelf: "center",
+                                }}
+                              >
+                                Could not send
+                              </span>
+                            )}
+                          </div>
                         )}
                       </div>
                     ) : (

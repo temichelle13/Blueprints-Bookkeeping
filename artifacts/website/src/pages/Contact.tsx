@@ -1029,7 +1029,11 @@ export default function Contact() {
               {isBookkeeperIntent ? (
                 <BookkeeperIntakeForm />
               ) : (
-                <MessageForm defaultMessage={defaultClientMeetingMessage} />
+                <MessageForm
+                  {...(defaultClientMeetingMessage
+                    ? { defaultMessage: defaultClientMeetingMessage }
+                    : {})}
+                />
               )}
             </div>
           </div>
