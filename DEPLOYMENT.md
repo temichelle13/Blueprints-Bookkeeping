@@ -159,14 +159,14 @@ compatibility_date = "2024-01-01"
 command = "pnpm install && pnpm --filter @workspace/website run build"
 ```
 
-2. **Configure Cloudflare Pages** for the frontend:
+1. **Configure Cloudflare Pages** for the frontend:
    - Build command: `pnpm install && pnpm --filter @workspace/website run build`
    - Build output directory: `artifacts/website/dist/public`
    - Environment variables: `VITE_API_URL=<your-api-url>`
 
-3. **Deploy API server separately** (Cloudflare Workers, Cloud Run, etc.)
+2. **Deploy API server separately** (Cloudflare Workers, Cloud Run, etc.)
 
-4. **Configure CORS** on the API server to allow Cloudflare Pages origin
+3. **Configure CORS** on the API server to allow Cloudflare Pages origin
 
 ## Deployment Steps
 
@@ -213,6 +213,7 @@ command = "pnpm install && pnpm --filter @workspace/website run build"
 5. **Set environment variables** on hosting platform
 
 6. **Run database migrations** (if needed):
+
    ```bash
    pnpm --filter db push
    ```
@@ -251,8 +252,8 @@ To prevent accidental indexing drift, run this check once per month in Google Se
 
 ### CORS Errors in Browser Console
 
-```
-Access to fetch at 'https://api.example.com/api/...' from origin 'https://example.com' has been blocked by CORS policy
+Access to fetch at '<https://api.example.com/api/>...' from origin '<https://example.com>' has been blocked by CORS policy
+
 ```
 
 **Fix**: Add frontend origin to `CORS_ORIGIN` environment variable on backend.
@@ -281,7 +282,7 @@ Access to fetch at 'https://api.example.com/api/...' from origin 'https://exampl
 
 ## Support
 
-For deployment issues, contact Tea at tea@blueprintsandbookkeeping.com or check:
+For deployment issues, contact Tea at <tea@blueprintsandbookkeeping.com> or check:
 
 - `.env.example` - List of all environment variables
 - `artifacts/website/.replit-artifact/artifact.toml` - Frontend configuration

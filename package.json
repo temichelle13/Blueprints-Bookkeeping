@@ -11,26 +11,27 @@
     "lint": "prettier --check .",
     "format": "prettier --write .",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
-    "check:website-deploy": "pnpm run typecheck && pnpm --filter @workspace/scripts run check:indexing-guards && pnpm --filter @workspace/website build"
+    "check:merge-conflicts": "pnpm --filter @workspace/scripts run check:merge-conflicts",
+    "check:website-deploy": "pnpm run check:merge-conflicts && pnpm run typecheck && pnpm --filter @workspace/scripts run check:indexing-guards && pnpm --filter @workspace/website build"
   },
   "private": true,
   "devDependencies": {
-    "prettier": "^3.8.1",
+    "@types/node": "catalog:",
+    "prettier": "^3.8.3",
     "tsx": "catalog:",
-    "typescript": "~6.0.2",
-    "@types/node": "catalog:"
+    "typescript": "~6.0.3"
   },
   "dependencies": {
     "@types/adm-zip": "^0.5.8",
-    "adm-zip": "^0.5.16",
+    "adm-zip": "^0.5.17",
     "archiver": "^7.0.1",
     "pdfkit": "^0.18.0",
     "pngjs": "^7.0.0",
     "sharp": "^0.34.5",
-    "stripe": "^21.0.1",
+    "stripe": "^22.1.0",
     "stripe-replit-sync": "^1.0.0"
   },
-  "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319",
+  "packageManager": "pnpm@10.13.1",
   "engines": {
     "node": "^20.19.0 || ^22.0.0 || ^24.0.0",
     "pnpm": "^10.13.1"

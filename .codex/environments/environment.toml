@@ -9,3 +9,23 @@ script = ""
 name = "Run"
 icon = "run"
 command = "pnpm install"
+
+[[actions]]
+name = "codegen"
+icon = "run"
+command = "pnpm --filter @workspace/api-spec run codegen"
+
+[[actions]]
+name = "Build"
+icon = "run"
+command = "pnpm run codegen && pnpm run typecheck && pnpm -r --if-present run build"
+
+[[actions]]
+name = "Dev"
+icon = "run"
+command = "pnpm --filter @workspace/api-server run dev"
+
+[[actions]]
+name = "check:merge-conflicts"
+icon = "run"
+command = "pnpm --filter @workspace/scripts run check:merge-conflict"
