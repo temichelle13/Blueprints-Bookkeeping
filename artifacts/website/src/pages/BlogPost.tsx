@@ -1,10 +1,5 @@
 import { useParams, Link } from "wouter";
-import {
-  ArrowLeft,
-  Calendar,
-  Clock,
-  Mail,
-} from "lucide-react";
+import { ArrowLeft, Calendar, Clock, Mail } from "lucide-react";
 import { FaLinkedin, FaXTwitter } from "react-icons/fa6";
 import { blogPosts } from "@/data/blog-posts";
 import { usePageTitle } from "@/hooks/use-page-title";

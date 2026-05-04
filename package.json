@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "preinstall": "sh -c 'rm -f package-lock.json yarn.lock; case \"$npm_config_user_agent\" in pnpm/*) ;; *) echo \"Use pnpm instead\" >&2; exit 1 ;; esac'",
     "bootstrap": "pnpm install --frozen-lockfile",
     "codegen": "pnpm --filter @workspace/api-spec run codegen",
     "build": "pnpm run codegen && pnpm run typecheck && pnpm -r --if-present run build",
@@ -10,9 +11,11 @@
     "typecheck:libs": "pnpm --filter \"./lib/**\" --if-present run typecheck",
     "lint": "prettier --check .",
     "format": "prettier --write .",
+    "format:files": "prettier --write --ignore-unknown --no-error-on-unmatched-pattern",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
     "check:merge-conflicts": "pnpm --filter @workspace/scripts run check:merge-conflicts",
-    "check:website-deploy": "pnpm run check:merge-conflicts && pnpm run typecheck && pnpm --filter @workspace/scripts run check:indexing-guards && pnpm --filter @workspace/website build"
+    "check:website-deploy": "pnpm run check:merge-conflicts && pnpm run typecheck && pnpm --filter @workspace/scripts run check:indexing-guards && pnpm --filter @workspace/website build",
+    "check:route-references": "pnpm --filter @workspace/scripts run check:route-references"
   },
   "private": true,
   "devDependencies": {
@@ -31,7 +34,7 @@
     "stripe": "^22.1.0",
     "stripe-replit-sync": "^1.0.0"
   },
-  "packageManager": "pnpm@10.13.1",
+  "packageManager": "pnpm@10.33.2",
   "engines": {
     "node": "^20.19.0 || ^22.0.0 || ^24.0.0",
     "pnpm": "^10.13.1"

@@ -261,7 +261,11 @@ router.post(
           .returning();
 
         if (doc) {
-          results.push({ id: doc.id, fileName: file.originalname, storagePath });
+          results.push({
+            id: doc.id,
+            fileName: file.originalname,
+            storagePath,
+          });
         }
       } catch (err) {
         console.error(`Failed to upload ${file.originalname}:`, err);

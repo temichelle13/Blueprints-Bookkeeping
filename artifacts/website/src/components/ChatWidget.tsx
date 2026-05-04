@@ -20,6 +20,12 @@ interface Message {
 type ChatAvailability = "unknown" | "checking" | "available" | "unavailable";
 type ChatFeedbackStatus = "idle" | "sending" | "sent" | "error";
 
+interface ApiErrorPayload {
+  error?: string;
+  code?: string;
+  retryAfterSeconds?: number;
+}
+
 const OFFLINE_NOTICE =
   "Aria is temporarily offline right now. Please use the contact form, email tea@blueprintsandbookkeeping.com, or book a discovery call and Tea will follow up personally.";
 
@@ -93,6 +99,26 @@ export default function ChatWidget() {
     void checkAvailability();
   }, [open, availability, checkAvailability]);
 
+  const parseApiErrorPayload = useCallback(async (response: Response) => {
+    try {
+      const payload = (await response.json()) as ApiErrorPayload;
+      if (!payload || typeof payload !== "object") return null;
+      return payload;
+    } catch {
+      return null;
+    }
+  }, []);
+
+  const getRateLimitStatusMessage = (payload: ApiErrorPayload | null) => {
+    if (!payload || payload.code == null) return null;
+
+    if (payload.retryAfterSeconds != null) {
+      return `${payload.error ?? "Too many requests."} Try again in ${payload.retryAfterSeconds} seconds.`;
+    }
+
+    return payload.error ?? "Too many requests. Please try again shortly.";
+  };
+
   const getOrCreateConversation = useCallback(async (): Promise<number> => {
     if (conversationId) return conversationId;
 
@@ -103,6 +129,10 @@ export default function ChatWidget() {
     });
 
     if (!res.ok) {
+      const payload = await parseApiErrorPayload(res);
+      if (res.status === 429) {
+        setStatusMessage(getRateLimitStatusMessage(payload));
+      }
       if (res.status >= 500 || res.status === 404 || res.status === 405) {
         setAvailability("unavailable");
         setStatusMessage(OFFLINE_NOTICE);
@@ -148,6 +178,16 @@ export default function ChatWidget() {
       );
 
       if (!res.ok || !res.body) {
+        const payload = await parseApiErrorPayload(res);
+        if (res.status === 429) {
+          const rateLimitMessage = getRateLimitStatusMessage(payload);
+          if (rateLimitMessage) {
+            setStatusMessage(rateLimitMessage);
+          }
+        } else if (payload?.error) {
+          setStatusMessage(payload.error);
+        }
+
         if (res.status >= 500 || res.status === 404 || res.status === 405) {
           setAvailability("unavailable");
           setStatusMessage(OFFLINE_NOTICE);
@@ -247,6 +287,7 @@ export default function ChatWidget() {
     getOrCreateConversation,
     open,
     apiBase,
+    parseApiErrorPayload,
   ]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
