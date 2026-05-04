@@ -33,7 +33,9 @@ export const contactInquiriesTable = pgTable("contact_inquiries", {
   consentTimestamp: timestamp("consent_timestamp", { withTimezone: true })
     .notNull()
     .defaultNow(),
-  consentTextVersion: text("consent_text_version").notNull().default("legacy-unknown"),
+  consentTextVersion: text("consent_text_version")
+    .notNull()
+    .default("legacy-unknown"),
   requestIp: text("request_ip").notNull().default("unknown"),
   userAgent: text("user_agent").notNull().default("unknown"),
   consentSourcePage: text("consent_source_page").notNull().default("/contact"),

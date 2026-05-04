@@ -85,8 +85,16 @@ export default function CookieConsent() {
                   Cookies, kept simple
                 </h2>
                 <p className="text-sm leading-6 text-muted-foreground">
-                  Allow analytics cookies, or keep only essential site cookies.
-                  You can update this anytime in our{" "}
+                  Choose{" "}
+                  <span className="text-white font-medium">
+                    Accept analytics
+                  </span>{" "}
+                  to enable optional analytics tools (Google Analytics, Google
+                  Tag Manager, Apollo.io, and Plausible where configured), or
+                  choose{" "}
+                  <span className="text-white font-medium">Essential only</span>{" "}
+                  to keep those optional tools disabled. You can update this
+                  anytime in our{" "}
                   <a
                     href={`${import.meta.env.BASE_URL}privacy`}
                     className="text-accent hover:underline"

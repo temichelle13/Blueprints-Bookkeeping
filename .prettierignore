@@ -1,0 +1,6 @@
+artifacts/website/public/_headers
+artifacts/website/public/_redirects
+wrangler.toml
+scripts/cloudflare-pages-build.sh
+.nvmrc
+.node-version
