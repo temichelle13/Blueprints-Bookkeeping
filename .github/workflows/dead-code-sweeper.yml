@@ -1,0 +1,17 @@
+name: Dead Code Sweeper (Knip)
+on: [push]
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      # Knip finds unused files, dependencies, and exports
+      - name: Find Dead Code
+        run: npx knip
