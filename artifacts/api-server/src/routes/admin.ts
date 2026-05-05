@@ -10,6 +10,7 @@ import {
 import type { SuppressionReason } from "@workspace/db";
 import { desc, eq, sql, count } from "drizzle-orm";
 import { addToSuppressionList } from "../lib/email-suppression";
+import { getSchedulerHealth } from "../lib/scheduler-health";
 import { getOutboundEmailAdminCounts } from "../lib/outbound-email-events";
 import { adminAuth } from "../middleware/admin-auth";
 
@@ -119,6 +120,7 @@ router.get("/admin/stats", async (_req, res): Promise<void> => {
       active: subscriberStats?.active ?? 0,
     },
     emailDelivery,
+    schedulers: getSchedulerHealth(),
   });
 });
 
