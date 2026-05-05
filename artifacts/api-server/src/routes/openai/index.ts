@@ -30,6 +30,17 @@ const CHAT_RESPONSE_TOKEN_LIMIT = 4096;
 const USES_MAX_COMPLETION_TOKENS = /^o\d+(?:-|$)/.test(CHAT_MODEL);
 const isOpenAiConfigured = Boolean(openai);
 
+
+function parseConversationId(value: string | string[] | undefined): number {
+  if (Array.isArray(value)) {
+    if (value.length !== 1) return NaN;
+    return parseConversationId(value[0]);
+  }
+  if (value === undefined || !/^\d+$/.test(value)) return NaN;
+  const n = Number.parseInt(value, 10);
+  return Number.isSafeInteger(n) ? n : NaN;
+}
+
 const SYSTEM_PROMPT = `You are Aria, the friendly AI assistant for Blueprints & Bookkeeping, LLC — a premium remote financial services firm founded by Tea Larson-Hetrick in Roseburg, Oregon.
 
 ABOUT THE FIRM:
@@ -184,7 +195,7 @@ router.get("/openai/conversations", async (_req, res): Promise<void> => {
 });
 
 router.get("/openai/conversations/:id", async (req, res): Promise<void> => {
-  const id = parseInt(req.params.id, 10);
+  const id = parseConversationId(req.params.id);
   if (isNaN(id)) {
     res.status(400).json({ error: "Invalid id" });
     return;
@@ -220,7 +231,7 @@ router.get("/openai/conversations/:id", async (req, res): Promise<void> => {
 });
 
 router.delete("/openai/conversations/:id", async (req, res): Promise<void> => {
-  const id = parseInt(req.params.id, 10);
+  const id = parseConversationId(req.params.id);
   if (isNaN(id)) {
     res.status(400).json({ error: "Invalid id" });
     return;
@@ -242,7 +253,7 @@ router.delete("/openai/conversations/:id", async (req, res): Promise<void> => {
 router.get(
   "/openai/conversations/:id/messages",
   async (req, res): Promise<void> => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseConversationId(req.params.id);
     if (isNaN(id)) {
       res.status(400).json({ error: "Invalid id" });
       return;
@@ -279,7 +290,7 @@ router.post(
   "/openai/conversations/:id/messages",
   openAiMessageLimiter,
   async (req, res): Promise<void> => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseConversationId(req.params.id);
     if (isNaN(id)) {
       res.status(400).json({ error: "Invalid id" });
       return;
