@@ -45,9 +45,6 @@ catalogs:
     framer-motion:
       specifier: 12.38.0
       version: 12.38.0
-    lucide-react:
-      specifier: ^1.9.0
-      version: 1.9.0
     react:
       specifier: 19.2.5
       version: 19.2.5
@@ -274,7 +271,7 @@ importers:
         version: 1.4.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       lucide-react:
         specifier: 'catalog:'
-        version: 1.9.0(react@19.2.5)
+        version: 1.14.0(react@19.2.5)
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -2754,8 +2751,8 @@ packages:
   longest-streak@3.1.0:
     resolution: {integrity: sha512-9Ri+o0JYgehTaVBBDoMqIl8GXtbWg711O3srftcHhZ0dqnETqLaoIK0x17fUw9rFSlK/0NlsKe0Ahhyl5pXE2g==}
 
-  lucide-react@1.9.0:
-    resolution: {integrity: sha512-6qVAmbgCjcJz7sAGSPSSJ++RAwjlK2XCbRrZKv63Ciko1KT8jX0//CXxgI3jg2HlJu8tADqdYlNDebmYjeoruA==}
+  lucide-react@1.14.0:
+    resolution: {integrity: sha512-+1mdWcfSJVUsaTIjN9zoezmUhfXo5l0vP7ekBMPo3jcS/aIkxHnXqAPsByszMZx/Y8oQBRJxJx5xg+RH3urzxA==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -3566,6 +3563,7 @@ packages:
 
   uuid@10.0.0:
     resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   vary@1.1.2:
@@ -5814,7 +5812,7 @@ snapshots:
 
   longest-streak@3.1.0: {}
 
-  lucide-react@1.9.0(react@19.2.5):
+  lucide-react@1.14.0(react@19.2.5):
     dependencies:
       react: 19.2.5
 
