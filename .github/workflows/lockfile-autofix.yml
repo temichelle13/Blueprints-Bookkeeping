@@ -1,0 +1,57 @@
+name: Lockfile Autofix
+
+on:
+  pull_request:
+    branches: ["master"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lockfile-autofix-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  autofix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      # Use the pnpm version declared in package.json ("packageManager")
+      - name: Setup pnpm (from packageManager)
+        uses: pnpm/action-setup@v3
+
+      # Use Node 24 (since you said you use 24)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "pnpm"
+
+      # Try frozen first; if it fails, regenerate the lockfile and push it
+      - name: Frozen install (check)
+        id: frozen
+        continue-on-error: true
+        run: pnpm install --frozen-lockfile
+
+      - name: Regenerate lockfile (if needed)
+        if: steps.frozen.outcome == 'failure'
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Commit pnpm-lock.yaml back to PR (if changed)
+        if: steps.frozen.outcome == 'failure'
+        run: |
+          if git diff --quiet -- pnpm-lock.yaml; then
+            echo "No pnpm-lock.yaml changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add pnpm-lock.yaml
+          git commit -m "chore(ci): auto-fix pnpm lockfile"
+          git push
