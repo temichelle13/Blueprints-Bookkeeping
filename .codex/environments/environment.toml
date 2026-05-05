@@ -28,4 +28,4 @@ command = "pnpm --filter @workspace/api-server run dev"
 [[actions]]
 name = "check:merge-conflicts"
 icon = "run"
-command = "pnpm --filter @workspace/scripts run check:merge-conflict"
+command = "pnpm --filter @workspace/scripts run check:merge-conflicts"
