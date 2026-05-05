@@ -148,7 +148,7 @@ export function validateConversationMessageCap(
 export function recordOpenAiRequestVolume(params: {
   routeId: "conversation_create" | "message_send";
   req: Request;
-  conversationId?: number;
+  conversationId?: string | number;
 }): void {
   const ip = params.req.ip ?? "unknown";
   const conversationKey = params.conversationId ?? "none";

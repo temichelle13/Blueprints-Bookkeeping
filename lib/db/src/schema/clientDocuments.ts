@@ -1,18 +1,33 @@
-import { pgTable, text, serial, timestamp, integer } from "drizzle-orm/pg-core";
+import mongoose, { Schema } from "mongoose";
 
-export const clientDocumentsTable = pgTable("client_documents", {
-  id: serial("id").primaryKey(),
-  clientName: text("client_name").notNull(),
-  clientEmail: text("client_email").notNull(),
-  fileName: text("file_name").notNull(),
-  originalName: text("original_name").notNull(),
-  fileSize: integer("file_size").notNull(),
-  mimeType: text("mime_type").notNull(),
-  storagePath: text("storage_path").notNull(),
-  uploadedAt: timestamp("uploaded_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-});
+export interface IClientDocument {
+  clientName: string;
+  clientEmail: string;
+  fileName: string;
+  originalName: string;
+  fileSize: number;
+  mimeType: string;
+  storagePath: string;
+  uploadedAt: Date;
+}
 
-export type ClientDocument = typeof clientDocumentsTable.$inferSelect;
-export type InsertClientDocument = typeof clientDocumentsTable.$inferInsert;
+const ClientDocumentSchema = new Schema<IClientDocument>(
+  {
+    clientName: { type: String, required: true },
+    clientEmail: { type: String, required: true },
+    fileName: { type: String, required: true },
+    originalName: { type: String, required: true },
+    fileSize: { type: Number, required: true },
+    mimeType: { type: String, required: true },
+    storagePath: { type: String, required: true },
+    uploadedAt: { type: Date, default: () => new Date() },
+  },
+  { timestamps: false },
+);
+
+export const ClientDocumentModel =
+  (mongoose.models["ClientDocument"] as mongoose.Model<IClientDocument>) ||
+  mongoose.model<IClientDocument>("ClientDocument", ClientDocumentSchema);
+
+export type ClientDocument = mongoose.HydratedDocument<IClientDocument>;
+export type InsertClientDocument = Omit<IClientDocument, "uploadedAt"> & Partial<Pick<IClientDocument, "uploadedAt">>;

@@ -37,11 +37,11 @@ test("unpaid session returns 400 and does not persist inquiry", async () => {
     getSubscriptionIdByStripeSubscriptionId: async () => null,
     insertOnboardingSubmission: async () => {
       onboardingWrites += 1;
-      return { id: 1 };
+      return { id: "1" };
     },
     insertContactInquiry: async () => {
       inquiryWrites += 1;
-      return { id: 1 };
+      return { id: "1" };
     },
     processContractSubmission: async () => {},
     sendOnboardingEmails: async () => {},
@@ -66,11 +66,11 @@ test("paid session persists inquiry and runs downstream actions", async () => {
       customerEmail: "casey@example.com",
       stripeSubscriptionId: "sub_123",
     }),
-    getSubscriptionIdByStripeSubscriptionId: async () => 42,
-    insertOnboardingSubmission: async () => ({ id: 99 }),
+    getSubscriptionIdByStripeSubscriptionId: async () => "sub_42",
+    insertOnboardingSubmission: async () => ({ id: "99" }),
     insertContactInquiry: async (values) => {
       persistedEmail = values.email;
-      return { id: 77 };
+      return { id: "77" };
     },
     processContractSubmission: async () => {
       contractCalls += 1;
@@ -91,17 +91,17 @@ test("paid session persists inquiry and runs downstream actions", async () => {
 test("repeated stripeSessionId returns 200 and skips duplicate work", async () => {
   let inquiryWrites = 0;
   const deps: OnboardingFinalizeDeps = {
-    getExistingSubmissionByStripeSessionId: async () => ({ id: 12 }),
+    getExistingSubmissionByStripeSessionId: async () => ({ id: "12" }),
     verifyStripeSession: async () => ({
       paymentStatus: "paid",
       customerEmail: "casey@example.com",
       stripeSubscriptionId: null,
     }),
     getSubscriptionIdByStripeSubscriptionId: async () => null,
-    insertOnboardingSubmission: async () => ({ id: 1 }),
+    insertOnboardingSubmission: async () => ({ id: "1" }),
     insertContactInquiry: async () => {
       inquiryWrites += 1;
-      return { id: 1 };
+      return { id: "1" };
     },
     processContractSubmission: async () => {},
     sendOnboardingEmails: async () => {},

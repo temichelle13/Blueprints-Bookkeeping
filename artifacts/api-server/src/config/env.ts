@@ -12,7 +12,7 @@ const envSchema = z.object({
   PORT: z.string().regex(/^\d+$/).transform(Number).default(3001),
 
   // Database
-  DATABASE_URL: z.string().url().min(1, "DATABASE_URL is required"),
+  MONGODB_URI: z.string().min(1, "MONGODB_URI is required"),
 
   // CORS Configuration
   CORS_ORIGIN: z.string().optional(),

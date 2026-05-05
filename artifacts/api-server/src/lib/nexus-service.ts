@@ -1,18 +1,10 @@
 import {
-  db,
-  onboardingSubmissionsTable,
-  subscriptionsTable,
-  stateNexusRulesTable,
-  nexusNotificationsLogTable,
+  OnboardingSubmissionModel,
+  SubscriptionModel,
+  StateNexusRuleModel,
+  NexusNotificationLogModel,
+  type IStateNexusRule,
 } from "@workspace/db";
-import {
-  eq,
-  sql,
-  desc,
-  and,
-  inArray,
-  count as drizzleCount,
-} from "drizzle-orm";
 import { Resend } from "resend";
 
 const OWNER_EMAIL = "tea@blueprintsandbookkeeping.com";
@@ -25,10 +17,10 @@ export interface StateNexusSummary {
   clientCount: number;
   foreignQualificationThreshold: number;
   bookkeepingLicenseRequired: boolean;
-  bookkeepingLicenseNotes: string | null;
-  authorityName: string | null;
-  authorityUrl: string | null;
-  notes: string | null;
+  bookkeepingLicenseNotes: string | null | undefined;
+  authorityName: string | null | undefined;
+  authorityUrl: string | null | undefined;
+  notes: string | null | undefined;
   warningThresholdPercent: number;
   riskLevel: "safe" | "warning" | "alert";
   lastNotificationSent: string | null;
@@ -36,27 +28,26 @@ export interface StateNexusSummary {
 }
 
 export async function getStateClientCounts(): Promise<Record<string, number>> {
-  const rows = await db
-    .select({
-      state: onboardingSubmissionsTable.businessState,
-      count: sql<number>`count(distinct ${onboardingSubmissionsTable.clientEmail})::int`,
-    })
-    .from(onboardingSubmissionsTable)
-    .leftJoin(
-      subscriptionsTable,
-      eq(onboardingSubmissionsTable.subscriptionId, subscriptionsTable.id),
-    )
-    .where(
-      sql`${onboardingSubmissionsTable.businessState} is not null
-        and ${onboardingSubmissionsTable.businessState} != ''
-        and (${onboardingSubmissionsTable.subscriptionId} is null
-          or ${subscriptionsTable.status} in ('active', 'trialing', 'past_due'))`,
-    )
-    .groupBy(onboardingSubmissionsTable.businessState);
+  const activeSubIds = await SubscriptionModel.distinct("_id", {
+    status: { $in: ["active", "trialing", "past_due"] },
+  });
+
+  const submissions = await OnboardingSubmissionModel.find({
+    businessState: { $exists: true, $ne: "" },
+    $or: [{ subscriptionId: null }, { subscriptionId: { $in: activeSubIds } }],
+  })
+    .select("businessState clientEmail")
+    .lean();
 
   const counts: Record<string, number> = {};
-  for (const row of rows) {
-    if (row.state) counts[row.state] = row.count;
+  const seen: Record<string, Set<string>> = {};
+  for (const row of submissions) {
+    if (!row.businessState) continue;
+    if (!seen[row.businessState]) seen[row.businessState] = new Set();
+    if (row.clientEmail) seen[row.businessState]!.add(row.clientEmail);
+  }
+  for (const [state, emails] of Object.entries(seen)) {
+    counts[state] = emails.size;
   }
   return counts;
 }
@@ -73,16 +64,12 @@ function computeRiskLevel(
 }
 
 export async function getNexusSummary(): Promise<StateNexusSummary[]> {
-  const rules = await db
-    .select()
-    .from(stateNexusRulesTable)
-    .orderBy(stateNexusRulesTable.stateName);
+  const rules = await StateNexusRuleModel.find().sort({ stateName: 1 }).lean();
   const clientCounts = await getStateClientCounts();
 
-  const lastNotifications = await db
-    .select()
-    .from(nexusNotificationsLogTable)
-    .orderBy(desc(nexusNotificationsLogTable.sentAt));
+  const lastNotifications = await NexusNotificationLogModel.find()
+    .sort({ sentAt: -1 })
+    .lean();
 
   const latestByState: Record<string, { sentAt: Date; type: string }> = {};
   for (const n of lastNotifications) {
@@ -94,7 +81,7 @@ export async function getNexusSummary(): Promise<StateNexusSummary[]> {
     }
   }
 
-  return rules.map((rule) => {
+  return rules.map((rule: IStateNexusRule & { _id: unknown }) => {
     const clientCount = clientCounts[rule.stateCode] || 0;
     const riskLevel = computeRiskLevel(
       clientCount,
@@ -125,7 +112,7 @@ export async function runNexusCheck(): Promise<{
   warnings: number;
   alerts: number;
 }> {
-  const rules = await db.select().from(stateNexusRulesTable);
+  const rules = await StateNexusRuleModel.find().lean();
   const clientCounts = await getStateClientCounts();
 
   let warnings = 0;
@@ -142,26 +129,19 @@ export async function runNexusCheck(): Promise<{
     );
     if (riskLevel === "safe") continue;
 
-    const lastNotifs = await db
-      .select()
-      .from(nexusNotificationsLogTable)
-      .where(
-        and(
-          eq(nexusNotificationsLogTable.stateCode, rule.stateCode),
-          eq(nexusNotificationsLogTable.notificationType, riskLevel),
-        ),
-      )
-      .orderBy(desc(nexusNotificationsLogTable.sentAt))
-      .limit(1);
-
-    const lastNotif = lastNotifs[0];
+    const lastNotif = await NexusNotificationLogModel.findOne({
+      stateCode: rule.stateCode,
+      notificationType: riskLevel,
+    })
+      .sort({ sentAt: -1 })
+      .lean();
     if (lastNotif && lastNotif.clientCount >= clientCount) {
       continue;
     }
 
     const sent = await sendNexusNotification(rule, clientCount, riskLevel);
     if (sent) {
-      await db.insert(nexusNotificationsLogTable).values({
+      await NexusNotificationLogModel.create({
         stateCode: rule.stateCode,
         notificationType: riskLevel,
         clientCount,
@@ -177,7 +157,7 @@ export async function runNexusCheck(): Promise<{
 }
 
 async function sendNexusNotification(
-  rule: typeof stateNexusRulesTable.$inferSelect,
+  rule: { stateCode: string; stateName: string; foreignQualificationThreshold: number; warningThresholdPercent: number; bookkeepingLicenseRequired: boolean; bookkeepingLicenseNotes?: string | null; authorityName?: string | null; authorityUrl?: string | null; notes?: string | null },
   clientCount: number,
   level: "warning" | "alert",
 ): Promise<boolean> {
@@ -250,11 +230,7 @@ async function sendNexusNotification(
 }
 
 export async function getNotificationLog() {
-  return db
-    .select()
-    .from(nexusNotificationsLogTable)
-    .orderBy(desc(nexusNotificationsLogTable.sentAt))
-    .limit(100);
+  return NexusNotificationLogModel.find().sort({ sentAt: -1 }).limit(100).lean();
 }
 
 const STATE_NEXUS_SEED_DATA = [
@@ -777,16 +753,14 @@ const STATE_NEXUS_SEED_DATA = [
 ];
 
 export async function ensureNexusRulesSeeded(): Promise<void> {
-  const existing = await db
-    .select({ count: sql<number>`count(*)::int` })
-    .from(stateNexusRulesTable);
-  if ((existing[0]?.count ?? 0) > 0) return;
+  const count = await StateNexusRuleModel.countDocuments();
+  if (count > 0) return;
 
   console.log("Seeding state nexus rules...");
   for (const state of STATE_NEXUS_SEED_DATA) {
-    await db
-      .insert(stateNexusRulesTable)
-      .values({
+    await StateNexusRuleModel.updateOne(
+      { stateCode: state.stateCode },
+      {
         stateCode: state.stateCode,
         stateName: state.stateName,
         foreignQualificationThreshold: state.threshold,
@@ -795,8 +769,9 @@ export async function ensureNexusRulesSeeded(): Promise<void> {
         authorityName: state.authority,
         authorityUrl: state.url,
         notes: state.notes,
-      })
-      .onConflictDoNothing();
+      },
+      { upsert: true },
+    );
   }
   console.log(`Seeded ${STATE_NEXUS_SEED_DATA.length} state nexus rules`);
 }

@@ -1,6 +1,7 @@
 import { validateEnv, getEnv } from "./config/env";
 import { logger } from "./lib/logger";
 import app from "./app";
+import { connectToDatabase } from "@workspace/db";
 import {
   checkAndSendReminders,
   syncAllPendingAgreements,
@@ -135,6 +136,14 @@ function startInquiryRetentionScheduler() {
 
 app.listen(port, async () => {
   logger.info("Server started", { port, environment: env.NODE_ENV });
+
+  try {
+    await connectToDatabase();
+    logger.info("Connected to MongoDB");
+  } catch (err) {
+    logger.error("Failed to connect to MongoDB", err as Error);
+    process.exit(1);
+  }
 
   try {
     await ensureNexusRulesSeeded();

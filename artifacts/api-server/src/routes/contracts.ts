@@ -5,8 +5,7 @@ import {
   type Response,
   type NextFunction,
 } from "express";
-import { db, contractsTable, contractTemplatesTable } from "@workspace/db";
-import { eq, desc } from "drizzle-orm";
+import { ContractModel, ContractTemplateModel } from "@workspace/db";
 import * as contractService from "../lib/contract-service";
 import * as adobeSign from "../lib/adobe-sign";
 
@@ -96,33 +95,22 @@ router.post("/contracts/webhooks/booking", async (req, res): Promise<void> => {
 router.use("/contracts", adminAuth);
 
 router.get("/contracts", async (_req, res): Promise<void> => {
-  const contracts = await db
-    .select()
-    .from(contractsTable)
-    .orderBy(desc(contractsTable.createdAt));
+  const contracts = await ContractModel.find().sort({ createdAt: -1 }).lean();
 
   res.json(contracts);
 });
 
 router.get("/contracts/:id", async (req, res): Promise<void> => {
-  const id = parseInt(req.params.id, 10);
-  if (isNaN(id)) {
-    res.status(400).json({ error: "Invalid contract ID" });
-    return;
-  }
+  const id = req.params.id;
 
-  const results = await db
-    .select()
-    .from(contractsTable)
-    .where(eq(contractsTable.id, id))
-    .limit(1);
+  const contract = await ContractModel.findById(id).lean();
 
-  if (results.length === 0) {
+  if (!contract) {
     res.status(404).json({ error: "Contract not found" });
     return;
   }
 
-  res.json(results[0]);
+  res.json(contract);
 });
 
 function validateSendContract(body: unknown): {
@@ -180,32 +168,20 @@ router.post("/contracts/send", async (req, res): Promise<void> => {
 });
 
 router.post("/contracts/:id/sync", async (req, res): Promise<void> => {
-  const id = parseInt(req.params.id, 10);
-  if (isNaN(id)) {
-    res.status(400).json({ error: "Invalid contract ID" });
-    return;
-  }
+  const id = req.params.id;
 
   try {
-    const check = await db
-      .select()
-      .from(contractsTable)
-      .where(eq(contractsTable.id, id))
-      .limit(1);
+    const check = await ContractModel.findById(id).lean();
 
-    if (check.length === 0) {
+    if (!check) {
       res.status(404).json({ error: "Contract not found" });
       return;
     }
 
     await contractService.syncAgreementStatus(id);
-    const updated = await db
-      .select()
-      .from(contractsTable)
-      .where(eq(contractsTable.id, id))
-      .limit(1);
+    const updated = await ContractModel.findById(id).lean();
 
-    res.json(updated[0]);
+    res.json(updated);
   } catch (err) {
     console.error("Failed to sync contract:", err);
     res.status(500).json({ error: "Failed to sync contract status" });
@@ -236,10 +212,9 @@ router.post(
 );
 
 router.get("/contracts/templates/list", async (_req, res): Promise<void> => {
-  const templates = await db
-    .select()
-    .from(contractTemplatesTable)
-    .orderBy(desc(contractTemplatesTable.createdAt));
+  const templates = await ContractTemplateModel.find()
+    .sort({ createdAt: -1 })
+    .lean();
 
   res.json(templates);
 });
@@ -293,28 +268,21 @@ router.post("/contracts/templates", async (req, res): Promise<void> => {
     return;
   }
 
-  const [template] = await db
-    .insert(contractTemplatesTable)
-    .values({
-      name: data.name,
-      contractType: data.contractType,
-      adobeTemplateId: data.adobeTemplateId ?? null,
-      triggerCondition: data.triggerCondition,
-      description: data.description ?? null,
-      prefillFields: data.prefillFields ?? null,
-      active: data.active ?? true,
-    })
-    .returning();
+  const template = await ContractTemplateModel.create({
+    name: data.name,
+    contractType: data.contractType,
+    adobeTemplateId: data.adobeTemplateId ?? null,
+    triggerCondition: data.triggerCondition,
+    description: data.description ?? null,
+    prefillFields: data.prefillFields ?? null,
+    active: data.active ?? true,
+  });
 
   res.status(201).json(template);
 });
 
 router.put("/contracts/templates/:id", async (req, res): Promise<void> => {
-  const id = parseInt(req.params.id, 10);
-  if (isNaN(id)) {
-    res.status(400).json({ error: "Invalid template ID" });
-    return;
-  }
+  const id = req.params.id;
 
   const data = validateTemplateBody(req.body);
   if (!data) {
@@ -324,9 +292,9 @@ router.put("/contracts/templates/:id", async (req, res): Promise<void> => {
     return;
   }
 
-  const [updated] = await db
-    .update(contractTemplatesTable)
-    .set({
+  const updated = await ContractTemplateModel.findByIdAndUpdate(
+    id,
+    {
       name: data.name,
       contractType: data.contractType,
       adobeTemplateId: data.adobeTemplateId ?? null,
@@ -335,9 +303,9 @@ router.put("/contracts/templates/:id", async (req, res): Promise<void> => {
       prefillFields: data.prefillFields ?? null,
       active: data.active ?? true,
       updatedAt: new Date(),
-    })
-    .where(eq(contractTemplatesTable.id, id))
-    .returning();
+    },
+    { new: true },
+  ).lean();
 
   if (!updated) {
     res.status(404).json({ error: "Template not found" });
@@ -348,18 +316,11 @@ router.put("/contracts/templates/:id", async (req, res): Promise<void> => {
 });
 
 router.delete("/contracts/templates/:id", async (req, res): Promise<void> => {
-  const id = parseInt(req.params.id, 10);
-  if (isNaN(id)) {
-    res.status(400).json({ error: "Invalid template ID" });
-    return;
-  }
+  const id = req.params.id;
 
-  const deleted = await db
-    .delete(contractTemplatesTable)
-    .where(eq(contractTemplatesTable.id, id))
-    .returning();
+  const deleted = await ContractTemplateModel.findByIdAndDelete(id).lean();
 
-  if (deleted.length === 0) {
+  if (!deleted) {
     res.status(404).json({ error: "Template not found" });
     return;
   }
@@ -368,19 +329,9 @@ router.delete("/contracts/templates/:id", async (req, res): Promise<void> => {
 });
 
 router.get("/contracts/:id/document", async (req, res): Promise<void> => {
-  const id = parseInt(req.params.id, 10);
-  if (isNaN(id)) {
-    res.status(400).json({ error: "Invalid contract ID" });
-    return;
-  }
+  const id = req.params.id;
 
-  const results = await db
-    .select()
-    .from(contractsTable)
-    .where(eq(contractsTable.id, id))
-    .limit(1);
-
-  const contract = results[0];
+  const contract = await ContractModel.findById(id).lean();
   if (!contract) {
     res.status(404).json({ error: "Contract not found" });
     return;

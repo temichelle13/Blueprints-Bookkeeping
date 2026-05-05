@@ -1,5 +1,4 @@
-import { db, contractsTable, contractTemplatesTable } from "@workspace/db";
-import { eq, and, lt, isNull, inArray } from "drizzle-orm";
+import { ContractModel, ContractTemplateModel } from "@workspace/db";
 import * as adobeSign from "./adobe-sign";
 import * as ccStorage from "./adobe-cc-storage";
 import { Resend } from "resend";
@@ -91,7 +90,7 @@ export async function processBooking(data: {
   clientEmail: string;
   serviceType?: string;
 }): Promise<
-  Array<{ id: number; contractType: string; adobeAgreementId: string | null }>
+  Array<{ id: string; contractType: string; adobeAgreementId: string | null }>
 > {
   const services = data.serviceType ? [data.serviceType] : null;
   const recurring = await isRecurringClient(data.clientEmail);
@@ -111,7 +110,7 @@ export async function processBooking(data: {
     recurring,
   );
   const results: Array<{
-    id: number;
+    id: string;
     contractType: string;
     adobeAgreementId: string | null;
   }> = [];
@@ -149,10 +148,7 @@ export async function determineContractTypes(
 ): Promise<string[]> {
   const types = new Set<string>();
 
-  const activeTemplates = await db
-    .select()
-    .from(contractTemplatesTable)
-    .where(eq(contractTemplatesTable.active, true));
+  const activeTemplates = await ContractTemplateModel.find({ active: true }).lean();
 
   const dbTriggerMap = new Map<string, Set<string>>();
   for (const tpl of activeTemplates) {
@@ -219,18 +215,12 @@ export async function determineContractTypes(
 }
 
 export async function isRecurringClient(email: string): Promise<boolean> {
-  const existing = await db
-    .select()
-    .from(contractsTable)
-    .where(
-      and(
-        eq(contractsTable.clientEmail, email),
-        eq(contractsTable.status, "signed"),
-      ),
-    )
-    .limit(1);
+  const existing = await ContractModel.findOne({
+    clientEmail: email,
+    status: "signed",
+  }).lean();
 
-  return existing.length > 0;
+  return !!existing;
 }
 
 export async function sendContract(opts: {
@@ -240,20 +230,12 @@ export async function sendContract(opts: {
   serviceType?: string;
   pricingTier?: string;
   startDate?: string;
-  contactInquiryId?: number;
-}): Promise<{ id: number; adobeAgreementId: string | null }> {
-  const templates = await db
-    .select()
-    .from(contractTemplatesTable)
-    .where(
-      and(
-        eq(contractTemplatesTable.contractType, opts.contractType),
-        eq(contractTemplatesTable.active, true),
-      ),
-    )
-    .limit(1);
-
-  const template = templates[0] || null;
+  contactInquiryId?: string;
+}): Promise<{ id: string; adobeAgreementId: string | null }> {
+  const template = await ContractTemplateModel.findOne({
+    contractType: opts.contractType,
+    active: true,
+  }).lean();
   const now = new Date();
 
   const mergeFields: Array<{ defaultValue: string; fieldName: string }> = [
@@ -323,28 +305,21 @@ export async function sendContract(opts: {
     adobeAgreementId = agreement.id;
   }
 
-  const [contract] = await db
-    .insert(contractsTable)
-    .values({
-      clientName: opts.clientName,
-      clientEmail: opts.clientEmail,
-      contractType: opts.contractType,
-      templateId: template.id,
-      adobeAgreementId,
-      status: "sent",
-      serviceType: opts.serviceType ?? null,
-      pricingTier: opts.pricingTier ?? null,
-      startDate: opts.startDate ?? null,
-      sentAt: now,
-      contactInquiryId: opts.contactInquiryId ?? null,
-    })
-    .returning();
+  const contract = await ContractModel.create({
+    clientName: opts.clientName,
+    clientEmail: opts.clientEmail,
+    contractType: opts.contractType,
+    templateId: template._id,
+    adobeAgreementId,
+    status: "sent",
+    serviceType: opts.serviceType ?? null,
+    pricingTier: opts.pricingTier ?? null,
+    startDate: opts.startDate ?? null,
+    sentAt: now,
+    contactInquiryId: opts.contactInquiryId ?? null,
+  });
 
-  if (!contract) {
-    throw new Error("Failed to insert contract record");
-  }
-
-  return { id: contract.id, adobeAgreementId };
+  return { id: contract._id.toString(), adobeAgreementId };
 }
 
 export async function processFormSubmission(data: {
@@ -352,9 +327,9 @@ export async function processFormSubmission(data: {
   name: string;
   email: string;
   servicesInterested?: string[] | null;
-  contactInquiryId: number;
+  contactInquiryId: string;
 }): Promise<
-  Array<{ id: number; contractType: string; adobeAgreementId: string | null }>
+  Array<{ id: string; contractType: string; adobeAgreementId: string | null }>
 > {
   const recurring = await isRecurringClient(data.email);
   const contractTypes = await determineContractTypes(
@@ -363,7 +338,7 @@ export async function processFormSubmission(data: {
     recurring,
   );
   const results: Array<{
-    id: number;
+    id: string;
     contractType: string;
     adobeAgreementId: string | null;
   }> = [];
@@ -409,24 +384,20 @@ export async function checkAndSendReminders(): Promise<{
     contractType: string;
   }> = [];
 
-  const pendingContracts = await db
-    .select()
-    .from(contractsTable)
-    .where(
-      and(
-        inArray(contractsTable.status, ["sent", "viewed"]),
-        isNull(contractsTable.signedAt),
-      ),
-    );
+  const pendingContracts = await ContractModel.find({
+    status: { $in: ["sent", "viewed"] },
+    signedAt: null,
+  }).lean();
 
   for (const contract of pendingContracts) {
     if (!contract.sentAt) continue;
 
     if (contract.sentAt < fourteenDaysAgo) {
-      await db
-        .update(contractsTable)
-        .set({ status: "expired", expiredAt: now, updatedAt: now })
-        .where(eq(contractsTable.id, contract.id));
+      await ContractModel.findByIdAndUpdate(contract._id, {
+        status: "expired",
+        expiredAt: now,
+        updatedAt: now,
+      });
 
       if (contract.adobeAgreementId && adobeSign.isConfigured()) {
         try {
@@ -454,18 +425,15 @@ export async function checkAndSendReminders(): Promise<{
     if (shouldRemind && contract.adobeAgreementId && adobeSign.isConfigured()) {
       try {
         await adobeSign.sendReminder(contract.adobeAgreementId);
-        await db
-          .update(contractsTable)
-          .set({
-            remindersSent: contract.remindersSent + 1,
-            lastReminderAt: now,
-            updatedAt: now,
-          })
-          .where(eq(contractsTable.id, contract.id));
+        await ContractModel.findByIdAndUpdate(contract._id, {
+          remindersSent: (contract.remindersSent ?? 0) + 1,
+          lastReminderAt: now,
+          updatedAt: now,
+        });
         remindersProcessed++;
       } catch (err) {
         console.error(
-          `Failed to send reminder for contract ${contract.id}:`,
+          `Failed to send reminder for contract ${contract._id}:`,
           err,
         );
       }
@@ -479,14 +447,8 @@ export async function checkAndSendReminders(): Promise<{
   return { remindersProcessed, expired };
 }
 
-export async function syncAgreementStatus(contractId: number): Promise<void> {
-  const contracts = await db
-    .select()
-    .from(contractsTable)
-    .where(eq(contractsTable.id, contractId))
-    .limit(1);
-
-  const contract = contracts[0];
+export async function syncAgreementStatus(contractId: string): Promise<void> {
+  const contract = await ContractModel.findById(contractId).lean();
   if (!contract?.adobeAgreementId || !adobeSign.isConfigured()) return;
 
   const details = await adobeSign.getAgreement(contract.adobeAgreementId);
@@ -497,26 +459,17 @@ export async function syncAgreementStatus(contractId: number): Promise<void> {
     details.status === "OUT_FOR_APPROVAL"
   ) {
     if (contract.status !== "sent") {
-      await db
-        .update(contractsTable)
-        .set({ status: "sent", updatedAt: now })
-        .where(eq(contractsTable.id, contractId));
+      await ContractModel.findByIdAndUpdate(contractId, { status: "sent", updatedAt: now });
     }
   } else if (
     details.status === "VIEWED" ||
     details.status === "WAITING_FOR_MY_SIGNATURE"
   ) {
     if (contract.status !== "viewed") {
-      await db
-        .update(contractsTable)
-        .set({ status: "viewed", updatedAt: now })
-        .where(eq(contractsTable.id, contractId));
+      await ContractModel.findByIdAndUpdate(contractId, { status: "viewed", updatedAt: now });
     }
   } else if (details.status === "SIGNED" && contract.status !== "signed") {
-    await db
-      .update(contractsTable)
-      .set({ status: "signed", signedAt: now, updatedAt: now })
-      .where(eq(contractsTable.id, contractId));
+    await ContractModel.findByIdAndUpdate(contractId, { status: "signed", signedAt: now, updatedAt: now });
 
     try {
       const signedPdf = await adobeSign.getSignedDocument(
@@ -528,10 +481,7 @@ export async function syncAgreementStatus(contractId: number): Promise<void> {
       );
       await ccStorage.uploadToCreativeCloud(archivePath, signedPdf);
 
-      await db
-        .update(contractsTable)
-        .set({ signedDocumentUrl: archivePath, updatedAt: now })
-        .where(eq(contractsTable.id, contractId));
+      await ContractModel.findByIdAndUpdate(contractId, { signedDocumentUrl: archivePath, updatedAt: now });
     } catch (err) {
       console.error(
         `Failed to archive signed document for contract ${contractId}:`,
@@ -539,30 +489,26 @@ export async function syncAgreementStatus(contractId: number): Promise<void> {
       );
     }
   } else if (details.status === "CANCELLED" || details.status === "EXPIRED") {
-    await db
-      .update(contractsTable)
-      .set({
-        status: details.status.toLowerCase() as "expired" | "cancelled",
-        expiredAt: now,
-        updatedAt: now,
-      })
-      .where(eq(contractsTable.id, contractId));
+    await ContractModel.findByIdAndUpdate(contractId, {
+      status: details.status.toLowerCase() as "expired" | "cancelled",
+      expiredAt: now,
+      updatedAt: now,
+    });
   }
 }
 
 export async function syncAllPendingAgreements(): Promise<number> {
-  const pending = await db
-    .select()
-    .from(contractsTable)
-    .where(and(inArray(contractsTable.status, ["sent", "viewed"])));
+  const pending = await ContractModel.find({
+    status: { $in: ["sent", "viewed"] },
+  }).lean();
 
   let synced = 0;
   for (const contract of pending) {
     try {
-      await syncAgreementStatus(contract.id);
+      await syncAgreementStatus(contract._id.toString());
       synced++;
     } catch (err) {
-      console.error(`Failed to sync contract ${contract.id}:`, err);
+      console.error(`Failed to sync contract ${contract._id}:`, err);
     }
   }
   return synced;

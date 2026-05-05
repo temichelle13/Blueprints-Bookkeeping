@@ -1,10 +1,9 @@
 import { Router, type IRouter } from "express";
-import { db, newsletterSubscribersTable } from "@workspace/db";
+import { NewsletterSubscriberModel } from "@workspace/db";
 import {
   SubscribeNewsletterBody,
   UnsubscribeNewsletterBody,
 } from "@workspace/api-zod";
-import { eq } from "drizzle-orm";
 import { Resend } from "resend";
 import {
   isEmailSuppressed,
@@ -50,22 +49,20 @@ async function unsubscribeByToken(
     return { status: 400, body: { error: "Invalid token format." } };
   }
 
-  const rows = await db
-    .select()
-    .from(newsletterSubscribersTable)
-    .where(eq(newsletterSubscribersTable.unsubscribeToken, token))
-    .limit(1);
+  const subscriber = await NewsletterSubscriberModel.findOne({
+    unsubscribeToken: token,
+  });
 
-  if (rows.length === 0) {
+  if (!subscriber) {
     return { status: 404, body: { error: "Subscriber not found." } };
   }
 
-  await db
-    .update(newsletterSubscribersTable)
-    .set({ active: false })
-    .where(eq(newsletterSubscribersTable.unsubscribeToken, token));
+  await NewsletterSubscriberModel.findOneAndUpdate(
+    { unsubscribeToken: token },
+    { active: false },
+  );
 
-  await addToSuppressionList(rows[0]!.email, "unsubscribed");
+  await addToSuppressionList(subscriber.email, "unsubscribed");
 
   return {
     status: 200,
@@ -169,19 +166,14 @@ router.post(
       return;
     }
 
-    const existing = await db
-      .select()
-      .from(newsletterSubscribersTable)
-      .where(eq(newsletterSubscribersTable.email, email))
-      .limit(1);
+    const existing = await NewsletterSubscriberModel.findOne({ email });
 
-    if (existing.length > 0) {
-      const existingEntry = existing[0]!;
-      if (!existingEntry.active) {
-        await db
-          .update(newsletterSubscribersTable)
-          .set({ active: true, signupSource })
-          .where(eq(newsletterSubscribersTable.email, email));
+    if (existing) {
+      if (!existing.active) {
+        await NewsletterSubscriberModel.findOneAndUpdate(
+          { email },
+          { active: true, signupSource },
+        );
 
         const suppressed = await isEmailSuppressed(email);
         if (suppressed) {
@@ -192,11 +184,7 @@ router.post(
         } else {
           const resend = getResend();
           if (resend) {
-            await sendWelcomeEmail(
-              resend,
-              email,
-              existingEntry.unsubscribeToken,
-            );
+            await sendWelcomeEmail(resend, email, existing.unsubscribeToken);
           }
         }
       }
@@ -207,15 +195,10 @@ router.post(
       return;
     }
 
-    const [inserted] = await db
-      .insert(newsletterSubscribersTable)
-      .values({
-        email,
-        signupSource,
-      })
-      .returning({
-        unsubscribeToken: newsletterSubscribersTable.unsubscribeToken,
-      });
+    const inserted = await NewsletterSubscriberModel.create({
+      email,
+      signupSource,
+    });
 
     const suppressed = await isEmailSuppressed(email);
     if (suppressed) {
@@ -272,10 +255,7 @@ router.post("/newsletter/unsubscribe", async (req, res): Promise<void> => {
     return;
   }
 
-  await db
-    .update(newsletterSubscribersTable)
-    .set({ active: false })
-    .where(eq(newsletterSubscribersTable.email, email));
+  await NewsletterSubscriberModel.updateOne({ email }, { $set: { active: false } });
 
   await addToSuppressionList(email, "unsubscribed");
 

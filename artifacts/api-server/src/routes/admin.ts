@@ -1,14 +1,12 @@
 import { Router, type IRouter } from "express";
 import {
-  db,
-  contactInquiriesTable,
-  newsletterSubscribersTable,
-  emailSuppressionListTable,
+  ContactInquiryModel,
+  NewsletterSubscriberModel,
+  EmailSuppressionModel,
   INQUIRY_STATUSES,
   SUPPRESSION_REASONS,
 } from "@workspace/db";
 import type { SuppressionReason } from "@workspace/db";
-import { desc, eq, sql, count } from "drizzle-orm";
 import { addToSuppressionList } from "../lib/email-suppression";
 import { getSchedulerHealth } from "../lib/scheduler-health";
 import { getOutboundEmailAdminCounts } from "../lib/outbound-email-events";
@@ -20,16 +18,15 @@ const router: IRouter = Router();
 router.use(adminAuth);
 
 router.get("/admin/inquiries", async (_req, res): Promise<void> => {
-  const inquiries = await db
-    .select()
-    .from(contactInquiriesTable)
-    .orderBy(desc(contactInquiriesTable.createdAt));
+  const inquiries = await ContactInquiryModel.find()
+    .sort({ createdAt: -1 })
+    .lean();
 
   res.json(inquiries);
 });
 
 router.patch("/admin/inquiries/:id/status", async (req, res): Promise<void> => {
-  const id = parseInt(req.params.id, 10);
+  const id = req.params.id;
   const { status } = req.body;
 
   if (!INQUIRY_STATUSES.includes(status)) {
@@ -39,11 +36,11 @@ router.patch("/admin/inquiries/:id/status", async (req, res): Promise<void> => {
     return;
   }
 
-  const [updated] = await db
-    .update(contactInquiriesTable)
-    .set({ status })
-    .where(eq(contactInquiriesTable.id, id))
-    .returning();
+  const updated = await ContactInquiryModel.findByIdAndUpdate(
+    id,
+    { status },
+    { new: true },
+  ).lean();
 
   if (!updated) {
     res.status(404).json({ error: "Inquiry not found" });
@@ -54,10 +51,9 @@ router.patch("/admin/inquiries/:id/status", async (req, res): Promise<void> => {
 });
 
 router.get("/admin/newsletter", async (_req, res): Promise<void> => {
-  const subscribers = await db
-    .select()
-    .from(newsletterSubscribersTable)
-    .orderBy(desc(newsletterSubscribersTable.subscribedAt));
+  const subscribers = await NewsletterSubscriberModel.find()
+    .sort({ subscribedAt: -1 })
+    .lean();
 
   const activeCount = subscribers.filter((s) => s.active).length;
   const totalCount = subscribers.length;
@@ -66,15 +62,14 @@ router.get("/admin/newsletter", async (_req, res): Promise<void> => {
 });
 
 router.get("/admin/newsletter/export", async (_req, res): Promise<void> => {
-  const subscribers = await db
-    .select()
-    .from(newsletterSubscribersTable)
-    .orderBy(desc(newsletterSubscribersTable.subscribedAt));
+  const subscribers = await NewsletterSubscriberModel.find()
+    .sort({ subscribedAt: -1 })
+    .lean();
 
   const header = "id,email,signup_source,active,subscribed_at";
   const rows = subscribers.map(
     (s) =>
-      `${s.id},"${s.email}","${s.signupSource}",${s.active},"${s.subscribedAt?.toISOString() ?? ""}"`,
+      `${String(s._id)},"${s.email}","${s.signupSource}",${s.active},"${s.subscribedAt?.toISOString() ?? ""}"`,
   );
   const csv = [header, ...rows].join("\n");
 
@@ -87,37 +82,27 @@ router.get("/admin/newsletter/export", async (_req, res): Promise<void> => {
 });
 
 router.get("/admin/stats", async (_req, res): Promise<void> => {
-  const [inquiryStats] = await db
-    .select({ total: count() })
-    .from(contactInquiriesTable);
+  const totalInquiries = await ContactInquiryModel.countDocuments();
+  const statusAgg = await ContactInquiryModel.aggregate<{
+    _id: string;
+    count: number;
+  }>([{ $group: { _id: "$status", count: { $sum: 1 } } }]);
 
-  const statusCounts = await db
-    .select({
-      status: contactInquiriesTable.status,
-      count: count(),
-    })
-    .from(contactInquiriesTable)
-    .groupBy(contactInquiriesTable.status);
-
-  const [subscriberStats] = await db
-    .select({
-      total: count(),
-      active: sql<number>`count(*) filter (where ${newsletterSubscribersTable.active} = true)`,
-    })
-    .from(newsletterSubscribersTable);
+  const totalSubscribers = await NewsletterSubscriberModel.countDocuments();
+  const activeSubscribers = await NewsletterSubscriberModel.countDocuments({
+    active: true,
+  });
 
   const emailDelivery = await getOutboundEmailAdminCounts();
 
   res.json({
     inquiries: {
-      total: inquiryStats?.total ?? 0,
-      byStatus: Object.fromEntries(
-        statusCounts.map((s) => [s.status, s.count]),
-      ),
+      total: totalInquiries,
+      byStatus: Object.fromEntries(statusAgg.map((s) => [s._id, s.count])),
     },
     newsletter: {
-      total: subscriberStats?.total ?? 0,
-      active: subscriberStats?.active ?? 0,
+      total: totalSubscribers,
+      active: activeSubscribers,
     },
     emailDelivery,
     schedulers: getSchedulerHealth(),
@@ -125,10 +110,9 @@ router.get("/admin/stats", async (_req, res): Promise<void> => {
 });
 
 router.get("/admin/suppression", async (_req, res): Promise<void> => {
-  const entries = await db
-    .select()
-    .from(emailSuppressionListTable)
-    .orderBy(desc(emailSuppressionListTable.createdAt));
+  const entries = await EmailSuppressionModel.find()
+    .sort({ createdAt: -1 })
+    .lean();
 
   res.json(entries);
 });
@@ -153,27 +137,17 @@ router.post("/admin/suppression", async (req, res): Promise<void> => {
 
   await addToSuppressionList(email, finalReason);
 
-  const [entry] = await db
-    .select()
-    .from(emailSuppressionListTable)
-    .where(eq(emailSuppressionListTable.email, email.trim().toLowerCase()))
-    .limit(1);
+  const entry = await EmailSuppressionModel.findOne({
+    email: email.trim().toLowerCase(),
+  }).lean();
 
   res.status(201).json(entry);
 });
 
 router.delete("/admin/suppression/:id", async (req, res): Promise<void> => {
-  const id = parseInt(req.params.id, 10);
+  const id = req.params.id;
 
-  if (isNaN(id)) {
-    res.status(400).json({ error: "Invalid ID" });
-    return;
-  }
-
-  const [deleted] = await db
-    .delete(emailSuppressionListTable)
-    .where(eq(emailSuppressionListTable.id, id))
-    .returning();
+  const deleted = await EmailSuppressionModel.findByIdAndDelete(id).lean();
 
   if (!deleted) {
     res.status(404).json({ error: "Entry not found" });

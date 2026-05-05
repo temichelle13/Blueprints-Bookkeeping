@@ -1,12 +1,10 @@
 import { Router, type IRouter } from "express";
 import Stripe from "stripe";
 import {
-  db,
-  onboardingSubmissionsTable,
-  contactInquiriesTable,
-  subscriptionsTable,
+  OnboardingSubmissionModel,
+  ContactInquiryModel,
+  SubscriptionModel,
 } from "@workspace/db";
-import { eq } from "drizzle-orm";
 import { Resend } from "resend";
 import * as contractService from "../lib/contract-service";
 import { isEmailSuppressed } from "../lib/email-suppression";
@@ -214,12 +212,11 @@ router.post(
         },
         {
           getExistingSubmissionByStripeSessionId: async (sessionId) => {
-            const [existing] = await db
-              .select({ id: onboardingSubmissionsTable.id })
-              .from(onboardingSubmissionsTable)
-              .where(eq(onboardingSubmissionsTable.stripeSessionId, sessionId))
-              .limit(1);
-            return existing ?? null;
+            const existing = await OnboardingSubmissionModel.findOne(
+              { stripeSessionId: sessionId },
+              { _id: 1 }
+            ).lean();
+            return existing ? { id: existing._id.toString() } : null;
           },
           verifyStripeSession: async (sessionId) => {
             const stripe = getStripe();
@@ -245,31 +242,19 @@ router.post(
           getSubscriptionIdByStripeSubscriptionId: async (
             stripeSubscriptionId,
           ) => {
-            const subs = await db
-              .select({ id: subscriptionsTable.id })
-              .from(subscriptionsTable)
-              .where(
-                eq(
-                  subscriptionsTable.stripeSubscriptionId,
-                  stripeSubscriptionId,
-                ),
-              )
-              .limit(1);
-            return subs[0]?.id ?? null;
+            const sub = await SubscriptionModel.findOne(
+              { stripeSubscriptionId },
+              { _id: 1 }
+            ).lean();
+            return sub ? sub._id.toString() : null;
           },
           insertOnboardingSubmission: async (values) => {
-            const [submission] = await db
-              .insert(onboardingSubmissionsTable)
-              .values(values)
-              .returning({ id: onboardingSubmissionsTable.id });
-            return submission!;
+            const submission = await OnboardingSubmissionModel.create(values);
+            return { id: submission._id.toString() };
           },
           insertContactInquiry: async (values) => {
-            const [inquiry] = await db
-              .insert(contactInquiriesTable)
-              .values(values)
-              .returning({ id: contactInquiriesTable.id });
-            return inquiry!;
+            const inquiry = await ContactInquiryModel.create(values);
+            return { id: inquiry._id.toString() };
           },
           processContractSubmission: async (contactInquiryId) => {
             await contractService.processFormSubmission({

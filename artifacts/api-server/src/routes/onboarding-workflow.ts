@@ -1,7 +1,7 @@
 export type OnboardingFinalizeDeps = {
   getExistingSubmissionByStripeSessionId: (
     stripeSessionId: string,
-  ) => Promise<{ id: number } | null>;
+  ) => Promise<{ id: string } | null>;
   verifyStripeSession: (stripeSessionId: string) => Promise<{
     paymentStatus: string | null;
     customerEmail: string | null;
@@ -9,7 +9,7 @@ export type OnboardingFinalizeDeps = {
   }>;
   getSubscriptionIdByStripeSubscriptionId: (
     stripeSubscriptionId: string,
-  ) => Promise<number | null>;
+  ) => Promise<string | null>;
   insertOnboardingSubmission: (values: {
     clientName: string;
     clientEmail: string;
@@ -22,8 +22,8 @@ export type OnboardingFinalizeDeps = {
     plan: string | null;
     businessState: string;
     stripeSessionId: string;
-    subscriptionId: number | null;
-  }) => Promise<{ id: number }>;
+    subscriptionId: string | null;
+  }) => Promise<{ id: string }>;
   insertContactInquiry: (values: {
     formType: string;
     name: string;
@@ -37,8 +37,8 @@ export type OnboardingFinalizeDeps = {
     requestIp: string;
     userAgent: string;
     consentTimestamp: Date;
-  }) => Promise<{ id: number }>;
-  processContractSubmission: (contactInquiryId: number) => Promise<void>;
+  }) => Promise<{ id: string }>;
+  processContractSubmission: (contactInquiryId: string) => Promise<void>;
   sendOnboardingEmails: () => Promise<void>;
 };
 
@@ -98,7 +98,7 @@ export async function finalizeOnboardingSubmission(
     };
   }
 
-  let subscriptionId: number | null = null;
+  let subscriptionId: string | null = null;
   if (session.stripeSubscriptionId) {
     subscriptionId = await deps.getSubscriptionIdByStripeSubscriptionId(
       session.stripeSubscriptionId,

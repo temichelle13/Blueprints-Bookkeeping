@@ -1,103 +1,5 @@
-import {
-  pgTable,
-  text,
-  serial,
-  timestamp,
-  integer,
-  jsonb,
-  boolean,
-  index,
-} from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+import mongoose, { Schema, Types } from "mongoose";
 import { z } from "zod";
-import { contactInquiriesTable } from "./contactInquiries";
-
-export const contractTemplatesTable = pgTable(
-  "contract_templates",
-  {
-    id: serial("id").primaryKey(),
-    name: text("name").notNull(),
-    contractType: text("contract_type").notNull(),
-    adobeTemplateId: text("adobe_template_id"),
-    triggerCondition: text("trigger_condition").notNull(),
-    description: text("description"),
-    prefillFields: jsonb("prefill_fields").$type<string[]>(),
-    active: boolean("active").notNull().default(true),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
-    updatedAt: timestamp("updated_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
-  },
-  (table) => ({
-    contractTypeIdx: index("contract_templates_contract_type_idx").on(
-      table.contractType,
-    ),
-    activeIdx: index("contract_templates_active_idx").on(table.active),
-  }),
-);
-
-export const contractsTable = pgTable(
-  "contracts",
-  {
-    id: serial("id").primaryKey(),
-    clientName: text("client_name").notNull(),
-    clientEmail: text("client_email").notNull(),
-    contractType: text("contract_type").notNull(),
-    templateId: integer("template_id").references(
-      () => contractTemplatesTable.id,
-    ),
-    adobeAgreementId: text("adobe_agreement_id"),
-    status: text("status").notNull().default("draft"),
-    serviceType: text("service_type"),
-    pricingTier: text("pricing_tier"),
-    startDate: text("start_date"),
-    sentAt: timestamp("sent_at", { withTimezone: true }),
-    signedAt: timestamp("signed_at", { withTimezone: true }),
-    expiredAt: timestamp("expired_at", { withTimezone: true }),
-    signedDocumentUrl: text("signed_document_url"),
-    remindersSent: integer("reminders_sent").notNull().default(0),
-    lastReminderAt: timestamp("last_reminder_at", { withTimezone: true }),
-    metadata: jsonb("metadata").$type<Record<string, unknown>>(),
-    contactInquiryId: integer("contact_inquiry_id").references(
-      () => contactInquiriesTable.id,
-    ),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
-    updatedAt: timestamp("updated_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
-  },
-  (table) => ({
-    clientEmailIdx: index("contracts_client_email_idx").on(table.clientEmail),
-    statusIdx: index("contracts_status_idx").on(table.status),
-    templateIdIdx: index("contracts_template_id_idx").on(table.templateId),
-    contactInquiryIdIdx: index("contracts_contact_inquiry_id_idx").on(
-      table.contactInquiryId,
-    ),
-  }),
-);
-
-// Define relations for better type safety and query building
-export const contractTemplatesRelations = relations(
-  contractTemplatesTable,
-  ({ many }) => ({
-    contracts: many(contractsTable),
-  }),
-);
-
-export const contractsRelations = relations(contractsTable, ({ one }) => ({
-  template: one(contractTemplatesTable, {
-    fields: [contractsTable.templateId],
-    references: [contractTemplatesTable.id],
-  }),
-  contactInquiry: one(contactInquiriesTable, {
-    fields: [contractsTable.contactInquiryId],
-    references: [contactInquiriesTable.id],
-  }),
-}));
 
 export const contractTypeEnum = z.enum([
   "engagement_letter",
@@ -122,7 +24,92 @@ export const triggerConditionEnum = z.enum([
   "manual",
 ]);
 
-export type ContractTemplate = typeof contractTemplatesTable.$inferSelect;
-export type InsertContractTemplate = typeof contractTemplatesTable.$inferInsert;
-export type Contract = typeof contractsTable.$inferSelect;
-export type InsertContract = typeof contractsTable.$inferInsert;
+export type ContractType = z.infer<typeof contractTypeEnum>;
+export type ContractStatus = z.infer<typeof contractStatusEnum>;
+export type TriggerCondition = z.infer<typeof triggerConditionEnum>;
+
+export interface IContractTemplate {
+  name: string;
+  contractType: string;
+  adobeTemplateId?: string | null;
+  triggerCondition: string;
+  description?: string | null;
+  prefillFields?: string[] | null;
+  active: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const ContractTemplateSchema = new Schema<IContractTemplate>(
+  {
+    name: { type: String, required: true },
+    contractType: { type: String, required: true },
+    adobeTemplateId: { type: String, default: null },
+    triggerCondition: { type: String, required: true },
+    description: { type: String, default: null },
+    prefillFields: { type: [String], default: null },
+    active: { type: Boolean, default: true },
+  },
+  { timestamps: true },
+);
+
+export const ContractTemplateModel =
+  (mongoose.models["ContractTemplate"] as mongoose.Model<IContractTemplate>) ||
+  mongoose.model<IContractTemplate>("ContractTemplate", ContractTemplateSchema);
+
+export type ContractTemplate = mongoose.HydratedDocument<IContractTemplate>;
+export type InsertContractTemplate = Omit<IContractTemplate, "createdAt" | "updatedAt" | "active"> &
+  Partial<Pick<IContractTemplate, "active">>;
+
+export interface IContract {
+  clientName: string;
+  clientEmail: string;
+  contractType: string;
+  templateId?: Types.ObjectId | null;
+  adobeAgreementId?: string | null;
+  status: string;
+  serviceType?: string | null;
+  pricingTier?: string | null;
+  startDate?: Date | null;
+  sentAt?: Date | null;
+  signedAt?: Date | null;
+  expiredAt?: Date | null;
+  signedDocumentUrl?: string | null;
+  remindersSent: number;
+  lastReminderAt?: Date | null;
+  metadata?: Record<string, unknown> | null;
+  contactInquiryId?: Types.ObjectId | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const ContractSchema = new Schema<IContract>(
+  {
+    clientName: { type: String, required: true },
+    clientEmail: { type: String, required: true },
+    contractType: { type: String, required: true },
+    templateId: { type: Schema.Types.ObjectId, ref: "ContractTemplate", default: null },
+    adobeAgreementId: { type: String, default: null },
+    status: { type: String, default: "draft" },
+    serviceType: { type: String, default: null },
+    pricingTier: { type: String, default: null },
+    startDate: { type: Date, default: null },
+    sentAt: { type: Date, default: null },
+    signedAt: { type: Date, default: null },
+    expiredAt: { type: Date, default: null },
+    signedDocumentUrl: { type: String, default: null },
+    remindersSent: { type: Number, default: 0 },
+    lastReminderAt: { type: Date, default: null },
+    metadata: { type: Schema.Types.Mixed, default: null },
+    contactInquiryId: { type: Schema.Types.ObjectId, ref: "ContactInquiry", default: null },
+  },
+  { timestamps: true },
+);
+
+export const ContractModel =
+  (mongoose.models["Contract"] as mongoose.Model<IContract>) ||
+  mongoose.model<IContract>("Contract", ContractSchema);
+
+export type Contract = mongoose.HydratedDocument<IContract>;
+export type InsertContract = Omit<IContract, "createdAt" | "updatedAt" | "remindersSent" | "status"> &
+  Partial<Pick<IContract, "remindersSent" | "status">>;

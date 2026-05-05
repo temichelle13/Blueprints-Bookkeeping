@@ -1,6 +1,4 @@
-import { db } from "./index";
-import { stateNexusRulesTable } from "./schema/stateNexus";
-import { sql } from "drizzle-orm";
+import { connectToDatabase, StateNexusRuleModel } from "./index";
 
 const STATE_NEXUS_DATA = [
   {
@@ -522,12 +520,13 @@ const STATE_NEXUS_DATA = [
 ];
 
 export async function seedNexusRules() {
+  await connectToDatabase();
   console.log("Seeding state nexus rules...");
 
   for (const state of STATE_NEXUS_DATA) {
-    await db
-      .insert(stateNexusRulesTable)
-      .values({
+    await StateNexusRuleModel.updateOne(
+      { stateCode: state.stateCode },
+      {
         stateCode: state.stateCode,
         stateName: state.stateName,
         foreignQualificationThreshold: state.threshold,
@@ -536,20 +535,9 @@ export async function seedNexusRules() {
         authorityName: state.authority,
         authorityUrl: state.url,
         notes: state.notes,
-      })
-      .onConflictDoUpdate({
-        target: stateNexusRulesTable.stateCode,
-        set: {
-          stateName: sql`excluded.state_name`,
-          foreignQualificationThreshold: sql`excluded.foreign_qualification_threshold`,
-          bookkeepingLicenseRequired: sql`excluded.bookkeeping_license_required`,
-          bookkeepingLicenseNotes: sql`excluded.bookkeeping_license_notes`,
-          authorityName: sql`excluded.authority_name`,
-          authorityUrl: sql`excluded.authority_url`,
-          notes: sql`excluded.notes`,
-          updatedAt: sql`now()`,
-        },
-      });
+      },
+      { upsert: true },
+    );
   }
 
   console.log(`Seeded ${STATE_NEXUS_DATA.length} state nexus rules`);

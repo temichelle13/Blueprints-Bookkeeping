@@ -5,8 +5,7 @@ import {
   type Response,
   type NextFunction,
 } from "express";
-import { db, stateNexusRulesTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { StateNexusRuleModel } from "@workspace/db";
 import {
   getNexusSummary,
   runNexusCheck,
@@ -46,10 +45,9 @@ router.get("/admin/nexus/summary", async (_req, res): Promise<void> => {
 
 router.get("/admin/nexus/rules", async (_req, res): Promise<void> => {
   try {
-    const rules = await db
-      .select()
-      .from(stateNexusRulesTable)
-      .orderBy(stateNexusRulesTable.stateName);
+    const rules = await StateNexusRuleModel.find()
+      .sort({ stateName: 1 })
+      .lean();
     res.json(rules);
   } catch (err) {
     console.error("Failed to get nexus rules:", err);
@@ -106,11 +104,11 @@ router.patch(
     }
 
     try {
-      const [updated] = await db
-        .update(stateNexusRulesTable)
-        .set(updates)
-        .where(eq(stateNexusRulesTable.stateCode, stateCode.toUpperCase()))
-        .returning();
+      const updated = await StateNexusRuleModel.findOneAndUpdate(
+        { stateCode: stateCode.toUpperCase() },
+        updates,
+        { new: true },
+      ).lean();
 
       if (!updated) {
         res.status(404).json({ error: "State not found" });

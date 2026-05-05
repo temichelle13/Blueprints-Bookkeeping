@@ -1,7 +1,5 @@
 import { Router, type IRouter } from "express";
-import { db } from "@workspace/db";
-import { conversations, messages } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { ConversationModel, MessageModel } from "@workspace/db";
 import { openai } from "@workspace/integrations-openai-ai-server";
 import { Resend } from "resend";
 import {
@@ -67,15 +65,15 @@ export function isLeadMessage(
   );
 }
 
-
-function parseConversationId(value: string | string[] | undefined): number {
+function parseConversationId(
+  value: string | string[] | undefined,
+): string | null {
   if (Array.isArray(value)) {
-    if (value.length !== 1) return NaN;
+    if (value.length !== 1) return null;
     return parseConversationId(value[0]);
   }
-  if (value === undefined || !/^\d+$/.test(value)) return NaN;
-  const n = Number.parseInt(value, 10);
-  return Number.isSafeInteger(n) ? n : NaN;
+  if (!value || typeof value !== "string" || value.length === 0) return null;
+  return value;
 }
 
 const SYSTEM_PROMPT = `You are Aria, the friendly AI assistant for Blueprints & Bookkeeping, LLC — a premium remote financial services firm founded by Tea Larson-Hetrick in Roseburg, Oregon.
@@ -204,15 +202,10 @@ router.post(
       return;
     }
 
-    const [conv] = await db.insert(conversations).values({ title }).returning();
-
-    if (!conv) {
-      res.status(500).json({ error: "Failed to create conversation" });
-      return;
-    }
+    const conv = await ConversationModel.create({ title });
 
     res.status(201).json({
-      id: conv.id,
+      id: conv._id.toString(),
       title: conv.title,
       createdAt: conv.createdAt,
     });
@@ -220,11 +213,11 @@ router.post(
 );
 
 router.get("/openai/conversations", async (_req, res): Promise<void> => {
-  const allConversations = await db.select().from(conversations);
+  const allConversations = await ConversationModel.find().lean();
 
   res.json(
     allConversations.map((conversation) => ({
-      id: conversation.id,
+      id: conversation._id.toString(),
       title: conversation.title,
       createdAt: conversation.createdAt,
     })),
@@ -233,33 +226,29 @@ router.get("/openai/conversations", async (_req, res): Promise<void> => {
 
 router.get("/openai/conversations/:id", async (req, res): Promise<void> => {
   const id = parseConversationId(req.params.id);
-  if (isNaN(id)) {
+  if (!id) {
     res.status(400).json({ error: "Invalid id" });
     return;
   }
 
-  const [conv] = await db
-    .select()
-    .from(conversations)
-    .where(eq(conversations.id, id));
+  const conv = await ConversationModel.findById(id).lean();
 
   if (!conv) {
     res.status(404).json({ error: "Conversation not found" });
     return;
   }
 
-  const msgs = await db
-    .select()
-    .from(messages)
-    .where(eq(messages.conversationId, id));
+  const msgs = await MessageModel.find({ conversationId: id })
+    .sort({ createdAt: 1 })
+    .lean();
 
   res.json({
-    id: conv.id,
+    id: conv._id.toString(),
     title: conv.title,
     createdAt: conv.createdAt,
     messages: msgs.map((m) => ({
-      id: m.id,
-      conversationId: m.conversationId,
+      id: m._id.toString(),
+      conversationId: m.conversationId.toString(),
       role: m.role,
       content: m.content,
       createdAt: m.createdAt,
@@ -269,17 +258,14 @@ router.get("/openai/conversations/:id", async (req, res): Promise<void> => {
 
 router.delete("/openai/conversations/:id", async (req, res): Promise<void> => {
   const id = parseConversationId(req.params.id);
-  if (isNaN(id)) {
+  if (!id) {
     res.status(400).json({ error: "Invalid id" });
     return;
   }
 
-  const [deletedConversation] = await db
-    .delete(conversations)
-    .where(eq(conversations.id, id))
-    .returning({ id: conversations.id });
+  const deleted = await ConversationModel.findByIdAndDelete(id);
 
-  if (!deletedConversation) {
+  if (!deleted) {
     res.status(404).json({ error: "Conversation not found" });
     return;
   }
@@ -291,30 +277,26 @@ router.get(
   "/openai/conversations/:id/messages",
   async (req, res): Promise<void> => {
     const id = parseConversationId(req.params.id);
-    if (isNaN(id)) {
+    if (!id) {
       res.status(400).json({ error: "Invalid id" });
       return;
     }
 
-    const [conv] = await db
-      .select({ id: conversations.id })
-      .from(conversations)
-      .where(eq(conversations.id, id));
+    const conv = await ConversationModel.findById(id).lean();
 
     if (!conv) {
       res.status(404).json({ error: "Conversation not found" });
       return;
     }
 
-    const convMessages = await db
-      .select()
-      .from(messages)
-      .where(eq(messages.conversationId, id));
+    const convMessages = await MessageModel.find({ conversationId: id })
+      .sort({ createdAt: 1 })
+      .lean();
 
     res.json(
       convMessages.map((message) => ({
-        id: message.id,
-        conversationId: message.conversationId,
+        id: message._id.toString(),
+        conversationId: message.conversationId.toString(),
         role: message.role,
         content: message.content,
         createdAt: message.createdAt,
@@ -328,7 +310,7 @@ router.post(
   openAiMessageLimiter,
   async (req, res): Promise<void> => {
     const id = parseConversationId(req.params.id);
-    if (isNaN(id)) {
+    if (!id) {
       res.status(400).json({ error: "Invalid id" });
       return;
     }
@@ -342,20 +324,16 @@ router.post(
 
     const userContent = content as string;
 
-    const [conv] = await db
-      .select()
-      .from(conversations)
-      .where(eq(conversations.id, id));
+    const conv = await ConversationModel.findById(id).lean();
 
     if (!conv) {
       res.status(404).json({ error: "Conversation not found" });
       return;
     }
 
-    const history = await db
-      .select()
-      .from(messages)
-      .where(eq(messages.conversationId, id));
+    const history = await MessageModel.find({ conversationId: id })
+      .sort({ createdAt: 1 })
+      .lean();
 
     recordOpenAiRequestVolume({
       routeId: "message_send",
@@ -369,19 +347,19 @@ router.post(
       return;
     }
 
-    await db.insert(messages).values({
+    await MessageModel.create({
       conversationId: id,
       role: "user",
       content: userContent,
     });
 
     history.push({
-      id: -1,
-      conversationId: id,
+      _id: new (await import("mongoose")).default.Types.ObjectId(),
+      conversationId: conv._id,
       role: "user",
       content: userContent,
       createdAt: new Date(),
-    });
+    } as (typeof history)[number]);
 
     const chatMessages = history.map((m) => ({
       role: m.role as "user" | "assistant" | "system",
@@ -397,10 +375,8 @@ router.post(
     if (!isOpenAiConfigured || !openai) {
       const fallback =
         "Aria is temporarily offline right now. Please use the contact form, email tea@blueprintsandbookkeeping.com, or book a discovery call and Tea will follow up personally.";
-      res.write(`data: ${JSON.stringify({ content: fallback })}
-
-`);
-      await db.insert(messages).values({
+      res.write(`data: ${JSON.stringify({ content: fallback })}\n\n`);
+      await MessageModel.create({
         conversationId: id,
         role: "assistant",
         content: fallback,
@@ -430,7 +406,7 @@ router.post(
         }
       }
 
-      await db.insert(messages).values({
+      await MessageModel.create({
         conversationId: id,
         role: "assistant",
         content: fullResponse,
@@ -453,7 +429,7 @@ router.post(
 async function checkAndNotifyTea(
   userMessage: string,
   assistantResponse: string,
-  conversationId: number,
+  conversationId: string,
 ): Promise<void> {
   const isLead = isLeadMessage(userMessage, assistantResponse);
 

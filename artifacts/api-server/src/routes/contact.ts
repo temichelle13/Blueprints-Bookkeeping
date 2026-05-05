@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { db, contactInquiriesTable } from "@workspace/db";
+import { ContactInquiryModel } from "@workspace/db";
 import { SubmitContactFormBody } from "@workspace/api-zod";
 import * as contractService from "../lib/contract-service";
 import { isEmailSuppressed } from "../lib/email-suppression";
@@ -23,7 +23,10 @@ export const ALLOWED_CONSENT_TEXT_VERSIONS = new Set([
   "legacy-unknown",
 ]);
 
-export const ALLOWED_CONSENT_SOURCE_PAGES = new Set(["/contact", "/onboarding"]);
+export const ALLOWED_CONSENT_SOURCE_PAGES = new Set([
+  "/contact",
+  "/onboarding",
+]);
 
 export function escapeHtml(str: string): string {
   return str
@@ -117,35 +120,32 @@ router.post(
     const normalizedConsent = normalizeConsent(data);
     const consentCapturedAt = new Date();
 
-    const [inquiry] = await db
-      .insert(contactInquiriesTable)
-      .values({
-        formType: data.formType,
-        name: data.name,
-        email: data.email,
-        phone: data.phone ?? null,
-        message: data.message ?? null,
-        businessName: data.businessName ?? null,
-        industry: data.industry ?? null,
-        servicesInterested: data.servicesInterested ?? null,
-        monthlyRevenueRange: data.monthlyRevenueRange ?? null,
-        biggestChallenge: data.biggestChallenge ?? null,
-        preferredContactMethod: data.preferredContactMethod ?? null,
-        emailConsent: normalizedConsent.email,
-        emailConsentCapturedAt: normalizedConsent.email
-          ? consentCapturedAt
-          : null,
-        emailConsentSource: normalizedConsent.email
-          ? normalizedConsent.source
-          : null,
-        smsConsent: normalizedConsent.sms,
-        consentTimestamp: consentCapturedAt,
-        consentTextVersion: data.consentTextVersion,
-        requestIp: getRequestIp(req),
-        userAgent: getUserAgent(req),
-        consentSourcePage: data.consentSourcePage,
-      })
-      .returning();
+    const inquiry = await ContactInquiryModel.create({
+      formType: data.formType,
+      name: data.name,
+      email: data.email,
+      phone: data.phone ?? null,
+      message: data.message ?? null,
+      businessName: data.businessName ?? null,
+      industry: data.industry ?? null,
+      servicesInterested: data.servicesInterested ?? null,
+      monthlyRevenueRange: data.monthlyRevenueRange ?? null,
+      biggestChallenge: data.biggestChallenge ?? null,
+      preferredContactMethod: data.preferredContactMethod ?? null,
+      emailConsent: normalizedConsent.email,
+      emailConsentCapturedAt: normalizedConsent.email
+        ? consentCapturedAt
+        : null,
+      emailConsentSource: normalizedConsent.email
+        ? normalizedConsent.source
+        : null,
+      smsConsent: normalizedConsent.sms,
+      consentTimestamp: consentCapturedAt,
+      consentTextVersion: data.consentTextVersion,
+      requestIp: getRequestIp(req),
+      userAgent: getUserAgent(req),
+      consentSourcePage: data.consentSourcePage,
+    });
 
     if (!inquiry) {
       throw new Error("Failed to insert contact inquiry record");
@@ -212,8 +212,10 @@ router.post(
         </div>
       </div>`;
 
+    const inquiryId = inquiry._id.toString();
+
     queueContactInquiryEmails({
-      inquiryId: inquiry.id,
+      inquiryId,
       senderEmail: data.email,
       senderSuppressed: suppressed,
       ownerHtml: notifyHtml,
@@ -221,7 +223,7 @@ router.post(
       confirmationHtml: confirmHtml,
     }).catch((err: unknown) => {
       logger.error("Failed to queue contact inquiry emails", err as Error, {
-        inquiryId: inquiry.id,
+        inquiryId,
       });
     });
 
@@ -231,7 +233,7 @@ router.post(
         name: data.name,
         email: data.email,
         servicesInterested: data.servicesInterested ?? null,
-        contactInquiryId: inquiry.id,
+        contactInquiryId: inquiryId,
       })
       .catch((err) => {
         console.error("Contract automation error (non-blocking):", err);
@@ -241,7 +243,7 @@ router.post(
       success: true,
       message:
         "Thank you for your inquiry! We will be in touch within 48 hours.",
-      id: inquiry.id,
+      id: inquiryId,
     });
   },
 );

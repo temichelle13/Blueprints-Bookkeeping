@@ -1,11 +1,9 @@
 import {
-  db,
-  outboundEmailEventsTable,
-  contactInquiriesTable,
-  type OutboundEmailEvent,
+  OutboundEmailEventModel,
+  ContactInquiryModel,
+  Types,
   type OutboundEmailEventType,
 } from "@workspace/db";
-import { and, asc, eq, gte, inArray, lte, notExists, sql } from "drizzle-orm";
 import { EMAIL_FROM, getOwnerEmail, getResend } from "./email";
 import { logger } from "./logger";
 
@@ -13,7 +11,7 @@ const MAX_RETRY_ATTEMPTS = 3;
 const RETRY_DELAYS_MS = [60_000, 5 * 60_000, 15 * 60_000];
 
 interface QueueContactEmailArgs {
-  inquiryId: number;
+  inquiryId: string;
   senderEmail: string;
   senderSuppressed: boolean;
   ownerHtml: string;
@@ -59,23 +57,20 @@ function isTransientError(errorPayload: Record<string, unknown>): boolean {
 }
 
 async function markEventSent(
-  id: number,
+  id: string,
   providerMessageId: string | null,
 ): Promise<void> {
-  await db
-    .update(outboundEmailEventsTable)
-    .set({
-      status: "sent",
-      providerMessageId,
-      sentAt: new Date(),
-      errorPayload: null,
-      updatedAt: new Date(),
-    })
-    .where(eq(outboundEmailEventsTable.id, id));
+  await OutboundEmailEventModel.findByIdAndUpdate(id, {
+    status: "sent",
+    providerMessageId,
+    sentAt: new Date(),
+    errorPayload: null,
+    updatedAt: new Date(),
+  });
 }
 
 async function markEventRetryOrFailure(
-  event: OutboundEmailEvent,
+  event: { _id: Types.ObjectId; attemptCount: number; maxAttempts: number; nextAttemptAt: Date; eventType: string; inquiryId: Types.ObjectId },
   errorPayload: Record<string, unknown>,
 ): Promise<void> {
   const attemptCount = event.attemptCount + 1;
@@ -86,18 +81,15 @@ async function markEventRetryOrFailure(
     RETRY_DELAYS_MS[Math.min(attemptCount - 1, RETRY_DELAYS_MS.length - 1)] ??
     15 * 60_000;
 
-  await db
-    .update(outboundEmailEventsTable)
-    .set({
-      attemptCount,
-      status: hasRetriesRemaining ? "queued" : "failed",
-      nextAttemptAt: hasRetriesRemaining
-        ? new Date(Date.now() + retryDelay)
-        : event.nextAttemptAt,
-      errorPayload,
-      updatedAt: new Date(),
-    })
-    .where(eq(outboundEmailEventsTable.id, event.id));
+  await OutboundEmailEventModel.findByIdAndUpdate(event._id, {
+    attemptCount,
+    status: hasRetriesRemaining ? "queued" : "failed",
+    nextAttemptAt: hasRetriesRemaining
+      ? new Date(Date.now() + retryDelay)
+      : event.nextAttemptAt,
+    errorPayload,
+    updatedAt: new Date(),
+  });
 
   if (event.eventType === "owner_notification") {
     logger.error(
@@ -105,7 +97,7 @@ async function markEventRetryOrFailure(
       undefined,
       {
         inquiryId: event.inquiryId,
-        eventId: event.id,
+        eventId: event._id,
         attemptCount,
         willRetry: hasRetriesRemaining,
         errorPayload,
@@ -114,7 +106,7 @@ async function markEventRetryOrFailure(
   }
 }
 
-async function sendSingleEvent(event: OutboundEmailEvent): Promise<void> {
+async function sendSingleEvent(event: ReturnType<typeof OutboundEmailEventModel.prototype.toObject> & { _id: Types.ObjectId }): Promise<void> {
   const resend = getResend();
 
   if (!resend) {
@@ -153,14 +145,14 @@ async function sendSingleEvent(event: OutboundEmailEvent): Promise<void> {
       return;
     }
 
-    await markEventSent(event.id, (response as any)?.data?.id ?? null);
+    await markEventSent(event._id.toString(), (response as any)?.data?.id ?? null);
   } catch (error) {
     await markEventRetryOrFailure(event, buildErrorPayload(error));
   }
 }
 
 async function queueEvent(
-  inquiryId: number,
+  inquiryId: string,
   eventType: OutboundEmailEventType,
   recipientEmail: string,
   emailData: {
@@ -169,23 +161,20 @@ async function queueEvent(
     replyTo?: string;
   },
 ): Promise<void> {
-  const [event] = await db
-    .insert(outboundEmailEventsTable)
-    .values({
-      inquiryId,
-      eventType,
-      recipientEmail,
-      status: "queued",
-      attemptCount: 0,
-      maxAttempts: MAX_RETRY_ATTEMPTS,
-      nextAttemptAt: new Date(),
-      emailPayload: {
-        subject: emailData.subject,
-        html: emailData.html,
-        ...(emailData.replyTo ? { replyTo: emailData.replyTo } : {}),
-      },
-    })
-    .returning();
+  const event = await OutboundEmailEventModel.create({
+    inquiryId: new Types.ObjectId(inquiryId),
+    eventType,
+    recipientEmail,
+    status: "queued",
+    attemptCount: 0,
+    maxAttempts: MAX_RETRY_ATTEMPTS,
+    nextAttemptAt: new Date(),
+    emailPayload: {
+      subject: emailData.subject,
+      html: emailData.html,
+      ...(emailData.replyTo ? { replyTo: emailData.replyTo } : {}),
+    },
+  });
 
   if (!event) {
     logger.error("Failed to create outbound email event", undefined, {
@@ -222,75 +211,45 @@ export async function processPendingOutboundEmailEvents(
   limit = 25,
 ): Promise<number> {
   const now = new Date();
+  const processed: number[] = [];
 
-  // Atomically claim queued events using a subquery with FOR UPDATE SKIP LOCKED
-  // to prevent concurrent workers from processing the same event.
-  const claimed = await db
-    .update(outboundEmailEventsTable)
-    .set({ status: "sending", updatedAt: now })
-    .where(
-      inArray(
-        outboundEmailEventsTable.id,
-        db
-          .select({ id: outboundEmailEventsTable.id })
-          .from(outboundEmailEventsTable)
-          .where(
-            and(
-              eq(outboundEmailEventsTable.status, "queued"),
-              lte(outboundEmailEventsTable.nextAttemptAt, now),
-            ),
-          )
-          .orderBy(asc(outboundEmailEventsTable.nextAttemptAt))
-          .limit(limit)
-          .for("update", { skipLocked: true }),
-      ),
-    )
-    .returning();
+  // Process events one at a time using atomic findOneAndUpdate to prevent
+  // concurrent workers from processing the same event.
+  for (let i = 0; i < limit; i++) {
+    const event = await OutboundEmailEventModel.findOneAndUpdate(
+      { status: "queued", nextAttemptAt: { $lte: now } },
+      { $set: { status: "sending", updatedAt: now } },
+      { new: true, sort: { nextAttemptAt: 1 } },
+    ).lean();
 
-  for (const event of claimed) {
-    await sendSingleEvent(event);
+    if (!event) break;
+    await sendSingleEvent(event as any);
+    processed.push(1);
   }
 
-  return claimed.length;
+  return processed.length;
 }
 
 export async function getOutboundEmailAdminCounts(): Promise<{
   unnotifiedInquiries: number;
   emailFailuresLast24h: number;
 }> {
-  const [unnotified] = await db
-    .select({ count: sql<number>`count(*)::int` })
-    .from(contactInquiriesTable)
-    .where(
-      notExists(
-        db
-          .select({ id: outboundEmailEventsTable.id })
-          .from(outboundEmailEventsTable)
-          .where(
-            and(
-              eq(outboundEmailEventsTable.inquiryId, contactInquiriesTable.id),
-              eq(outboundEmailEventsTable.eventType, "owner_notification"),
-              eq(outboundEmailEventsTable.status, "sent"),
-            ),
-          ),
-      ),
-    );
+  const notifiedIds = await OutboundEmailEventModel.distinct("inquiryId", {
+    eventType: "owner_notification",
+    status: "sent",
+  });
 
-  const [failures] = await db
-    .select({ count: sql<number>`count(*)::int` })
-    .from(outboundEmailEventsTable)
-    .where(
-      and(
-        eq(outboundEmailEventsTable.status, "failed"),
-        gte(
-          outboundEmailEventsTable.updatedAt,
-          new Date(Date.now() - 24 * 60 * 60 * 1000),
-        ),
-      ),
-    );
+  const unnotifiedCount = await ContactInquiryModel.countDocuments({
+    _id: { $nin: notifiedIds },
+  });
+
+  const failureCount = await OutboundEmailEventModel.countDocuments({
+    status: "failed",
+    updatedAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+  });
 
   return {
-    unnotifiedInquiries: unnotified?.count ?? 0,
-    emailFailuresLast24h: failures?.count ?? 0,
+    unnotifiedInquiries: unnotifiedCount,
+    emailFailuresLast24h: failureCount,
   };
 }

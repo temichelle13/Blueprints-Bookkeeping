@@ -1,7 +1,6 @@
 import { Router, type IRouter } from "express";
 import Stripe from "stripe";
-import { db, subscriptionsTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { SubscriptionModel } from "@workspace/db";
 import { Resend } from "resend";
 import { isEmailSuppressed } from "../lib/email-suppression";
 
@@ -246,17 +245,15 @@ async function handleCheckoutCompleted(
       ? session.subscription
       : session.subscription?.id || "";
 
-  const existing = await db
-    .select()
-    .from(subscriptionsTable)
-    .where(eq(subscriptionsTable.stripeSubscriptionId, subscriptionId))
-    .limit(1);
+  const existing = await SubscriptionModel.findOne({
+    stripeSubscriptionId: subscriptionId,
+  }).lean();
 
-  if (existing.length > 0) {
+  if (existing) {
     return;
   }
 
-  await db.insert(subscriptionsTable).values({
+  await SubscriptionModel.create({
     stripeCustomerId: customerId,
     stripeSubscriptionId: subscriptionId,
     plan,
@@ -380,10 +377,10 @@ async function handlePaymentFailed(invoice: Stripe.Invoice): Promise<void> {
 
   if (subscriptionId) {
     const now = new Date();
-    await db
-      .update(subscriptionsTable)
-      .set({ status: "past_due", updatedAt: now })
-      .where(eq(subscriptionsTable.stripeSubscriptionId, subscriptionId));
+    await SubscriptionModel.findOneAndUpdate(
+      { stripeSubscriptionId: subscriptionId },
+      { status: "past_due", updatedAt: now },
+    );
   }
 
   const resend = getResend();
@@ -431,18 +428,14 @@ async function handleSubscriptionCanceled(
   subscription: Stripe.Subscription,
 ): Promise<void> {
   const now = new Date();
-  await db
-    .update(subscriptionsTable)
-    .set({ status: "canceled", canceledAt: now, updatedAt: now })
-    .where(eq(subscriptionsTable.stripeSubscriptionId, subscription.id));
+  await SubscriptionModel.findOneAndUpdate(
+    { stripeSubscriptionId: subscription.id },
+    { status: "canceled", canceledAt: now, updatedAt: now },
+  );
 
-  const existing = await db
-    .select()
-    .from(subscriptionsTable)
-    .where(eq(subscriptionsTable.stripeSubscriptionId, subscription.id))
-    .limit(1);
-
-  const sub = existing[0];
+  const sub = await SubscriptionModel.findOne({
+    stripeSubscriptionId: subscription.id,
+  }).lean();
 
   const resend = getResend();
   if (resend && sub) {

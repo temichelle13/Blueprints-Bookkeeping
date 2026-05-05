@@ -1,19 +1,25 @@
-import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+import mongoose, { Schema } from "mongoose";
 
-export const conversations = pgTable("conversations", {
-  id: serial("id").primaryKey(),
-  title: text("title").notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-});
+export interface IConversation {
+  title: string;
+  visitorIp?: string | null;
+  leadCaptured: boolean;
+  createdAt: Date;
+}
 
-export const insertConversationSchema = createInsertSchema(conversations).omit({
-  id: true,
-  createdAt: true,
-}) as any;
+const ConversationSchema = new Schema<IConversation>(
+  {
+    title: { type: String, required: true },
+    visitorIp: { type: String, default: null },
+    leadCaptured: { type: Boolean, default: false },
+  },
+  { timestamps: { createdAt: "createdAt", updatedAt: false } },
+);
 
-export type Conversation = typeof conversations.$inferSelect;
-export type InsertConversation = z.infer<typeof insertConversationSchema>;
+export const ConversationModel =
+  (mongoose.models["Conversation"] as mongoose.Model<IConversation>) ||
+  mongoose.model<IConversation>("Conversation", ConversationSchema);
+
+export type Conversation = mongoose.HydratedDocument<IConversation>;
+export type InsertConversation = Omit<IConversation, "createdAt" | "leadCaptured"> &
+  Partial<Pick<IConversation, "leadCaptured">>;

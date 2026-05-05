@@ -1,38 +1,34 @@
-import {
-  pgTable,
-  text,
-  serial,
-  timestamp,
-  boolean,
-  uuid,
-} from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+import mongoose, { Schema } from "mongoose";
+import { randomUUID } from "crypto";
 
-export const newsletterSubscribersTable = pgTable("newsletter_subscribers", {
-  id: serial("id").primaryKey(),
-  email: text("email").notNull().unique(),
-  signupSource: text("signup_source").notNull(),
-  active: boolean("active").notNull().default(true),
-  unsubscribeToken: uuid("unsubscribe_token")
-    .notNull()
-    .unique()
-    .defaultRandom(),
-  subscribedAt: timestamp("subscribed_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-});
+export interface INewsletterSubscriber {
+  email: string;
+  signupSource: string;
+  active: boolean;
+  unsubscribeToken: string;
+  subscribedAt: Date;
+}
 
-export const insertNewsletterSubscriberSchema = createInsertSchema(
-  newsletterSubscribersTable,
-).omit({
-  id: true,
-  subscribedAt: true,
-  active: true,
-  unsubscribeToken: true,
-}) as any;
-export type InsertNewsletterSubscriber = z.infer<
-  typeof insertNewsletterSubscriberSchema
->;
-export type NewsletterSubscriber =
-  typeof newsletterSubscribersTable.$inferSelect;
+const NewsletterSubscriberSchema = new Schema<INewsletterSubscriber>(
+  {
+    email: { type: String, required: true, unique: true, lowercase: true },
+    signupSource: { type: String, required: true },
+    active: { type: Boolean, default: true },
+    unsubscribeToken: {
+      type: String,
+      required: true,
+      unique: true,
+      default: () => randomUUID(),
+    },
+    subscribedAt: { type: Date, default: () => new Date() },
+  },
+  { timestamps: false },
+);
+
+export const NewsletterSubscriberModel =
+  (mongoose.models["NewsletterSubscriber"] as mongoose.Model<INewsletterSubscriber>) ||
+  mongoose.model<INewsletterSubscriber>("NewsletterSubscriber", NewsletterSubscriberSchema);
+
+export type NewsletterSubscriber = mongoose.HydratedDocument<INewsletterSubscriber>;
+export type InsertNewsletterSubscriber = Omit<INewsletterSubscriber, "active" | "unsubscribeToken" | "subscribedAt"> &
+  Partial<Pick<INewsletterSubscriber, "active" | "unsubscribeToken" | "subscribedAt">>;

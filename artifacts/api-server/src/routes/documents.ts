@@ -5,8 +5,7 @@ import {
   type Response,
   type NextFunction,
 } from "express";
-import { db, clientDocumentsTable } from "@workspace/db";
-import { eq, desc } from "drizzle-orm";
+import { ClientDocumentModel } from "@workspace/db";
 import multer from "multer";
 import * as ccStorage from "../lib/adobe-cc-storage";
 import { Resend } from "resend";
@@ -232,7 +231,7 @@ router.post(
     }
 
     const results: Array<{
-      id: number;
+      id: string;
       fileName: string;
       storagePath: string;
     }> = [];
@@ -247,9 +246,7 @@ router.post(
         const mimeType = file.mimetype || getMimeTypeForFile(file.originalname);
         await ccStorage.uploadToCreativeCloud(storagePath, fileBytes, mimeType);
 
-        const [doc] = await db
-          .insert(clientDocumentsTable)
-          .values({
+        const doc = await ClientDocumentModel.create({
             clientName,
             clientEmail,
             fileName: file.originalname,
@@ -257,16 +254,13 @@ router.post(
             fileSize: file.size,
             mimeType: file.mimetype || getMimeTypeForFile(file.originalname),
             storagePath,
-          })
-          .returning();
-
-        if (doc) {
-          results.push({
-            id: doc.id,
-            fileName: file.originalname,
-            storagePath,
           });
-        }
+
+        results.push({
+          id: doc._id.toString(),
+          fileName: file.originalname,
+          storagePath,
+        });
       } catch (err) {
         console.error(`Failed to upload ${file.originalname}:`, err);
         errors.push(file.originalname);
@@ -299,11 +293,7 @@ router.get(
   "/documents",
   adminAuth,
   async (_req: Request, res: Response): Promise<void> => {
-    const documents = await db
-      .select()
-      .from(clientDocumentsTable)
-      .orderBy(desc(clientDocumentsTable.uploadedAt));
-
+    const documents = await ClientDocumentModel.find().sort({ uploadedAt: -1 }).lean();
     res.json(documents);
   },
 );
@@ -312,19 +302,9 @@ router.get(
   "/documents/:id/download",
   adminAuth,
   async (req: Request, res: Response): Promise<void> => {
-    const id = parseInt(req.params.id as string, 10);
-    if (isNaN(id)) {
-      res.status(400).json({ error: "Invalid document ID" });
-      return;
-    }
+    const id = req.params.id as string;
 
-    const results = await db
-      .select()
-      .from(clientDocumentsTable)
-      .where(eq(clientDocumentsTable.id, id))
-      .limit(1);
-
-    const doc = results[0];
+    const doc = await ClientDocumentModel.findById(id).lean();
     if (!doc) {
       res.status(404).json({ error: "Document not found" });
       return;

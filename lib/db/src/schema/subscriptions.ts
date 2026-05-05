@@ -1,48 +1,83 @@
-import { pgTable, text, serial, timestamp, integer } from "drizzle-orm/pg-core";
+import mongoose, { Schema, Types } from "mongoose";
 
-export const subscriptionsTable = pgTable("subscriptions", {
-  id: serial("id").primaryKey(),
-  stripeCustomerId: text("stripe_customer_id").notNull(),
-  stripeSubscriptionId: text("stripe_subscription_id").notNull(),
-  stripePriceId: text("stripe_price_id"),
-  plan: text("plan").notNull(),
-  billingInterval: text("billing_interval").notNull().default("monthly"),
-  status: text("status").notNull().default("active"),
-  clientName: text("client_name").notNull(),
-  clientEmail: text("client_email").notNull(),
-  currentPeriodStart: timestamp("current_period_start", { withTimezone: true }),
-  currentPeriodEnd: timestamp("current_period_end", { withTimezone: true }),
-  canceledAt: timestamp("canceled_at", { withTimezone: true }),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  updatedAt: timestamp("updated_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-});
+export interface ISubscription {
+  stripeCustomerId: string;
+  stripeSubscriptionId: string;
+  stripePriceId?: string | null;
+  plan: string;
+  billingInterval: string;
+  status: string;
+  clientName: string;
+  clientEmail: string;
+  currentPeriodStart?: Date | null;
+  currentPeriodEnd?: Date | null;
+  canceledAt?: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
-export const onboardingSubmissionsTable = pgTable("onboarding_submissions", {
-  id: serial("id").primaryKey(),
-  subscriptionId: integer("subscription_id"),
-  stripeSessionId: text("stripe_session_id"),
-  clientName: text("client_name").notNull(),
-  clientEmail: text("client_email").notNull(),
-  businessName: text("business_name").notNull(),
-  ownerName: text("owner_name").notNull(),
-  phone: text("phone"),
-  einBusinessType: text("ein_business_type"),
-  currentBookkeepingSoftware: text("current_bookkeeping_software"),
-  notes: text("notes"),
-  plan: text("plan"),
-  businessState: text("business_state"),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-});
+const SubscriptionSchema = new Schema<ISubscription>(
+  {
+    stripeCustomerId: { type: String, required: true },
+    stripeSubscriptionId: { type: String, required: true, unique: true },
+    stripePriceId: { type: String, default: null },
+    plan: { type: String, required: true },
+    billingInterval: { type: String, default: "monthly" },
+    status: { type: String, default: "active" },
+    clientName: { type: String, required: true },
+    clientEmail: { type: String, required: true },
+    currentPeriodStart: { type: Date, default: null },
+    currentPeriodEnd: { type: Date, default: null },
+    canceledAt: { type: Date, default: null },
+  },
+  { timestamps: true },
+);
 
-export type Subscription = typeof subscriptionsTable.$inferSelect;
-export type InsertSubscription = typeof subscriptionsTable.$inferInsert;
-export type OnboardingSubmission =
-  typeof onboardingSubmissionsTable.$inferSelect;
-export type InsertOnboardingSubmission =
-  typeof onboardingSubmissionsTable.$inferInsert;
+export const SubscriptionModel =
+  (mongoose.models["Subscription"] as mongoose.Model<ISubscription>) ||
+  mongoose.model<ISubscription>("Subscription", SubscriptionSchema);
+
+export type Subscription = mongoose.HydratedDocument<ISubscription>;
+export type InsertSubscription = Omit<ISubscription, "createdAt" | "updatedAt" | "billingInterval" | "status"> &
+  Partial<Pick<ISubscription, "billingInterval" | "status">>;
+
+export interface IOnboardingSubmission {
+  subscriptionId?: Types.ObjectId | null;
+  stripeSessionId?: string | null;
+  clientName: string;
+  clientEmail: string;
+  businessName: string;
+  ownerName: string;
+  phone?: string | null;
+  einBusinessType?: string | null;
+  currentBookkeepingSoftware?: string | null;
+  notes?: string | null;
+  plan?: string | null;
+  businessState?: string | null;
+  createdAt: Date;
+}
+
+const OnboardingSubmissionSchema = new Schema<IOnboardingSubmission>(
+  {
+    subscriptionId: { type: Schema.Types.ObjectId, ref: "Subscription", default: null },
+    stripeSessionId: { type: String, default: null },
+    clientName: { type: String, required: true },
+    clientEmail: { type: String, required: true },
+    businessName: { type: String, required: true },
+    ownerName: { type: String, required: true },
+    phone: { type: String, default: null },
+    einBusinessType: { type: String, default: null },
+    currentBookkeepingSoftware: { type: String, default: null },
+    notes: { type: String, default: null },
+    plan: { type: String, default: null },
+    businessState: { type: String, default: null },
+  },
+  { timestamps: { createdAt: "createdAt", updatedAt: false } },
+);
+
+export const OnboardingSubmissionModel =
+  (mongoose.models["OnboardingSubmission"] as mongoose.Model<IOnboardingSubmission>) ||
+  mongoose.model<IOnboardingSubmission>("OnboardingSubmission", OnboardingSubmissionSchema);
+
+export type OnboardingSubmission = mongoose.HydratedDocument<IOnboardingSubmission>;
+export type InsertOnboardingSubmission = Omit<IOnboardingSubmission, "createdAt">;

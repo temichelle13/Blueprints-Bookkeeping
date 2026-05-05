@@ -1,52 +1,72 @@
-import { pgTable, text, serial, timestamp, boolean } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+import mongoose, { Schema } from "mongoose";
 
 export const INQUIRY_STATUSES = [
   "New",
-  "Contacted",
   "In Progress",
   "Closed",
   "Archived",
 ] as const;
+
 export type InquiryStatus = (typeof INQUIRY_STATUSES)[number];
 
-export const contactInquiriesTable = pgTable("contact_inquiries", {
-  id: serial("id").primaryKey(),
-  formType: text("form_type").notNull(),
-  name: text("name").notNull(),
-  email: text("email").notNull(),
-  phone: text("phone"),
-  message: text("message"),
-  businessName: text("business_name"),
-  industry: text("industry"),
-  servicesInterested: text("services_interested").array(),
-  monthlyRevenueRange: text("monthly_revenue_range"),
-  biggestChallenge: text("biggest_challenge"),
-  preferredContactMethod: text("preferred_contact_method"),
-  emailConsent: boolean("email_consent").notNull().default(false),
-  emailConsentCapturedAt: timestamp("email_consent_captured_at", {
-    withTimezone: true,
-  }),
-  emailConsentSource: text("email_consent_source"),
-  smsConsent: boolean("sms_consent").notNull().default(false),
-  consentTimestamp: timestamp("consent_timestamp", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  consentTextVersion: text("consent_text_version")
-    .notNull()
-    .default("legacy-unknown"),
-  requestIp: text("request_ip").notNull().default("unknown"),
-  userAgent: text("user_agent").notNull().default("unknown"),
-  consentSourcePage: text("consent_source_page").notNull().default("/contact"),
-  status: text("status").notNull().default("New"),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-});
+export interface IContactInquiry {
+  formType: string;
+  name: string;
+  email: string;
+  phone?: string | null;
+  message?: string | null;
+  businessName?: string | null;
+  industry?: string | null;
+  servicesInterested?: string[] | null;
+  monthlyRevenueRange?: string | null;
+  biggestChallenge?: string | null;
+  preferredContactMethod?: string | null;
+  emailConsent: boolean;
+  emailConsentCapturedAt?: Date | null;
+  emailConsentSource?: string | null;
+  smsConsent: boolean;
+  consentTimestamp: Date;
+  consentTextVersion: string;
+  requestIp: string;
+  userAgent: string;
+  consentSourcePage: string;
+  status: string;
+  createdAt: Date;
+}
 
-export const insertContactInquirySchema = createInsertSchema(
-  contactInquiriesTable,
-).omit({ id: true, createdAt: true }) as any;
-export type InsertContactInquiry = z.infer<typeof insertContactInquirySchema>;
-export type ContactInquiry = typeof contactInquiriesTable.$inferSelect;
+const ContactInquirySchema = new Schema<IContactInquiry>(
+  {
+    formType: { type: String, required: true },
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: { type: String, default: null },
+    message: { type: String, default: null },
+    businessName: { type: String, default: null },
+    industry: { type: String, default: null },
+    servicesInterested: { type: [String], default: null },
+    monthlyRevenueRange: { type: String, default: null },
+    biggestChallenge: { type: String, default: null },
+    preferredContactMethod: { type: String, default: null },
+    emailConsent: { type: Boolean, default: false },
+    emailConsentCapturedAt: { type: Date, default: null },
+    emailConsentSource: { type: String, default: null },
+    smsConsent: { type: Boolean, default: false },
+    consentTimestamp: { type: Date, required: true, default: () => new Date() },
+    consentTextVersion: { type: String, default: "legacy-unknown" },
+    requestIp: { type: String, default: "unknown" },
+    userAgent: { type: String, default: "unknown" },
+    consentSourcePage: { type: String, default: "/contact" },
+    status: { type: String, default: "New" },
+  },
+  { timestamps: { createdAt: "createdAt", updatedAt: false } },
+);
+
+export const ContactInquiryModel =
+  (mongoose.models["ContactInquiry"] as mongoose.Model<IContactInquiry>) ||
+  mongoose.model<IContactInquiry>("ContactInquiry", ContactInquirySchema);
+
+export type ContactInquiry = mongoose.HydratedDocument<IContactInquiry>;
+export type InsertContactInquiry = Omit<
+  IContactInquiry,
+  "createdAt" | "emailConsent" | "smsConsent" | "consentTimestamp" | "consentTextVersion" | "requestIp" | "userAgent" | "consentSourcePage" | "status"
+> & Partial<Pick<IContactInquiry, "emailConsent" | "smsConsent" | "consentTimestamp" | "consentTextVersion" | "requestIp" | "userAgent" | "consentSourcePage" | "status">>;
