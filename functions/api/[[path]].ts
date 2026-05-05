@@ -438,11 +438,27 @@ async function handleHealth(context: PagesContext): Promise<Response> {
   }, context.request);
 }
 
+function hasTurnstileToken(body: JsonRecord, request: Request): boolean {
+  const bodyToken =
+    typeof body.turnstileToken === "string" && body.turnstileToken.trim().length > 0;
+  const cfHeaderToken = request.headers.get("cf-turnstile-response");
+  const turnstileHeaderToken = request.headers.get("x-turnstile-token");
+
+  return (
+    bodyToken ||
+    (typeof cfHeaderToken === "string" && cfHeaderToken.trim().length > 0) ||
+    (typeof turnstileHeaderToken === "string" &&
+      turnstileHeaderToken.trim().length > 0)
+  );
+}
+
 async function handleContact(context: PagesContext): Promise<Response> {
   const db = requireDb(context.env);
   const body = await readJson(context.request);
   await checkRateLimit(db, "contact", getIp(context.request), 8, 15 * 60);
-  await verifyTurnstileIfPresent(context.env, body, context.request);
+  if (hasTurnstileToken(body, context.request)) {
+    await verifyTurnstileIfPresent(context.env, body, context.request);
+  }
 
   if (textField(body, "website", 200)) {
     return jsonResponse(
