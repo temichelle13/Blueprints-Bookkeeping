@@ -32,8 +32,13 @@ const isOpenAiConfigured = Boolean(openai);
 
 
 function parseConversationId(value: string | string[] | undefined): number {
-  const rawValue = Array.isArray(value) ? value[0] : value;
-  return Number.parseInt(rawValue ?? "", 10);
+  if (Array.isArray(value)) {
+    if (value.length !== 1) return NaN;
+    return parseConversationId(value[0]);
+  }
+  if (value === undefined || !/^\d+$/.test(value)) return NaN;
+  const n = Number.parseInt(value, 10);
+  return Number.isSafeInteger(n) ? n : NaN;
 }
 
 const SYSTEM_PROMPT = `You are Aria, the friendly AI assistant for Blueprints & Bookkeeping, LLC — a premium remote financial services firm founded by Tea Larson-Hetrick in Roseburg, Oregon.
