@@ -34,6 +34,7 @@ const Privacy = lazy(() => import("./pages/Privacy"));
 const Terms = lazy(() => import("./pages/Terms"));
 const Accessibility = lazy(() => import("./pages/Accessibility"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
+const ComplianceSecurity = lazy(() => import("./pages/ComplianceSecurity"));
 const Feedback = lazy(() => import("./pages/Feedback"));
 const GetStarted = lazy(() => import("./pages/GetStarted"));
 const TaxPartners = lazy(() => import("./pages/TaxPartners"));
@@ -56,6 +57,69 @@ if (import.meta.env.VITE_API_URL) {
 }
 
 const queryClient = new QueryClient();
+const NOINDEX_FALLBACK_PATH_PREFIXES = [
+  "/admin",
+  "/onboarding",
+  "/welcome",
+  "/payment-success",
+  "/status",
+  "/feedback",
+  "/unsubscribe",
+  "/marketing-guide",
+];
+
+function normalizePathname(pathname: string): string {
+  if (!pathname) return "/";
+  return pathname.endsWith("/") && pathname !== "/"
+    ? pathname.slice(0, -1)
+    : pathname;
+}
+
+function isSensitivePath(pathname: string): boolean {
+  const normalizedPath = normalizePathname(pathname);
+  return NOINDEX_FALLBACK_PATH_PREFIXES.some((prefix) => {
+    const normalizedPrefix = normalizePathname(prefix);
+    return (
+      normalizedPath === normalizedPrefix ||
+      normalizedPath.startsWith(`${normalizedPrefix}/`)
+    );
+  });
+}
+
+function SensitiveRouteNoindexFallback() {
+  const [location] = useLocation();
+
+  useEffect(() => {
+    const fallbackMetaId = "sensitive-route-noindex-fallback";
+    const shouldNoindex = isSensitivePath(location);
+
+    // Always operate on a single meta[name="robots"] element.
+    let robotsMeta = document.querySelector(
+      'meta[name="robots"]',
+    ) as HTMLMetaElement | null;
+
+    if (!robotsMeta) {
+      robotsMeta = document.createElement("meta");
+      robotsMeta.setAttribute("name", "robots");
+      document.head.appendChild(robotsMeta);
+    }
+
+    if (shouldNoindex) {
+      robotsMeta.setAttribute("content", "noindex, nofollow");
+      robotsMeta.setAttribute("data-source", fallbackMetaId);
+      return;
+    }
+
+    // Only revert changes if this fallback previously set the robots meta.
+    if (robotsMeta.getAttribute("data-source") === fallbackMetaId) {
+      robotsMeta.removeAttribute("data-source");
+      // Restore a neutral default; other components may overwrite this as needed.
+      robotsMeta.setAttribute("content", "index, follow");
+    }
+  }, [location]);
+
+  return null;
+}
 
 // Loading fallback component for lazy-loaded routes
 function RouteLoadingFallback() {
@@ -144,6 +208,7 @@ function Router() {
 
   return (
     <Layout>
+      <SensitiveRouteNoindexFallback />
       <Suspense fallback={<RouteLoadingFallback />}>
         <Switch>
           <Route path="/" component={Home} />
@@ -163,6 +228,7 @@ function Router() {
           <Route path="/terms" component={Terms} />
           <Route path="/accessibility" component={Accessibility} />
           <Route path="/cookies" component={CookiePolicy} />
+          <Route path="/compliance-security" component={ComplianceSecurity} />
           <Route path="/feedback" component={Feedback} />
           <Route path="/get-started" component={GetStarted} />
           <Route path="/tax-partners" component={TaxPartners} />

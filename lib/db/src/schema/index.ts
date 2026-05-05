@@ -8,3 +8,5 @@ export * from "./clientDocuments";
 export * from "./bookings";
 export * from "./stateNexus";
 export * from "./emailSuppressionList";
+
+export * from "./outboundEmailEvents";

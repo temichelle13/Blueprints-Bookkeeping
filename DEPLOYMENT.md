@@ -10,6 +10,8 @@ The application is currently configured for **Replit deployment**, not Cloudflar
 - **Website**: React + Vite frontend (`artifacts/website`)
 - **Database**: PostgreSQL
 
+> ⚠️ **Not runtime**: legacy `functions/api/*` placeholders are not part of production request handling. The authoritative API runtime is `artifacts/api-server/src/index.ts`, built to `artifacts/api-server/dist/index.cjs`.
+
 ## Required Environment Variables
 
 ### Backend (API Server)
@@ -31,6 +33,14 @@ CORS_ORIGIN=https://blueprintsandbookkeeping.com,https://www.blueprintsandbookke
 # Security
 ADMIN_TOKEN=<generate-with-openssl-rand-hex-32>
 
+# Reverse Proxy / Client IP Configuration (CRITICAL for rate limiting)
+# Set how many trusted proxy hops are in front of the API server.
+# Defaults to false (no proxy trust) when unset.
+# Replit or a single load balancer/CDN in front of Node: 1
+# Multiple proxies (e.g., CDN -> ingress -> Node): set to exact hop count
+# Must be set explicitly in production to avoid IP spoofing via X-Forwarded-For
+TRUST_PROXY=1
+
 # Email - Resend
 RESEND_API_KEY=<your-resend-api-key>
 OWNER_EMAIL=tea@blueprintsandbookkeeping.com
@@ -43,7 +53,7 @@ STRIPE_WEBHOOK_SECRET=<your-stripe-webhook-secret>
 OPENAI_API_KEY=<your-openai-api-key>
 OPENAI_CHAT_MODEL=gpt-4.1-mini
 
-# Optional: Adobe Sign, Cal.com, Apollo.io
+# Optional: Adobe Sign, Calendly webhook, Apollo.io
 # See .env.example for complete list
 ```
 
@@ -118,6 +128,25 @@ export CORS_ORIGIN=https://blueprintsandbookkeeping.com
 
 **Fix**: Increased padding to p-4/16px in `table.tsx` component.
 
+### Issue 6: Legitimate users being blocked by contact form rate limits
+
+**Symptoms**: Different users behind a proxy/CDN appear as one IP, causing unexpected 429 responses.
+
+**Root Causes**:
+
+1. `trust proxy` not configured for real deployment proxy depth
+2. Proxy chain sends `X-Forwarded-For`, but API is using proxy IP for limiter keys
+
+**Solution**:
+
+- Set `TRUST_PROXY` on the API server to match the number of trusted proxy hops.
+- Recommended values:
+  - `TRUST_PROXY=1` for one proxy hop (common: Replit proxy, single reverse proxy, or CDN directly in front of the app)
+  - `TRUST_PROXY=2` or higher only when you can verify multiple trusted hops
+  - Leave unset (or `TRUST_PROXY=false`) only when there is no reverse proxy/CDN; this is the default and prevents IP spoofing
+- **Always set `TRUST_PROXY` explicitly in production**; leaving it unset disables proxy trust and rate limits will key on the proxy IP, not the real client IP.
+- Keep proxy chain controlled by your infrastructure only; do not trust arbitrary client-supplied forwarding headers.
+
 ## Deployment to Cloudflare
 
 If you want to deploy to Cloudflare instead of Replit, you'll need to:
@@ -132,14 +161,14 @@ compatibility_date = "2024-01-01"
 command = "pnpm install && pnpm --filter @workspace/website run build"
 ```
 
-2. **Configure Cloudflare Pages** for the frontend:
+1. **Configure Cloudflare Pages** for the frontend:
    - Build command: `pnpm install && pnpm --filter @workspace/website run build`
    - Build output directory: `artifacts/website/dist/public`
    - Environment variables: `VITE_API_URL=<your-api-url>`
 
-3. **Deploy API server separately** (Cloudflare Workers, Cloud Run, etc.)
+2. **Deploy API server separately** (Cloudflare Workers, Cloud Run, etc.)
 
-4. **Configure CORS** on the API server to allow Cloudflare Pages origin
+3. **Configure CORS** on the API server to allow Cloudflare Pages origin
 
 ## Deployment Steps
 
@@ -186,6 +215,7 @@ command = "pnpm install && pnpm --filter @workspace/website run build"
 5. **Set environment variables** on hosting platform
 
 6. **Run database migrations** (if needed):
+
    ```bash
    pnpm --filter db push
    ```
@@ -205,12 +235,27 @@ After deployment, verify:
 - [ ] Check browser console for CORS errors
 - [ ] Check network tab for failed API requests
 
+## Monthly SEO Monitoring (Google Search Console)
+
+To prevent accidental indexing drift, run this check once per month in Google Search Console for `https://blueprintsandbookkeeping.com`:
+
+1. Open **Pages** report.
+2. Filter by reason: **Indexed, though blocked by robots.txt**.
+3. Review each URL:
+   - If it is an admin or transactional URL (`/admin`, `/onboarding`, `/welcome`, `/payment-success`, `/status`, `/feedback`, `/unsubscribe`, `/marketing-guide`), keep it blocked and verify no internal links are promoting crawl demand.
+   - If it is a public marketing URL, fix robots and sitemap consistency before next deployment.
+4. Record findings in your monthly ops log with:
+   - Date checked
+   - Number of affected URLs
+   - URLs remediated
+5. If anomaly count increases month-over-month, create a production incident ticket and run `pnpm run check:website-deploy` before shipping.
+
 ## Troubleshooting
 
 ### CORS Errors in Browser Console
 
-```
-Access to fetch at 'https://api.example.com/api/...' from origin 'https://example.com' has been blocked by CORS policy
+Access to fetch at '<https://api.example.com/api/>...' from origin '<https://example.com>' has been blocked by CORS policy
+
 ```
 
 **Fix**: Add frontend origin to `CORS_ORIGIN` environment variable on backend.
@@ -239,8 +284,9 @@ Access to fetch at 'https://api.example.com/api/...' from origin 'https://exampl
 
 ## Support
 
-For deployment issues, contact Tea at tea@blueprintsandbookkeeping.com or check:
+For deployment issues, contact Tea at <tea@blueprintsandbookkeeping.com> or check:
 
 - `.env.example` - List of all environment variables
 - `artifacts/website/.replit-artifact/artifact.toml` - Frontend configuration
 - `.replit` - Main deployment configuration
+```

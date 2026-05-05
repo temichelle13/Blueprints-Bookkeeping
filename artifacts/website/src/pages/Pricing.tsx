@@ -3,9 +3,19 @@ import { Link } from "wouter";
 import { Check, Shield, ArrowRight, HelpCircle, Calendar } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
+import { BookkeepingDisclaimer } from "@/components/BookkeepingDisclaimer";
 
 const TECHNOLOGY_SECURITY_SURCHARGE = "$50/mo";
 const TECHNOLOGY_SECURITY_SURCHARGE_COPY = `A mandatory Technology & Security Surcharge of ${TECHNOLOGY_SECURITY_SURCHARGE} applies to all bookkeeping tiers.`;
+
+function PaymentTrustMicrocopy() {
+  return (
+    <p className="text-xs text-muted-foreground">
+      Secure checkout via Stripe. QBO invoice option available for approved
+      workflows.
+    </p>
+  );
+}
 
 const bookkeepingTiers = [
   {
@@ -239,12 +249,15 @@ function BookkeepingTierCard({
               interval={billingInterval}
             />
           )}
-          <Link
-            href="/schedule"
-            className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
-          >
-            {tier.cta} <ArrowRight size={15} />
-          </Link>
+          {tier.cta !== "Get a Quote" && (
+            <Link
+              href="/schedule"
+              className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
+            >
+              {tier.cta} <ArrowRight size={15} />
+            </Link>
+          )}
+          <PaymentTrustMicrocopy />
         </div>
       </div>
     );
@@ -311,12 +324,15 @@ function BookkeepingTierCard({
         {tier.subscribable && (
           <SubscribeButton planKey={tier.planKey} interval={billingInterval} />
         )}
-        <Link
-          href="/schedule"
-          className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
-        >
-          {tier.cta}
-        </Link>
+        {tier.cta !== "Get a Quote" && (
+          <Link
+            href="/schedule"
+            className="flex items-center justify-center gap-2 w-full py-3 rounded-lg border border-accent/30 text-accent font-semibold text-sm hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
+          >
+            {tier.cta}
+          </Link>
+        )}
+        <PaymentTrustMicrocopy />
       </div>
     </div>
   );
@@ -381,6 +397,7 @@ function TierCard({
           >
             {tier.cta} <ArrowRight size={15} />
           </Link>
+          <PaymentTrustMicrocopy />
         </div>
       </div>
     );
@@ -436,6 +453,7 @@ function TierCard({
         >
           {tier.cta}
         </Link>
+        <PaymentTrustMicrocopy />
       </div>
     </div>
   );
@@ -608,6 +626,11 @@ export default function Pricing() {
               Read the FAQ
             </Link>
           </div>
+          <BookkeepingDisclaimer
+            compact
+            title="Scope clarification"
+            className="mt-6 text-left"
+          />
         </div>
       </section>
     </div>

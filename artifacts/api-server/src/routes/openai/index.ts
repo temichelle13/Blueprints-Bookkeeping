@@ -4,8 +4,17 @@ import { conversations, messages } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { openai } from "@workspace/integrations-openai-ai-server";
 import { Resend } from "resend";
+import {
+  createOpenAiConversationLimiter,
+  createOpenAiMessageLimiter,
+  recordOpenAiRequestVolume,
+  validateConversationMessageCap,
+  validateOpenAiMessageContent,
+} from "./guards";
 
 const router: IRouter = Router();
+const openAiConversationLimiter = createOpenAiConversationLimiter();
+const openAiMessageLimiter = createOpenAiMessageLimiter();
 
 function getResend(): Resend | null {
   const key = process.env["RESEND_API_KEY"];
@@ -17,7 +26,20 @@ const OWNER_EMAIL = "tea@blueprintsandbookkeeping.com";
 const FROM_ADDRESS =
   "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
 const CHAT_MODEL = process.env["OPENAI_CHAT_MODEL"] || "gpt-4.1-mini";
+const CHAT_RESPONSE_TOKEN_LIMIT = 4096;
+const USES_MAX_COMPLETION_TOKENS = /^o\d+(?:-|$)/.test(CHAT_MODEL);
 const isOpenAiConfigured = Boolean(openai);
+
+
+function parseConversationId(value: string | string[] | undefined): number {
+  if (Array.isArray(value)) {
+    if (value.length !== 1) return NaN;
+    return parseConversationId(value[0]);
+  }
+  if (value === undefined || !/^\d+$/.test(value)) return NaN;
+  const n = Number.parseInt(value, 10);
+  return Number.isSafeInteger(n) ? n : NaN;
+}
 
 const SYSTEM_PROMPT = `You are Aria, the friendly AI assistant for Blueprints & Bookkeeping, LLC — a premium remote financial services firm founded by Tea Larson-Hetrick in Roseburg, Oregon.
 
@@ -134,29 +156,46 @@ CONTACT INFO (share when asked):
 - Website: blueprintsandbookkeeping.com
 - Phone: 541-319-8654`;
 
-router.post("/openai/conversations", async (req, res): Promise<void> => {
-  const { title } = req.body;
-  if (!title || typeof title !== "string") {
-    res.status(400).json({ error: "title is required" });
-    return;
-  }
+router.post(
+  "/openai/conversations",
+  openAiConversationLimiter,
+  async (req, res): Promise<void> => {
+    recordOpenAiRequestVolume({ routeId: "conversation_create", req });
+    const { title } = req.body;
+    if (!title || typeof title !== "string") {
+      res.status(400).json({ error: "title is required" });
+      return;
+    }
 
-  const [conv] = await db.insert(conversations).values({ title }).returning();
+    const [conv] = await db.insert(conversations).values({ title }).returning();
 
-  if (!conv) {
-    res.status(500).json({ error: "Failed to create conversation" });
-    return;
-  }
+    if (!conv) {
+      res.status(500).json({ error: "Failed to create conversation" });
+      return;
+    }
 
-  res.status(201).json({
-    id: conv.id,
-    title: conv.title,
-    createdAt: conv.createdAt,
-  });
+    res.status(201).json({
+      id: conv.id,
+      title: conv.title,
+      createdAt: conv.createdAt,
+    });
+  },
+);
+
+router.get("/openai/conversations", async (_req, res): Promise<void> => {
+  const allConversations = await db.select().from(conversations);
+
+  res.json(
+    allConversations.map((conversation) => ({
+      id: conversation.id,
+      title: conversation.title,
+      createdAt: conversation.createdAt,
+    })),
+  );
 });
 
 router.get("/openai/conversations/:id", async (req, res): Promise<void> => {
-  const id = parseInt(req.params.id, 10);
+  const id = parseConversationId(req.params.id);
   if (isNaN(id)) {
     res.status(400).json({ error: "Invalid id" });
     return;
@@ -191,20 +230,80 @@ router.get("/openai/conversations/:id", async (req, res): Promise<void> => {
   });
 });
 
-router.post(
+router.delete("/openai/conversations/:id", async (req, res): Promise<void> => {
+  const id = parseConversationId(req.params.id);
+  if (isNaN(id)) {
+    res.status(400).json({ error: "Invalid id" });
+    return;
+  }
+
+  const [deletedConversation] = await db
+    .delete(conversations)
+    .where(eq(conversations.id, id))
+    .returning({ id: conversations.id });
+
+  if (!deletedConversation) {
+    res.status(404).json({ error: "Conversation not found" });
+    return;
+  }
+
+  res.status(204).send();
+});
+
+router.get(
   "/openai/conversations/:id/messages",
   async (req, res): Promise<void> => {
-    const id = parseInt(req.params.id, 10);
+    const id = parseConversationId(req.params.id);
+    if (isNaN(id)) {
+      res.status(400).json({ error: "Invalid id" });
+      return;
+    }
+
+    const [conv] = await db
+      .select({ id: conversations.id })
+      .from(conversations)
+      .where(eq(conversations.id, id));
+
+    if (!conv) {
+      res.status(404).json({ error: "Conversation not found" });
+      return;
+    }
+
+    const convMessages = await db
+      .select()
+      .from(messages)
+      .where(eq(messages.conversationId, id));
+
+    res.json(
+      convMessages.map((message) => ({
+        id: message.id,
+        conversationId: message.conversationId,
+        role: message.role,
+        content: message.content,
+        createdAt: message.createdAt,
+      })),
+    );
+  },
+);
+
+router.post(
+  "/openai/conversations/:id/messages",
+  openAiMessageLimiter,
+  async (req, res): Promise<void> => {
+    const id = parseConversationId(req.params.id);
     if (isNaN(id)) {
       res.status(400).json({ error: "Invalid id" });
       return;
     }
 
     const { content } = req.body;
-    if (!content || typeof content !== "string") {
-      res.status(400).json({ error: "content is required" });
+    const messageValidationError = validateOpenAiMessageContent(content);
+    if (messageValidationError) {
+      res.status(400).json(messageValidationError);
       return;
     }
+
+    const userContent = content as string;
 
     const [conv] = await db
       .select()
@@ -216,16 +315,36 @@ router.post(
       return;
     }
 
-    await db.insert(messages).values({
-      conversationId: id,
-      role: "user",
-      content,
-    });
-
     const history = await db
       .select()
       .from(messages)
       .where(eq(messages.conversationId, id));
+
+    recordOpenAiRequestVolume({
+      routeId: "message_send",
+      req,
+      conversationId: id,
+    });
+
+    const capError = validateConversationMessageCap(history.length);
+    if (capError) {
+      res.status(429).json(capError);
+      return;
+    }
+
+    await db.insert(messages).values({
+      conversationId: id,
+      role: "user",
+      content: userContent,
+    });
+
+    history.push({
+      id: -1,
+      conversationId: id,
+      role: "user",
+      content: userContent,
+      createdAt: new Date(),
+    });
 
     const chatMessages = history.map((m) => ({
       role: m.role as "user" | "assistant" | "system",
@@ -259,7 +378,9 @@ router.post(
     try {
       const stream = await openai.chat.completions.create({
         model: CHAT_MODEL,
-        max_completion_tokens: 4096,
+        ...(USES_MAX_COMPLETION_TOKENS
+          ? { max_completion_tokens: CHAT_RESPONSE_TOKEN_LIMIT }
+          : { max_tokens: CHAT_RESPONSE_TOKEN_LIMIT }),
         messages: [{ role: "system", content: SYSTEM_PROMPT }, ...chatMessages],
         stream: true,
       });
@@ -278,7 +399,7 @@ router.post(
         content: fullResponse,
       });
 
-      await checkAndNotifyTea(content, fullResponse, id);
+      await checkAndNotifyTea(userContent, fullResponse, id);
 
       res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
     } catch (err) {

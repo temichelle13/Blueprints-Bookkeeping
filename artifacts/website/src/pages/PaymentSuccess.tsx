@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { CheckCircle, ArrowRight, Phone, Mail } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
+import { BookkeepingDisclaimer } from "@/components/BookkeepingDisclaimer";
 import {
   buildOnboardingUrl,
   getOnboardingContextFromSearch,
@@ -115,6 +116,11 @@ export default function PaymentSuccess() {
                 Back to Home
               </Link>
             </div>
+            <p className="text-xs text-muted-foreground mb-4">
+              Secure checkout via Stripe. QBO invoice option available when
+              requested before engagement.
+            </p>
+            <BookkeepingDisclaimer compact title="Scope clarification" />
 
             <div className="border-t border-white/[0.06] pt-6">
               <p className="text-xs text-muted-foreground mb-3">

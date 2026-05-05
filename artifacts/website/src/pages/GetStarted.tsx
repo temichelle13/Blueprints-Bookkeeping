@@ -5,19 +5,21 @@ import {
   CalendarDays,
   Video,
   MessageSquare,
-  UserPlus,
   ArrowRight,
   HelpCircle,
   Send,
   CheckCircle,
+  Clock3,
 } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 import { getApiRoot } from "@/lib/api";
+import { trackEvent } from "@/lib/analytics";
+import { BOOKKEEPER_INTENT } from "@/lib/contact-intent";
 
 const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
-const QB_PROADVISOR_URL =
-  "https://quickbooks.intuit.com/accountants/products-solutions/bookkeeping/";
+const EMERGENCY_CALENDLY_URL =
+  "https://calendly.com/tea-blueprintsandbookkeeping/emergency-or-other-expedited-request";
 const EMAIL_ADDRESS = "tea@blueprintsandbookkeeping.com";
 
 interface BasePath {
@@ -34,6 +36,7 @@ interface BasePath {
   note?: string;
   secondaryHref?: string;
   secondaryCta?: string;
+  analyticsEvent?: string;
 }
 
 type PathCard = BasePath;
@@ -100,13 +103,25 @@ export default function GetStarted() {
       newTab: true,
     },
     {
+      icon: Clock3,
+      color: "#EF4444",
+      title: "Emergency / Expedited Request",
+      subtitle:
+        "Book a 15-minute emergency slot when you have urgent tax, lender, investor, or filing pressure and need priority review.",
+      cta: "Book emergency meeting",
+      href: EMERGENCY_CALENDLY_URL,
+      external: true,
+      newTab: true,
+      analyticsEvent: "Emergency Request Click",
+    },
+    {
       icon: MessageSquare,
       color: "#10B981",
       title: "Add Me as Your Accountant",
       subtitle:
         "Already have QuickBooks Online? Start the intake process. Once you submit, Tea will review your books, provide recommendations and an estimate, or ask for further information. From there, you can discuss your needs, costs, and contracts.",
       cta: "Start Intake",
-      href: "/contact?intent=bookkeeper-intake",
+      href: `/contact?intent=${BOOKKEEPER_INTENT}`,
       external: false,
       kind: "accountant",
       instructions: [
@@ -232,6 +247,11 @@ export default function GetStarted() {
                 href={path.href}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => {
+                  if (path.analyticsEvent) {
+                    trackEvent(path.analyticsEvent, { source: "get_started" });
+                  }
+                }}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -328,97 +348,79 @@ export default function GetStarted() {
               ))}
           </div>
         ) : (
-          <div
-            style={{
-              background: "rgba(255,255,255,0.02)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              borderRadius: 10,
-              padding: "12px 14px",
-              marginBottom: 16,
-            }}
-          >
-            <p
+          <>
+            <div
               style={{
-                fontSize: 11,
+                background: "rgba(255,255,255,0.02)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: 10,
+                padding: "12px 14px",
+                marginBottom: 16,
+              }}
+            >
+              <p
+                style={{
+                  fontSize: 11,
+                  fontWeight: 600,
+                  color: path.color,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                  marginBottom: 8,
+                }}
+              >
+                QuickBooks Online Instructions:
+              </p>
+              <ol
+                style={{
+                  margin: 0,
+                  paddingLeft: 20,
+                  fontSize: 12,
+                  color: "rgba(255,255,255,0.7)",
+                  lineHeight: 1.6,
+                }}
+              >
+                {path.instructions?.map((step, i) => (
+                  <li key={i} style={{ marginBottom: 6 }}>
+                    {step}
+                  </li>
+                ))}
+              </ol>
+            </div>
+            <Link
+              href={path.href}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+                padding: "12px 20px",
+                borderRadius: 10,
+                background: path.color,
+                color: "white",
                 fontWeight: 600,
-                color: path.color,
-                textTransform: "uppercase",
-                letterSpacing: "0.05em",
-                marginBottom: 8,
+                fontSize: 14,
+                textDecoration: "none",
+                transition: "opacity 0.15s",
               }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
             >
-              QuickBooks Online Instructions:
-            </p>
-            <ol
-              style={{
-                margin: 0,
-                paddingLeft: 20,
-                fontSize: 12,
-                color: "rgba(255,255,255,0.7)",
-                lineHeight: 1.6,
-              }}
-            >
-              {path.instructions?.map((step, i) => (
-                <li key={i} style={{ marginBottom: 6 }}>
-                  {step}
-                </li>
-              ))}
-            </ol>
-          </div>
+              {path.cta}
+              <ArrowRight size={16} />
+            </Link>
+          </>
         )}
-
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 8,
-            padding: "12px 20px",
-            borderRadius: 10,
-            background: path.color,
-            color: "white",
-            fontWeight: 600,
-            fontSize: 14,
-            textDecoration: "none",
-          }}
-        >
-          {path.cta}
-          <ArrowRight size={16} />
-        </div>
       </motion.div>
     );
 
-    if (path.external) {
-      return (
-        <a
-          key={index}
-          href={path.href}
-          {...(path.newTab
-            ? { target: "_blank", rel: "noopener noreferrer" }
-            : {})}
-          style={{ textDecoration: "none", display: "block" }}
-        >
-          {cardBody}
-        </a>
-      );
-    }
-
-    return (
-      <Link
-        key={index}
-        href={path.href}
-        style={{ textDecoration: "none", display: "block" }}
-      >
-        {cardBody}
-      </Link>
-    );
+    return <div key={index}>{cardBody}</div>;
   };
 
   return (
     <div className="min-h-screen py-20 px-4">
       <SEO
         title="Get Started"
-        description="Choose how to begin with Blueprints & Bookkeeping — schedule a call, book a video chat, or start the intake process to add Tea as your accountant."
+        description="Choose how to begin with Blueprints & Bookkeeping — schedule a call, book a video chat, submit an emergency or expedited request, or start the intake process to add Tea as your accountant."
         path="/get-started"
       />
       <div className="max-w-5xl mx-auto">
@@ -429,7 +431,7 @@ export default function GetStarted() {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/20 bg-accent/5 mb-6 text-sm font-medium text-accent">
             <span className="glow-dot" />
-            Three ways to get started
+            Four ways to get started
           </div>
           <h1 className="text-4xl md:text-5xl font-display font-extrabold text-white mb-4">
             How Would You Like to Begin?

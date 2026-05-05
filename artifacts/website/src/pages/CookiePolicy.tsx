@@ -2,15 +2,31 @@ import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
 import { Link } from "wouter";
 import { openCookieConsentPreferences } from "@/components/CookieConsent";
+import {
+  breadcrumbSchema,
+  localBusinessSchema,
+  professionalServiceSchema,
+} from "@/lib/seo-schemas";
 
 export default function CookiePolicy() {
   usePageTitle("Cookie Policy");
+  const BASE_URL = "https://blueprintsandbookkeeping.com";
+  const jsonLd = [
+    localBusinessSchema(),
+    professionalServiceSchema({ url: `${BASE_URL}/cookies` }),
+    breadcrumbSchema([
+      { name: "Home", url: BASE_URL },
+      { name: "Cookie Policy", url: `${BASE_URL}/cookies` },
+    ]),
+  ];
 
   return (
     <div className="pt-24 pb-20">
       <SEO
+        title="Cookie Policy"
         path="/cookies"
         description="Learn about how Blueprints & Bookkeeping uses cookies and similar technologies on our website, and how you can manage your preferences."
+        jsonLd={jsonLd}
       />
 
       <section className="py-16 mb-8 relative">
@@ -21,7 +37,7 @@ export default function CookiePolicy() {
             Cookie Policy
           </h1>
           <p className="text-muted-foreground text-sm">
-            Last updated: March 2026
+            Last updated: March 31, 2026
           </p>
         </div>
       </section>
@@ -52,7 +68,10 @@ export default function CookiePolicy() {
                 analytics)
               </li>
               <li>Improve our website performance and user experience</li>
-              <li>Track the effectiveness of our marketing efforts</li>
+              <li>
+                Measure website engagement and campaign performance (only when
+                analytics is enabled)
+              </li>
             </ul>
             <p className="mt-3">
               We do not use cookies for advertising or tracking you across other
@@ -174,10 +193,21 @@ export default function CookiePolicy() {
                       <td className="p-2">
                         Business analytics and lead intelligence
                       </td>
-                      <td className="p-2">Page visits, engagement metrics</td>
+                      <td className="p-2">
+                        Page visits, engagement metrics, company attribution
+                      </td>
                     </tr>
                   </tbody>
                 </table>
+                <p className="mt-2 text-xs">
+                  These services load only after you choose{" "}
+                  <span className="text-white font-medium">
+                    Accept analytics
+                  </span>{" "}
+                  in the cookie banner. Choosing{" "}
+                  <span className="text-white font-medium">Essential only</span>{" "}
+                  keeps them off.
+                </p>
               </div>
             </div>
           </section>
@@ -187,8 +217,8 @@ export default function CookiePolicy() {
               Third-Party Services
             </h2>
             <p className="mb-3">
-              Our website may include embedded content from third-party
-              services. These services may set their own cookies:
+              We use third-party tools that may set cookies or similar tracking
+              technologies when applicable:
             </p>
             <ul className="list-disc list-inside space-y-2 pl-2">
               <li>
@@ -198,6 +228,18 @@ export default function CookiePolicy() {
               <li>
                 <span className="text-white font-medium">Stripe</span> — Secure
                 payment processing (does not appear on all pages)
+              </li>
+              <li>
+                <span className="text-white font-medium">
+                  Google Analytics and Google Tag Manager
+                </span>{" "}
+                — Optional analytics and tag management (only after analytics
+                consent)
+              </li>
+              <li>
+                <span className="text-white font-medium">Apollo.io</span> —
+                Optional visitor analytics and lead intelligence (only after
+                analytics consent)
               </li>
             </ul>
             <p className="mt-3">

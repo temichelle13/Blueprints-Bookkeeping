@@ -49,14 +49,24 @@ export const nationalSecurityCerts: CredentialEntry[] = [
     url: "https://www.coursera.org/account/accomplishments/badge/5J6FiMaDQQ6ehYjGg7EOAQ",
   },
   {
-    name: "AI in National Security: Microcredential",
+    name: "AI in National Security: Microcredential Edition",
     issuer: "Special Competitive Studies Project (SCSP)",
     description:
       "Microcredential edition of the SCSP national security AI program — focused applied competencies for professionals working at the intersection of technology, intelligence, and policy.",
     icon: ShieldCheck,
     color: "from-blue-600/10 to-indigo-700/5",
     border: "border-blue-500/20",
-    url: "https://www.coursera.org/account/accomplishments/verify/TAIYT5DSJI1U",
+    url: "https://www.coursera.org/account/accomplishments/records/TAIYT5DSJI1U",
+  },
+  {
+    name: "Artificial General Intelligence (AGI) in National Security",
+    issuer: "Special Competitive Studies Project (SCSP)",
+    description:
+      "Advanced credential covering artificial general intelligence concepts and their strategic implications for national security — issued through the SCSP national security AI program.",
+    icon: ShieldCheck,
+    color: "from-blue-600/10 to-indigo-700/5",
+    border: "border-blue-500/20",
+    url: "https://coursera.org/share/8ab193d2fb3dee25cc88295c7ee11eac",
   },
 ];
 
@@ -111,12 +121,32 @@ export const intuitCerts: CredentialWithBadge[] = [
     border: "border-blue-500/20",
     url: "https://www.credly.com/badges/abc7661b-7147-4ccf-8fce-926ac6d32572/public_url",
   },
+  {
+    name: "Advanced Crypto Accounting Certified",
+    issuer: "Intuit",
+    description:
+      "Specialized certification covering digital asset taxation, cost-basis methodology, transaction reconciliation, and crypto income reporting.",
+    badge: `${base}images/badge-crypto-tax.png`,
+    color: "from-orange-500/10 to-amber-500/5",
+    border: "border-orange-500/20",
+    url: "https://www.credly.com/badges/44179f58-1ad3-4b02-9f5d-6bf2258a3c49/public_url",
+  },
+  {
+    name: "Client Advisory Services Foundations",
+    issuer: "Intuit",
+    description:
+      "Certification in delivering strategic advisory services to clients — moving beyond bookkeeping to actionable financial guidance and business insights.",
+    badge: `${base}images/badge-client-advisory.png`,
+    color: "from-accent/10 to-primary/5",
+    border: "border-accent/20",
+    verificationNote: "Public badge link still needs manual confirmation.",
+  },
 ];
 
 export const technologyAndSecurityCerts: CredentialEntry[] = [
   {
     name: "Certified Ethical Hacker (CEH) v12",
-    issuer: "Coursera / EC-Council",
+    issuer: "Packt",
     description:
       "Three-course specialization covering ethical hacking reconnaissance, system hacking and malware analysis, advanced network attacks, web hacking, and cryptography — directly applied to client data protection.",
     icon: ShieldCheck,
@@ -125,7 +155,7 @@ export const technologyAndSecurityCerts: CredentialEntry[] = [
     url: "https://www.coursera.org/account/accomplishments/specialization/AFOGOQ19VBCK",
   },
   {
-    name: "Foundations of Cybersecurity",
+    name: "Cybersecurity",
     issuer: "Google",
     description:
       "Google-certified cybersecurity training covering threat landscapes, security frameworks, network defense, and data protection best practices.",
@@ -145,7 +175,7 @@ export const technologyAndSecurityCerts: CredentialEntry[] = [
     url: "https://www.credly.com/badges/e2823194-36dc-4ab3-ab1d-155b9189714f/public_url",
   },
   {
-    name: "Foundations of Business Intelligence",
+    name: "Business Intelligence",
     issuer: "Google",
     description:
       "Google-certified BI training covering data modeling, dashboard design, stakeholder communication, and analytics-driven decision making.",
@@ -155,7 +185,7 @@ export const technologyAndSecurityCerts: CredentialEntry[] = [
     url: "https://www.coursera.org/account/accomplishments/verify/E8HX7LY389H8",
   },
   {
-    name: "Foundations of Project Management",
+    name: "Project Management",
     issuer: "Google",
     description:
       "Google-certified project management training covering methodologies, stakeholder management, risk analysis, and Agile frameworks.",
@@ -175,7 +205,7 @@ export const technologyAndSecurityCerts: CredentialEntry[] = [
     url: "https://learn.microsoft.com/api/achievements/share/en-us/tealarson-hetrick/2DMNZC8V?sharingId=3B49CB782E364529",
   },
   {
-    name: "Generative AI Fundamentals",
+    name: "AI Agent Fundamentals",
     issuer: "Databricks",
     description:
       "Databricks Academy accreditation covering large language models, generative AI architecture, prompt engineering, and responsible AI deployment.",
@@ -183,6 +213,26 @@ export const technologyAndSecurityCerts: CredentialEntry[] = [
     color: "from-red-500/10 to-orange-500/5",
     border: "border-red-500/20",
     url: "https://credentials.databricks.com/99d6ab70-bf88-49e2-a650-8d7c765fe00d",
+  },
+  {
+    name: "Advanced Network Attacks, Web Hacking, and Cryptography",
+    issuer: "Coursera / EC-Council",
+    description:
+      "Course-level credential from the CEH v12 specialization covering advanced network attack techniques, web application hacking, and cryptographic principles — applied to client data protection.",
+    icon: ShieldCheck,
+    color: "from-red-500/10 to-rose-500/5",
+    border: "border-red-500/20",
+    url: "https://www.coursera.org/account/accomplishments/records/QSM3ZYUN35MH",
+  },
+  {
+    name: "Data Science Professional Certificate",
+    issuer: "KNIME",
+    description:
+      "Professional certification in data science workflows, analytics, and machine learning pipelines using the KNIME Analytics Platform.",
+    icon: Zap,
+    color: "from-yellow-500/10 to-amber-500/5",
+    border: "border-yellow-500/20",
+    url: "https://www.linkedin.com/learning/certificates/a462f7321283de258509c3382e09e10cd18bf251c7f1398cab8151d50848e70a?u=121786466",
   },
 ];
 
@@ -229,32 +279,9 @@ export const aboutSecurityBadges: CredentialWithBadge[] = [
   },
 ];
 
-export const specializedCerts: CredentialWithBadge[] = [
-  {
-    name: "Advanced Crypto Accounting Certified",
-    issuer: "Intuit",
-    description:
-      "Specialized certification covering digital asset taxation, cost-basis methodology, transaction reconciliation, and crypto income reporting.",
-    badge: `${base}images/badge-crypto-tax.png`,
-    color: "from-orange-500/10 to-amber-500/5",
-    border: "border-orange-500/20",
-    url: "https://www.credly.com/badges/44179f58-1ad3-4b02-9f5d-6bf2258a3c49/public_url",
-  },
-  {
-    name: "Client Advisory Services Foundations",
-    issuer: "Intuit",
-    description:
-      "Certification in delivering strategic advisory services to clients — moving beyond bookkeeping to actionable financial guidance and business insights.",
-    badge: `${base}images/badge-client-advisory.png`,
-    color: "from-accent/10 to-primary/5",
-    border: "border-accent/20",
-    verificationNote: "Public badge link still needs manual confirmation.",
-  },
-];
-
 export const leadershipCerts = [
   {
-    title: "Exercising Leadership: Foundational Principles",
+    title: "Exercising Leadership: Executive Principles",
     school: "HarvardX",
     focus: "Leadership communication, influence, and executive presence.",
     url: "https://courses.edx.org/certificates/04f26e09cd414470bebc4a9852865dba",
@@ -267,15 +294,15 @@ export const leadershipCerts = [
     url: "https://www.coursera.org/account/accomplishments/certificate/7MPSBTXW624E",
   },
   {
-    title: "Intro to Psychology",
+    title: "Psychology",
     school: "Yale University",
     focus:
       "Foundational psychology principles covering human behavior, cognition, emotion, and social dynamics.",
     url: "https://coursera.org/share/e9d32ec91ee35b8ad28c00f99aa8dcd7",
   },
   {
-    title: "Strategic Innovation and Entrepreneurship",
-    school: "University of Illinois",
+    title: "Strategic Innovation: Building and Sustaining Innovative Organizations",
+    school: "University of Illinois Urbana-Champaign",
     focus:
       "Innovation frameworks, entrepreneurial strategy, and growth-stage business planning.",
     url: "https://www.coursera.org/account/accomplishments/records/MVW4VCQQQ9A2",
@@ -285,12 +312,20 @@ export const leadershipCerts = [
     school: "Jack Welch Management Institute",
     focus:
       "Leadership strategy, organizational performance, and management excellence.",
+    url: "https://www.linkedin.com/learning/certificates/f12e62d6f58b7e78ac19857d1c735ca7d81f0af14c399fba65fe4c495ba98d1b?u=121786466",
   },
   {
-    title: "American Negotiation Professional",
+    title: "Negotiation Professional Certificate",
     school: "American Negotiation Institute",
     focus:
       "Professional negotiation techniques, conflict resolution, and deal-making strategy.",
+    url: "https://www.linkedin.com/learning/certificates/b320b341fd52aaf206b4a86be6e23507cc946808e7fa6da2bc245ef8982966cd?u=121786466",
+  },
+  {
+    title: "Notary Public Commission",
+    school: "Oregon Secretary of State's Office",
+    focus:
+      "Oregon Notary Public Commission — Commission No. 1053057, issued November 2024.",
   },
   {
     title: "Business Communications",

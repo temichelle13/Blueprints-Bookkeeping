@@ -1,11 +1,32 @@
 import { usePageTitle } from "@/hooks/use-page-title";
+import { SEO } from "@/components/SEO";
+import {
+  breadcrumbSchema,
+  localBusinessSchema,
+  professionalServiceSchema,
+} from "@/lib/seo-schemas";
 import { Link } from "wouter";
 
 export default function Terms() {
   usePageTitle("Terms of Service");
+  const BASE_URL = "https://blueprintsandbookkeeping.com";
+  const jsonLd = [
+    localBusinessSchema(),
+    professionalServiceSchema({ url: `${BASE_URL}/terms` }),
+    breadcrumbSchema([
+      { name: "Home", url: BASE_URL },
+      { name: "Terms of Service", url: `${BASE_URL}/terms` },
+    ]),
+  ];
 
   return (
     <div className="pt-24 pb-20">
+      <SEO
+        title="Terms of Service"
+        path="/terms"
+        description="Review service terms, limitations, and legal conditions for working with Blueprints & Bookkeeping."
+        jsonLd={jsonLd}
+      />
       <section className="py-16 mb-8 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -14,7 +35,7 @@ export default function Terms() {
             Terms of Service
           </h1>
           <p className="text-muted-foreground text-sm">
-            Last updated: March 2026
+            Last updated: March 31, 2026
           </p>
         </div>
       </section>
@@ -63,6 +84,11 @@ export default function Terms() {
               planning services are designed to complement your tax
               professional's work, not replace it.
             </p>
+            <p className="mt-3">
+              We also do not provide legal advice or legal representation.
+              Please work with a licensed tax professional or attorney when
+              legal or tax decisions are required.
+            </p>
           </section>
 
           <section>
@@ -98,7 +124,29 @@ export default function Terms() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              6. Disclaimer of Warranties
+              6. Inquiry Data Processing and Retention
+            </h2>
+            <p>
+              When you submit a website inquiry, we process your contact and
+              business details to respond to your request, evaluate service fit,
+              maintain communication-consent records, and comply with legal and
+              regulatory obligations (including privacy/TCPA workflows). Inquiry
+              data is retained for up to 12 months while active, then
+              auto-archived/redacted, and permanently deleted after 24 months
+              unless a legal hold applies.
+            </p>
+            <p className="mt-3">
+              Additional details are provided in our{" "}
+              <Link href="/privacy" className="text-accent hover:underline">
+                Privacy Policy
+              </Link>
+              .
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-white font-bold text-lg mb-3">
+              7. Disclaimer of Warranties
             </h2>
             <p>
               Our website and services are provided "as is" without warranties
@@ -112,7 +160,7 @@ export default function Terms() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              7. Limitation of Liability
+              8. Limitation of Liability
             </h2>
             <p>
               To the fullest extent permitted by law, Blueprints & Bookkeeping
@@ -125,7 +173,7 @@ export default function Terms() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              8. Governing Law
+              9. Governing Law
             </h2>
             <p>
               These Terms are governed by the laws of the State of Oregon. Any
@@ -136,7 +184,7 @@ export default function Terms() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              9. Changes to Terms
+              10. Changes to Terms
             </h2>
             <p>
               We may update these Terms from time to time. Continued use of our
@@ -147,7 +195,7 @@ export default function Terms() {
           </section>
 
           <section>
-            <h2 className="text-white font-bold text-lg mb-3">10. Contact</h2>
+            <h2 className="text-white font-bold text-lg mb-3">11. Contact</h2>
             <p>Questions about these Terms? Contact us:</p>
             <div className="mt-3 pl-4 border-l border-accent/30 space-y-1">
               <p>Blueprints & Bookkeeping LLC</p>
@@ -161,13 +209,29 @@ export default function Terms() {
                 </a>
               </p>
             </div>
+            <p className="mt-4 text-xs text-muted-foreground/80">
+              Important: These Terms are provided for general informational
+              purposes and should be reviewed by qualified business counsel
+              before publication or reliance.
+            </p>
           </section>
         </div>
 
         <div className="text-center">
-          <Link href="/" className="text-accent hover:underline text-sm">
-            ← Back to Home
-          </Link>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
+            <Link href="/" className="text-accent hover:underline">
+              ← Back to Home
+            </Link>
+            <Link href="/privacy" className="text-accent hover:underline">
+              Privacy Policy
+            </Link>
+            <Link
+              href="/compliance-security"
+              className="text-accent hover:underline"
+            >
+              Compliance & Security
+            </Link>
+          </div>
         </div>
       </div>
     </div>

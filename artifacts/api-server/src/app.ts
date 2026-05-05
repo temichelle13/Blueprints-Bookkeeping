@@ -51,7 +51,35 @@ function parseAllowedCorsOrigins(
   return [...new Set(allowedOrigins)];
 }
 
+function parseTrustProxy(value: string | undefined): number | boolean {
+  if (!value) {
+    return false;
+  }
+
+  const normalizedValue = value.trim().toLowerCase();
+  if (["true", "yes", "on"].includes(normalizedValue)) {
+    return true;
+  }
+
+  if (["false", "no", "off", "0"].includes(normalizedValue)) {
+    return false;
+  }
+
+  const parsedNumber = Number.parseInt(normalizedValue, 10);
+  if (Number.isInteger(parsedNumber) && parsedNumber >= 1) {
+    return parsedNumber;
+  }
+
+  throw new Error(
+    `Invalid TRUST_PROXY value: ${value}. Use a positive integer hop count (recommended: 1), or true/false.`,
+  );
+}
+
 const app: Express = express();
+
+// Trust exactly one reverse-proxy hop so req.ip / req.ips reflect the real
+// client address rather than the proxy address.
+app.set("trust proxy", 1);
 
 app.use(helmet());
 
@@ -79,15 +107,6 @@ app.use(
 );
 
 app.use("/api/payments/webhook", express.raw({ type: "application/json" }));
-
-app.use(
-  "/api/webhooks/cal",
-  express.json({
-    verify: (req: any, _res, buf) => {
-      req.rawBody = buf;
-    },
-  }),
-);
 
 app.use(
   "/api/webhooks/resend",

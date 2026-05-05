@@ -6,14 +6,19 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
 
+export const CONTACT_CONSENT_TEXT_VERSION = "contact-consent-2026-03-31.1";
+export const CONTACT_CONSENT_SOURCE_PAGE = "/contact";
+
 export const quickContactSchema = z.object({
   formType: z.literal("quick"),
   name: z.string().min(2, "Name is required"),
   email: z.string().email("Valid email is required"),
   message: z.string().min(10, "Please provide a little more detail"),
-  smsConsent: z.boolean().refine((val) => val === true, {
-    message: "You must consent to receive text messages and phone calls",
+  emailConsent: z.boolean().refine((val) => val === true, {
+    message: "Email consent is required so we can respond to your inquiry",
   }),
+  smsConsent: z.boolean(),
+  phoneConsent: z.boolean(),
   website: z.string().optional(),
 });
 
@@ -28,9 +33,11 @@ export const detailedContactSchema = z.object({
   monthlyRevenueRange: z.string().optional(),
   biggestChallenge: z.string().min(10, "Please describe your challenge"),
   preferredContactMethod: z.string().optional(),
-  smsConsent: z.boolean().refine((val) => val === true, {
-    message: "You must consent to receive text messages and phone calls",
+  emailConsent: z.boolean().refine((val) => val === true, {
+    message: "Email consent is required so we can respond to your inquiry",
   }),
+  smsConsent: z.boolean(),
+  phoneConsent: z.boolean(),
   website: z.string().optional(),
 });
 
@@ -52,7 +59,16 @@ export function useContactMutation() {
               name: data.name,
               email: data.email,
               message: data.message,
+              consent: {
+                email: data.emailConsent,
+                sms: data.smsConsent,
+                phone: data.phoneConsent,
+                source: CONTACT_CONSENT_SOURCE_PAGE,
+                legalTextVersion: CONTACT_CONSENT_TEXT_VERSION,
+              },
               smsConsent: data.smsConsent,
+              consentTextVersion: CONTACT_CONSENT_TEXT_VERSION,
+              consentSourcePage: CONTACT_CONSENT_SOURCE_PAGE,
               website: data.website ?? "",
             }
           : {
@@ -66,7 +82,16 @@ export function useContactMutation() {
               monthlyRevenueRange: data.monthlyRevenueRange ?? null,
               biggestChallenge: data.biggestChallenge,
               preferredContactMethod: data.preferredContactMethod ?? null,
+              consent: {
+                email: data.emailConsent,
+                sms: data.smsConsent,
+                phone: data.phoneConsent,
+                source: CONTACT_CONSENT_SOURCE_PAGE,
+                legalTextVersion: CONTACT_CONSENT_TEXT_VERSION,
+              },
               smsConsent: data.smsConsent,
+              consentTextVersion: CONTACT_CONSENT_TEXT_VERSION,
+              consentSourcePage: CONTACT_CONSENT_SOURCE_PAGE,
               website: data.website ?? "",
             };
       await mutation.mutateAsync({ data: payload });
