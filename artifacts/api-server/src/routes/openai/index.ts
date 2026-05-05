@@ -30,6 +30,43 @@ const CHAT_RESPONSE_TOKEN_LIMIT = 4096;
 const USES_MAX_COMPLETION_TOKENS = /^o\d+(?:-|$)/.test(CHAT_MODEL);
 const isOpenAiConfigured = Boolean(openai);
 
+export const LEAD_KEYWORDS: readonly string[] = [
+  "my name is",
+  "i'm interested",
+  "i want to get started",
+  "sign me up",
+  "how do i start",
+  "reach out",
+  "contact me",
+  "follow up",
+  "my email",
+  "my phone",
+  "my number",
+  "call me",
+  "email me",
+  "i'd like to",
+  "id like to",
+  "ready to start",
+  "ready to move forward",
+  "i need help with",
+  "i run a",
+  "my business",
+  "how much would it cost",
+  "what would it cost",
+];
+
+export function isLeadMessage(
+  userMessage: string,
+  assistantResponse: string,
+): boolean {
+  const lowerUser = userMessage.toLowerCase();
+  const lowerAssistant = assistantResponse.toLowerCase();
+
+  return LEAD_KEYWORDS.some(
+    (kw) => lowerUser.includes(kw) || lowerAssistant.includes(kw),
+  );
+}
+
 
 function parseConversationId(value: string | string[] | undefined): number {
   if (Array.isArray(value)) {
@@ -418,37 +455,7 @@ async function checkAndNotifyTea(
   assistantResponse: string,
   conversationId: number,
 ): Promise<void> {
-  const lowerUser = userMessage.toLowerCase();
-  const lowerAssistant = assistantResponse.toLowerCase();
-
-  const leadKeywords = [
-    "my name is",
-    "i'm interested",
-    "i want to get started",
-    "sign me up",
-    "how do i start",
-    "reach out",
-    "contact me",
-    "follow up",
-    "my email",
-    "my phone",
-    "my number",
-    "call me",
-    "email me",
-    "i'd like to",
-    "id like to",
-    "ready to start",
-    "ready to move forward",
-    "i need help with",
-    "i run a",
-    "my business",
-    "how much would it cost",
-    "what would it cost",
-  ];
-
-  const isLead = leadKeywords.some(
-    (kw) => lowerUser.includes(kw) || lowerAssistant.includes(kw),
-  );
+  const isLead = isLeadMessage(userMessage, assistantResponse);
 
   if (!isLead) return;
 

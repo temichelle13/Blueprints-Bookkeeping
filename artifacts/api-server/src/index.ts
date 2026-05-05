@@ -5,6 +5,7 @@ import {
   checkAndSendReminders,
   syncAllPendingAgreements,
 } from "./lib/contract-service";
+import { recordSchedulerRun, recordSchedulerError } from "./lib/scheduler-health";
 import { runNexusCheck, ensureNexusRulesSeeded } from "./lib/nexus-service";
 import { runInquiryRetentionPolicy } from "./lib/inquiry-retention";
 import { processPendingOutboundEmailEvents } from "./lib/outbound-email-events";
@@ -30,10 +31,12 @@ function startOutboundEmailRetryScheduler() {
   async function run() {
     try {
       const processed = await processPendingOutboundEmailEvents();
+      recordSchedulerRun("outboundEmailRetry", processed);
       if (processed > 0) {
         logger.info("Processed queued outbound email events", { processed });
       }
     } catch (err) {
+      recordSchedulerError("outboundEmailRetry");
       logger.error("Outbound email retry scheduler error", err as Error);
     } finally {
       setTimeout(run, OUTBOUND_EMAIL_RETRY_INTERVAL_MS);
@@ -52,6 +55,7 @@ function startContractScheduler() {
       }
 
       const { remindersProcessed, expired } = await checkAndSendReminders();
+      recordSchedulerRun("contract", syncCount + remindersProcessed + expired);
       if (remindersProcessed > 0 || expired > 0) {
         logger.info("Contract reminders processed", {
           remindersProcessed,
@@ -59,6 +63,7 @@ function startContractScheduler() {
         });
       }
     } catch (err) {
+      recordSchedulerError("contract");
       logger.error("Contract scheduler error", err as Error);
     }
   }
@@ -71,10 +76,12 @@ function startNexusScheduler() {
   async function run() {
     try {
       const { warnings, alerts } = await runNexusCheck();
+      recordSchedulerRun("nexus", warnings + alerts);
       if (warnings > 0 || alerts > 0) {
         logger.info("Nexus check completed", { warnings, alerts });
       }
     } catch (err) {
+      recordSchedulerError("nexus");
       logger.error("Nexus scheduler error", err as Error);
     }
   }
@@ -115,7 +122,9 @@ function startInquiryRetentionScheduler() {
   async function run() {
     try {
       await runInquiryRetentionPolicy();
+      recordSchedulerRun("inquiryRetention");
     } catch (err) {
+      recordSchedulerError("inquiryRetention");
       logger.error("Inquiry retention scheduler error", err as Error);
     }
   }

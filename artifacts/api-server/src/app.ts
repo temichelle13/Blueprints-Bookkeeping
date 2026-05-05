@@ -1,6 +1,7 @@
 import express, { type Express, type Request } from "express";
 import cors from "cors";
 import helmet from "helmet";
+import { requestId } from "./middleware/request-id";
 import router from "./routes";
 
 interface RawBodyRequest extends Request {
@@ -82,6 +83,7 @@ const app: Express = express();
 app.set("trust proxy", 1);
 
 app.use(helmet());
+app.use(requestId);
 
 app.use((req, res, next) => {
   res.setHeader("Sec-GPC", "1");
