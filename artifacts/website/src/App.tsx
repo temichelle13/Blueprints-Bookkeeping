@@ -94,9 +94,9 @@ function SensitiveRouteNoindexFallback() {
     const shouldNoindex = isSensitivePath(location);
 
     // Always operate on a single meta[name="robots"] element.
-    let robotsMeta = document.querySelector('meta[name="robots"]') as
-      | HTMLMetaElement
-      | null;
+    let robotsMeta = document.querySelector(
+      'meta[name="robots"]',
+    ) as HTMLMetaElement | null;
 
     if (!robotsMeta) {
       robotsMeta = document.createElement("meta");

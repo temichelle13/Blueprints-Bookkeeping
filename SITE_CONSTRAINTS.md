@@ -47,6 +47,7 @@ These are the only services that should be positioned as “core,” “primary,
   - Availability: Only available to **existing** bookkeeping or business plan clients.
 
 **Constraints (hard rules):**
+
 - Do **NOT** add The Digital Handshake to:
   - Home page hero
   - Main navigation
@@ -66,6 +67,7 @@ The website must never claim or imply that Blueprints & Bookkeeping provides:
 **Constraint:** If a page or component introduces tax-service language, remove it. Do not “soften” this by implying “we can help with taxes.”
 
 **Allowed clarification (only if needed):**
+
 - Tax prep and filing can be completed through vetted partner professionals, or clients may use their preferred tax professional.
 - The business can provide bookkeeping outputs and financial reports that support a tax professional’s work, but does not provide tax services.
 
@@ -75,14 +77,14 @@ The website must never claim or imply that Blueprints & Bookkeeping provides:
 
 Use only the services below unless there is explicit instruction to add/replace one.
 
-| Service | Status | Website / Implementation Notes |
-|---|---:|---|
-| **Calendly** | YES | Primary scheduling method. Primary URL: `https://calendly.com/tea-blueprintsandbookkeeping/30min` |
-| **QuickBooks Online (QBO)** | YES | Used for bookkeeping via Intuit Accountant Suite as a ProAdvisor. |
-| **Resend** | YES | All transactional email goes through Resend. API key is stored in environment variables. |
-| **Contract Automation** | TBD | A contract automation solution is still being selected. Requirements include secure signing, automated contract generation, template support, and API integration. Do not finalize a vendor without explicit instruction. |
-| **Stripe** | MAYBE | Payments/invoicing approach is still being evaluated. Do not implement payment flows without explicit instruction. |
-| **LivePlan** | YES | Business planning tool partnership. |
+| Service                     | Status | Website / Implementation Notes                                                                                                                                                                                            |
+| --------------------------- | -----: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Calendly**                |    YES | Primary scheduling method. Primary URL: `https://calendly.com/tea-blueprintsandbookkeeping/30min`                                                                                                                         |
+| **QuickBooks Online (QBO)** |    YES | Used for bookkeeping via Intuit Accountant Suite as a ProAdvisor.                                                                                                                                                         |
+| **Resend**                  |    YES | All transactional email goes through Resend. API key is stored in environment variables.                                                                                                                                  |
+| **Contract Automation**     |    TBD | A contract automation solution is still being selected. Requirements include secure signing, automated contract generation, template support, and API integration. Do not finalize a vendor without explicit instruction. |
+| **Stripe**                  |  MAYBE | Payments/invoicing approach is still being evaluated. Do not implement payment flows without explicit instruction.                                                                                                        |
+| **LivePlan**                |    YES | Business planning tool partnership.                                                                                                                                                                                       |
 
 ---
 
@@ -96,6 +98,7 @@ Use only the services below unless there is explicit instruction to add/replace 
   - `https://calendly.com/tea-blueprintsandbookkeeping/emergency-or-other-expedited-request`
 
 **Constraints:**
+
 - The `/schedule` page embeds Calendly via **iframe**.
 - Do **NOT** replace Calendly with another scheduling tool without explicit instruction.
 - Do **NOT** change the Calendly URLs.
@@ -160,21 +163,25 @@ Earned certifications include (keep naming consistent; do not “improve” labe
 These items are locked. Do not modify them unless the owner explicitly instructs you to.
 
 ### 6.1 Scheduling & onboarding structure
+
 - The Calendly URLs
 - The 4-path **“Get Started”** page structure at `/get-started`
 - The `/schedule` Calendly embed approach (iframe)
 
 ### 6.2 Security / access patterns
+
 - The admin token authentication pattern
 - Admin path: `/admin` (token-protected)
 
 ### 6.3 Copy & IA (information architecture)
+
 - The home page hero copy (services positioning)
 - The Aria (AI assistant) system prompt paths (must match the Get Started page)
 - Navigation order set by Task #7:
   - Services, Industries, About, Pricing, Portfolio, Blog, Resources, Contact
 
 ### 6.4 Visual design tokens
+
 - Color scheme:
   - Background: `#0E1118`
   - Card: `#161B2E`

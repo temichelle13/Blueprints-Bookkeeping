@@ -270,10 +270,16 @@ function validateTemplateBody(body: unknown): {
   return {
     name: b.name,
     contractType: b.contractType,
-    ...(typeof b.adobeTemplateId === "string" && { adobeTemplateId: b.adobeTemplateId }),
+    ...(typeof b.adobeTemplateId === "string" && {
+      adobeTemplateId: b.adobeTemplateId,
+    }),
     triggerCondition: b.triggerCondition,
     ...(typeof b.description === "string" && { description: b.description }),
-    ...(Array.isArray(b.prefillFields) && { prefillFields: b.prefillFields.filter((f): f is string => typeof f === "string") }),
+    ...(Array.isArray(b.prefillFields) && {
+      prefillFields: b.prefillFields.filter(
+        (f): f is string => typeof f === "string",
+      ),
+    }),
     ...(active !== undefined && { active }),
   };
 }

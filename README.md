@@ -2,7 +2,7 @@
 
 # 🏗️ Blueprints & Bookkeeping
 
-### *Premium Remote Financial Services — Built Different*
+### _Premium Remote Financial Services — Built Different_
 
 [![Live Site](https://img.shields.io/badge/🌐_Live_Site-blueprintsandbookkeeping.com-2563eb?style=for-the-badge)](https://blueprintsandbookkeeping.com)
 [![React](https://img.shields.io/badge/React-19-61dafb?style=for-the-badge&logo=react&logoColor=white)](https://react.dev)
@@ -15,7 +15,7 @@
 
 **Blueprints & Bookkeeping, LLC** is a premium remote financial services firm based in Roseburg, Oregon, founded by **Tea Larson-Hetrick**. We provide advanced bookkeeping, professional business planning, and strategic advisory services — intentionally capped at **20 active clients** to ensure every business gets the focused, expert attention it deserves.
 
-*This is our full-stack web platform: the front door, the engine room, and everything in between.*
+_This is our full-stack web platform: the front door, the engine room, and everything in between._
 
 <br>
 
@@ -31,13 +31,13 @@
 
 Blueprints & Bookkeeping serves complex businesses — from multi-entity operations and agriculture to crypto and timber — with surgical financial precision. Our intentional client cap means you're never a ticket number; you're a strategy partner.
 
-| Service | Description | Starting At |
-|:--------|:------------|:------------|
-| 📊 **Essentials Bookkeeping** | Monthly reconciliation, QBO management, core financials | $500/mo |
-| 📈 **Growth Bookkeeping** | Multi-entity support, niche reconciliation, proactive advisory | $900/mo |
-| 🏢 **Advanced Bookkeeping** | Complex structures, consolidated reporting, dedicated strategist | Custom |
-| 📝 **Startup Roadmap** | Executive summary, market analysis, 3-year projections | $2,500 |
-| 💼 **SBA / Investor Ready Plan** | Full lender package, pitch deck, LivePlan financial modeling | $4,000 |
+| Service                          | Description                                                      | Starting At |
+| :------------------------------- | :--------------------------------------------------------------- | :---------- |
+| 📊 **Essentials Bookkeeping**    | Monthly reconciliation, QBO management, core financials          | $500/mo     |
+| 📈 **Growth Bookkeeping**        | Multi-entity support, niche reconciliation, proactive advisory   | $900/mo     |
+| 🏢 **Advanced Bookkeeping**      | Complex structures, consolidated reporting, dedicated strategist | Custom      |
+| 📝 **Startup Roadmap**           | Executive summary, market analysis, 3-year projections           | $2,500      |
+| 💼 **SBA / Investor Ready Plan** | Full lender package, pitch deck, LivePlan financial modeling     | $4,000      |
 
 ---
 
@@ -50,24 +50,30 @@ This isn't a brochure site. It's a full-stack business platform designed to deli
 <td width="50%">
 
 ### 🤖 Aria — AI Assistant
+
 An intelligent chatbot powered by **GPT-4.1-mini** that knows the business inside-out. Aria answers questions about services, pricing, process, and guides prospects to the right next step — with real-time streaming responses.
 
 ### 📬 Smart Contact System
+
 Dual-mode intake forms (quick inquiry + detailed onboarding) with **TCPA-compliant consent tracking**, honeypot spam protection, rate limiting, and automated email routing via **Resend**.
 
 ### 💳 Integrated Payments
+
 Seamless **Stripe** checkout for bookkeeping subscriptions (monthly/annual) and one-time business plan deposits. Full webhook lifecycle management for real-time status updates.
 
 </td>
 <td width="50%">
 
 ### 📄 Contract Management
+
 End-to-end contract workflow with **Adobe Sign** integration — template management, signature routing, status syncing, and signed document retrieval. All from a unified admin dashboard.
 
 ### 🔒 Admin Dashboard
+
 Protected internal hub for managing inquiries, newsletter subscribers, email suppression lists, contract pipelines, tax nexus rules, and site analytics.
 
 ### 🎨 Premium Design System
+
 Dark-first, glass-morphism aesthetic with **Framer Motion** animations, optimized for Core Web Vitals. Responsive from mobile to ultrawide with accessible, WCAG-aligned components.
 
 </td>
@@ -96,6 +102,7 @@ Dark-first, glass-morphism aesthetic with **Framer Motion** animations, optimize
 ## 🏗️ Architecture
 
 This is a **pnpm monorepo** designed for separation of concerns, type safety across boundaries, and shared code through internal packages.
+The production API runtime path is **only** `artifacts/api-server/src/index.ts` (built to `artifacts/api-server/dist/index.cjs`).
 
 ```
 Blueprints-Bookkeeping/
@@ -109,7 +116,7 @@ Blueprints-Bookkeeping/
 │   │   │   └── lib/              # Utilities and helpers
 │   │   └── public/               # Static assets, sitemap, images
 │   │
-│   └── ⚙️ api-server/            # Express v5 API backend
+│   └── ⚙️ api-server/            # Express v5 API backend (authoritative runtime)
 │       └── src/
 │           ├── routes/           # Endpoint handlers (contact, payments, admin…)
 │           ├── middleware/        # Auth, rate limiting, logging
@@ -124,6 +131,7 @@ Blueprints-Bookkeeping/
 │   └── integrations-openai-ai-react/    # OpenAI React components
 │
 ├── 📁 scripts/                   # Build, migration, and utility scripts
+│   └── src/check-route-references.ts # CI guard for unreferenced API route modules
 ├── 📁 docs/                      # Compliance SOPs, specs, recommendations
 └── 📄 pnpm-workspace.yaml        # Workspace configuration
 ```
@@ -196,11 +204,11 @@ QuickBooks Online
 
 ### Prerequisites
 
-| Tool | Version |
-|:-----|:--------|
-| **Node.js** | `^20.19.0` · `^22.0.0` · `^24.0.0` |
-| **pnpm** | `10.33.0` |
-| **PostgreSQL** | `16+` |
+| Tool           | Version                            |
+| :------------- | :--------------------------------- |
+| **Node.js**    | `^20.19.0` · `^22.0.0` · `^24.0.0` |
+| **pnpm**       | `10.33.2`                          |
+| **PostgreSQL** | `16+`                              |
 
 ### Installation
 
@@ -233,6 +241,7 @@ pnpm run typecheck                              # TypeScript validation
 pnpm run lint                                   # Check formatting (Prettier)
 pnpm run format                                 # Auto-format code
 pnpm run check:website-deploy                   # Full pre-deployment validation
+pnpm run check:route-references                 # Fail if API route modules are not wired into runtime
 pnpm --filter @workspace/website build          # Build frontend only
 pnpm --filter @workspace/api-server build       # Build backend only
 git grep -nE '^(<<<<<<<|=======|>>>>>>>)'       # Scan for merge conflict artifacts
@@ -249,20 +258,20 @@ Create a `.env` file from `.env.example`. Key variables:
 
 <br>
 
-| Variable | Required | Description |
-|:---------|:--------:|:------------|
-| `NODE_ENV` | ✅ | `development` or `production` |
-| `PORT` | ✅ | API server port (default: `3001`) |
-| `DATABASE_URL` | ✅ | PostgreSQL connection string |
-| `CORS_ORIGIN` | ✅ | Allowed origins (comma-separated) |
-| `ADMIN_TOKEN` | ✅ | 32+ character admin auth token |
-| `VITE_API_URL` | ✅ | API base URL (compile-time) |
-| `STRIPE_SECRET_KEY` | ✅ | Stripe secret key |
-| `STRIPE_WEBHOOK_SECRET` | ✅ | Stripe webhook signing secret |
-| `RESEND_API_KEY` | ✅ | Resend email service key |
-| `OPENAI_API_KEY` | ✅ | OpenAI key required for server startup (used by the Aria chatbot) |
-| `OPENAI_CHAT_MODEL` | ⬚ | Model name (default: `gpt-4.1-mini`) |
-| `TRUST_PROXY` | ⬚ | Set to `1` behind reverse proxy |
+| Variable                | Required | Description                                                       |
+| :---------------------- | :------: | :---------------------------------------------------------------- |
+| `NODE_ENV`              |    ✅    | `development` or `production`                                     |
+| `PORT`                  |    ✅    | API server port (default: `3001`)                                 |
+| `DATABASE_URL`          |    ✅    | PostgreSQL connection string                                      |
+| `CORS_ORIGIN`           |    ✅    | Allowed origins (comma-separated)                                 |
+| `ADMIN_TOKEN`           |    ✅    | 32+ character admin auth token                                    |
+| `VITE_API_URL`          |    ✅    | API base URL (compile-time)                                       |
+| `STRIPE_SECRET_KEY`     |    ✅    | Stripe secret key                                                 |
+| `STRIPE_WEBHOOK_SECRET` |    ✅    | Stripe webhook signing secret                                     |
+| `RESEND_API_KEY`        |    ✅    | Resend email service key                                          |
+| `OPENAI_API_KEY`        |    ✅    | OpenAI key required for server startup (used by the Aria chatbot) |
+| `OPENAI_CHAT_MODEL`     |    ⬚     | Model name (default: `gpt-4.1-mini`)                              |
+| `TRUST_PROXY`           |    ⬚     | Set to `1` behind reverse proxy                                   |
 
 > See `.env.example` for the complete list including Stripe price IDs and Adobe Sign configuration.
 
@@ -272,7 +281,7 @@ Create a `.env` file from `.env.example`. Key variables:
 
 ## 📦 Deployment
 
-The platform is deployed on **Replit** with a pre-deployment validation pipeline:
+The platform is deployed on **Replit** with a pre-deployment validation pipeline. API requests are served by the Express app at `artifacts/api-server/src/index.ts` (compiled to `artifacts/api-server/dist/index.cjs`).
 
 ```bash
 # Full deployment check (recommended before every deploy)
@@ -280,6 +289,7 @@ pnpm run check:website-deploy
 ```
 
 This runs, in order:
+
 1. **TypeScript check** — full type validation across the monorepo
 2. **Indexing guards** — ensures no sensitive routes are indexable
 3. **Website build** — Vite production build with code splitting
@@ -290,14 +300,14 @@ This runs, in order:
 
 ## 📚 Documentation
 
-| Document | Description |
-|:---------|:------------|
-| [`DEPLOYMENT.md`](./DEPLOYMENT.md) | Full deployment guide and environment reference |
-| [`SECURITY.md`](./SECURITY.md) | Security policy and vulnerability reporting |
-| [`SITE_CONSTRAINTS.md`](./SITE_CONSTRAINTS.md) | Business rules, locked content, and messaging guidelines |
-| [`docs/COMPLIANCE_SOP_TCPA_PRIVACY.md`](./docs/COMPLIANCE_SOP_TCPA_PRIVACY.md) | TCPA compliance and consent tracking procedures |
-| [`artifacts/website/docs/QUALITY_CHECKLIST.md`](./artifacts/website/docs/QUALITY_CHECKLIST.md) | Pre-deployment quality standards |
-| [`artifacts/website/docs/IMAGE_OPTIMIZATION.md`](./artifacts/website/docs/IMAGE_OPTIMIZATION.md) | Image optimization guide and best practices |
+| Document                                                                                         | Description                                              |
+| :----------------------------------------------------------------------------------------------- | :------------------------------------------------------- |
+| [`DEPLOYMENT.md`](./DEPLOYMENT.md)                                                               | Full deployment guide and environment reference          |
+| [`SECURITY.md`](./SECURITY.md)                                                                   | Security policy and vulnerability reporting              |
+| [`SITE_CONSTRAINTS.md`](./SITE_CONSTRAINTS.md)                                                   | Business rules, locked content, and messaging guidelines |
+| [`docs/COMPLIANCE_SOP_TCPA_PRIVACY.md`](./docs/COMPLIANCE_SOP_TCPA_PRIVACY.md)                   | TCPA compliance and consent tracking procedures          |
+| [`artifacts/website/docs/QUALITY_CHECKLIST.md`](./artifacts/website/docs/QUALITY_CHECKLIST.md)   | Pre-deployment quality standards                         |
+| [`artifacts/website/docs/IMAGE_OPTIMIZATION.md`](./artifacts/website/docs/IMAGE_OPTIMIZATION.md) | Image optimization guide and best practices              |
 
 ---
 
@@ -325,7 +335,7 @@ See the `LICENSE` file for the full license text.
 
 **Built with 💙 in Roseburg, Oregon**
 
-*Blueprints & Bookkeeping, LLC — Financial clarity for complex businesses.*
+_Blueprints & Bookkeeping, LLC — Financial clarity for complex businesses._
 
 📧 [tea@blueprintsandbookkeeping.com](mailto:tea@blueprintsandbookkeeping.com) · 📞 (541) 319-8654 · 🌐 [blueprintsandbookkeeping.com](https://blueprintsandbookkeeping.com)
 
