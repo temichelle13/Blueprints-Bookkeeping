@@ -1,0 +1,66 @@
+name: PR Quality Gate
+
+on:
+  pull_request:
+    branches: ["master"]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  format-check:
+    name: Prettier Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - name: Check formatting
+        run: pnpm run lint
+
+  typecheck:
+    name: TypeScript Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - name: Run codegen (required before typecheck)
+        run: pnpm run codegen
+      - name: Typecheck all packages
+        run: pnpm run typecheck
+
+  indexing-guards:
+    name: SEO Indexing Guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - name: Validate robots.txt + sitemap + noindex consistency
+        run: pnpm --filter @workspace/scripts run check:indexing-guards
+
+      - name: Warn on indexing guard failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `## 🚨 SEO Indexing Guard Failed\n\nThe \`check:indexing-guards\` script detected a mismatch between \`robots.txt\`, \`sitemap.xml\`, and page-level \`<SEO noindex />\` settings.\n\nSensitive routes (e.g. \`/admin\`, \`/onboarding\`) **must** be noindexed in all three places per \`AGENTS.md\`.\n\nPlease review \`scripts/src/check-indexing-guards.ts\` output and fix the inconsistency before merging.`
+            });
