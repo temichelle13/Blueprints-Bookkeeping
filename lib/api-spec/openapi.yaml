@@ -263,6 +263,16 @@ paths:
           description: SSE stream of assistant text chunks
           content:
             text/event-stream: {}
+        "404":
+          description: Conversation not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Conversation not found
   /contracts:
     get:
       operationId: listContracts
