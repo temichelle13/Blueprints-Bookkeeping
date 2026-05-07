@@ -1,0 +1,20 @@
+name = "blueprints-bookkeeping"
+pages_build_output_dir = "artifacts/website/dist/public"
+compatibility_date = "2026-05-01"
+
+[[d1_databases]]
+binding = "CONCIERGE_DB"
+database_name = "blueprints-bookkeeping-concierge"
+database_id = "replace-with-cloudflare-d1-database-id"
+
+# Workers AI bindings for Pages Functions are configured in the Cloudflare
+# dashboard. Bind Workers AI as AI before enabling Aria in production.
+#
+# Required encrypted secrets in Cloudflare Pages:
+# - RESEND_API_KEY
+#
+# Recommended variables:
+# - OWNER_EMAIL=tea@blueprintsandbookkeeping.com
+# - FROM_EMAIL=Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>
+# - AI_MODEL=@cf/meta/llama-3.1-8b-instruct
+# - TURNSTILE_SECRET_KEY=<optional>

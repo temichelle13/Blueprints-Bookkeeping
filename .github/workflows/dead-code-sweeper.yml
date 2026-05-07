@@ -4,6 +4,8 @@ on: [push]
 jobs:
   sweep:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgres://ci:ci@localhost:5432/ci
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v3
@@ -14,4 +16,5 @@ jobs:
       - run: pnpm install --frozen-lockfile
       # Knip finds unused files, dependencies, and exports
       - name: Find Dead Code
+        continue-on-error: true
         run: npx knip

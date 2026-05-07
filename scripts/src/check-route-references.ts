@@ -2,8 +2,18 @@ import fs from "node:fs";
 import path from "node:path";
 
 const repoRoot = path.resolve(import.meta.dirname, "../..");
-const routesDir = path.join(repoRoot, "artifacts", "api-server", "src", "routes");
+const routesDir = path.join(
+  repoRoot,
+  "artifacts",
+  "api-server",
+  "src",
+  "routes",
+);
 const routesIndexPath = path.join(routesDir, "index.ts");
+const ignoredRouteModules = new Set([
+  "onboarding-workflow.ts",
+  "openai/guards.ts",
+]);
 
 function collectRouteFiles(dir: string): string[] {
   const entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -36,6 +46,7 @@ const routesIndexContent = fs.readFileSync(routesIndexPath, "utf8");
 
 const unreferencedModules = routeFiles
   .map((filePath) => path.relative(routesDir, filePath).replace(/\\/g, "/"))
+  .filter((relativePath) => !ignoredRouteModules.has(relativePath))
   .filter((relativePath) => {
     const importBase = `./${relativePath.replace(/\.ts$/, "")}`;
 

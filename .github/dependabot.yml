@@ -5,21 +5,28 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday" # Runs every Monday morning
-    
+
     # 1. Auto-Assign Reviewers
     # Automatically assigns the PRs to you so they show up in your dashboard
     reviewers:
       - "temichelle13"
-      
+
     # 2. Auto-Labeling
     # Keeps your Pull Request tab beautifully organized
     labels:
       - "dependencies"
-      
+
     # 3. Grouped Updates (The Game Changer!)
-    # Instead of opening 10 different PRs for 10 different packages, 
+    # Instead of opening 10 different PRs for 10 different packages,
     # this bundles all routine package updates into ONE single Pull Request.
     groups:
       all-dependencies:
         patterns:
           - "*"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
