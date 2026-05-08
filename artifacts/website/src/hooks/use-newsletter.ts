@@ -19,9 +19,9 @@ export function useNewsletterMutation() {
       const result = await mutation.mutateAsync({
         data: {
           ...payload,
-          website: _honeypot,
+          ...(_honeypot !== undefined ? { website: _honeypot } : {}),
           "cf-turnstile-response": data.turnstileResponse,
-        } as any,
+        },
       });
       const eventName =
         data.signupSource === "lead_magnet"

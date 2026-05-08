@@ -54,7 +54,7 @@ export function useContactMutation() {
     data: QuickContactValues | DetailedContactValues,
   ): Promise<boolean> => {
     try {
-      const payload: ContactFormInput & { "cf-turnstile-response": string } =
+      const payload: ContactFormInput =
         data.formType === "quick"
           ? {
               formType: "quick",

@@ -69,6 +69,7 @@ export interface ContactFormInput {
   /** Public page path where consent was captured (for example /contact) */
   consentSourcePage: string;
   website?: string;
+  'cf-turnstile-response': string;
 }
 
 export interface ContactFormResponse {
@@ -88,6 +89,8 @@ export const NewsletterSubscribeInputSignupSource = {
 export interface NewsletterSubscribeInput {
   email: string;
   signupSource: NewsletterSubscribeInputSignupSource;
+  website?: string;
+  'cf-turnstile-response': string;
 }
 
 export interface NewsletterSubscribeResponse {
@@ -379,10 +382,6 @@ export type UnsubscribeNewsletterByTokenParams = {
  * The unique unsubscribe token for the subscriber
  */
 token: string;
-};
-
-export type SendOpenaiMessage404 = {
-  error?: string;
 };
 
 export type BookingWebhookBodyPayload = { [key: string]: unknown };

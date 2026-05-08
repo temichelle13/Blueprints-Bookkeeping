@@ -525,7 +525,7 @@ function BookkeeperIntakeForm() {
           consentSourcePage: CONTACT_CONSENT_SOURCE_PAGE,
           website: data.website || "",
           "cf-turnstile-response": turnstilePayload["cf-turnstile-response"],
-        } as any,
+        },
       });
       trackEvent("Contact Form Submission", { form_type: BOOKKEEPER_INTENT });
       toast({

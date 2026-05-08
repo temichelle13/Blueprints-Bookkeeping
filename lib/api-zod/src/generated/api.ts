@@ -45,7 +45,8 @@ export const SubmitContactFormBody = zod.object({
   "smsConsent": zod.boolean(),
   "consentTextVersion": zod.string().describe('Version identifier for the exact consent language shown at submit time'),
   "consentSourcePage": zod.string().describe('Public page path where consent was captured (for example \/contact)'),
-  "website": zod.string().optional()
+  "website": zod.string().optional(),
+  "cf-turnstile-response": zod.string()
 })
 
 
@@ -55,7 +56,9 @@ export const SubmitContactFormBody = zod.object({
  */
 export const SubscribeNewsletterBody = zod.object({
   "email": zod.string(),
-  "signupSource": zod.enum(['footer', 'lead_magnet'])
+  "signupSource": zod.enum(['footer', 'lead_magnet']),
+  "website": zod.string().optional(),
+  "cf-turnstile-response": zod.string()
 })
 
 
