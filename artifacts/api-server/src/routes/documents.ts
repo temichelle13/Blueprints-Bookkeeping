@@ -247,14 +247,14 @@ router.post(
         await ccStorage.uploadToCreativeCloud(storagePath, fileBytes, mimeType);
 
         const doc = await ClientDocumentModel.create({
-            clientName,
-            clientEmail,
-            fileName: file.originalname,
-            originalName: file.originalname,
-            fileSize: file.size,
-            mimeType: file.mimetype || getMimeTypeForFile(file.originalname),
-            storagePath,
-          });
+          clientName,
+          clientEmail,
+          fileName: file.originalname,
+          originalName: file.originalname,
+          fileSize: file.size,
+          mimeType: file.mimetype || getMimeTypeForFile(file.originalname),
+          storagePath,
+        });
 
         results.push({
           id: doc._id.toString(),
@@ -293,7 +293,9 @@ router.get(
   "/documents",
   adminAuth,
   async (_req: Request, res: Response): Promise<void> => {
-    const documents = await ClientDocumentModel.find().sort({ uploadedAt: -1 }).lean();
+    const documents = await ClientDocumentModel.find()
+      .sort({ uploadedAt: -1 })
+      .lean();
     res.json(documents);
   },
 );

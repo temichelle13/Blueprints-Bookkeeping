@@ -255,7 +255,10 @@ router.post("/newsletter/unsubscribe", async (req, res): Promise<void> => {
     return;
   }
 
-  await NewsletterSubscriberModel.updateOne({ email }, { $set: { active: false } });
+  await NewsletterSubscriberModel.updateOne(
+    { email },
+    { $set: { active: false } },
+  );
 
   await addToSuppressionList(email, "unsubscribed");
 

@@ -70,7 +70,14 @@ async function markEventSent(
 }
 
 async function markEventRetryOrFailure(
-  event: { _id: Types.ObjectId; attemptCount: number; maxAttempts: number; nextAttemptAt: Date; eventType: string; inquiryId: Types.ObjectId },
+  event: {
+    _id: Types.ObjectId;
+    attemptCount: number;
+    maxAttempts: number;
+    nextAttemptAt: Date;
+    eventType: string;
+    inquiryId: Types.ObjectId;
+  },
   errorPayload: Record<string, unknown>,
 ): Promise<void> {
   const attemptCount = event.attemptCount + 1;
@@ -106,7 +113,11 @@ async function markEventRetryOrFailure(
   }
 }
 
-async function sendSingleEvent(event: ReturnType<typeof OutboundEmailEventModel.prototype.toObject> & { _id: Types.ObjectId }): Promise<void> {
+async function sendSingleEvent(
+  event: ReturnType<typeof OutboundEmailEventModel.prototype.toObject> & {
+    _id: Types.ObjectId;
+  },
+): Promise<void> {
   const resend = getResend();
 
   if (!resend) {
@@ -145,7 +156,10 @@ async function sendSingleEvent(event: ReturnType<typeof OutboundEmailEventModel.
       return;
     }
 
-    await markEventSent(event._id.toString(), (response as any)?.data?.id ?? null);
+    await markEventSent(
+      event._id.toString(),
+      (response as any)?.data?.id ?? null,
+    );
   } catch (error) {
     await markEventRetryOrFailure(event, buildErrorPayload(error));
   }

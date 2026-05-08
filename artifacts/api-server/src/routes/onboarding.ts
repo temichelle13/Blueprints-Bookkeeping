@@ -214,7 +214,7 @@ router.post(
           getExistingSubmissionByStripeSessionId: async (sessionId) => {
             const existing = await OnboardingSubmissionModel.findOne(
               { stripeSessionId: sessionId },
-              { _id: 1 }
+              { _id: 1 },
             ).lean();
             return existing ? { id: existing._id.toString() } : null;
           },
@@ -244,7 +244,7 @@ router.post(
           ) => {
             const sub = await SubscriptionModel.findOne(
               { stripeSubscriptionId },
-              { _id: 1 }
+              { _id: 1 },
             ).lean();
             return sub ? sub._id.toString() : null;
           },

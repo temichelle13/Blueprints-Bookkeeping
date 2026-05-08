@@ -148,7 +148,9 @@ export async function determineContractTypes(
 ): Promise<string[]> {
   const types = new Set<string>();
 
-  const activeTemplates = await ContractTemplateModel.find({ active: true }).lean();
+  const activeTemplates = await ContractTemplateModel.find({
+    active: true,
+  }).lean();
 
   const dbTriggerMap = new Map<string, Set<string>>();
   for (const tpl of activeTemplates) {
@@ -459,17 +461,27 @@ export async function syncAgreementStatus(contractId: string): Promise<void> {
     details.status === "OUT_FOR_APPROVAL"
   ) {
     if (contract.status !== "sent") {
-      await ContractModel.findByIdAndUpdate(contractId, { status: "sent", updatedAt: now });
+      await ContractModel.findByIdAndUpdate(contractId, {
+        status: "sent",
+        updatedAt: now,
+      });
     }
   } else if (
     details.status === "VIEWED" ||
     details.status === "WAITING_FOR_MY_SIGNATURE"
   ) {
     if (contract.status !== "viewed") {
-      await ContractModel.findByIdAndUpdate(contractId, { status: "viewed", updatedAt: now });
+      await ContractModel.findByIdAndUpdate(contractId, {
+        status: "viewed",
+        updatedAt: now,
+      });
     }
   } else if (details.status === "SIGNED" && contract.status !== "signed") {
-    await ContractModel.findByIdAndUpdate(contractId, { status: "signed", signedAt: now, updatedAt: now });
+    await ContractModel.findByIdAndUpdate(contractId, {
+      status: "signed",
+      signedAt: now,
+      updatedAt: now,
+    });
 
     try {
       const signedPdf = await adobeSign.getSignedDocument(
@@ -481,7 +493,10 @@ export async function syncAgreementStatus(contractId: string): Promise<void> {
       );
       await ccStorage.uploadToCreativeCloud(archivePath, signedPdf);
 
-      await ContractModel.findByIdAndUpdate(contractId, { signedDocumentUrl: archivePath, updatedAt: now });
+      await ContractModel.findByIdAndUpdate(contractId, {
+        signedDocumentUrl: archivePath,
+        updatedAt: now,
+      });
     } catch (err) {
       console.error(
         `Failed to archive signed document for contract ${contractId}:`,

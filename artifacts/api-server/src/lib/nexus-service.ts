@@ -157,7 +157,17 @@ export async function runNexusCheck(): Promise<{
 }
 
 async function sendNexusNotification(
-  rule: { stateCode: string; stateName: string; foreignQualificationThreshold: number; warningThresholdPercent: number; bookkeepingLicenseRequired: boolean; bookkeepingLicenseNotes?: string | null; authorityName?: string | null; authorityUrl?: string | null; notes?: string | null },
+  rule: {
+    stateCode: string;
+    stateName: string;
+    foreignQualificationThreshold: number;
+    warningThresholdPercent: number;
+    bookkeepingLicenseRequired: boolean;
+    bookkeepingLicenseNotes?: string | null;
+    authorityName?: string | null;
+    authorityUrl?: string | null;
+    notes?: string | null;
+  },
   clientCount: number,
   level: "warning" | "alert",
 ): Promise<boolean> {
@@ -230,7 +240,10 @@ async function sendNexusNotification(
 }
 
 export async function getNotificationLog() {
-  return NexusNotificationLogModel.find().sort({ sentAt: -1 }).limit(100).lean();
+  return NexusNotificationLogModel.find()
+    .sort({ sentAt: -1 })
+    .limit(100)
+    .lean();
 }
 
 const STATE_NEXUS_SEED_DATA = [

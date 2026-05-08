@@ -6,7 +6,10 @@ import {
   checkAndSendReminders,
   syncAllPendingAgreements,
 } from "./lib/contract-service";
-import { recordSchedulerRun, recordSchedulerError } from "./lib/scheduler-health";
+import {
+  recordSchedulerRun,
+  recordSchedulerError,
+} from "./lib/scheduler-health";
 import { runNexusCheck, ensureNexusRulesSeeded } from "./lib/nexus-service";
 import { runInquiryRetentionPolicy } from "./lib/inquiry-retention";
 import { processPendingOutboundEmailEvents } from "./lib/outbound-email-events";
