@@ -19,6 +19,7 @@ const HTTP_URL_SCHEMA = z
   }, "URL must use http or https");
 
 const failureStore = new Map<string, { count: number; resetAt: number }>();
+const MAX_TURNSTILE_TOKEN_LENGTH = 2048;
 
 function routeKey(routeId: string, req: Request): string {
   const ip = req.ip ?? "unknown";
@@ -245,7 +246,7 @@ export function turnstileProtection(config: {
       });
       return;
     }
-    if (token.length > 2048) {
+    if (token.length > MAX_TURNSTILE_TOKEN_LENGTH) {
       recordFailedSubmission(config.routeId, req, "turnstile_token_too_long");
       res.status(400).json({
         error: "Verification token is invalid. Please retry verification.",

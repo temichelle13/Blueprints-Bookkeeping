@@ -51,6 +51,7 @@ const DEFAULT_AI_MODEL = "@cf/meta/llama-3.1-8b-instruct";
 const MAX_JSON_BYTES = 32_000;
 const TURNSTILE_RESPONSE_FIELD = "cf-turnstile-response";
 const TURNSTILE_ACTION = "lead_form";
+const MAX_TURNSTILE_TOKEN_LENGTH = 2048;
 
 const COMPANY_CONTEXT = `
 Blueprints & Bookkeeping LLC is a remote-first bookkeeping and business planning firm founded by Tea Larson-Hetrick in Roseburg, Oregon. The firm serves clients nationwide.
@@ -317,6 +318,7 @@ async function verifyTurnstileOrThrow(
   }
   const tokenRaw =
     body[TURNSTILE_RESPONSE_FIELD] ??
+    // Legacy transition support: remove turnstileToken/captchaToken once clients only submit cf-turnstile-response.
     body.turnstileToken ??
     body.captchaToken ??
     request.headers.get(TURNSTILE_RESPONSE_FIELD);
@@ -339,7 +341,7 @@ async function verifyTurnstileOrThrow(
       "Verification is required. Please complete the challenge.",
     );
   }
-  if (token.length > 2048) {
+  if (token.length > MAX_TURNSTILE_TOKEN_LENGTH) {
     throw new ResponseError(
       400,
       "Verification token is invalid. Please retry verification.",
