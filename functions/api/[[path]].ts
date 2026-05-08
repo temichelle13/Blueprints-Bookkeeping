@@ -183,12 +183,25 @@ class ResponseError extends Error {
 
 async function readJson(request: Request): Promise<JsonRecord> {
   const lengthHeader = request.headers.get("content-length");
-  const length = lengthHeader ? Number.parseInt(lengthHeader, 10) : 0;
-  if (length > MAX_JSON_BYTES) {
+  const declaredLength = lengthHeader ? Number.parseInt(lengthHeader, 10) : 0;
+  if (declaredLength > MAX_JSON_BYTES) {
     throw new ResponseError(413, "Submission is too large.");
   }
 
-  const value = await request.json().catch(() => null);
+  // Enforce the byte limit on the actual body, not just the Content-Length header,
+  // so chunked or header-less requests can't bypass the check.
+  const rawBytes = await request.arrayBuffer();
+  if (rawBytes.byteLength > MAX_JSON_BYTES) {
+    throw new ResponseError(413, "Submission is too large.");
+  }
+
+  let value: unknown;
+  try {
+    value = JSON.parse(new TextDecoder().decode(rawBytes)) as unknown;
+  } catch {
+    throw new ResponseError(400, "Expected a JSON object.");
+  }
+
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     throw new ResponseError(400, "Expected a JSON object.");
   }
@@ -726,6 +739,9 @@ async function createConversation(context: PagesContext): Promise<Response> {
     .bind(title, getIp(context.request), getUserAgent(context.request), now, now)
     .run();
   const id = result.meta?.last_row_id;
+  if (typeof id !== "number") {
+    throw new ResponseError(503, "Failed to create conversation.");
+  }
 
   return jsonResponse(
     { id, title, createdAt: now },

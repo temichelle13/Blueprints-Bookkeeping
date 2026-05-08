@@ -89,6 +89,11 @@ export default function ChatWidget() {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    // Reset feedback status when a new completed assistant message arrives
+    const lastMsg = messages[messages.length - 1];
+    if (lastMsg?.role === "assistant" && !lastMsg.streaming) {
+      setFeedbackStatus("idle");
+    }
   }, [messages]);
 
   useEffect(() => {
