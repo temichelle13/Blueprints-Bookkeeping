@@ -13,9 +13,11 @@ import {
 } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
 import { getApiRoot } from "@/lib/api";
 import { trackEvent } from "@/lib/analytics";
 import { BOOKKEEPER_INTENT } from "@/lib/contact-intent";
+import { getTurnstilePayload } from "@/lib/turnstile";
 
 const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
 const EMERGENCY_CALENDLY_URL =
@@ -51,9 +53,14 @@ export default function GetStarted() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
-  const handleFallbackSubmit = async (e: React.FormEvent) => {
+  const handleFallbackSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!fallbackMessage.trim()) return;
+    const turnstilePayload = getTurnstilePayload(e.currentTarget);
+    if (!turnstilePayload) {
+      setError("Please complete verification and try again.");
+      return;
+    }
     setSubmitting(true);
     setError("");
     try {
@@ -66,6 +73,7 @@ export default function GetStarted() {
           page: "Get Started",
           category: "not-sure",
           description: fallbackMessage,
+          "cf-turnstile-response": turnstilePayload["cf-turnstile-response"],
         }),
       });
       if (!res.ok) throw new Error("Failed");
@@ -565,6 +573,7 @@ export default function GetStarted() {
                   {error}
                 </p>
               )}
+              <TurnstileWidget />
               <button
                 type="submit"
                 disabled={submitting || !fallbackMessage.trim()}

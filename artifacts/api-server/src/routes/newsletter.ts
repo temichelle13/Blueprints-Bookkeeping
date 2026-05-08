@@ -13,6 +13,7 @@ import {
 import {
   createSubmissionRateLimiter,
   honeypotProtection,
+  turnstileProtection,
   validateEmailStrict,
   withSubmissionMonitoring,
 } from "../middleware/public-submissions";
@@ -148,6 +149,11 @@ router.post(
   "/newsletter/subscribe",
   newsletterSubscribeLimiter,
   honeypotProtection("newsletter_subscribe"),
+  turnstileProtection({
+    routeId: "newsletter_subscribe",
+    required: true,
+    action: "lead_form",
+  }),
   withSubmissionMonitoring("newsletter_subscribe"),
   async (req, res): Promise<void> => {
     if (typeof req.body?.email !== "string" || req.body.email.length > 320) {

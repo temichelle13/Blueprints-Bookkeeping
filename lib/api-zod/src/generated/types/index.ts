@@ -47,6 +47,7 @@ export * from './openaiMessage';
 export * from './reminderResult';
 export * from './sendContractInput';
 export * from './sendContractResponse';
+export * from './sendOpenaiMessage404';
 export * from './sendOpenaiMessageBody';
 export * from './stateNexusRule';
 export * from './syncResult';

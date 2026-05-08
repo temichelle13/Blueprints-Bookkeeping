@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -18,6 +18,7 @@ import {
 import { useSubmitContactForm } from "@workspace/api-client-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
 import {
   useContactMutation,
   CONTACT_CONSENT_TEXT_VERSION,
@@ -29,6 +30,7 @@ import {
   BOOKKEEPER_INTENT,
   isBookkeeperIntentParam,
 } from "@/lib/contact-intent";
+import { getTurnstilePayload } from "@/lib/turnstile";
 
 const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
 const EMERGENCY_CALENDLY_URL =
@@ -188,6 +190,7 @@ function MessageForm({ defaultMessage = "" }: { defaultMessage?: string }) {
   const { submit: sendMessage, isPending } = useContactMutation();
   const [sent, setSent] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const formRef = useRef<HTMLFormElement | null>(null);
 
   const {
     register,
@@ -205,8 +208,23 @@ function MessageForm({ defaultMessage = "" }: { defaultMessage?: string }) {
     },
   });
 
-  const onSubmit = async (data: MessageValues) => {
+  const onSubmit = async (
+    data: MessageValues,
+    event?: React.BaseSyntheticEvent,
+  ) => {
     setSubmitError(null);
+    const form =
+      formRef.current ??
+      (event?.target instanceof HTMLFormElement ? event.target : null);
+    if (!form) {
+      setSubmitError("Please complete verification and try again.");
+      return;
+    }
+    const turnstilePayload = getTurnstilePayload(form);
+    if (!turnstilePayload) {
+      setSubmitError("Please complete verification and try again.");
+      return;
+    }
     const ok = await sendMessage({
       formType: "quick",
       name: data.name,
@@ -216,6 +234,7 @@ function MessageForm({ defaultMessage = "" }: { defaultMessage?: string }) {
       smsConsent: data.smsConsent,
       phoneConsent: data.phoneConsent,
       website: data.website || "",
+      turnstileResponse: turnstilePayload["cf-turnstile-response"],
     });
     if (ok) {
       setSent(true);
@@ -256,6 +275,7 @@ function MessageForm({ defaultMessage = "" }: { defaultMessage?: string }) {
   return (
     <form
       id="client-meeting-request"
+      ref={formRef}
       onSubmit={handleSubmit(onSubmit)}
       className="space-y-4"
     >
@@ -398,6 +418,7 @@ function MessageForm({ defaultMessage = "" }: { defaultMessage?: string }) {
           {submitError}
         </p>
       )}
+      <TurnstileWidget />
 
       <button
         type="submit"
@@ -420,6 +441,7 @@ function BookkeeperIntakeForm() {
   const mutation = useSubmitContactForm();
   const [sent, setSent] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const formRef = useRef<HTMLFormElement | null>(null);
 
   const {
     register,
@@ -455,8 +477,23 @@ function BookkeeperIntakeForm() {
     }
   }, [budgetUnknown, setValue]);
 
-  const onSubmit = async (data: BookkeeperIntakeValues) => {
+  const onSubmit = async (
+    data: BookkeeperIntakeValues,
+    event?: React.BaseSyntheticEvent,
+  ) => {
     setSubmitError(null);
+    const form =
+      formRef.current ??
+      (event?.target instanceof HTMLFormElement ? event.target : null);
+    if (!form) {
+      setSubmitError("Please complete verification and try again.");
+      return;
+    }
+    const turnstilePayload = getTurnstilePayload(form);
+    if (!turnstilePayload) {
+      setSubmitError("Please complete verification and try again.");
+      return;
+    }
 
     try {
       await mutation.mutateAsync({
@@ -487,7 +524,8 @@ function BookkeeperIntakeForm() {
           consentTextVersion: CONTACT_CONSENT_TEXT_VERSION,
           consentSourcePage: CONTACT_CONSENT_SOURCE_PAGE,
           website: data.website || "",
-        },
+          "cf-turnstile-response": turnstilePayload["cf-turnstile-response"],
+        } as any,
       });
       trackEvent("Contact Form Submission", { form_type: BOOKKEEPER_INTENT });
       toast({
@@ -566,7 +604,7 @@ function BookkeeperIntakeForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-7">
+    <form ref={formRef} onSubmit={handleSubmit(onSubmit)} className="space-y-7">
       <input
         type="text"
         {...register("website")}
@@ -860,6 +898,7 @@ function BookkeeperIntakeForm() {
           {submitError}
         </p>
       )}
+      <TurnstileWidget />
       <p className="text-xs text-muted-foreground leading-relaxed -mt-2">
         {INQUIRY_PROCESSING_DISCLOSURE} Consent language version:{" "}
         {CONTACT_CONSENT_TEXT_VERSION}.
