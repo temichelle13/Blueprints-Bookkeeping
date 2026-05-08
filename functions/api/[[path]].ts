@@ -197,7 +197,7 @@ async function readJson(request: Request): Promise<JsonRecord> {
 
   let value: unknown;
   try {
-    value = JSON.parse(new TextDecoder().decode(rawBytes)) as unknown;
+    value = JSON.parse(new TextDecoder().decode(rawBytes));
   } catch {
     throw new ResponseError(400, "Expected a JSON object.");
   }
