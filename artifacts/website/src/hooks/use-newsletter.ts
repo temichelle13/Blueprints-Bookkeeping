@@ -19,7 +19,7 @@ export function useNewsletterMutation() {
       const result = await mutation.mutateAsync({
         data: {
           ...payload,
-          ...(_honeypot !== undefined ? { website: _honeypot } : {}),
+          website: _honeypot ?? "",
           "cf-turnstile-response": data.turnstileResponse,
         },
       });

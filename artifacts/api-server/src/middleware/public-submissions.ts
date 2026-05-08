@@ -209,7 +209,7 @@ export function turnstileProtection(config: {
 
     if (!turnstileSecret) {
       if (config.required) {
-        logger.error("Turnstile secret missing for protected route", undefined, {
+        logger.warn("Turnstile secret missing for protected route", {
           routeId: config.routeId,
         });
         res.status(503).json({
@@ -330,12 +330,6 @@ export function turnstileProtection(config: {
           "turnstile_action_mismatch",
         );
         res.status(403).json({ error: "Verification action mismatch." });
-        return;
-      }
-
-      if (config.action && !payload.action) {
-        recordFailedSubmission(config.routeId, req, "turnstile_action_missing");
-        res.status(403).json({ error: "Verification action is invalid." });
         return;
       }
 
