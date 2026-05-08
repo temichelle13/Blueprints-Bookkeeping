@@ -44,6 +44,7 @@ export default function ChatWidget() {
     useState<ChatFeedbackStatus>("idle");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const completedAssistantCountRef = useRef(0);
   const apiBase = getApiRoot();
 
   const checkAvailability = useCallback(async () => {
@@ -89,6 +90,15 @@ export default function ChatWidget() {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    // Reset feedback status only when the count of completed assistant messages
+    // increases — guards against spurious resets on array recreations.
+    const completedCount = messages.filter(
+      (m) => m.role === "assistant" && !m.streaming,
+    ).length;
+    if (completedCount > completedAssistantCountRef.current) {
+      setFeedbackStatus("idle");
+      completedAssistantCountRef.current = completedCount;
+    }
   }, [messages]);
 
   useEffect(() => {

@@ -381,6 +381,10 @@ export type UnsubscribeNewsletterByTokenParams = {
 token: string;
 };
 
+export type SendOpenaiMessage404 = {
+  error?: string;
+};
+
 export type BookingWebhookBodyPayload = { [key: string]: unknown };
 
 export type BookingWebhookBody = {

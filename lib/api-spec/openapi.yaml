@@ -263,6 +263,12 @@ paths:
           description: SSE stream of assistant text chunks
           content:
             text/event-stream: {}
+        "404":
+          description: Conversation not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OpenaiError"
   /contracts:
     get:
       operationId: listContracts

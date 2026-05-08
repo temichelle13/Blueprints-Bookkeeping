@@ -183,12 +183,25 @@ class ResponseError extends Error {
 
 async function readJson(request: Request): Promise<JsonRecord> {
   const lengthHeader = request.headers.get("content-length");
-  const length = lengthHeader ? Number.parseInt(lengthHeader, 10) : 0;
-  if (length > MAX_JSON_BYTES) {
+  const declaredLength = lengthHeader ? Number.parseInt(lengthHeader, 10) : 0;
+  if (declaredLength > MAX_JSON_BYTES) {
     throw new ResponseError(413, "Submission is too large.");
   }
 
-  const value = await request.json().catch(() => null);
+  // Enforce the byte limit on the actual body, not just the Content-Length header,
+  // so chunked or header-less requests can't bypass the check.
+  const rawBytes = await request.arrayBuffer();
+  if (rawBytes.byteLength > MAX_JSON_BYTES) {
+    throw new ResponseError(413, "Submission is too large.");
+  }
+
+  let value: unknown;
+  try {
+    value = JSON.parse(new TextDecoder().decode(rawBytes));
+  } catch {
+    throw new ResponseError(400, "Expected a JSON object.");
+  }
+
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     throw new ResponseError(400, "Expected a JSON object.");
   }
@@ -438,11 +451,27 @@ async function handleHealth(context: PagesContext): Promise<Response> {
   }, context.request);
 }
 
+function hasTurnstileToken(body: JsonRecord, request: Request): boolean {
+  const bodyToken =
+    typeof body.turnstileToken === "string" && body.turnstileToken.trim().length > 0;
+  const cfHeaderToken = request.headers.get("cf-turnstile-response");
+  const turnstileHeaderToken = request.headers.get("x-turnstile-token");
+
+  return (
+    bodyToken ||
+    (typeof cfHeaderToken === "string" && cfHeaderToken.trim().length > 0) ||
+    (typeof turnstileHeaderToken === "string" &&
+      turnstileHeaderToken.trim().length > 0)
+  );
+}
+
 async function handleContact(context: PagesContext): Promise<Response> {
   const db = requireDb(context.env);
   const body = await readJson(context.request);
   await checkRateLimit(db, "contact", getIp(context.request), 8, 15 * 60);
-  await verifyTurnstileIfPresent(context.env, body, context.request);
+  if (hasTurnstileToken(body, context.request)) {
+    await verifyTurnstileIfPresent(context.env, body, context.request);
+  }
 
   if (textField(body, "website", 200)) {
     return jsonResponse(
@@ -710,6 +739,9 @@ async function createConversation(context: PagesContext): Promise<Response> {
     .bind(title, getIp(context.request), getUserAgent(context.request), now, now)
     .run();
   const id = result.meta?.last_row_id;
+  if (typeof id !== "number") {
+    throw new ResponseError(503, "Failed to create conversation.");
+  }
 
   return jsonResponse(
     { id, title, createdAt: now },
