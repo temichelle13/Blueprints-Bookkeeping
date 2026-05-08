@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # 1. We have to install pnpm first!
       #    No version pin here — pnpm/action-setup reads "packageManager" from package.json

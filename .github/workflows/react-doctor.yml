@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # 1. Checkout the code. fetch-depth: 0 is required for diff mode to work properly.
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0 
 
