@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import type { Request, Response } from "express";
+import type { Request, Response as ExpressResponse } from "express";
 import {
   createSubmissionRateLimiter,
   turnstileProtection,
@@ -25,7 +25,7 @@ function createMockResponse() {
       headers.set(key.toLowerCase(), value);
       return this;
     },
-  } as unknown as Response;
+  } as unknown as ExpressResponse;
 
   return {
     res,
@@ -121,7 +121,7 @@ test("turnstileProtection rejects invalid-input-response token", async () => {
         success: false,
         "error-codes": ["invalid-input-response"],
       }),
-    }) as Response) as typeof fetch;
+    }) as unknown as Response) as typeof fetch;
 
   const middleware = turnstileProtection({
     routeId: "contact",
@@ -159,7 +159,7 @@ test("turnstileProtection rejects timeout-or-duplicate token", async () => {
         success: false,
         "error-codes": ["timeout-or-duplicate"],
       }),
-    }) as Response) as typeof fetch;
+    }) as unknown as Response) as typeof fetch;
 
   const middleware = turnstileProtection({
     routeId: "contact",
@@ -203,7 +203,7 @@ test("turnstileProtection allows valid token and uses env secret", async () => {
         action: "lead_form",
         hostname: "blueprintsandbookkeeping.com",
       }),
-    } as Response;
+    } as unknown as Response;
   }) as typeof fetch;
 
   const middleware = turnstileProtection({
