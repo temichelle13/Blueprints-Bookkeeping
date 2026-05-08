@@ -268,11 +268,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    example: Conversation not found
+                $ref: "#/components/schemas/OpenaiError"
   /contracts:
     get:
       operationId: listContracts
