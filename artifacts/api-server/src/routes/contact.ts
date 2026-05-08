@@ -17,15 +17,15 @@ import {
 const router: IRouter = Router();
 const CONSENT_FALLBACK_VERSION = "v2026-03-31";
 
-const ALLOWED_CONSENT_TEXT_VERSIONS = new Set([
+export const ALLOWED_CONSENT_TEXT_VERSIONS = new Set([
   "contact-consent-2026-03-31.1",
   "self-service-onboarding-consent-2026-03-31.1",
   "legacy-unknown",
 ]);
 
-const ALLOWED_CONSENT_SOURCE_PAGES = new Set(["/contact", "/onboarding"]);
+export const ALLOWED_CONSENT_SOURCE_PAGES = new Set(["/contact", "/onboarding"]);
 
-function escapeHtml(str: string): string {
+export function escapeHtml(str: string): string {
   return str
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")

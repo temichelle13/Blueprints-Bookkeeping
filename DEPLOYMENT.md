@@ -1,292 +1,163 @@
-# Deployment Guide for Blueprints & Bookkeeping
+# Deployment Guide — Blueprints & Bookkeeping
 
-This guide explains how to properly deploy the Blueprints & Bookkeeping application to production.
+## Architecture Overview
 
-## Current Deployment Architecture
+| Layer | Technology | Platform |
+| --- | --- | --- |
+| Frontend + Pages Functions | React + Vite, Cloudflare Pages Functions | Cloudflare Pages |
+| API server | Express 5, Node.js >= 20 | Railway / Render / Fly.io |
+| Database | PostgreSQL 16 | Neon / Supabase / Railway |
 
-The application is currently configured for **Replit deployment**, not Cloudflare. The repository contains:
+```text
+Browser
+  |
+  +-> Cloudflare Pages (artifacts/website/dist/public)
+  |     +-> /api/chat     -> functions/api/chat.ts (Pages Function)
+  |     +-> /api/contact  -> functions/api/contact.ts (Pages Function)
+  |
+  +-> Standalone API server (artifacts/api-server)
+        +-> /api/admin/**
+        +-> /api/webhooks/**
+        +-> /api/openai/**
+        +-> all other Express routes
+```
 
-- **API Server**: Express backend (`artifacts/api-server`)
-- **Website**: React + Vite frontend (`artifacts/website`)
-- **Database**: PostgreSQL
+Cloudflare Pages Functions handle `/api/chat` and `/api/contact` at the edge.
+All remaining API routes are served by the standalone Express server.
 
-> ⚠️ **Not runtime**: legacy `functions/api/*` placeholders are not part of production request handling. The authoritative API runtime is `artifacts/api-server/src/index.ts`, built to `artifacts/api-server/dist/index.cjs`.
+## Cloudflare Pages — Frontend
 
-## Required Environment Variables
+### Build settings
 
-### Backend (API Server)
+| Setting | Value |
+| --- | --- |
+| Build command | `pnpm install && pnpm --filter @workspace/website run build` |
+| Build output directory | `artifacts/website/dist/public` |
+| Root directory | repo root |
+| Node.js version | 20 |
 
-The following environment variables must be set for the API server:
+### API environment variables
 
 ```bash
-# Server Configuration
-NODE_ENV=production
-PORT=3001
+# Build-time
+VITE_API_URL=
 
-# Database
-DATABASE_URL=postgresql://user:password@host:port/dbname
-
-# CORS Configuration (CRITICAL)
-# Must include all allowed frontend origins (comma-separated)
-CORS_ORIGIN=https://blueprintsandbookkeeping.com,https://www.blueprintsandbookkeeping.com
-
-# Security
-ADMIN_TOKEN=<generate-with-openssl-rand-hex-32>
-
-# Reverse Proxy / Client IP Configuration (CRITICAL for rate limiting)
-# Set how many trusted proxy hops are in front of the API server.
-# Defaults to false (no proxy trust) when unset.
-# Replit or a single load balancer/CDN in front of Node: 1
-# Multiple proxies (e.g., CDN -> ingress -> Node): set to exact hop count
-# Must be set explicitly in production to avoid IP spoofing via X-Forwarded-For
-TRUST_PROXY=1
-
-# Email - Resend
-RESEND_API_KEY=<your-resend-api-key>
-OWNER_EMAIL=tea@blueprintsandbookkeeping.com
-
-# Payment Processing
-STRIPE_SECRET_KEY=<your-stripe-secret-key>
-STRIPE_WEBHOOK_SECRET=<your-stripe-webhook-secret>
-
-# AI Features
+# Runtime
 OPENAI_API_KEY=<your-openai-api-key>
 OPENAI_CHAT_MODEL=gpt-4.1-mini
-
-# Optional: Adobe Sign, Calendly webhook, Apollo.io
-# See .env.example for complete list
+RESEND_API_KEY=<your-resend-api-key>
+OWNER_EMAIL=tea@blueprintsandbookkeeping.com
 ```
 
-### Frontend (Website)
+`wrangler.toml` at the repo root controls the Pages project configuration.
+`artifacts/website/public/_routes.json` controls function routing include/exclude.
 
-The frontend requires **build-time** environment variables:
+## Standalone API Server — Express
+
+### Prerequisites
+
+- Node.js >= 20
+- PostgreSQL 16 database
+
+### Environment variables
 
 ```bash
-# API URL Configuration (CRITICAL)
-# Set this to the API server URL if frontend and backend are on different origins
-# Leave empty for same-origin deployments (API accessible via /api relative path)
-VITE_API_URL=https://api.blueprintsandbookkeeping.com
-
-# OR leave empty if deploying on same domain:
-VITE_API_URL=
+NODE_ENV=production
+PORT=3001
+DATABASE_URL=postgresql://user:password@host:5432/dbname
+CORS_ORIGIN=https://blueprintsandbookkeeping.com,https://www.blueprintsandbookkeeping.com
+ADMIN_TOKEN=<generate with: openssl rand -hex 32>
+TRUST_PROXY=1
+RESEND_API_KEY=<your-resend-api-key>
+OWNER_EMAIL=tea@blueprintsandbookkeeping.com
+OPENAI_API_KEY=<your-openai-api-key>
+OPENAI_CHAT_MODEL=gpt-4.1-mini
+CAL_WEBHOOK_SECRET=<your-cal-webhook-secret>
+STRIPE_SECRET_KEY=<your-stripe-secret-key>
+STRIPE_WEBHOOK_SECRET=<your-stripe-webhook-signing-secret>
 ```
 
-**Important**: `VITE_API_URL` must be set **during the build process**, not at runtime. Vite injects this value into the compiled JavaScript at build time.
-
-## Common Deployment Issues and Solutions
-
-### Issue 1: Forms Not Working
-
-**Symptoms**: Contact forms, intake forms, newsletter signup return errors or fail silently.
-
-**Root Causes**:
-
-1. `VITE_API_URL` not set during website build
-2. `CORS_ORIGIN` not configured on backend
-3. API server not running or unreachable
-
-**Solution**:
+### Deploy steps
 
 ```bash
-# During website build:
-export VITE_API_URL=https://api.blueprintsandbookkeeping.com
-pnpm --filter @workspace/website run build
-
-# On API server:
-export CORS_ORIGIN=https://blueprintsandbookkeeping.com
+pnpm install --frozen-lockfile
+pnpm --filter @workspace/api-server run build
+pnpm --filter db push
+node artifacts/api-server/dist/index.cjs
 ```
 
-### Issue 2: Chat Assistant Not Working
+Set the start command on your host to `node artifacts/api-server/dist/index.cjs`.
 
-**Symptoms**: Chat widget shows "offline" or returns 405 Method Not Allowed.
+## Database Migrations
 
-**Root Causes**: Same as forms issue - missing `VITE_API_URL` or `CORS_ORIGIN`.
+Drizzle migration files are under `lib/db/drizzle/`.
+The applied migration journal is `lib/db/drizzle/meta/_journal.json`.
 
-**Solution**: Same as Issue 1.
-
-### Issue 3: Intake Form Reverting to Defaults
-
-**Status**: ✅ FIXED in this PR
-
-**Previous Issue**: Budget selection would revert when user checked "I don't know my budget" then tried to select a budget.
-
-**Fix**: Removed `selectedBudget` from useEffect dependency array in `Contact.tsx` to prevent infinite loop.
-
-### Issue 4: Footer Text Overflow
-
-**Status**: ✅ FIXED in this PR
-
-**Previous Issue**: Contact link descriptions were too long and caused layout issues.
-
-**Fix**: Shortened descriptions in `Footer.tsx` from verbose to concise versions.
-
-### Issue 5: Table Action Columns Text Overflow
-
-**Status**: ✅ FIXED in this PR
-
-**Previous Issue**: Table cells had minimal padding (p-2/8px) causing text to wrap or overflow.
-
-**Fix**: Increased padding to p-4/16px in `table.tsx` component.
-
-### Issue 6: Legitimate users being blocked by contact form rate limits
-
-**Symptoms**: Different users behind a proxy/CDN appear as one IP, causing unexpected 429 responses.
-
-**Root Causes**:
-
-1. `trust proxy` not configured for real deployment proxy depth
-2. Proxy chain sends `X-Forwarded-For`, but API is using proxy IP for limiter keys
-
-**Solution**:
-
-- Set `TRUST_PROXY` on the API server to match the number of trusted proxy hops.
-- Recommended values:
-  - `TRUST_PROXY=1` for one proxy hop (common: Replit proxy, single reverse proxy, or CDN directly in front of the app)
-  - `TRUST_PROXY=2` or higher only when you can verify multiple trusted hops
-  - Leave unset (or `TRUST_PROXY=false`) only when there is no reverse proxy/CDN; this is the default and prevents IP spoofing
-- **Always set `TRUST_PROXY` explicitly in production**; leaving it unset disables proxy trust and rate limits will key on the proxy IP, not the real client IP.
-- Keep proxy chain controlled by your infrastructure only; do not trust arbitrary client-supplied forwarding headers.
-
-## Deployment to Cloudflare
-
-If you want to deploy to Cloudflare instead of Replit, you'll need to:
-
-1. **Create `wrangler.toml`** in the root directory (for Cloudflare Pages):
-
-```toml
-name = "blueprints-bookkeeping"
-pages_build_output_dir = "artifacts/website/dist/public"
-compatibility_date = "2024-01-01"
-[build]
-command = "pnpm install && pnpm --filter @workspace/website run build"
+```bash
+pnpm --filter db push
+pnpm --filter db generate
 ```
 
-1. **Configure Cloudflare Pages** for the frontend:
-   - Build command: `pnpm install && pnpm --filter @workspace/website run build`
-   - Build output directory: `artifacts/website/dist/public`
-   - Environment variables: `VITE_API_URL=<your-api-url>`
+Note on legacy migration files:
 
-2. **Deploy API server separately** (Cloudflare Workers, Cloud Run, etc.)
+- `0004_add_contact_consent_audit_fields.sql`
+- `0004_add_outbound_email_events.sql`
 
-3. **Configure CORS** on the API server to allow Cloudflare Pages origin
-
-## Deployment Steps
-
-### Replit Deployment (Current)
-
-1. Set environment variables in Replit Secrets:
-   - All backend variables from `.env.example`
-   - `VITE_API_URL` (if needed)
-
-2. The `.replit` file handles the deployment:
-
-   ```bash
-   pnpm install
-   pnpm run build
-   ```
-
-3. Artifacts are automatically deployed via Replit's artifact system
-
-### Manual Deployment
-
-1. **Install dependencies**:
-
-   ```bash
-   pnpm install --frozen-lockfile
-   ```
-
-2. **Build the website**:
-
-   ```bash
-   export VITE_API_URL=<your-api-url-or-empty>
-   pnpm --filter @workspace/website run build
-   ```
-
-3. **Build the API server**:
-
-   ```bash
-   pnpm --filter @workspace/api-server run build
-   ```
-
-4. **Deploy artifacts**:
-   - Frontend: `artifacts/website/dist/public` → static hosting
-   - Backend: `artifacts/api-server/dist/index.cjs` → Node.js hosting
-
-5. **Set environment variables** on hosting platform
-
-6. **Run database migrations** (if needed):
-
-   ```bash
-   pnpm --filter db push
-   ```
+These files are not in `_journal.json` and are currently unapplied stale artifacts.
 
 ## Verification Checklist
 
-After deployment, verify:
-
 - [ ] Homepage loads without errors
-- [ ] Contact form submission works
+- [ ] Contact form submission succeeds
 - [ ] Newsletter signup works
-- [ ] Intake form (bookkeeper form) works
-- [ ] Chat assistant appears and works (or shows offline state gracefully)
-- [ ] All pages render without blank spaces
-- [ ] Table layouts look correct with proper padding
-- [ ] Footer displays correctly without text overflow
-- [ ] Check browser console for CORS errors
-- [ ] Check network tab for failed API requests
-
-## Monthly SEO Monitoring (Google Search Console)
-
-To prevent accidental indexing drift, run this check once per month in Google Search Console for `https://blueprintsandbookkeeping.com`:
-
-1. Open **Pages** report.
-2. Filter by reason: **Indexed, though blocked by robots.txt**.
-3. Review each URL:
-   - If it is an admin or transactional URL (`/admin`, `/onboarding`, `/welcome`, `/payment-success`, `/status`, `/feedback`, `/unsubscribe`, `/marketing-guide`), keep it blocked and verify no internal links are promoting crawl demand.
-   - If it is a public marketing URL, fix robots and sitemap consistency before next deployment.
-4. Record findings in your monthly ops log with:
-   - Date checked
-   - Number of affected URLs
-   - URLs remediated
-5. If anomaly count increases month-over-month, create a production incident ticket and run `pnpm run check:website-deploy` before shipping.
+- [ ] Intake / onboarding form works
+- [ ] Chat assistant responds (or fails gracefully)
+- [ ] `/api/healthz` returns 200
+- [ ] Browser console has no CORS errors
+- [ ] No unexpected 404 / 405 API responses
+- [ ] `/admin/stats` works with `ADMIN_TOKEN`
 
 ## Troubleshooting
 
-### CORS Errors in Browser Console
+### CORS blocked in browser
 
-Access to fetch at '<https://api.example.com/api/>...' from origin '<https://example.com>' has been blocked by CORS policy
+Fix `CORS_ORIGIN` on API server and redeploy.
 
-```
+### `/api/chat` or `/api/contact` returns 404
 
-**Fix**: Add frontend origin to `CORS_ORIGIN` environment variable on backend.
+1. Confirm `wrangler.toml` exists at repo root.
+2. Confirm `artifacts/website/public/_routes.json` includes those routes.
+3. Confirm Cloudflare deployment included the `functions/` directory.
 
-### 404 Not Found for API Requests
+### Forms return 405
 
-**Symptoms**: All API requests return 404.
+Verify the client is sending `POST` and not `GET`.
 
-**Fix**: Check `VITE_API_URL` is set correctly during build. Rebuild the website if needed.
+### Chat shows offline
 
-### Chat Assistant Always Offline
+1. Verify `OPENAI_API_KEY` is set in Cloudflare env.
+2. Verify key validity in OpenAI dashboard.
+3. Check Cloudflare Pages Function logs.
 
-**Symptoms**: Chat widget shows offline message even though API is running.
+### Rate-limit false positives behind proxy
 
-**Fix**:
+Set `TRUST_PROXY=1` so `req.ip` resolves to real client IP.
 
-1. Check `VITE_API_URL` is set
-2. Check `/api/healthz` endpoint is accessible
-3. Check CORS configuration
+## Monthly SEO Monitoring
 
-### Forms Return 405 Method Not Allowed
+For `https://blueprintsandbookkeeping.com` in Search Console:
 
-**Symptoms**: POST requests to `/api/contact` or `/api/newsletter/subscribe` return 405.
-
-**Fix**: API server is not receiving requests. Check routing and `VITE_API_URL` configuration.
+1. Open Pages report and filter `Indexed, though blocked by robots.txt`.
+2. Keep admin/transactional routes blocked.
+3. Fix robots/sitemap drift on any public marketing URL.
+4. Record date, URL count, and remediations.
+5. If anomalies increase, run `pnpm run check:website-deploy` before shipping.
 
 ## Support
 
-For deployment issues, contact Tea at <tea@blueprintsandbookkeeping.com> or check:
+For deployment questions contact <tea@blueprintsandbookkeeping.com>.
+Also review:
 
-- `.env.example` - List of all environment variables
-- `artifacts/website/.replit-artifact/artifact.toml` - Frontend configuration
-- `.replit` - Main deployment configuration
-```
+- `.env.example`
+- `wrangler.toml`
+- `functions/api/`
