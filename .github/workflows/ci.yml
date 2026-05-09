@@ -17,7 +17,7 @@ jobs:
       # 1. We have to install pnpm first!
       #    No version pin here — pnpm/action-setup reads "packageManager" from package.json
       - name: Install pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v6
 
       # 2. Setup Node.js and tell it to cache pnpm dependencies to make it fast
       - name: Setup Node.js

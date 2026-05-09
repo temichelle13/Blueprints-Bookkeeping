@@ -22,7 +22,7 @@ jobs:
 
       # Use the pnpm version declared in package.json ("packageManager")
       - name: Setup pnpm (from packageManager)
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v6
 
       # Use Node 24 (since you said you use 24)
       - name: Setup Node.js
