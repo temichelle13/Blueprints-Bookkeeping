@@ -1,7 +1,7 @@
 # Open PR Triage — April 2026
 
 > Generated during triage session on 2026-04-26.  
-> Root-cause fix (api-server typecheck pre-builds lib deps) is applied to master via **PR #161** (`copilot/fix-failing-prs`).
+> Root-cause fix (api-server typecheck pre-builds lib deps) was applied to master via this PR (`copilot/fix-failing-prs`).
 
 ---
 
@@ -15,7 +15,7 @@ error TS6305: Output file '…/lib/db/dist/index.d.ts' has not been built
 
 This causes cascading `TS7006` (implicit `any`) errors for every Drizzle query callback whose return type could not be resolved.
 
-**Fix applied to master** (commit in this PR):
+**Fix applied** (commit in this PR):
 
 ```diff
 - "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -124,9 +124,9 @@ These PRs cannot be trivially fixed and should be closed. The work they represen
 
 ### PR #144 — Update pnpm to v10.33.2 (Renovate)
 - **Branch**: `renovate/pnpm-10.x`
-- **What it does**: Renovate bot automated pnpm upgrade from 10.13.1 to 10.33.2.
-- **Why it cannot be fixed**: The repo is pinned to pnpm `^10.13.1` (see `package.json` `engines` and `packageManager` fields). Upgrading pnpm also requires updating `pnpm/action-setup` version in CI and verifying the lockfile. This is a pure version bump that needs careful validation.
-- **TODO**: Before upgrading pnpm, verify compatibility with all workspace packages, update `.github/workflows/ci.yml` pnpm version, update `packageManager` in `package.json`, and regenerate `pnpm-lock.yaml`. Only upgrade if there's a specific need (security fix or required feature).
+- **What it does**: Renovate bot automated pnpm upgrade from the repo's previous pin to v10.33.2.
+- **Why it cannot be fixed**: The repo is currently pinned to pnpm `10.33.4` (see `package.json` `engines` and `packageManager` fields). This PR was targeting an older version and is now superseded. Any pnpm upgrade requires updating `pnpm/action-setup` version in CI and verifying the lockfile.
+- **TODO**: This PR is superseded by the pnpm `10.33.4` upgrade already on master. Close it. Future pnpm upgrades should be applied via Renovate to the current master, updating `package.json`, `.github/workflows/ci.yml`, and regenerating `pnpm-lock.yaml`.
 
 ---
 
@@ -134,10 +134,10 @@ These PRs cannot be trivially fixed and should be closed. The work they represen
 - **Branch**: `copilot/fix-unreadable-text-light-mode`
 - **Base**: `a055e77` (one commit behind current master — missing PR #151 merge)
 - **What it does**: Adds CSS overrides to `src/index.css` outside any `@layer` so `.light .text-white` maps to `hsl(var(--foreground))` instead of rendering invisible. Covers ~30 opacity variants for ghost backgrounds and borders. Updates `NewsletterSignup.tsx` input to use `text-foreground`.
-- **Why it cannot be fixed**: Draft PR; based on slightly old master (conflicts with PR #151 merge). CI fails with pnpm version mismatch (`Got: 9.15.9, Expected: ^10.13.1`) because the branch uses the old CI config. Has 9,319 additions (mostly generated CSS).
+- **Why it cannot be fixed**: Draft PR; based on slightly old master (conflicts with PR #151 merge). CI fails with pnpm version mismatch (`Got: 9.15.9, Expected: 10.33.4`) because the branch uses the old CI config. Has 9,319 additions (mostly generated CSS).
 - **TODO**: Light mode styling should be revisited. The approach (adding per-class CSS overrides outside `@layer`) is valid but the PR is outdated. Specifically:
   1. Re-create the PR from current master.
-  2. In `.github/workflows/ci.yml`, ensure `pnpm/action-setup@v3` (or later) with version `10.13.1`.
+  2. In `.github/workflows/ci.yml`, ensure `pnpm/action-setup@v3` reads pnpm version from `package.json` (`packageManager: pnpm@10.33.4`).
   3. Review whether a CSS variable redesign is preferable to per-class overrides.
 
 ---
@@ -145,10 +145,10 @@ These PRs cannot be trivially fixed and should be closed. The work they represen
 ### PR #150 — Fix pnpm setup: correct version references, add PATH instructions
 - **Branch**: `copilot/setup-pnpm-path`
 - **Base**: `a055e77` (one commit behind current master)
-- **What it does**: Corrects README pnpm version reference to `10.13.1`; adds "Installing pnpm" section with Corepack instructions; bumps `pnpm/action-setup` to `@v4` in CI; adds `.npmrc` peer-dependency flags; prepends Corepack setup to `AGENTS.md`.
+- **What it does**: Corrects README pnpm version reference; adds "Installing pnpm" section with Corepack instructions; bumps `pnpm/action-setup` to `@v4` in CI; adds `.npmrc` peer-dependency flags; prepends Corepack setup to `AGENTS.md`.
 - **Why it cannot be fixed**: Draft PR based on `a055e77` (conflicts due to PR #151 merge). CI fails with the same TS6305 typecheck errors as all other branches.
 - **TODO**: Most of the README and documentation improvements here are still valid. After the typecheck fix merges, re-create a PR from current master with:
-  1. README `pnpm` version correction (currently says `10.33.0` in some places).
+  1. README `pnpm` version verification (current pin is `10.33.4`).
   2. "Installing pnpm via Corepack" section.
   3. Any useful `.npmrc` additions.
 
