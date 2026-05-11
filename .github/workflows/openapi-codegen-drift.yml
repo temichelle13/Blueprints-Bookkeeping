@@ -1,0 +1,69 @@
+name: OpenAPI Codegen Drift Guard
+
+on:
+  pull_request:
+    branches: ["master"]
+    paths:
+      - "lib/api-spec/openapi.yaml"
+      - "lib/api-client-react/**"
+      - "lib/api-zod/**"
+      - "pnpm-lock.yaml"
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  codegen-drift:
+    name: Verify generated clients match OpenAPI spec
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run codegen
+        run: pnpm run codegen
+
+      - name: Check for uncommitted codegen drift
+        id: drift
+        run: |
+          if git diff --exit-code -- \
+            lib/api-client-react/src/generated \
+            lib/api-zod/src/generated; then
+            echo "drift=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "drift=true" >> "$GITHUB_OUTPUT"
+            echo "### ⚠️ OpenAPI Codegen Drift Detected" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "The following generated files are out of sync with \`lib/api-spec/openapi.yaml\`:" >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+            git diff --name-only -- lib/api-client-react/src/generated lib/api-zod/src/generated >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+            echo "Run \`pnpm run codegen\` locally and commit the updated generated files." >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+      - name: Post drift comment on PR
+        if: failure() && steps.drift.outputs.drift == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `## ⚠️ OpenAPI Codegen Drift Detected\n\nThe generated API client or Zod schema files under \`lib/api-client-react/src/generated\` or \`lib/api-zod/src/generated\` are **out of sync** with \`lib/api-spec/openapi.yaml\`.\n\n**Fix:** Run \`pnpm run codegen\` locally and commit the updated files before merging.\n\n> Per \`AGENTS.md\`: *"If an endpoint shape changes: update openapi.yaml first, run pnpm run codegen, then adapt both the Express route and frontend call sites."*`
+            });
