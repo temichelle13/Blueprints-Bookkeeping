@@ -1,6 +1,7 @@
 {
     "git.autofetch": true,
     "redhat.telemetry.enabled": true,
+    "svn.ignoreMissingSvnWarning": true,
     "mdb.presetConnections": [
         {
             "name": "Preset Connection",
