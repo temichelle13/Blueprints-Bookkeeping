@@ -295,13 +295,37 @@ async function checkRateLimit(
     .run();
 }
 
-function getExpectedTurnstileHostname(env: Env): string | null {
+function normalizeHostname(hostname: string): string {
+  return hostname.trim().toLowerCase().replace(/\.$/, "");
+}
+
+function getExpectedTurnstileHostnames(env: Env): Set<string> {
   const configuredSiteUrl = env.SITE_URL || SITE_URL;
   try {
-    return new URL(configuredSiteUrl).hostname.toLowerCase();
+    const hostname = normalizeHostname(new URL(configuredSiteUrl).hostname);
+    const hostnames = new Set<string>([hostname]);
+
+    if (hostname.startsWith("www.")) {
+      hostnames.add(normalizeHostname(hostname.slice(4)));
+    } else {
+      hostnames.add(normalizeHostname(`www.${hostname}`));
+    }
+
+    return hostnames;
   } catch {
-    return null;
+    return new Set<string>();
   }
+}
+
+function isExpectedTurnstileHostname(
+  env: Env,
+  hostname: string | null | undefined,
+): boolean {
+  if (!hostname) {
+    return false;
+  }
+
+  return getExpectedTurnstileHostnames(env).has(normalizeHostname(hostname));
 }
 
 async function verifyTurnstileOrThrow(
