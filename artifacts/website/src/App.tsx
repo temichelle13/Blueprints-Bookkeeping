@@ -6,6 +6,7 @@ import { setApiBaseUrl } from "@workspace/api-client-react";
 import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import NotFound from "@/pages/not-found";
 import { usePageTracking } from "./hooks/usePageTracking";
+import { useWebMCP } from "./hooks/use-webmcp";
 
 import { ThemeProvider } from "./hooks/use-theme";
 import { Header } from "./components/layout/Header";
@@ -205,6 +206,7 @@ function Layout({ children }: { children: React.ReactNode }) {
 
 function Router() {
   usePageTracking();
+  useWebMCP();
 
   return (
     <Layout>
