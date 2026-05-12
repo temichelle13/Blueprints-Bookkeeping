@@ -1,0 +1,19 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://blueprintsandbookkeeping.com",
+      "service-doc": [
+        {
+          "href": "https://blueprintsandbookkeeping.com/api/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ],
+      "service-desc": [
+        {
+          "href": "https://blueprintsandbookkeeping.com/api/openapi.yaml",
+          "type": "application/vnd.oai.openapi;version=3.1"
+        }
+      ]
+    }
+  ]
+}

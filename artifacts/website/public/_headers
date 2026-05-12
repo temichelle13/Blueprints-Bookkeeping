@@ -1,0 +1,5 @@
+/
+  Link: </.well-known/api-catalog>; rel="api-catalog"
+
+/.well-known/api-catalog
+  Content-Type: application/linkset+json

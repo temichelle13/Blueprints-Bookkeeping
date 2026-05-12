@@ -54,6 +54,11 @@ async function buildAll() {
       !pkg.dependencies?.[dep]?.startsWith("workspace:"),
   );
 
+  const openApiYaml = await readFile(
+    path.resolve(__dirname, "../../lib/api-spec/openapi.yaml"),
+    "utf-8",
+  );
+
   await esbuild({
     entryPoints: [path.resolve(__dirname, "src/index.ts")],
     platform: "node",
@@ -62,6 +67,7 @@ async function buildAll() {
     outfile: path.resolve(distDir, "index.cjs"),
     define: {
       "process.env.NODE_ENV": '"production"',
+      __OPENAPI_YAML__: JSON.stringify(openApiYaml),
     },
     minify: true,
     external: externals,
