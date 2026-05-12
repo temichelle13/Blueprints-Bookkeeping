@@ -24,9 +24,9 @@ export function adminAuth(
     return;
   }
 
-  const looksLikeJwt = token.split(".").length === 3;
+  const hasJwtStructure = token.split(".").length === 3;
   const isValid =
-    looksLikeJwt
+    hasJwtStructure
       ? verifyAdminAccessToken(token)
       : constantTimeCompare(token, env.ADMIN_TOKEN);
 

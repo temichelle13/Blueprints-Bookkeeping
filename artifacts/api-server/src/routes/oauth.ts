@@ -18,7 +18,7 @@ function parseBasicAuth(header: string | undefined): {
     const encoded = header.slice("Basic ".length).trim();
     const decoded = Buffer.from(encoded, "base64").toString("utf8");
     const separatorIndex = decoded.indexOf(":");
-    if (separatorIndex <= 0) {
+    if (separatorIndex < 0) {
       return {};
     }
 

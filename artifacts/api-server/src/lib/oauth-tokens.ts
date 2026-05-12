@@ -24,7 +24,10 @@ const TOKEN_TTL_SECONDS = Number.parseInt(
   process.env.OAUTH_TOKEN_TTL_SECONDS ?? "",
   10,
 );
-const TOKEN_ISSUER = "blueprints-api";
+const TOKEN_ISSUER =
+  process.env.OAUTH_ISSUER ||
+  process.env.SITE_URL ||
+  "https://blueprintsandbookkeeping.com";
 const KEY_ID = process.env.OAUTH_JWKS_KEY_ID || "blueprints-oauth-rs256-v1";
 
 const configuredPrivateKey = process.env.OAUTH_PRIVATE_KEY_PEM;
