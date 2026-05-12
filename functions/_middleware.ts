@@ -4,7 +4,7 @@
  * Implements HTTP content negotiation so that AI agents requesting
  * `Accept: text/markdown` receive a Markdown version of each public
  * marketing page rather than the React SPA shell.  Browsers that send
- * the normal `Accept: text/html, …` header (or `Accept: *∕*`) are
+ * the normal `Accept: text/html, ...` header (or `Accept: */*`) are
  * unaffected and receive the usual static assets.
  *
  * Per-page Markdown is pre-authored here to ensure accuracy and to avoid
@@ -78,7 +78,7 @@ export async function onRequest(
  *   Accept: text/markdown                     → markdown
  *   Accept: text/markdown, text/html;q=0.9   → markdown
  *   Accept: text/*                            → markdown
- *   Accept: *∕*                              → HTML (browser default)
+ *   Accept: */*                              → HTML (browser default)
  */
 function prefersMarkdown(accept: string): boolean {
   if (!accept) return false;
