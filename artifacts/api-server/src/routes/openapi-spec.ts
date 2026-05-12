@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { readFileSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
+import { logger } from "../lib/logger";
 
 const router: IRouter = Router();
 
@@ -19,7 +20,11 @@ function loadOpenApiYaml(): string {
       resolve(__dirname, "../../../../lib/api-spec/openapi.yaml"),
       "utf-8",
     );
-  } catch {
+  } catch (err) {
+    logger.error(
+      "Failed to read openapi.yaml from disk (dev fallback)",
+      err instanceof Error ? err : new Error(String(err)),
+    );
     return "";
   }
 }
@@ -27,6 +32,10 @@ function loadOpenApiYaml(): string {
 const openApiYaml = loadOpenApiYaml();
 
 router.get("/openapi.yaml", (_req, res) => {
+  if (!openApiYaml) {
+    res.status(500).json({ error: "OpenAPI spec unavailable" });
+    return;
+  }
   res.setHeader("Content-Type", "application/yaml");
   res.send(openApiYaml);
 });
