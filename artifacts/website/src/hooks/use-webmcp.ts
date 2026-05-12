@@ -169,6 +169,7 @@ export function useWebMCP(): void {
             },
             emailConsent: {
               type: "boolean",
+              const: true,
               description:
                 "Whether the user consents to receive email responses. Must be true to submit.",
             },
@@ -188,7 +189,9 @@ export function useWebMCP(): void {
                 name: input.name,
                 email: input.email,
                 message: input.message,
-                consent: {
+                // The API contract expects both a nested consent object and
+              // top-level convenience fields; this mirrors use-contact.ts.
+              consent: {
                   email: true,
                   sms: false,
                   phone: false,
