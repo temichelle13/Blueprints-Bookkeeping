@@ -1,0 +1,166 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "agent-tools",
+      "type": "skill-md",
+      "description": "Run 150+ AI apps via inference.sh CLI - image generation, video creation, LLMs, search, 3D, Twitter automation. Models: FLUX, Veo, Gemini, Grok, Claude, Seedance, OmniHuman, Tavily, Exa, OpenRouter, and many more. Use when running AI apps, generating images/videos, calling LLMs, web search, or automating Twitter. Triggers: inference.sh, infsh, ai model, run ai, serverless ai, ai api, flux, veo, claude api, image generation, video generation, openrouter, tavily, exa search, twitter api, grok",
+      "url": "/.well-known/agent-skills/agent-tools/SKILL.md",
+      "digest": "sha256:982fec0feabb393eeba64d58ef9a6fc80842a3a8f21974b28601ba57854c7a3c"
+    },
+    {
+      "name": "ai-social-media-content",
+      "type": "skill-md",
+      "description": "Create AI-powered social media content for TikTok, Instagram, YouTube, Twitter/X. Generate: images, videos, reels, shorts, thumbnails, captions, hashtags. Tools: FLUX, Veo, Seedance, Wan, Kokoro TTS, Claude for copywriting. Use for: content creators, social media managers, influencers, brands. Triggers: social media content, tiktok, instagram reels, youtube shorts, twitter post, content creator, ai influencer, social content, reels, shorts, viral content, thumbnail generator, caption generator, hashtag generator, ugc content",
+      "url": "/.well-known/agent-skills/ai-social-media-content/SKILL.md",
+      "digest": "sha256:a3637aff065319e9001ebf40d6bb1466f8a7824c61ba8a0a4c692b2e0e53847c"
+    },
+    {
+      "name": "audit-website",
+      "type": "skill-md",
+      "description": "Audit websites for SEO, performance, security, technical, content, and 15 other issue cateories with 230+ rules using the squirrelscan CLI. Returns LLM-optimized reports with health scores, broken links, meta tag analysis, and actionable recommendations. Use to discover and asses website or webapp issues and health.",
+      "url": "/.well-known/agent-skills/audit-website/SKILL.md",
+      "digest": "sha256:14efd0df7fbfd4803c9c4e5d84de36eda5966a5672c5e9ab6e082eaedb17f175"
+    },
+    {
+      "name": "better-auth-best-practices",
+      "type": "skill-md",
+      "description": "Configure Better Auth server and client, set up database adapters, manage sessions, add plugins, and handle environment variables. Use when users mention Better Auth, betterauth, auth.ts, or need to set up TypeScript authentication with email/password, OAuth, or plugin configuration.",
+      "url": "/.well-known/agent-skills/better-auth-best-practices/SKILL.md",
+      "digest": "sha256:369e47d6275a93d4b9b9c62977f1547de32b92a08e9b23b2939fd336c61942e9"
+    },
+    {
+      "name": "brainstorming",
+      "type": "skill-md",
+      "description": "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation.",
+      "url": "/.well-known/agent-skills/brainstorming/SKILL.md",
+      "digest": "sha256:fc2bed187840885ea09b739194f0609781fb03e45cfb872ad11ac1e9217ff3eb"
+    },
+    {
+      "name": "browser-use",
+      "type": "skill-md",
+      "description": "Automates browser interactions for web testing, form filling, screenshots, and data extraction. Use when the user needs to navigate websites, interact with web pages, fill forms, take screenshots, or extract information from web pages.",
+      "url": "/.well-known/agent-skills/browser-use/SKILL.md",
+      "digest": "sha256:51758f42069a19fed40c211ff7c1fd890321ec7ee5187a190cd40882d14cc0ff"
+    },
+    {
+      "name": "content-strategy",
+      "type": "skill-md",
+      "description": "When the user wants to plan a content strategy, decide what content to create, or figure out what topics to cover. Also use when the user mentions \"content strategy,\" \"what should I write about,\" \"content ideas,\" \"blog strategy,\" \"topic clusters,\" \"content planning,\" \"editorial calendar,\" \"content marketing,\" \"content roadmap,\" \"what content should I create,\" \"blog topics,\" \"content pillars,\" or \"I don't know what to write.\" Use this whenever someone needs help deciding what content to produce, not just writing it. For writing individual pieces, see copywriting. For SEO-specific audits, see seo-audit. For social media content specifically, see social-content.",
+      "url": "/.well-known/agent-skills/content-strategy/SKILL.md",
+      "digest": "sha256:8985f0bb3f5e41a9a180ff7ae0ec95be6ca198c1419f824d09c3c0196bf0d62b"
+    },
+    {
+      "name": "copywriting",
+      "type": "skill-md",
+      "description": "When the user wants to write, rewrite, or improve marketing copy for any page \u2014 including homepage, landing pages, pricing pages, feature pages, about pages, or product pages. Also use when the user says \"write copy for,\" \"improve this copy,\" \"rewrite this page,\" \"marketing copy,\" \"headline help,\" \"CTA copy,\" \"value proposition,\" \"tagline,\" \"subheadline,\" \"hero section copy,\" \"above the fold,\" \"this copy is weak,\" \"make this more compelling,\" or \"help me describe my product.\" Use this whenever someone is working on website text that needs to persuade or convert. For email copy, see email-sequence. For popup copy, see popup-cro. For editing existing copy, see copy-editing.",
+      "url": "/.well-known/agent-skills/copywriting/SKILL.md",
+      "digest": "sha256:05db858fd44412494255eff0079275c228059620464980e64a671e89b1f744e9"
+    },
+    {
+      "name": "docx",
+      "type": "skill-md",
+      "description": "Use this skill whenever the user wants to create, read, edit, or manipulate Word documents (.docx files). Triggers include: any mention of 'Word doc', 'word document', '.docx', or requests to produce professional documents with formatting like tables of contents, headings, page numbers, or letterheads. Also use when extracting or reorganizing content from .docx files, inserting or replacing images in documents, performing find-and-replace in Word files, working with tracked changes or comments, or converting content into a polished Word document. If the user asks for a 'report', 'memo', 'letter', 'template', or similar deliverable as a Word or .docx file, use this skill. Do NOT use for PDFs, spreadsheets, Google Docs, or general coding tasks unrelated to document generation.",
+      "url": "/.well-known/agent-skills/docx/SKILL.md",
+      "digest": "sha256:2d80e1236aa75993d335aab6fe7731abbae2e4c6b62802263b687067b6490ddc"
+    },
+    {
+      "name": "find-skills",
+      "type": "skill-md",
+      "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill.",
+      "url": "/.well-known/agent-skills/find-skills/SKILL.md",
+      "digest": "sha256:54b44dc9539df865fbb060f62fb062e8232e765852a0cf14c38301fe0c1eb264"
+    },
+    {
+      "name": "frontend-design",
+      "type": "skill-md",
+      "description": "Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, artifacts, posters, or applications (examples include websites, landing pages, dashboards, React components, HTML/CSS layouts, or when styling/beautifying any web UI). Generates creative, polished code and UI design that avoids generic AI aesthetics.",
+      "url": "/.well-known/agent-skills/frontend-design/SKILL.md",
+      "digest": "sha256:3dc8886d38b6470dfb70ab037db15a6ce48e167339692475086f73a1c8f2a8ac"
+    },
+    {
+      "name": "internal-comms",
+      "type": "skill-md",
+      "description": "A set of resources to help me write all kinds of internal communications, using the formats that my company likes to use. Claude should use this skill whenever asked to write some sort of internal communications (status reports, leadership updates, 3P updates, company newsletters, FAQs, incident reports, project updates, etc.).",
+      "url": "/.well-known/agent-skills/internal-comms/SKILL.md",
+      "digest": "sha256:372f36c484654d790f8b4a85a45a1fbb6d62ba2a84ae04208ed46ec8653e7421"
+    },
+    {
+      "name": "marketing-ideas",
+      "type": "skill-md",
+      "description": "When the user needs marketing ideas, inspiration, or strategies for their SaaS or software product. Also use when the user asks for 'marketing ideas,' 'growth ideas,' 'how to market,' 'marketing strategies,' 'marketing tactics,' 'ways to promote,' 'ideas to grow,' 'what else can I try,' 'I don't know how to market this,' 'brainstorm marketing,' or 'what marketing should I do.' Use this as a starting point whenever someone is stuck or looking for inspiration on how to grow. For specific channel execution, see the relevant skill (paid-ads, social-content, email-sequence, etc.).",
+      "url": "/.well-known/agent-skills/marketing-ideas/SKILL.md",
+      "digest": "sha256:3d53adb89dbe7687288251bb28d2b28196b3382a68174dbd70f699839737963c"
+    },
+    {
+      "name": "page-cro",
+      "type": "skill-md",
+      "description": "When the user wants to optimize, improve, or increase conversions on any marketing page \u2014 including homepage, landing pages, pricing pages, feature pages, or blog posts. Also use when the user says \"CRO,\" \"conversion rate optimization,\" \"this page isn't converting,\" \"improve conversions,\" \"why isn't this page working,\" \"my landing page sucks,\" \"nobody's converting,\" \"low conversion rate,\" \"bounce rate is too high,\" \"people leave without signing up,\" or \"this page needs work.\" Use this even if the user just shares a URL and asks for feedback \u2014 they probably want conversion help. For signup/registration flows, see signup-flow-cro. For post-signup activation, see onboarding-cro. For forms outside of signup, see form-cro. For popups/modals, see popup-cro.",
+      "url": "/.well-known/agent-skills/page-cro/SKILL.md",
+      "digest": "sha256:ed36a52b35b0992ac36f3fb0a21f8acd5fe3b74662eb8190815ea8d947bd458d"
+    },
+    {
+      "name": "paid-ads",
+      "type": "skill-md",
+      "description": "When the user wants help with paid advertising campaigns on Google Ads, Meta (Facebook/Instagram), LinkedIn, Twitter/X, or other ad platforms. Also use when the user mentions 'PPC,' 'paid media,' 'ROAS,' 'CPA,' 'ad campaign,' 'retargeting,' 'audience targeting,' 'Google Ads,' 'Facebook ads,' 'LinkedIn ads,' 'ad budget,' 'cost per click,' 'ad spend,' or 'should I run ads.' Use this for campaign strategy, audience targeting, bidding, and optimization. For bulk ad creative generation and iteration, see ad-creative. For landing page optimization, see page-cro.",
+      "url": "/.well-known/agent-skills/paid-ads/SKILL.md",
+      "digest": "sha256:ff9971fe3ff9434de278cbfc9f3cb9f549f6d2350114337b3ca2be0140deac66"
+    },
+    {
+      "name": "pdf",
+      "type": "skill-md",
+      "description": "Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/tables from PDFs, combining or merging multiple PDFs into one, splitting PDFs apart, rotating pages, adding watermarks, creating new PDFs, filling PDF forms, encrypting/decrypting PDFs, extracting images, and OCR on scanned PDFs to make them searchable. If the user mentions a .pdf file or asks to produce one, use this skill.",
+      "url": "/.well-known/agent-skills/pdf/SKILL.md",
+      "digest": "sha256:a2d4f7fa124629835ac072a2b2523126fb8d80be1b061f370fff4cd4a170b4bf"
+    },
+    {
+      "name": "remembering-conversations",
+      "type": "skill-md",
+      "description": "Use when user asks 'how should I...' or 'what's the best approach...' after exploring code, OR when you've tried to solve something and are stuck, OR for unfamiliar workflows, OR when user references past work. Searches conversation history.",
+      "url": "/.well-known/agent-skills/remembering-conversations/SKILL.md",
+      "digest": "sha256:da3251315793fbf37902e86f8a91286e3f6bc8a39f25320cef5b294cdffab4b5"
+    },
+    {
+      "name": "seo-audit",
+      "type": "skill-md",
+      "description": "When the user wants to audit, review, or diagnose SEO issues on their site. Also use when the user mentions \"SEO audit,\" \"technical SEO,\" \"why am I not ranking,\" \"SEO issues,\" \"on-page SEO,\" \"meta tags review,\" \"SEO health check,\" \"my traffic dropped,\" \"lost rankings,\" \"not showing up in Google,\" \"site isn't ranking,\" \"Google update hit me,\" \"page speed,\" \"core web vitals,\" \"crawl errors,\" or \"indexing issues.\" Use this even if the user just says something vague like \"my SEO is bad\" or \"help with SEO\" \u2014 start with an audit. For building pages at scale to target keywords, see programmatic-seo. For adding structured data, see schema-markup. For AI search optimization, see ai-seo.",
+      "url": "/.well-known/agent-skills/seo-audit/SKILL.md",
+      "digest": "sha256:3e1a1666a60bf5e69195af7e4ec468215f86fef9d289a895232a2860a8b50492"
+    },
+    {
+      "name": "skill-creator",
+      "type": "skill-md",
+      "description": "Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy.",
+      "url": "/.well-known/agent-skills/skill-creator/SKILL.md",
+      "digest": "sha256:2bac3218c256cd9ff16ede13898148d6a71e4ddee73cbcada158851d7b192f89"
+    },
+    {
+      "name": "social-content",
+      "type": "skill-md",
+      "description": "When the user wants help creating, scheduling, or optimizing social media content for LinkedIn, Twitter/X, Instagram, TikTok, Facebook, or other platforms. Also use when the user mentions 'LinkedIn post,' 'Twitter thread,' 'social media,' 'content calendar,' 'social scheduling,' 'engagement,' 'viral content,' 'what should I post,' 'repurpose this content,' 'tweet ideas,' 'LinkedIn carousel,' 'social media strategy,' or 'grow my following.' Use this for any social media content creation, repurposing, or scheduling task. For broader content strategy, see content-strategy.",
+      "url": "/.well-known/agent-skills/social-content/SKILL.md",
+      "digest": "sha256:2b952ea602733272382b039ce3312063dad4f1670e11e6ef11dd9acf9f8de11f"
+    },
+    {
+      "name": "social-media-carousel",
+      "type": "skill-md",
+      "description": "Multi-slide carousel design for Instagram, LinkedIn, and Twitter/X with layout rules and hooks. Covers slide structure, text hierarchy, swipe psychology, and platform-specific specs. Use for: carousel posts, Instagram carousels, LinkedIn carousels, slide posts, educational content. Triggers: carousel, instagram carousel, linkedin carousel, slide post, carousel design, swipe post, multi-image post, carousel template, educational carousel, carousel content, instagram slides, linkedin slides",
+      "url": "/.well-known/agent-skills/social-media-carousel/SKILL.md",
+      "digest": "sha256:c50c00c2e3eccbd953fcd1c8d8e782015f3474047e95fc93ff49d4e50bfcc600"
+    },
+    {
+      "name": "vercel-react-native-skills",
+      "type": "skill-md",
+      "description": "React Native and Expo best practices for building performant mobile apps. Use when building React Native components, optimizing list performance, implementing animations, or working with native modules. Triggers on tasks involving React Native, Expo, mobile performance, or native platform APIs.",
+      "url": "/.well-known/agent-skills/vercel-react-native-skills/SKILL.md",
+      "digest": "sha256:d8a275ca02558a894885623049572bf4640ffa5d9b2cc8564fd5ad7755f5aecc"
+    },
+    {
+      "name": "web-design-guidelines",
+      "type": "skill-md",
+      "description": "Review UI code for Web Interface Guidelines compliance. Use when asked to \"review my UI\", \"check accessibility\", \"audit design\", \"review UX\", or \"check my site against best practices\".",
+      "url": "/.well-known/agent-skills/web-design-guidelines/SKILL.md",
+      "digest": "sha256:65d7dbaf180a92376cd09ea796ef6db6a7d98599606c331c075aa9af8f458f12"
+    }
+  ]
+}
