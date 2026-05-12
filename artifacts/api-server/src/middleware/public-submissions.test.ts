@@ -84,31 +84,41 @@ test("createSubmissionRateLimiter keys by route and request IP", async () => {
 });
 
 test("turnstileProtection rejects missing cf-turnstile-response token", async () => {
+  const previousTurnstileSecretKey = process.env["TURNSTILE_SECRET_KEY"];
   process.env["TURNSTILE_SECRET_KEY"] = "test-secret";
-  const middleware = turnstileProtection({
-    routeId: "contact",
-    required: true,
-    action: "lead_form",
-  });
-  const req = {
-    body: {},
-    path: "/contact",
-    ip: "198.51.100.55",
-    socket: { remoteAddress: "198.51.100.55" },
-    get: (_name: string) => undefined,
-  } as unknown as Request;
-  const response = createMockResponse();
-  let nextCalled = false;
 
-  await middleware(req, response.res, () => {
-    nextCalled = true;
-  });
+  try {
+    const middleware = turnstileProtection({
+      routeId: "contact",
+      required: true,
+      action: "lead_form",
+    });
+    const req = {
+      body: {},
+      path: "/contact",
+      ip: "198.51.100.55",
+      socket: { remoteAddress: "198.51.100.55" },
+      get: (_name: string) => undefined,
+    } as unknown as Request;
+    const response = createMockResponse();
+    let nextCalled = false;
 
-  assert.equal(nextCalled, false);
-  assert.equal(response.statusCode, 400);
-  assert.deepEqual(response.jsonBody, {
-    error: "Verification is required. Please complete the challenge.",
-  });
+    await middleware(req, response.res, () => {
+      nextCalled = true;
+    });
+
+    assert.equal(nextCalled, false);
+    assert.equal(response.statusCode, 400);
+    assert.deepEqual(response.jsonBody, {
+      error: "Verification is required. Please complete the challenge.",
+    });
+  } finally {
+    if (previousTurnstileSecretKey === undefined) {
+      delete process.env["TURNSTILE_SECRET_KEY"];
+    } else {
+      process.env["TURNSTILE_SECRET_KEY"] = previousTurnstileSecretKey;
+    }
+  }
 });
 
 test("turnstileProtection rejects invalid-input-response token", async () => {
