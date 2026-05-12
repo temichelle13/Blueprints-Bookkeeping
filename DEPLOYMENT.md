@@ -105,6 +105,84 @@ Note on legacy migration files:
 
 These files are not in `_journal.json` and are currently unapplied stale artifacts.
 
+## Markdown for Agents
+
+AI agents and crawlers that send `Accept: text/markdown` receive a Markdown
+version of the page instead of the React SPA shell. Two layers work together:
+
+### Layer 1 — Pages Function middleware (code, always active)
+
+`functions/_middleware.ts` intercepts every non-asset, non-API request.
+When the `Accept` header explicitly prefers `text/markdown` the middleware
+returns a pre-authored Markdown document with:
+
+- `Content-Type: text/markdown; charset=utf-8`
+- `Vary: Accept`
+- `x-markdown-tokens` (rough token estimate at ~4 chars/token)
+
+Pages covered: `/`, `/services`, `/services/bookkeeping`,
+`/services/business-plans`, `/about`, `/about/credentials`, `/pricing`,
+`/contact`, `/faq`, `/industries`, `/schedule`, `/get-started`, `/blog`,
+`/oregon-bookkeeper`, `/results`. All other paths fall back to a generic
+site-overview document.
+
+**Test it:**
+
+```bash
+curl https://blueprintsandbookkeeping.com/ \
+  -H "Accept: text/markdown" \
+  -I
+# Expect: content-type: text/markdown; charset=utf-8
+#         x-markdown-tokens: <number>
+#         vary: Accept
+```
+
+### Layer 2 — Cloudflare zone-level setting (dashboard, recommended)
+
+For automatic HTML-to-Markdown conversion at the CDN edge (requires a
+Cloudflare Pro or Business plan):
+
+1. Log in to the [Cloudflare dashboard](https://dash.cloudflare.com/) and
+   select the `blueprintsandbookkeeping.com` zone.
+2. Go to **AI** → **AI Crawl Control**.
+3. Toggle **Markdown for Agents** to **On**.
+
+Alternatively, enable via the Cloudflare API:
+
+```bash
+curl -X PATCH \
+  'https://api.cloudflare.com/client/v4/zones/{zone_id}/settings/content_converter' \
+  -H 'Authorization: Bearer <API_TOKEN>' \
+  -H 'Content-Type: application/json' \
+  -d '{"value": "on"}'
+```
+
+The API token needs the **Zone Settings: Edit** permission.
+
+When both layers are active, the Pages Function middleware takes precedence
+for the pages it covers (returning rich, content-accurate Markdown). The zone
+setting provides a safety net for any pages not explicitly handled by the
+middleware.
+
+### Verify the full setup
+
+```bash
+# Check Content-Type and token header
+curl -s -D - https://blueprintsandbookkeeping.com/ \
+  -H "Accept: text/markdown" -o /dev/null
+
+# Check markdown body
+curl -s https://blueprintsandbookkeeping.com/pricing \
+  -H "Accept: text/markdown"
+```
+
+### Updating Markdown content
+
+Edit `functions/_middleware.ts` — each page has a dedicated `*Markdown()`
+function. Update the function when the corresponding page content changes.
+
+---
+
 ## Verification Checklist
 
 - [ ] Homepage loads without errors
@@ -116,6 +194,7 @@ These files are not in `_journal.json` and are currently unapplied stale artifac
 - [ ] Browser console has no CORS errors
 - [ ] No unexpected 404 / 405 API responses
 - [ ] `/admin/stats` works with `ADMIN_TOKEN`
+- [ ] `curl https://blueprintsandbookkeeping.com/ -H "Accept: text/markdown"` returns `Content-Type: text/markdown`
 
 ## Troubleshooting
 
