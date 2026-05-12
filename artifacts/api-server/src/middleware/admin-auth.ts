@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { getEnv } from "../config/env";
+import { verifyAdminAccessToken } from "../lib/oauth-tokens";
 
 /**
  * Admin authentication middleware
@@ -23,7 +24,10 @@ export function adminAuth(
     return;
   }
 
-  if (!constantTimeCompare(token, env.ADMIN_TOKEN)) {
+  if (
+    !constantTimeCompare(token, env.ADMIN_TOKEN) &&
+    !verifyAdminAccessToken(token)
+  ) {
     res.status(401).json({ error: "Unauthorized: Invalid admin token" });
     return;
   }
@@ -43,7 +47,7 @@ export function extractAdminToken(req: Request): string | null {
   }
 
   const [scheme, value] = authorizationHeader.split(" ", 2);
-  if (!scheme || !value || scheme.toLowerCase() !== "bearer") {
+  if (!value || scheme?.toLowerCase() !== "bearer") {
     return null;
   }
 

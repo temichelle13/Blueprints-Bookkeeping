@@ -1,8 +1,8 @@
 import { Router, type IRouter } from "express";
 import { getEnv } from "../config/env";
+import { createAdminAccessToken, getJwks } from "../lib/oauth-tokens";
 
 const CLIENT_ID = "blueprints-agent";
-const TOKEN_TTL_SECONDS = 60 * 60;
 
 const router: IRouter = Router();
 
@@ -37,6 +37,10 @@ router.get("/oauth/authorize", (_req, res): void => {
     error_description:
       "This authorization server supports the client_credentials grant type only.",
   });
+});
+
+router.get("/oauth/jwks.json", (_req, res): void => {
+  res.json(getJwks());
 });
 
 router.post("/oauth/token", (req, res): void => {
@@ -77,10 +81,12 @@ router.post("/oauth/token", (req, res): void => {
     return;
   }
 
+  const { accessToken, expiresIn } = createAdminAccessToken(clientId);
+
   res.json({
-    access_token: env.ADMIN_TOKEN,
+    access_token: accessToken,
     token_type: "Bearer",
-    expires_in: TOKEN_TTL_SECONDS,
+    expires_in: expiresIn,
     scope: "admin",
   });
 });
