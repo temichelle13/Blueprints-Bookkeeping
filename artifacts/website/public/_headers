@@ -1,0 +1,5 @@
+/.well-known/api-catalog
+  Content-Type: application/linkset+json
+
+/openapi.yaml
+  Content-Type: application/openapi+yaml

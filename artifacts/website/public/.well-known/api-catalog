@@ -1,0 +1,23 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://blueprintsandbookkeeping.com/api",
+      "service-desc": [
+        {
+          "href": "https://blueprintsandbookkeeping.com/openapi.yaml",
+          "type": "application/openapi+yaml"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://blueprintsandbookkeeping.com/"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://blueprintsandbookkeeping.com/api/healthz"
+        }
+      ]
+    }
+  ]
+}
