@@ -845,7 +845,13 @@ async function sendChatMessage(
   const db = requireDb(context.env);
   const body = await readJson(context.request);
   await checkRateLimit(db, "chat_message", getIp(context.request), 30, 60 * 60);
-  await verifyTurnstileOrThrow(context.env, body, context.request);
+  const turnstileResponse =
+    typeof body?.["cf-turnstile-response"] === "string"
+      ? body["cf-turnstile-response"].trim()
+      : "";
+  if (turnstileResponse) {
+    await verifyTurnstileOrThrow(context.env, body, context.request);
+  }
 
   const content = textField(body, "content", 3000, true);
   const now = new Date().toISOString();
