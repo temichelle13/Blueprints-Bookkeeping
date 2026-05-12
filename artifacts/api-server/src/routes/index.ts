@@ -11,6 +11,7 @@ import documentsRouter from "./documents";
 import adminRouter from "./admin";
 import nexusRouter from "./nexus";
 import resendWebhookRouter from "./resend-webhook";
+import oauthRouter from "./oauth";
 
 const router: IRouter = Router();
 
@@ -26,4 +27,5 @@ router.use(documentsRouter);
 router.use(adminRouter);
 router.use(nexusRouter);
 router.use(resendWebhookRouter);
+router.use(oauthRouter);
 export default router;

@@ -11,6 +11,7 @@ import multer from "multer";
 import * as ccStorage from "../lib/adobe-cc-storage";
 import { Resend } from "resend";
 import { isEmailSuppressed } from "../lib/email-suppression";
+import { adminAuth } from "../middleware/admin-auth";
 
 const router: IRouter = Router();
 
@@ -61,23 +62,6 @@ const upload = multer({
     }
   },
 });
-
-function adminAuth(req: Request, res: Response, next: NextFunction): void {
-  const token = req.headers["x-admin-token"];
-  const expected = process.env["ADMIN_TOKEN"];
-
-  if (!expected) {
-    res.status(503).json({ error: "Admin access not configured." });
-    return;
-  }
-
-  if (token !== expected) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
-
-  next();
-}
 
 function buildDocumentPath(clientName: string, originalName: string): string {
   const year = new Date().getFullYear();

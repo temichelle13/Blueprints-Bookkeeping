@@ -1,36 +1,11 @@
-import {
-  Router,
-  type IRouter,
-  type Request,
-  type Response,
-  type NextFunction,
-} from "express";
+import { Router, type IRouter } from "express";
 import { db, contractsTable, contractTemplatesTable } from "@workspace/db";
 import { eq, desc } from "drizzle-orm";
 import * as contractService from "../lib/contract-service";
 import * as adobeSign from "../lib/adobe-sign";
+import { adminAuth } from "../middleware/admin-auth";
 
 const router: IRouter = Router();
-
-function adminAuth(req: Request, res: Response, next: NextFunction): void {
-  const token = req.headers["x-admin-token"];
-  const expected = process.env["ADMIN_TOKEN"];
-
-  if (!expected) {
-    res.status(503).json({
-      error:
-        "Admin access not configured. Set ADMIN_TOKEN environment variable.",
-    });
-    return;
-  }
-
-  if (token !== expected) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
-
-  next();
-}
 
 router.post("/contracts/webhooks/booking", async (req, res): Promise<void> => {
   const webhookSecret = process.env["BOOKING_WEBHOOK_SECRET"];

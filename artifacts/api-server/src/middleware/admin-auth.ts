@@ -14,7 +14,7 @@ export function adminAuth(
   res: Response,
   next: NextFunction,
 ): void {
-  const token = req.headers["x-admin-token"];
+  const token = extractAdminToken(req);
   const env = getEnv();
 
   // Use constant-time comparison to prevent timing attacks
@@ -29,6 +29,25 @@ export function adminAuth(
   }
 
   next();
+}
+
+export function extractAdminToken(req: Request): string | null {
+  const headerToken = req.headers["x-admin-token"];
+  if (typeof headerToken === "string" && headerToken.length > 0) {
+    return headerToken;
+  }
+
+  const authorizationHeader = req.headers.authorization;
+  if (typeof authorizationHeader !== "string") {
+    return null;
+  }
+
+  const [scheme, value] = authorizationHeader.split(" ", 2);
+  if (!scheme || !value || scheme.toLowerCase() !== "bearer") {
+    return null;
+  }
+
+  return value.trim() || null;
 }
 
 /**

@@ -1,3 +1,12 @@
 {
-  "keys": []
+  "keys": [
+    {
+      "kty": "RSA",
+      "kid": "blueprints-oauth-discovery-v1",
+      "use": "sig",
+      "alg": "RS256",
+      "n": "uzPuN0N542QkdwO0t8T1GLRXKJYnm33zc0lcfFUL_IgyGNuBsNXInk_aWmsxIu0MGCU01HdCHzmLp20cZOzkB-zgkNc2Zz8GG-1W4FKCwSdlN6zMo1pbP5zoOvC0ii8WIydDFI7IYJqtyTTX5UoeV6VgzqAx98cbBj3SYbfptUToHhrojTvPXAcRxS4_jvh2pOk8Jhy536c881iL2A34pskcfHKsy05AzgIIDOchy7CYHjbPu13F3XKqVb9fiHAAEBEQn_cm5tvcoKO_f7JAaGIgygW0v_50jdHb6NEDYL0MT7aauyxbhTc3RsMKM62Q5TETePM6bqL7Cj0uxKddJw",
+      "e": "AQAB"
+    }
+  ]
 }
