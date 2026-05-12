@@ -1,26 +1,36 @@
 version: 2
-runs-on: ubuntu-latest
+
 updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday" # Runs every Monday morning
-    
-    # 1. Auto-Assign Reviewers
-    # Automatically assigns the PRs to you so they show up in your dashboard
+      interval: "daily"
+      time: "06:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 10
     reviewers:
       - "temichelle13"
-      
-    # 2. Auto-Labeling
-    # Keeps your Pull Request tab beautifully organized
     labels:
       - "dependencies"
-      
-    # 3. Grouped Updates (The Game Changer!)
-    # Instead of opening 10 different PRs for 10 different packages, 
-    # this bundles all routine package updates into ONE single Pull Request.
     groups:
-      all-dependencies:
+      all-npm-dependencies:
+        patterns:
+          - "*"
+    versioning-strategy: increase
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "06:15"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "temichelle13"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    groups:
+      github-actions-dependencies:
         patterns:
           - "*"

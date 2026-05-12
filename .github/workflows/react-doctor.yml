@@ -2,7 +2,7 @@ name: React Doctor Review
 
 on:
   pull_request:
-    branches: [ "main" ] # or 'master', depending on your default branch
+    branches: [ "master" ]
 
 permissions:
   contents: read
@@ -20,8 +20,8 @@ jobs:
       # 2. Run React Doctor
       - uses: millionco/react-doctor@main
         with:
-          # Scans only the files changed against the main branch
-          diff: main 
+          # Scans only the files changed against the master branch
+          diff: master 
           
           # Crucial: Allows the bot to post findings directly as a comment on the PR
           github-token: ${{ secrets.GITHUB_TOKEN }}

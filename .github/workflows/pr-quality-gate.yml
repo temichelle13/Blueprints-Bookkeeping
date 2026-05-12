@@ -39,7 +39,7 @@ jobs:
         run: pnpm --filter @workspace/scripts run check:indexing-guards
 
       - name: Warn on indexing guard failure
-        if: failure()
+        if: failure() && github.actor != 'dependabot[bot]'
         uses: actions/github-script@v7
         with:
           script: |
