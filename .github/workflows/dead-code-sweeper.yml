@@ -12,6 +12,10 @@ jobs:
           node-version: "24"
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
-      # Knip finds unused files, dependencies, and exports
+      # Knip finds unused files, dependencies, and exports.
+      # DATABASE_URL is set to a placeholder so drizzle.config.ts can be
+      # imported without throwing; no real DB connection is made during analysis.
       - name: Find Dead Code
+        env:
+          DATABASE_URL: "postgresql://localhost/placeholder"
         run: npx knip
