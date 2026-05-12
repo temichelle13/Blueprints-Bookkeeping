@@ -1,0 +1,7 @@
+{
+  "issuer": "https://blueprintsandbookkeeping.com",
+  "authorization_endpoint": "https://blueprintsandbookkeeping.com/api/oauth/authorize",
+  "token_endpoint": "https://blueprintsandbookkeeping.com/api/oauth/token",
+  "jwks_uri": "https://blueprintsandbookkeeping.com/.well-known/jwks.json",
+  "grant_types_supported": ["client_credentials"]
+}

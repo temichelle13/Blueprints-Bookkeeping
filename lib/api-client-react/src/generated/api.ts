@@ -47,6 +47,7 @@ import type {
   ReminderResult,
   SendContractInput,
   SendContractResponse,
+  SendOpenaiMessage404,
   SendOpenaiMessageBody,
   StateNexusRule,
   SyncResult,
@@ -844,7 +845,7 @@ export const sendOpenaiMessage = async (id: number,
 
 
 
-export const getSendOpenaiMessageMutationOptions = <TError = ErrorType<OpenaiError>,
+export const getSendOpenaiMessageMutationOptions = <TError = ErrorType<SendOpenaiMessage404>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendOpenaiMessage>>, TError,{id: number;data: BodyType<SendOpenaiMessageBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof sendOpenaiMessage>>, TError,{id: number;data: BodyType<SendOpenaiMessageBody>}, TContext> => {
 
@@ -873,12 +874,12 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type SendOpenaiMessageMutationResult = NonNullable<Awaited<ReturnType<typeof sendOpenaiMessage>>>
     export type SendOpenaiMessageMutationBody = BodyType<SendOpenaiMessageBody>
-    export type SendOpenaiMessageMutationError = ErrorType<OpenaiError>
+    export type SendOpenaiMessageMutationError = ErrorType<SendOpenaiMessage404>
 
     /**
  * @summary Send a text message and receive a streaming text response
  */
-export const useSendOpenaiMessage = <TError = ErrorType<OpenaiError>,
+export const useSendOpenaiMessage = <TError = ErrorType<SendOpenaiMessage404>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendOpenaiMessage>>, TError,{id: number;data: BodyType<SendOpenaiMessageBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof sendOpenaiMessage>>,
