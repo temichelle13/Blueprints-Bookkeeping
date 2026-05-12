@@ -1,4 +1,10 @@
-import { createSign, createVerify, generateKeyPairSync } from "crypto";
+import {
+  createPrivateKey,
+  createPublicKey,
+  createSign,
+  createVerify,
+  generateKeyPairSync,
+} from "crypto";
 
 type JwtHeader = {
   alg: "RS256";
@@ -14,15 +20,32 @@ type JwtPayload = {
   exp: number;
 };
 
-const TOKEN_TTL_SECONDS = 60 * 60;
+const TOKEN_TTL_SECONDS = Number.parseInt(
+  process.env.OAUTH_TOKEN_TTL_SECONDS ?? "",
+  10,
+);
 const TOKEN_ISSUER = "blueprints-api";
-const KEY_ID = "blueprints-oauth-rs256-v1";
+const KEY_ID = process.env.OAUTH_JWKS_KEY_ID || "blueprints-oauth-rs256-v1";
 
-const { privateKey, publicKey } = generateKeyPairSync("rsa", {
-  modulusLength: 2048,
-});
+const configuredPrivateKey = process.env.OAUTH_PRIVATE_KEY_PEM;
+const configuredPublicKey = process.env.OAUTH_PUBLIC_KEY_PEM;
 
-const publicJwk = publicKey.export({ format: "jwk" }) as Record<string, string>;
+const resolvedTtlSeconds =
+  Number.isInteger(TOKEN_TTL_SECONDS) && TOKEN_TTL_SECONDS > 0
+    ? TOKEN_TTL_SECONDS
+    : 60 * 60;
+
+const keyPair =
+  configuredPrivateKey && configuredPublicKey
+    ? {
+        privateKey: createPrivateKey(configuredPrivateKey),
+        publicKey: createPublicKey(configuredPublicKey),
+      }
+    : generateKeyPairSync("rsa", { modulusLength: 2048 });
+
+const publicJwk = keyPair.publicKey.export({
+  format: "jwk",
+}) as Record<string, string>;
 
 function base64UrlEncode(input: Buffer | string): string {
   const buffer = typeof input === "string" ? Buffer.from(input, "utf8") : input;
@@ -50,7 +73,7 @@ export function createAdminAccessToken(clientId: string): {
     sub: clientId,
     scope: "admin",
     iat: now,
-    exp: now + TOKEN_TTL_SECONDS,
+    exp: now + resolvedTtlSeconds,
   };
 
   const encodedHeader = base64UrlEncode(JSON.stringify(header));
@@ -60,11 +83,11 @@ export function createAdminAccessToken(clientId: string): {
   const signer = createSign("RSA-SHA256");
   signer.update(unsignedToken);
   signer.end();
-  const signature = signer.sign(privateKey);
+  const signature = signer.sign(keyPair.privateKey);
 
   return {
     accessToken: `${unsignedToken}.${base64UrlEncode(signature)}`,
-    expiresIn: TOKEN_TTL_SECONDS,
+    expiresIn: resolvedTtlSeconds,
   };
 }
 
@@ -102,7 +125,7 @@ export function verifyAdminAccessToken(token: string): boolean {
   const verifier = createVerify("RSA-SHA256");
   verifier.update(`${encodedHeader}.${encodedPayload}`);
   verifier.end();
-  return verifier.verify(publicKey, base64UrlDecode(encodedSignature));
+  return verifier.verify(keyPair.publicKey, base64UrlDecode(encodedSignature));
 }
 
 export function getJwks(): { keys: Record<string, string>[] } {

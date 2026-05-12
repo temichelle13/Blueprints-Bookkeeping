@@ -24,10 +24,13 @@ export function adminAuth(
     return;
   }
 
-  if (
-    !constantTimeCompare(token, env.ADMIN_TOKEN) &&
-    !verifyAdminAccessToken(token)
-  ) {
+  const looksLikeJwt = token.split(".").length === 3;
+  const isValid =
+    looksLikeJwt
+      ? verifyAdminAccessToken(token)
+      : constantTimeCompare(token, env.ADMIN_TOKEN);
+
+  if (!isValid) {
     res.status(401).json({ error: "Unauthorized: Invalid admin token" });
     return;
   }

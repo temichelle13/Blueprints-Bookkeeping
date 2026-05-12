@@ -2,7 +2,7 @@ import { Router, type IRouter } from "express";
 import { getEnv } from "../config/env";
 import { createAdminAccessToken, getJwks } from "../lib/oauth-tokens";
 
-const CLIENT_ID = "blueprints-agent";
+const CLIENT_ID = process.env.OAUTH_CLIENT_ID || "blueprints-agent";
 
 const router: IRouter = Router();
 
@@ -70,7 +70,10 @@ router.post("/oauth/token", (req, res): void => {
       : undefined);
 
   const env = getEnv();
-  if (clientId !== CLIENT_ID || clientSecret !== env.ADMIN_TOKEN) {
+  const expectedClientSecret =
+    process.env.OAUTH_CLIENT_SECRET || env.ADMIN_TOKEN;
+
+  if (clientId !== CLIENT_ID || clientSecret !== expectedClientSecret) {
     res
       .status(401)
       .setHeader("WWW-Authenticate", "Basic realm=\"oauth-token\"")
