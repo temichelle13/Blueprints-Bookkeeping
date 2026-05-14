@@ -10,6 +10,7 @@ import {
   honeypotProtection,
   createSubmissionRateLimiter,
   enforceMaxLength,
+  turnstileProtection,
   validateEmailStrict,
   withSubmissionMonitoring,
 } from "../middleware/public-submissions";
@@ -70,6 +71,11 @@ router.post(
   "/contact",
   contactSubmissionLimiter,
   honeypotProtection("contact"),
+  turnstileProtection({
+    routeId: "contact",
+    required: true,
+    action: "lead_form",
+  }),
   withSubmissionMonitoring("contact"),
   async (req, res): Promise<void> => {
     if (

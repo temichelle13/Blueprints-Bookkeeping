@@ -6,6 +6,7 @@ interface SubscribeParams {
   email: string;
   signupSource: "footer" | "lead_magnet";
   website?: string;
+  turnstileResponse: string;
 }
 
 export function useNewsletterMutation() {
@@ -16,7 +17,11 @@ export function useNewsletterMutation() {
     try {
       const { website: _honeypot, ...payload } = data;
       const result = await mutation.mutateAsync({
-        data: { ...payload, website: _honeypot } as any,
+        data: {
+          ...payload,
+          website: _honeypot ?? "",
+          "cf-turnstile-response": data.turnstileResponse,
+        },
       });
       const eventName =
         data.signupSource === "lead_magnet"

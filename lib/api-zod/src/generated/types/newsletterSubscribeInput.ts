@@ -10,4 +10,6 @@ import type { NewsletterSubscribeInputSignupSource } from './newsletterSubscribe
 export interface NewsletterSubscribeInput {
   email: string;
   signupSource: NewsletterSubscribeInputSignupSource;
+  website?: string;
+  'cf-turnstile-response': string;
 }

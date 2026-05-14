@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Send,
@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
 import { useToast } from "@/hooks/use-toast";
 import {
   buildOnboardingUrl,
@@ -21,6 +22,7 @@ import {
 } from "@/lib/onboarding-url";
 import { getApiRoot } from "@/lib/api";
 import { BookkeepingDisclaimer } from "@/components/BookkeepingDisclaimer";
+import { getTurnstilePayload } from "@/lib/turnstile";
 
 const US_STATES = [
   { code: "AL", name: "Alabama" },
@@ -92,6 +94,7 @@ export default function Onboarding() {
   usePageTitle("Onboarding — Blueprints & Bookkeeping");
   const { toast } = useToast();
   const [submitted, setSubmitted] = useState(false);
+  const formRef = useRef<HTMLFormElement | null>(null);
 
   const onboardingContext = useMemo(
     () => getOnboardingContextFromSearch(window.location.search),
@@ -123,12 +126,36 @@ export default function Onboarding() {
     formState: { errors, isSubmitting },
   } = useForm<OnboardingFormValues>();
 
-  const onSubmit = async (data: OnboardingFormValues) => {
+  const onSubmit = async (
+    data: OnboardingFormValues,
+    event?: React.BaseSyntheticEvent,
+  ) => {
     if (isMissingSessionId) {
       toast({
         title: "Missing checkout session",
         description:
           "Return to your checkout confirmation page to reopen onboarding with a valid session, or contact support for a new link.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const form =
+      formRef.current ??
+      (event?.target instanceof HTMLFormElement ? event.target : null);
+    if (!form) {
+      toast({
+        title: "Verification Required",
+        description: "Please complete verification and try again.",
+        variant: "destructive",
+      });
+      return;
+    }
+    const turnstilePayload = getTurnstilePayload(form);
+    if (!turnstilePayload) {
+      toast({
+        title: "Verification Required",
+        description: "Please complete verification and try again.",
         variant: "destructive",
       });
       return;
@@ -142,6 +169,7 @@ export default function Onboarding() {
           ...data,
           plan: effectivePlan,
           stripeSessionId: sessionId,
+          "cf-turnstile-response": turnstilePayload["cf-turnstile-response"],
         }),
       });
 
@@ -351,7 +379,11 @@ export default function Onboarding() {
           </div>
         ) : (
           <div className="glass-card rounded-2xl p-8 md:p-10">
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <form
+              ref={formRef}
+              onSubmit={handleSubmit(onSubmit)}
+              className="space-y-6"
+            >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className={labelClass}>
@@ -518,6 +550,7 @@ export default function Onboarding() {
                   placeholder="Anything else we should know? Special requests, timeline considerations, etc."
                 />
               </div>
+              <TurnstileWidget />
 
               <button
                 type="submit"
