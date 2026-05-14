@@ -20,6 +20,7 @@ export const quickContactSchema = z.object({
   smsConsent: z.boolean(),
   phoneConsent: z.boolean(),
   website: z.string().optional(),
+  turnstileResponse: z.string().min(1, "Please complete the verification step"),
 });
 
 export const detailedContactSchema = z.object({
@@ -39,6 +40,7 @@ export const detailedContactSchema = z.object({
   smsConsent: z.boolean(),
   phoneConsent: z.boolean(),
   website: z.string().optional(),
+  turnstileResponse: z.string().min(1, "Please complete the verification step"),
 });
 
 export type QuickContactValues = z.infer<typeof quickContactSchema>;
@@ -70,6 +72,7 @@ export function useContactMutation() {
               consentTextVersion: CONTACT_CONSENT_TEXT_VERSION,
               consentSourcePage: CONTACT_CONSENT_SOURCE_PAGE,
               website: data.website ?? "",
+              "cf-turnstile-response": data.turnstileResponse,
             }
           : {
               formType: "detailed",
@@ -93,6 +96,7 @@ export function useContactMutation() {
               consentTextVersion: CONTACT_CONSENT_TEXT_VERSION,
               consentSourcePage: CONTACT_CONSENT_SOURCE_PAGE,
               website: data.website ?? "",
+              "cf-turnstile-response": data.turnstileResponse,
             };
       await mutation.mutateAsync({ data: payload });
       trackEvent("Contact Form Submission", { form_type: data.formType });

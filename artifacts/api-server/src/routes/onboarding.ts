@@ -28,7 +28,6 @@ const FROM_ADDRESS =
   "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
 const SITE_URL =
   process.env["SITE_URL"] || "https://blueprintsandbookkeeping.com";
-const TURNSTILE_SECRET = process.env["TURNSTILE_SECRET_KEY"];
 
 function getStripe(): Stripe | null {
   const key = process.env["STRIPE_SECRET_KEY"];
@@ -55,9 +54,8 @@ router.post(
   withSubmissionMonitoring("onboarding"),
   turnstileProtection({
     routeId: "onboarding",
-    required: false,
-    action: "onboarding_submit",
-    ...(TURNSTILE_SECRET ? { secret: TURNSTILE_SECRET } : {}),
+    required: true,
+    action: "lead_form",
   }),
   async (req, res): Promise<void> => {
     if (

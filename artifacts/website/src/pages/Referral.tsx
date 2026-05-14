@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -14,6 +14,8 @@ import {
 import { useContactMutation } from "@/hooks/use-contact";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
+import { getTurnstilePayload } from "@/lib/turnstile";
 
 const referralSchema = z.object({
   referrerName: z.string().min(2, "Your name is required"),
@@ -226,6 +228,7 @@ export default function Referral() {
 function ReferralForm() {
   const { submit, isPending } = useContactMutation();
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const formRef = useRef<HTMLFormElement | null>(null);
   const {
     register,
     handleSubmit,
@@ -243,8 +246,23 @@ function ReferralForm() {
 
   const referrerType = watch("referrerType");
 
-  const onSubmit = async (data: ReferralValues) => {
+  const onSubmit = async (
+    data: ReferralValues,
+    event?: React.BaseSyntheticEvent,
+  ) => {
     setSubmitError(null);
+    const form =
+      formRef.current ??
+      (event?.target instanceof HTMLFormElement ? event.target : null);
+    if (!form) {
+      setSubmitError("Please complete verification and try again.");
+      return;
+    }
+    const turnstilePayload = getTurnstilePayload(form);
+    if (!turnstilePayload) {
+      setSubmitError("Please complete verification and try again.");
+      return;
+    }
     const message = [
       `[REFERRAL SUBMISSION]`,
       `Referrer Type: ${data.referrerType}`,
@@ -264,6 +282,7 @@ function ReferralForm() {
       emailConsent: data.emailConsent,
       phoneConsent: data.phoneConsent,
       website: data.website || "",
+      turnstileResponse: turnstilePayload["cf-turnstile-response"],
     });
 
     if (success) {
@@ -281,7 +300,7 @@ function ReferralForm() {
   const labelClass = "block text-sm font-medium text-foreground mb-1.5";
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form ref={formRef} onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <input
         type="text"
         {...register("website")}
@@ -473,6 +492,7 @@ function ReferralForm() {
       {submitError && (
         <p className="text-destructive text-sm -mt-2">{submitError}</p>
       )}
+      <TurnstileWidget />
 
       <button
         type="submit"

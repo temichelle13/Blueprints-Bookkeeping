@@ -4,6 +4,7 @@ import {
   createSubmissionRateLimiter,
   enforceMaxLength,
   honeypotProtection,
+  turnstileProtection,
   validateEmailStrict,
   validateHttpUrlStrict,
   withSubmissionMonitoring,
@@ -38,6 +39,11 @@ router.post(
   "/feedback",
   feedbackLimiter,
   honeypotProtection("feedback"),
+  turnstileProtection({
+    routeId: "feedback",
+    required: true,
+    action: "lead_form",
+  }),
   withSubmissionMonitoring("feedback"),
   async (req, res): Promise<void> => {
     if (

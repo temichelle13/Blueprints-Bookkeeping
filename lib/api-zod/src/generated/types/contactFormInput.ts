@@ -34,4 +34,5 @@ export interface ContactFormInput {
   /** Public page path where consent was captured (for example /contact) */
   consentSourcePage: string;
   website?: string;
+  'cf-turnstile-response': string;
 }

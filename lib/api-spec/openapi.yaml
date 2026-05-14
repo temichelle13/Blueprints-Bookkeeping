@@ -721,6 +721,8 @@ components:
           description: Public page path where consent was captured (for example /contact)
         website:
           type: string
+        cf-turnstile-response:
+          type: string
       required:
         - formType
         - name
@@ -728,6 +730,7 @@ components:
         - smsConsent
         - consentTextVersion
         - consentSourcePage
+        - cf-turnstile-response
     ContactFormResponse:
       type: object
       properties:
@@ -749,9 +752,14 @@ components:
         signupSource:
           type: string
           enum: [footer, lead_magnet]
+        website:
+          type: string
+        cf-turnstile-response:
+          type: string
       required:
         - email
         - signupSource
+        - cf-turnstile-response
     NewsletterSubscribeResponse:
       type: object
       properties:
