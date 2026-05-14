@@ -49,6 +49,9 @@ const EMERGENCY_CALENDLY_URL =
   "https://calendly.com/tea-blueprintsandbookkeeping/emergency-or-other-expedited-request";
 const DEFAULT_AI_MODEL = "@cf/meta/llama-3.1-8b-instruct";
 const MAX_JSON_BYTES = 32_000;
+const TURNSTILE_RESPONSE_FIELD = "cf-turnstile-response";
+const TURNSTILE_ACTION = "lead_form";
+const MAX_TURNSTILE_TOKEN_LENGTH = 2048;
 
 const COMPANY_CONTEXT = `
 Blueprints & Bookkeeping LLC is a remote-first bookkeeping and business planning firm founded by Tea Larson-Hetrick in Roseburg, Oregon. The firm serves clients nationwide.
@@ -292,18 +295,81 @@ async function checkRateLimit(
     .run();
 }
 
-async function verifyTurnstileIfPresent(
+function normalizeHostname(hostname: string): string {
+  return hostname.trim().toLowerCase().replace(/\.$/, "");
+}
+
+function getExpectedTurnstileHostnames(env: Env): Set<string> {
+  const configuredSiteUrl = env.SITE_URL || SITE_URL;
+  try {
+    const hostname = normalizeHostname(new URL(configuredSiteUrl).hostname);
+    const hostnames = new Set<string>([hostname]);
+
+    if (hostname.startsWith("www.")) {
+      hostnames.add(normalizeHostname(hostname.slice(4)));
+    } else {
+      hostnames.add(normalizeHostname(`www.${hostname}`));
+    }
+
+    return hostnames;
+  } catch {
+    return new Set<string>();
+  }
+}
+
+function isExpectedTurnstileHostname(
+  env: Env,
+  hostname: string | null | undefined,
+): boolean {
+  if (!hostname) {
+    return false;
+  }
+
+  return getExpectedTurnstileHostnames(env).has(normalizeHostname(hostname));
+}
+
+async function verifyTurnstileOrThrow(
   env: Env,
   body: JsonRecord,
   request: Request,
+  options: { action?: string } = {},
 ): Promise<void> {
-  if (!env.TURNSTILE_SECRET_KEY) return;
-  const token =
-    textField(body, "turnstileToken", 2048) ||
-    request.headers.get("cf-turnstile-response") ||
-    "";
+  if (!env.TURNSTILE_SECRET_KEY) {
+    throw new ResponseError(
+      503,
+      "Verification is temporarily unavailable. Please try again soon.",
+    );
+  }
+  const tokenRaw =
+    body[TURNSTILE_RESPONSE_FIELD] ??
+    // Legacy transition support: remove turnstileToken/captchaToken once clients only submit cf-turnstile-response.
+    body.turnstileToken ??
+    body.captchaToken ??
+    request.headers.get(TURNSTILE_RESPONSE_FIELD);
+  if (tokenRaw == null || tokenRaw === "") {
+    throw new ResponseError(
+      400,
+      "Verification is required. Please complete the challenge.",
+    );
+  }
+  if (typeof tokenRaw !== "string") {
+    throw new ResponseError(
+      400,
+      "Verification token format is invalid. Please try again.",
+    );
+  }
+  const token = tokenRaw.trim();
   if (!token) {
-    throw new ResponseError(400, "Verification is required.");
+    throw new ResponseError(
+      400,
+      "Verification is required. Please complete the challenge.",
+    );
+  }
+  if (token.length > MAX_TURNSTILE_TOKEN_LENGTH) {
+    throw new ResponseError(
+      400,
+      "Verification token is invalid. Please retry verification.",
+    );
   }
 
   const response = await fetch(
@@ -318,11 +384,42 @@ async function verifyTurnstileIfPresent(
       }),
     },
   );
+  if (!response.ok) {
+    throw new ResponseError(
+      503,
+      "Verification is temporarily unavailable. Please try again.",
+    );
+  }
   const payload = (await response.json().catch(() => ({}))) as {
     success?: boolean;
+    action?: string;
+    hostname?: string;
+    "error-codes"?: string[];
   };
   if (!payload.success) {
-    throw new ResponseError(403, "Verification failed.");
+    const errorCodes = Array.isArray(payload["error-codes"])
+      ? payload["error-codes"]
+      : [];
+    if (errorCodes.includes("timeout-or-duplicate")) {
+      throw new ResponseError(
+        400,
+        "Verification expired or was already used. Please complete the challenge again.",
+      );
+    }
+    if (errorCodes.includes("invalid-input-response")) {
+      throw new ResponseError(
+        400,
+        "Verification token is invalid. Please retry verification.",
+      );
+    }
+    throw new ResponseError(403, "Verification failed. Please try again.");
+  }
+  if (options.action && payload.action !== options.action) {
+    throw new ResponseError(403, "Verification action mismatch.");
+  }
+  const expectedHostname = getExpectedTurnstileHostname(env);
+  if (expectedHostname && payload.hostname?.toLowerCase() !== expectedHostname) {
+    throw new ResponseError(403, "Verification origin mismatch.");
   }
 }
 
@@ -451,27 +548,13 @@ async function handleHealth(context: PagesContext): Promise<Response> {
   }, context.request);
 }
 
-function hasTurnstileToken(body: JsonRecord, request: Request): boolean {
-  const bodyToken =
-    typeof body.turnstileToken === "string" && body.turnstileToken.trim().length > 0;
-  const cfHeaderToken = request.headers.get("cf-turnstile-response");
-  const turnstileHeaderToken = request.headers.get("x-turnstile-token");
-
-  return (
-    bodyToken ||
-    (typeof cfHeaderToken === "string" && cfHeaderToken.trim().length > 0) ||
-    (typeof turnstileHeaderToken === "string" &&
-      turnstileHeaderToken.trim().length > 0)
-  );
-}
-
 async function handleContact(context: PagesContext): Promise<Response> {
   const db = requireDb(context.env);
   const body = await readJson(context.request);
   await checkRateLimit(db, "contact", getIp(context.request), 8, 15 * 60);
-  if (hasTurnstileToken(body, context.request)) {
-    await verifyTurnstileIfPresent(context.env, body, context.request);
-  }
+  await verifyTurnstileOrThrow(context.env, body, context.request, {
+    action: TURNSTILE_ACTION,
+  });
 
   if (textField(body, "website", 200)) {
     return jsonResponse(
@@ -580,6 +663,9 @@ async function handleNewsletter(context: PagesContext): Promise<Response> {
     20,
     60 * 60,
   );
+  await verifyTurnstileOrThrow(context.env, body, context.request, {
+    action: TURNSTILE_ACTION,
+  });
 
   if (textField(body, "website", 200)) {
     return jsonResponse(
@@ -641,7 +727,9 @@ async function handleFeedback(context: PagesContext): Promise<Response> {
   const db = requireDb(context.env);
   const body = await readJson(context.request);
   await checkRateLimit(db, "feedback", getIp(context.request), 12, 10 * 60);
-  await verifyTurnstileIfPresent(context.env, body, context.request);
+  await verifyTurnstileOrThrow(context.env, body, context.request, {
+    action: TURNSTILE_ACTION,
+  });
 
   if (textField(body, "website", 200)) {
     return jsonResponse(
@@ -757,7 +845,13 @@ async function sendChatMessage(
   const db = requireDb(context.env);
   const body = await readJson(context.request);
   await checkRateLimit(db, "chat_message", getIp(context.request), 30, 60 * 60);
-  await verifyTurnstileIfPresent(context.env, body, context.request);
+  const turnstileResponse =
+    typeof body?.["cf-turnstile-response"] === "string"
+      ? body["cf-turnstile-response"].trim()
+      : "";
+  if (turnstileResponse) {
+    await verifyTurnstileOrThrow(context.env, body, context.request);
+  }
 
   const content = textField(body, "content", 3000, true);
   const now = new Date().toISOString();

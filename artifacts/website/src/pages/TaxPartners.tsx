@@ -21,7 +21,9 @@ import {
 } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import { SEO } from "@/components/SEO";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
 import { useContactMutation } from "@/hooks/use-contact";
+import { getTurnstilePayload } from "@/lib/turnstile";
 import {
   taxPartners,
   US_STATES,
@@ -176,6 +178,11 @@ function JoinNetworkForm() {
     }
 
     setFormError(null);
+    const turnstilePayload = getTurnstilePayload(e.currentTarget);
+    if (!turnstilePayload) {
+      setFormError("Please complete verification and try again.");
+      return;
+    }
     const success = await submit({
       formType: "quick" as const,
       name: formData.contactName,
@@ -192,6 +199,7 @@ Additional Info: ${formData.message}`,
       emailConsent: formData.emailConsent,
       phoneConsent: formData.phoneConsent,
       website: "",
+      turnstileResponse: turnstilePayload["cf-turnstile-response"],
     });
     if (success) {
       setSubmitted(true);
@@ -405,6 +413,9 @@ Additional Info: ${formData.message}`,
       {formError && (
         <p className="md:col-span-2 text-destructive text-sm">{formError}</p>
       )}
+      <div className="md:col-span-2">
+        <TurnstileWidget />
+      </div>
       <div className="md:col-span-2">
         <button
           type="submit"

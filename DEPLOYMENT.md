@@ -47,6 +47,7 @@ OPENAI_API_KEY=<your-openai-api-key>
 OPENAI_CHAT_MODEL=gpt-4.1-mini
 RESEND_API_KEY=<your-resend-api-key>
 OWNER_EMAIL=tea@blueprintsandbookkeeping.com
+TURNSTILE_SECRET_KEY=<your-cloudflare-turnstile-secret-key>
 ```
 
 `wrangler.toml` at the repo root controls the Pages project configuration.
@@ -72,6 +73,7 @@ RESEND_API_KEY=<your-resend-api-key>
 OWNER_EMAIL=tea@blueprintsandbookkeeping.com
 OPENAI_API_KEY=<your-openai-api-key>
 OPENAI_CHAT_MODEL=gpt-4.1-mini
+TURNSTILE_SECRET_KEY=<your-cloudflare-turnstile-secret-key>
 CAL_WEBHOOK_SECRET=<your-cal-webhook-secret>
 STRIPE_SECRET_KEY=<your-stripe-secret-key>
 STRIPE_WEBHOOK_SECRET=<your-stripe-webhook-signing-secret>
