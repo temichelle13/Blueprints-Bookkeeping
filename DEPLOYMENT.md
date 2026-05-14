@@ -2,11 +2,11 @@
 
 ## Architecture Overview
 
-| Layer | Technology | Platform |
-| --- | --- | --- |
-| Frontend + Pages Functions | React + Vite, Cloudflare Pages Functions | Cloudflare Pages |
-| API server | Express 5, Node.js >= 20 | Railway / Render / Fly.io |
-| Database | PostgreSQL 16 | Neon / Supabase / Railway |
+| Layer                      | Technology                               | Platform                  |
+| -------------------------- | ---------------------------------------- | ------------------------- |
+| Frontend + Pages Functions | React + Vite, Cloudflare Pages Functions | Cloudflare Pages          |
+| API server                 | Express 5, Node.js >= 20                 | Railway / Render / Fly.io |
+| Database                   | PostgreSQL 16                            | Neon / Supabase / Railway |
 
 ```text
 Browser
@@ -29,12 +29,12 @@ All remaining API routes are served by the standalone Express server.
 
 ### Build settings
 
-| Setting | Value |
-| --- | --- |
-| Build command | `pnpm install && pnpm --filter @workspace/website run build` |
-| Build output directory | `artifacts/website/dist/public` |
-| Root directory | repo root |
-| Node.js version | 20 |
+| Setting                | Value                                                        |
+| ---------------------- | ------------------------------------------------------------ |
+| Build command          | `pnpm install && pnpm --filter @workspace/website run build` |
+| Build output directory | `artifacts/website/dist/public`                              |
+| Root directory         | repo root                                                    |
+| Node.js version        | 20                                                           |
 
 ### API environment variables
 
