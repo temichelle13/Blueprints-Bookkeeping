@@ -1,0 +1,19 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/v1/server-card.schema.json",
+  "name": "com.blueprintsandbookkeeping/api",
+  "version": "1.0.0",
+  "title": "Blueprints & Bookkeeping",
+  "description": "API for Blueprints & Bookkeeping, a professional bookkeeping and business planning service. Provides capabilities for client onboarding, contact, newsletter, and AI-assisted chat.",
+  "websiteUrl": "https://blueprintsandbookkeeping.com",
+  "repository": {
+    "url": "https://github.com/temichelle13/Blueprints-Bookkeeping",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://blueprintsandbookkeeping.com/api/mcp",
+      "supportedProtocolVersions": ["2025-03-12", "2025-06-15"]
+    }
+  ]
+}
