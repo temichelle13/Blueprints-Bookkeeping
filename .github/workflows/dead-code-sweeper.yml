@@ -17,5 +17,5 @@ jobs:
       # imported without throwing; no real DB connection is made during analysis.
       - name: Find Dead Code
         env:
-          DATABASE_URL: "postgresql://localhost/placeholder"
+          DATABASE_URL: "postgresql://example.invalid/placeholder"
         run: npx knip

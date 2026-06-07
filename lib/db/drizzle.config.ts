@@ -5,7 +5,7 @@ import path from "path";
 // contexts (e.g. Knip). Defer validation to actual Drizzle commands so that
 // tooling that only imports this file does not fail.
 const databaseUrl =
-  process.env.DATABASE_URL ?? "postgresql://localhost/placeholder";
+  process.env.DATABASE_URL ?? "postgresql://example.invalid/placeholder";
 
 export default defineConfig({
   schema: path.join(__dirname, "./src/schema/index.ts"),
