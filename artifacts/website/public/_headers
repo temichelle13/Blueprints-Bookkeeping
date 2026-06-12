@@ -1,2 +1,6 @@
 /.well-known/oauth-protected-resource
+/.well-known/mcp/*
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Methods: GET
+  Access-Control-Allow-Headers: Content-Type
   Content-Type: application/json

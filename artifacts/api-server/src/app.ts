@@ -134,6 +134,38 @@ app.get("/.well-known/oauth-protected-resource", (_req, res) => {
     bearer_methods_supported: ["header"],
   });
 });
+const MCP_SERVER_CARD = {
+  $schema: "https://static.modelcontextprotocol.io/schemas/v1/server-card.schema.json",
+  name: "com.blueprintsandbookkeeping/api",
+  version: "1.0.0",
+  title: "Blueprints & Bookkeeping",
+  description:
+    "API for Blueprints & Bookkeeping, a professional bookkeeping and business planning service. Provides capabilities for client onboarding, contact, newsletter, and AI-assisted chat.",
+  websiteUrl: "https://blueprintsandbookkeeping.com",
+  repository: {
+    url: "https://github.com/temichelle13/Blueprints-Bookkeeping",
+    source: "github",
+  },
+  remotes: [
+    {
+      type: "streamable-http",
+      url: "https://blueprintsandbookkeeping.com/api/mcp",
+      supportedProtocolVersions: ["2025-03-12", "2025-06-15"],
+    },
+  ],
+};
+
+// MCP Server Card (SEP-2127) — serves from both the canonical sub-path and
+// the flat path used by earlier drafts of the spec.
+app.get(
+  ["/.well-known/mcp/server-card.json", "/.well-known/mcp-server-card"],
+  (_req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.json(MCP_SERVER_CARD);
+  },
+);
 
 app.use("/api", router);
 

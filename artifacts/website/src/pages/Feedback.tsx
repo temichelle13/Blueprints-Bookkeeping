@@ -6,7 +6,9 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { SEO } from "@/components/SEO";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
 import { getApiRoot } from "@/lib/api";
+import { getTurnstilePayload } from "@/lib/turnstile";
 
 const CATEGORIES = [
   { value: "bug", label: "Something is broken" },
@@ -48,7 +50,7 @@ export default function Feedback() {
   const set = (field: string, value: string) =>
     setForm((prev) => ({ ...prev, [field]: value }));
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!form.category) {
       setErrorMsg("Please select a category.");
@@ -63,12 +65,21 @@ export default function Feedback() {
 
     setStatus("loading");
     setErrorMsg("");
+    const turnstilePayload = getTurnstilePayload(e.currentTarget);
+    if (!turnstilePayload) {
+      setErrorMsg("Please complete verification and try again.");
+      setStatus("error");
+      return;
+    }
 
     try {
       const res = await fetch(`${getApiRoot()}/feedback`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          "cf-turnstile-response": turnstilePayload["cf-turnstile-response"],
+        }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -263,6 +274,7 @@ export default function Feedback() {
                 required
               />
             </div>
+            <TurnstileWidget />
 
             <button
               type="submit"

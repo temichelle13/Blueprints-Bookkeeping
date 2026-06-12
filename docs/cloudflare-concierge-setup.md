@@ -56,14 +56,14 @@ AI_MODEL=@cf/meta/llama-3.1-8b-instruct
 ALLOWED_ORIGINS=https://blueprintsandbookkeeping.com,https://www.blueprintsandbookkeeping.com
 ```
 
-Optional encrypted secret:
+Required encrypted secret:
 
 ```text
 TURNSTILE_SECRET_KEY
 ```
 
-If `TURNSTILE_SECRET_KEY` is present, public submissions and chat messages require
-a Turnstile token in `turnstileToken` or `cf-turnstile-response`.
+Public submissions and chat messages require a Turnstile token in
+`cf-turnstile-response` (or legacy `turnstileToken` during transition).
 
 ## Active Endpoints
 

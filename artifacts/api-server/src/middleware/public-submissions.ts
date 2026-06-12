@@ -19,6 +19,7 @@ const HTTP_URL_SCHEMA = z
   }, "URL must use http or https");
 
 const failureStore = new Map<string, { count: number; resetAt: number }>();
+const MAX_TURNSTILE_TOKEN_LENGTH = 2048;
 
 function routeKey(routeId: string, req: Request): string {
   const ip = req.ip ?? "unknown";
@@ -184,32 +185,86 @@ export function turnstileProtection(config: {
   secret?: string;
   required: boolean;
   action?: string;
+  expectedHostname?: string;
 }): RequestHandler {
-  return async (req, res, next): Promise<void> => {
-    const secret = config.secret;
-    const token = req.body?.turnstileToken ?? req.body?.captchaToken;
+  const turnstileSecret = config.secret ?? process.env["TURNSTILE_SECRET_KEY"];
+  const expectedHostnameFromSiteUrl = (() => {
+    if (config.expectedHostname) {
+      return config.expectedHostname.trim().toLowerCase();
+    }
+    const siteUrl = process.env["SITE_URL"];
+    if (!siteUrl) return undefined;
+    try {
+      return new URL(siteUrl).hostname.trim().toLowerCase();
+    } catch {
+      return undefined;
+    }
+  })();
 
-    if (!secret) {
+  return async (req, res, next): Promise<void> => {
+    // Turnstile server verification happens here before any form route handler logic.
+    const tokenRaw =
+      req.body?.["cf-turnstile-response"] ??
+      req.body?.turnstileToken ??
+      req.body?.captchaToken;
+
+    if (!turnstileSecret) {
       if (config.required) {
         logger.warn("Turnstile secret missing for protected route", {
           routeId: config.routeId,
         });
+        res.status(503).json({
+          error: "Verification is temporarily unavailable. Please try again soon.",
+        });
+        return;
       }
       next();
       return;
     }
 
-    if (!token || typeof token !== "string") {
+    if (tokenRaw == null || tokenRaw === "") {
       recordFailedSubmission(config.routeId, req, "missing_turnstile_token");
-      res.status(400).json({ error: "CAPTCHA verification is required." });
+      res.status(400).json({
+        error: "Verification is required. Please complete the challenge.",
+      });
+      return;
+    }
+
+    if (typeof tokenRaw !== "string") {
+      recordFailedSubmission(config.routeId, req, "turnstile_token_not_string");
+      res.status(400).json({
+        error: "Verification token format is invalid. Please try again.",
+      });
+      return;
+    }
+
+    const token = tokenRaw.trim();
+    if (!token) {
+      recordFailedSubmission(config.routeId, req, "missing_turnstile_token");
+      res.status(400).json({
+        error: "Verification is required. Please complete the challenge.",
+      });
+      return;
+    }
+    if (token.length > MAX_TURNSTILE_TOKEN_LENGTH) {
+      recordFailedSubmission(config.routeId, req, "turnstile_token_too_long");
+      res.status(400).json({
+        error: "Verification token is invalid. Please retry verification.",
+      });
       return;
     }
 
     try {
+      const remoteIp =
+        req.get("cf-connecting-ip") ??
+        req.get("x-forwarded-for")?.split(",", 1)[0]?.trim() ??
+        req.ip ??
+        req.socket?.remoteAddress ??
+        "";
       const params = new URLSearchParams({
-        secret,
+        secret: turnstileSecret,
         response: token,
-        remoteip: req.ip ?? "",
+        remoteip: remoteIp,
       });
 
       const verification = await fetch(
@@ -224,12 +279,48 @@ export function turnstileProtection(config: {
       const payload = (await verification.json()) as {
         success?: boolean;
         action?: string;
+        hostname?: string;
+        "error-codes"?: string[];
         [key: string]: unknown;
       };
 
+      if (!verification.ok) {
+        recordFailedSubmission(config.routeId, req, "turnstile_siteverify_http");
+        res.status(503).json({
+          error: "Verification is temporarily unavailable. Please try again.",
+        });
+        return;
+      }
+
       if (!payload.success) {
-        recordFailedSubmission(config.routeId, req, "turnstile_failed");
-        res.status(403).json({ error: "CAPTCHA verification failed." });
+        const errorCodes = Array.isArray(payload["error-codes"])
+          ? payload["error-codes"]
+          : [];
+        const hasInvalidInput = errorCodes.includes("invalid-input-response");
+        const hasTimeoutOrDuplicate = errorCodes.includes("timeout-or-duplicate");
+        recordFailedSubmission(
+          config.routeId,
+          req,
+          hasTimeoutOrDuplicate
+            ? "turnstile_timeout_or_duplicate"
+            : hasInvalidInput
+              ? "turnstile_invalid_input_response"
+              : "turnstile_failed",
+        );
+        if (hasTimeoutOrDuplicate) {
+          res.status(400).json({
+            error:
+              "Verification expired or was already used. Please complete the challenge again.",
+          });
+          return;
+        }
+        if (hasInvalidInput) {
+          res.status(400).json({
+            error: "Verification token is invalid. Please retry verification.",
+          });
+          return;
+        }
+        res.status(403).json({ error: "Verification failed. Please try again." });
         return;
       }
 
@@ -239,14 +330,36 @@ export function turnstileProtection(config: {
           req,
           "turnstile_action_mismatch",
         );
-        res.status(403).json({ error: "CAPTCHA action mismatch." });
+        res.status(403).json({ error: "Verification action mismatch." });
+        return;
+      }
+
+      if (expectedHostnameFromSiteUrl && !payload.hostname) {
+        recordFailedSubmission(config.routeId, req, "turnstile_hostname_missing");
+        res.status(403).json({ error: "Verification origin mismatch." });
+        return;
+      }
+
+      if (
+        expectedHostnameFromSiteUrl &&
+        payload.hostname &&
+        payload.hostname.toLowerCase() !== expectedHostnameFromSiteUrl
+      ) {
+        recordFailedSubmission(
+          config.routeId,
+          req,
+          "turnstile_hostname_mismatch",
+        );
+        res.status(403).json({ error: "Verification origin mismatch." });
         return;
       }
     } catch (error) {
       logger.error("Turnstile verification request failed", error as Error, {
         routeId: config.routeId,
       });
-      res.status(503).json({ error: "CAPTCHA verification unavailable." });
+      res.status(503).json({
+        error: "Verification is temporarily unavailable. Please try again.",
+      });
       return;
     }
 
