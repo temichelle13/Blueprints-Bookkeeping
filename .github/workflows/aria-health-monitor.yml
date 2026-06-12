@@ -20,12 +20,18 @@ jobs:
     runs-on: ubuntu-latest
     env:
       API_BASE: ${{ inputs.api_base_url || secrets.PRODUCTION_API_URL || 'https://blueprintsandbookkeeping.com/api' }}
+      # Sent as a header so the Cloudflare WAF bypass rule can allowlist health-check
+      # traffic and prevent Bot Fight Mode from returning a 403 challenge page.
+      CF_BYPASS_HEADER: ${{ secrets.CF_HEALTH_BYPASS_TOKEN }}
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Health check — /api/healthz
         id: healthz
         run: |
-          STATUS=$(curl -s -o /tmp/healthz.json -w "%{http_code}" "$API_BASE/healthz")
+          STATUS=$(curl -s -o /tmp/healthz.json -w "%{http_code}" \
+            -H "X-Health-Check-Token: $CF_BYPASS_HEADER" \
+            "$API_BASE/healthz")
           echo "status=$STATUS" >> "$GITHUB_OUTPUT"
           cat /tmp/healthz.json
           # 200 = healthy, 503 = degraded but reachable; anything else is unexpected
@@ -49,6 +55,7 @@ jobs:
         run: |
           CONV_RESP=$(curl -s -X POST "$API_BASE/openai/conversations" \
             -H "Content-Type: application/json" \
+            -H "X-Health-Check-Token: $CF_BYPASS_HEADER" \
             -d '{"title":"CI Health Smoke Test"}' \
             -w "\n%{http_code}")
           CONV_BODY=$(echo "$CONV_RESP" | head -n1)
@@ -70,6 +77,7 @@ jobs:
             -X POST "$API_BASE/openai/conversations/$CONV_ID/messages" \
             -H "Content-Type: application/json" \
             -H "Accept: text/event-stream" \
+            -H "X-Health-Check-Token: $CF_BYPASS_HEADER" \
             -d '{"content":"Hello, are you online?"}')
 
           echo "Send message status: $MSG_STATUS"
@@ -83,7 +91,36 @@ jobs:
             echo "❌ Aria message endpoint returned HTTP $MSG_STATUS"
           fi
 
-          curl -s -X DELETE "$API_BASE/openai/conversations/$CONV_ID" || true
+          curl -s -X DELETE "$API_BASE/openai/conversations/$CONV_ID" \
+            -H "X-Health-Check-Token: $CF_BYPASS_HEADER" || true
+
+      - name: Close resolved health-alert issues on success
+        if: success() && steps.aria.outputs.aria_ok != 'false' && steps.degraded.outputs.overall != 'degraded'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'health-alert',
+            });
+
+            for (const issue of issues) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: `✅ **Production API recovered.**\n\nAll health checks passed at ${new Date().toUTCString()}.\n\nCheck: [workflow run](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`,
+              });
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                state: 'closed',
+              });
+              console.log(`Closed health-alert issue #${issue.number}`);
+            }
 
       - name: Open GitHub Issue on failure
         if: failure() || steps.aria.outputs.aria_ok == 'false' || steps.degraded.outputs.overall == 'degraded'
