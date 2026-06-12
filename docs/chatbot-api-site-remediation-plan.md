@@ -17,18 +17,17 @@ This plan records the problems found during a repository-level audit of the Aria
 
 ## Current verification results
 
-| Check                                                                                                                                       | Result | Finding                                                                                                                                |
-| ------------------------------------------------------------------------------------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `pnpm run check:merge-conflicts`                                                                                                            | Pass   | No merge conflict markers found.                                                                                                       |
-| `pnpm run typecheck`                                                                                                                        | Pass   | Workspace TypeScript projects passed, but Cloudflare Pages Functions are not covered by the workspace TypeScript config.               |
-| `pnpm --filter @workspace/website run test`                                                                                                 | Pass   | 3 website tests passed.                                                                                                                |
-| `pnpm run build`                                                                                                                            | Pass   | Codegen, typecheck, API bundle, sitemap generation, and website production build completed.                                            |
-| `pnpm run check:website-deploy`                                                                                                             | Pass   | Merge-conflict, typecheck, indexing-guard, sitemap, and website build gate completed.                                                  |
-| `pnpm run lint`                                                                                                                             | Fail   | Prettier reports 57 existing formatting violations across app, generated, config, docs, and lock files.                                |
-| `pnpm --filter @workspace/api-server run test`                                                                                              | Fail   | 2 test files fail before assertions because importing API modules imports `@workspace/db`, which throws when `DATABASE_URL` is absent. |
-| `pnpm run check:route-references`                                                                                                           | Fail   | The route-reference script treats support modules as route modules and flags `onboarding-workflow.ts` and `openai/guards.ts`.          |
-| `pnpm exec tsc --noEmit --ignoreConfig --target ES2022 --module ESNext --moduleResolution Bundler --skipLibCheck functions/api/[[path]].ts` | Fail   | The Cloudflare Pages Function has an uncovered TypeScript error: `getExpectedTurnstileHostname` is referenced but not defined.         |
-
+| Check | Result | Finding |
+| --- | ------ | ------- |
+| `pnpm run check:merge-conflicts` | Pass | No merge conflict markers found. |
+| `pnpm run typecheck` | Pass | Workspace TypeScript projects passed, but Cloudflare Pages Functions are not covered by the workspace TypeScript config. |
+| `pnpm --filter @workspace/website run test` | Pass | 3 website tests passed. |
+| `pnpm run build` | Pass | Codegen, typecheck, API bundle, sitemap generation, and website production build completed. |
+| `pnpm run check:website-deploy` | Pass | Merge-conflict, typecheck, indexing-guard, sitemap, and website build gate completed. |
+| `pnpm run lint` | Fail | Prettier reports 57 existing formatting violations across app, generated, config, docs, and lock files. |
+| `pnpm --filter @workspace/api-server run test` | Fail | 2 test files fail before assertions because importing API modules imports `@workspace/db`, which throws when `DATABASE_URL` is absent. |
+| `pnpm run check:route-references` | Fail | The route-reference script treats support modules as route modules and flags `onboarding-workflow.ts` and `openai/guards.ts`. |
+| `pnpm exec tsc --noEmit --target ES2022 --module ESNext --moduleResolution Bundler --skipLibCheck functions/api/[[path]].ts` | Fail | The Cloudflare Pages Function has an uncovered TypeScript error: `getExpectedTurnstileHostname` is referenced but not defined.
 ## Problems found
 
 ### P0 — Chat/API deployment has two competing implementations
