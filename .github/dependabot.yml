@@ -1,5 +1,4 @@
 version: 2
-runs-on: ubuntu-latest
 updates:
   - package-ecosystem: "npm"
     directory: "/"
@@ -7,11 +6,6 @@ updates:
       interval: "weekly"
       day: "monday" # Runs every Monday morning
     
-    # 1. Auto-Assign Reviewers
-    # Automatically assigns the PRs to you so they show up in your dashboard
-    reviewers:
-      - "temichelle13"
-      
     # 2. Auto-Labeling
     # Keeps your Pull Request tab beautifully organized
     labels:
