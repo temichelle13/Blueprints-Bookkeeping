@@ -24,19 +24,44 @@ jobs:
       # traffic and prevent Bot Fight Mode from returning a 403 challenge page.
       CF_BYPASS_HEADER: ${{ secrets.CF_HEALTH_BYPASS_TOKEN }}
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      # Optional Cloudflare WAF bypass header value. Configure a matching WAF rule in
+      # Cloudflare to allow requests that carry this token so that Bot Fight Mode does
+      # not challenge automated health-check traffic from GitHub Actions.
+      CF_HEALTH_BYPASS_TOKEN: ${{ secrets.CF_HEALTH_BYPASS_TOKEN }}
 
     steps:
       - name: Health check — /api/healthz
         id: healthz
         run: |
-          STATUS=$(curl -s -o /tmp/healthz.json -w "%{http_code}" \
-            -H "X-Health-Check-Token: $CF_BYPASS_HEADER" \
-            "$API_BASE/healthz")
+          # Build curl args as a bash array to avoid eval and shell-injection risks.
+          CURL_ARGS=(
+            -s
+            --connect-timeout 5
+            --max-time 15
+            -o /tmp/healthz.json
+            -w "%{http_code}"
+            -H "User-Agent: Blueprints-Health-Monitor/1.0 (github-actions)"
+          )
+          # Append the Cloudflare WAF bypass header only when the secret is set.
+          # Configure a matching WAF rule in Cloudflare to allow these requests.
+          if [ -n "$CF_HEALTH_BYPASS_TOKEN" ]; then
+            CURL_ARGS+=(-H "X-Health-Bypass-Token: $CF_HEALTH_BYPASS_TOKEN")
+          fi
+
+          STATUS=$(curl "${CURL_ARGS[@]}" "$API_BASE/healthz")
           echo "status=$STATUS" >> "$GITHUB_OUTPUT"
           cat /tmp/healthz.json
-          # 200 = healthy, 503 = degraded but reachable; anything else is unexpected
+
+          # 200 = healthy, 503 = degraded but reachable; anything else is unexpected.
           if [ "$STATUS" != "200" ] && [ "$STATUS" != "503" ]; then
-            echo "❌ /healthz returned unexpected HTTP $STATUS (expected 200 or 503)"
+            # Detect Cloudflare Bot Fight Mode challenge pages (403 with HTML body).
+            if [ "$STATUS" = "403" ] && grep -q "challenges.cloudflare.com" /tmp/healthz.json 2>/dev/null; then
+              echo "❌ Cloudflare Bot Fight Mode is blocking this health check (HTTP 403 challenge page)."
+              echo "   Fix: create a Cloudflare WAF bypass rule keyed on the 'X-Health-Bypass-Token'"
+              echo "   header and set the CF_HEALTH_BYPASS_TOKEN secret in this repository's Actions settings."
+            else
+              echo "❌ /healthz returned unexpected HTTP $STATUS (expected 200 or 503)"
+            fi
             exit 1
           fi
 
@@ -53,13 +78,23 @@ jobs:
       - name: Aria smoke test — create conversation + send message
         id: aria
         run: |
-          CONV_RESP=$(curl -s -X POST "$API_BASE/openai/conversations" \
+          # Build curl args as a bash array to avoid eval and shell-injection risks.
+          BASE_CURL_ARGS=(
+            -s
+            -H "User-Agent: Blueprints-Health-Monitor/1.0 (github-actions)"
+          )
+          if [ -n "$CF_HEALTH_BYPASS_TOKEN" ]; then
+            BASE_CURL_ARGS+=(-H "X-Health-Bypass-Token: $CF_HEALTH_BYPASS_TOKEN")
+          fi
+
+          CONV_STATUS=$(curl "${BASE_CURL_ARGS[@]}" \
+            -o /tmp/conv.json \
+            -w "%{http_code}" \
+            --max-time 15 \
+            -X POST "$API_BASE/openai/conversations" \
             -H "Content-Type: application/json" \
-            -H "X-Health-Check-Token: $CF_BYPASS_HEADER" \
-            -d '{"title":"CI Health Smoke Test"}' \
-            -w "\n%{http_code}")
-          CONV_BODY=$(echo "$CONV_RESP" | head -n1)
-          CONV_STATUS=$(echo "$CONV_RESP" | tail -n1)
+            -d '{"title":"CI Health Smoke Test"}')
+          CONV_BODY=$(cat /tmp/conv.json)
           echo "Create conversation status: $CONV_STATUS"
 
           if [ "$CONV_STATUS" != "201" ]; then
@@ -68,11 +103,18 @@ jobs:
             exit 0
           fi
 
-          CONV_ID=$(echo "$CONV_BODY" | jq -r '.id')
+          CONV_ID=$(echo "$CONV_BODY" | jq -r '.id // empty')
+          if [ -z "$CONV_ID" ] || [ "$CONV_ID" = "null" ]; then
+            echo "❌ Create conversation response missing conversation id"
+            echo "aria_ok=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           echo "conv_id=$CONV_ID" >> "$GITHUB_OUTPUT"
           echo "✅ Conversation created: #$CONV_ID"
 
-          MSG_STATUS=$(curl -s -o /tmp/aria_stream.txt -w "%{http_code}" \
+          MSG_STATUS=$(curl "${BASE_CURL_ARGS[@]}" \
+            -o /tmp/aria_stream.txt \
+            -w "%{http_code}" \
             --max-time 15 \
             -X POST "$API_BASE/openai/conversations/$CONV_ID/messages" \
             -H "Content-Type: application/json" \
@@ -121,6 +163,7 @@ jobs:
               });
               console.log(`Closed health-alert issue #${issue.number}`);
             }
+          curl "${BASE_CURL_ARGS[@]}" -X DELETE "$API_BASE/openai/conversations/$CONV_ID" || true
 
       - name: Open GitHub Issue on failure
         if: failure() || steps.aria.outputs.aria_ok == 'false' || steps.degraded.outputs.overall == 'degraded'
