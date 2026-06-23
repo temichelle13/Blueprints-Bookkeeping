@@ -122,6 +122,18 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// OAuth 2.0 Protected Resource Metadata (RFC 9728)
+// Tells agents/clients how to discover authorization servers for this API.
+app.get("/.well-known/oauth-protected-resource", (_req, res) => {
+  const resource =
+    process.env.SITE_URL ?? "https://blueprintsandbookkeeping.com";
+  res.json({
+    resource,
+    authorization_servers: [],
+    scopes_supported: [],
+    bearer_methods_supported: ["header"],
+  });
+});
 const MCP_SERVER_CARD = {
   $schema: "https://static.modelcontextprotocol.io/schemas/v1/server-card.schema.json",
   name: "com.blueprintsandbookkeeping/api",
