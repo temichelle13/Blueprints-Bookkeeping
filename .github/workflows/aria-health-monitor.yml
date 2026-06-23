@@ -159,7 +159,7 @@ jobs:
               body += `### ❌ Aria Chat Endpoint Failed\nThe \`POST /openai/conversations/:id/messages\` SSE endpoint did not respond correctly.\n\n**Impact:** Visitors cannot use Aria to get service info or leave their contact details — Tea may miss inbound leads.\n\n`;
             }
             if (degraded === 'degraded') {
-              body += `### ⚠️ API Reports Degraded Status\nOne or more backend dependencies (DB, OpenAI, Resend, Adobe Sign) may be unhealthy. Check \`/api/healthz\` for details.\n\n`;
+              body += `### ⚠️ API Reports Degraded Status\nOne or more dependencies reported by \`/api/healthz\` may be unhealthy. Check \`/api/healthz\` for details.\n\n`;
             }
 
             body += `**Action:** Check the [workflow run](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}) for full logs and verify the deployment is healthy.`;
