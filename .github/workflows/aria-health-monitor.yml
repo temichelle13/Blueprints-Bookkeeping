@@ -83,13 +83,14 @@ jobs:
             BASE_CURL_ARGS+=(-H "X-Health-Bypass-Token: $CF_HEALTH_BYPASS_TOKEN")
           fi
 
-          CONV_RESP=$(curl "${BASE_CURL_ARGS[@]}" \
+          CONV_STATUS=$(curl "${BASE_CURL_ARGS[@]}" \
+            -o /tmp/conv.json \
+            -w "%{http_code}" \
+            --max-time 15 \
             -X POST "$API_BASE/openai/conversations" \
             -H "Content-Type: application/json" \
-            -d '{"title":"CI Health Smoke Test"}' \
-            -w "\n%{http_code}")
-          CONV_BODY=$(echo "$CONV_RESP" | head -n1)
-          CONV_STATUS=$(echo "$CONV_RESP" | tail -n1)
+            -d '{"title":"CI Health Smoke Test"}')
+          CONV_BODY=$(cat /tmp/conv.json)
           echo "Create conversation status: $CONV_STATUS"
 
           if [ "$CONV_STATUS" != "201" ]; then
