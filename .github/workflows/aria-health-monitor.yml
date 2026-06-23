@@ -32,6 +32,8 @@ jobs:
           # Build curl args as a bash array to avoid eval and shell-injection risks.
           CURL_ARGS=(
             -s
+            --connect-timeout 5
+            --max-time 15
             -o /tmp/healthz.json
             -w "%{http_code}"
             -H "User-Agent: Blueprints-Health-Monitor/1.0 (github-actions)"
