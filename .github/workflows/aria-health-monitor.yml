@@ -99,7 +99,12 @@ jobs:
             exit 0
           fi
 
-          CONV_ID=$(echo "$CONV_BODY" | jq -r '.id')
+          CONV_ID=$(echo "$CONV_BODY" | jq -r '.id // empty')
+          if [ -z "$CONV_ID" ] || [ "$CONV_ID" = "null" ]; then
+            echo "❌ Create conversation response missing conversation id"
+            echo "aria_ok=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           echo "conv_id=$CONV_ID" >> "$GITHUB_OUTPUT"
           echo "✅ Conversation created: #$CONV_ID"
 
