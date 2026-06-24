@@ -50,5 +50,7 @@ overrides:
 minimumReleaseAgeExclude:
   # Renovate security update: esbuild@0.28.1
   - esbuild@0.28.1
+  # Renovate security update: multer@2.2.0
+  - multer@2.2.0
   # Renovate security update: vite@8.0.16
   - vite@8.0.16
