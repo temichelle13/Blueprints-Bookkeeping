@@ -20,6 +20,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       API_BASE: ${{ inputs.api_base_url || secrets.PRODUCTION_API_URL || 'https://blueprintsandbookkeeping.com/api' }}
+      # Sent as a header so the Cloudflare WAF bypass rule can allowlist health-check
+      # traffic and prevent Bot Fight Mode from returning a 403 challenge page.
+      CF_BYPASS_HEADER: ${{ secrets.CF_HEALTH_BYPASS_TOKEN }}
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
       # Optional Cloudflare WAF bypass header value. Configure a matching WAF rule in
       # Cloudflare to allow requests that carry this token so that Bot Fight Mode does
       # not challenge automated health-check traffic from GitHub Actions.
@@ -115,6 +119,7 @@ jobs:
             -X POST "$API_BASE/openai/conversations/$CONV_ID/messages" \
             -H "Content-Type: application/json" \
             -H "Accept: text/event-stream" \
+            -H "X-Health-Check-Token: $CF_BYPASS_HEADER" \
             -d '{"content":"Hello, are you online?"}')
 
           echo "Send message status: $MSG_STATUS"
@@ -128,6 +133,36 @@ jobs:
             echo "❌ Aria message endpoint returned HTTP $MSG_STATUS"
           fi
 
+          curl -s -X DELETE "$API_BASE/openai/conversations/$CONV_ID" \
+            -H "X-Health-Check-Token: $CF_BYPASS_HEADER" || true
+
+      - name: Close resolved health-alert issues on success
+        if: success() && steps.aria.outputs.aria_ok != 'false' && steps.degraded.outputs.overall != 'degraded'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'health-alert',
+            });
+
+            for (const issue of issues) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: `✅ **Production API recovered.**\n\nAll health checks passed at ${new Date().toUTCString()}.\n\nCheck: [workflow run](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`,
+              });
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                state: 'closed',
+              });
+              console.log(`Closed health-alert issue #${issue.number}`);
+            }
           curl "${BASE_CURL_ARGS[@]}" -X DELETE "$API_BASE/openai/conversations/$CONV_ID" || true
 
       - name: Open GitHub Issue on failure
@@ -159,7 +194,7 @@ jobs:
               body += `### ❌ Aria Chat Endpoint Failed\nThe \`POST /openai/conversations/:id/messages\` SSE endpoint did not respond correctly.\n\n**Impact:** Visitors cannot use Aria to get service info or leave their contact details — Tea may miss inbound leads.\n\n`;
             }
             if (degraded === 'degraded') {
-              body += `### ⚠️ API Reports Degraded Status\nOne or more dependencies reported by \`/api/healthz\` may be unhealthy. Check \`/api/healthz\` for details.\n\n`;
+              body += `### ⚠️ API Reports Degraded Status\nOne or more backend dependencies (DB, OpenAI, Resend, Adobe Sign) may be unhealthy. Check \`/api/healthz\` for details.\n\n`;
             }
 
             body += `**Action:** Check the [workflow run](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}) for full logs and verify the deployment is healthy.`;
