@@ -77,6 +77,42 @@ POST /api/openai/conversations
 POST /api/openai/conversations/:id/messages
 ```
 
+## CI Health-Check WAF Bypass
+
+GitHub Actions cannot solve Cloudflare Bot Fight Mode challenges, so the
+health-monitor workflow sends a shared secret in the `X-Health-Check-Token`
+request header. A matching Cloudflare WAF bypass rule skips Bot Fight Mode for
+those requests.
+
+### GitHub Actions secret
+
+Add the following **repository secret** in
+**Settings → Secrets and variables → Actions**:
+
+```text
+CF_HEALTH_BYPASS_TOKEN=<random-256-bit-hex-or-uuid>
+```
+
+Generate a suitable value with:
+
+```bash
+openssl rand -hex 32
+```
+
+### Cloudflare WAF skip rule
+
+In **Cloudflare → Security → WAF → Custom rules**, create a skip rule:
+
+| Field | Value |
+|---|---|
+| Rule name | `Allow CI health checks` |
+| If… | `http.request.headers["x-health-check-token"] eq "<same-token-value>"` |
+| Then… | Skip → Bot Fight Mode |
+| Order | Place before any Bot Fight Mode / rate-limit rules |
+
+> **Security note:** rotate `CF_HEALTH_BYPASS_TOKEN` quarterly and update the
+> Cloudflare WAF rule expression at the same time.
+
 ## Cloudflare Migration Inventory
 
 These endpoints are still used or integration-relevant but are not implemented in
