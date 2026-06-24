@@ -132,9 +132,9 @@ function isAllowedOrigin(origin: string, request?: Request): boolean {
         .split(",")
         .map((value) => value.trim())
         .filter(Boolean),
-    ].map((value) => value.replace(/\/+$/, "")),
+    ].map((value) => value.replace(/\/+$/u, "")),
   );
-  return allowed.has(origin.replace(/\/+$/, ""));
+  return allowed.has(origin.replace(/\/+$/u, ""));
 }
 
 function bindEnvToRequest(request: Request, env: Env): Request {
@@ -153,7 +153,7 @@ function assertAllowedOrigin(request: Request, env: Env): void {
 
 function getPath(request: Request): string {
   const pathname = new URL(request.url).pathname;
-  return pathname.replace(/^\/api\/?/, "").replace(/\/+$/, "");
+  return pathname.replace(/^\/api\/?/u, "").replace(/\/+$/u, "");
 }
 
 function getIp(request: Request): string {

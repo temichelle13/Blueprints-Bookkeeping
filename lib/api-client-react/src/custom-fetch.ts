@@ -6,7 +6,7 @@ let _apiBaseUrl = "";
 const API_PREFIX = "/api";
 
 export function normalizeApiBaseUrl(url?: string | null): string {
-  const trimmed = url?.trim().replace(/\/+$/, "") ?? "";
+  const trimmed = url?.trim().replace(/\/+$/u, "") ?? "";
 
   if (!trimmed || trimmed === API_PREFIX) {
     return "";
