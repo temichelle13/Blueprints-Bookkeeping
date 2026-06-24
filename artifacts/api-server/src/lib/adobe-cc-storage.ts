@@ -1,5 +1,35 @@
 const CC_STORAGE_BASE_URL = "https://cc-api-storage.adobe.io/v2";
 
+function normalizeAndValidateAssetPath(filePath: string): string {
+  if (!filePath || typeof filePath !== "string") {
+    throw new Error("Invalid CC Storage path");
+  }
+
+  const trimmed = filePath.trim();
+  if (!trimmed) {
+    throw new Error("Invalid CC Storage path");
+  }
+
+  const rawSegments = trimmed.split("/");
+  if (rawSegments.some((segment) => segment.length === 0)) {
+    throw new Error("Invalid CC Storage path");
+  }
+
+  const safeSegments = rawSegments.map((segment) => {
+    if (
+      segment === "." ||
+      segment === ".." ||
+      /[\\?#]/.test(segment) ||
+      /[\u0000-\u001F\u007F]/.test(segment)
+    ) {
+      throw new Error("Invalid CC Storage path");
+    }
+    return encodeURIComponent(segment);
+  });
+
+  return safeSegments.join("/");
+}
+
 async function getAccessToken(): Promise<string> {
   const clientId = process.env["ADOBE_SIGN_CLIENT_ID"];
   const clientSecret = process.env["ADOBE_SIGN_CLIENT_SECRET"];
@@ -38,8 +68,13 @@ export async function uploadToCreativeCloud(
 ): Promise<string> {
   const token = await getAccessToken();
   const apiKey = process.env["ADOBE_SIGN_CLIENT_ID"];
+  const safeAssetPath = normalizeAndValidateAssetPath(filePath);
+  const uploadUrl = new URL(
+    `/v2/assets/${safeAssetPath}`,
+    "https://cc-api-storage.adobe.io",
+  );
 
-  const response = await fetch(`${CC_STORAGE_BASE_URL}/assets/${filePath}`, {
+  const response = await fetch(uploadUrl.toString(), {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,

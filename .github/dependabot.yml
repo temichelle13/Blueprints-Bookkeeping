@@ -1,20 +1,35 @@
 version: 2
+
 updates:
+  # Keep GitHub Actions versions updated
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    target-branch: "master"
+    labels:
+      - "dependencies"
+      - "github_actions"
+
+  # Node/TypeScript dependencies
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday" # Runs every Monday morning
-    
-    # 2. Auto-Labeling
-    # Keeps your Pull Request tab beautifully organized
+      interval: "daily"
+    target-branch: "master"
     labels:
       - "dependencies"
-      
-    # 3. Grouped Updates (The Game Changer!)
-    # Instead of opening 10 different PRs for 10 different packages, 
-    # this bundles all routine package updates into ONE single Pull Request.
     groups:
       all-dependencies:
         patterns:
           - "*"
+
+  # Python dependencies (if you have requirements.txt/pyproject.toml/poetry.lock)
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    target-branch: "master"
+    labels:
+      - "dependencies"
+      - "python"
