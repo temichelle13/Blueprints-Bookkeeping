@@ -1,11 +1,5 @@
-import {
-  motion,
-  useInView,
-  useMotionValue,
-  useTransform,
-  animate,
-} from "framer-motion";
-import { useRef, useEffect, type ReactNode } from "react";
+import { motion } from "framer-motion";
+import type { ReactNode } from "react";
 import {
   Star,
   ExternalLink,
@@ -29,29 +23,11 @@ function AnimatedCounter({
   suffix?: string;
   prefix?: string;
 }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-50px" });
-  const motionVal = useMotionValue(0);
-  const rounded = useTransform(motionVal, (v) => Math.round(v));
-
-  useEffect(() => {
-    if (inView) {
-      animate(motionVal, value, { duration: 2, ease: "easeOut" });
-    }
-  }, [inView, value, motionVal]);
-
-  useEffect(() => {
-    const unsubscribe = rounded.on("change", (v) => {
-      if (ref.current) {
-        ref.current.textContent = `${prefix}${v.toLocaleString()}${suffix}`;
-      }
-    });
-    return unsubscribe;
-  }, [rounded, suffix, prefix]);
-
   return (
-    <span ref={ref}>
-      {prefix}0{suffix}
+    <span>
+      {prefix}
+      {value.toLocaleString()}
+      {suffix}
     </span>
   );
 }
@@ -91,7 +67,7 @@ export function StatsProofBar() {
       value: 4,
       suffix: "",
       label: "Pro Certifications",
-      description: "CEH v12 · QB ProAdvisor",
+      description: "CEH v12 · QB ProAdvisor Gold · Intuit Crypto · QBO L1",
     },
   ];
 
@@ -111,7 +87,7 @@ export function StatsProofBar() {
               <div className="inline-flex p-3 rounded-xl bg-accent/10 text-accent mb-4 group-hover:bg-accent group-hover:text-white transition-all duration-500">
                 {stat.icon}
               </div>
-              <div className="text-3xl md:text-4xl font-display font-extrabold text-white mb-1">
+              <div className="text-3xl md:text-4xl font-display font-extrabold text-foreground mb-1">
                 <AnimatedCounter
                   value={stat.value}
                   suffix={stat.suffix}
@@ -168,7 +144,7 @@ export function CredentialBadgeStrip({
         {!compact && (
           <div className="flex flex-col items-center text-center mb-10">
             <div className="accent-bar mb-6" />
-            <h2 className="text-2xl md:text-3xl font-display font-bold text-white mb-2">
+            <h2 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-2">
               Professional Credentials
             </h2>
             <p className="text-muted-foreground text-sm max-w-lg">
@@ -189,7 +165,7 @@ export function CredentialBadgeStrip({
               <div className="p-2.5 rounded-lg bg-accent/10 text-accent mb-3">
                 {cred.icon}
               </div>
-              <span className="text-xs font-semibold text-white mb-1 leading-tight">
+              <span className="text-xs font-semibold text-foreground mb-1 leading-tight">
                 {compact ? cred.shortName : cred.name}
               </span>
               {cred.link && (
@@ -197,7 +173,7 @@ export function CredentialBadgeStrip({
                   href={cred.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[10px] text-accent hover:text-white flex items-center gap-1 mt-1 transition-colors"
+                  className="text-[10px] text-accent hover:text-foreground flex items-center gap-1 mt-1 transition-colors"
                 >
                   {cred.linkLabel} <ExternalLink className="w-2.5 h-2.5" />
                 </a>
@@ -231,7 +207,7 @@ export function GoogleReviewsCallout() {
             ))}
           </div>
 
-          <p className="text-2xl font-display font-bold text-white mb-1">
+          <p className="text-2xl font-display font-bold text-foreground mb-1">
             5.0 on Google
           </p>
           <p className="text-muted-foreground text-sm mb-6">
