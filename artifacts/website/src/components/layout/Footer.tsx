@@ -97,6 +97,7 @@ const footerBuckets: FooterBucket[] = [
       { label: "Privacy Policy", href: "/privacy" },
       { label: "Terms of Service", href: "/terms" },
       { label: "Cookie Policy", href: "/cookies" },
+      { label: "Unsubscribe", href: "/unsubscribe" },
     ],
   },
 ];
@@ -208,7 +209,7 @@ export function Footer() {
                 )}
               </div>
             ))}
-            <div className="md:col-span-2 lg:col-span-4 pt-2">
+            <div className="md:col-span-2 lg:col-span-4 mt-2 border-t border-border/40 pt-6">
               <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-4">
                 Stay in the Loop
               </h3>
@@ -303,6 +304,12 @@ export function Footer() {
               className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               Referral Program
+            </Link>
+            <Link
+              href="/unsubscribe"
+              className="hover:text-foreground transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              Unsubscribe
             </Link>
             <Link
               href="/feedback"

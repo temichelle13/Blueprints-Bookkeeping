@@ -1,5 +1,11 @@
-import { motion } from "framer-motion";
-import type { ReactNode } from "react";
+import {
+  motion,
+  useInView,
+  useMotionValue,
+  useTransform,
+  animate,
+} from "framer-motion";
+import { useEffect, useRef, type ReactNode } from "react";
 import {
   Star,
   ExternalLink,
@@ -23,11 +29,32 @@ function AnimatedCounter({
   suffix?: string;
   prefix?: string;
 }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-50px" });
+  const motionVal = useMotionValue(0);
+  const rounded = useTransform(motionVal, (currentValue) =>
+    Math.round(currentValue),
+  );
+
+  useEffect(() => {
+    if (inView) {
+      animate(motionVal, value, { duration: 2, ease: "easeOut" });
+    }
+  }, [inView, value, motionVal]);
+
+  useEffect(() => {
+    const unsubscribe = rounded.on("change", (currentValue) => {
+      if (ref.current) {
+        ref.current.textContent = `${prefix}${currentValue.toLocaleString()}${suffix}`;
+      }
+    });
+
+    return unsubscribe;
+  }, [rounded, prefix, suffix]);
+
   return (
-    <span>
-      {prefix}
-      {value.toLocaleString()}
-      {suffix}
+    <span ref={ref}>
+      {prefix}0{suffix}
     </span>
   );
 }
