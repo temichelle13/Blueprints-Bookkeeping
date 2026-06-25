@@ -6,7 +6,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
 
-export const CONTACT_CONSENT_TEXT_VERSION = "contact-consent-2026-03-31.1";
+export const CONTACT_CONSENT_TEXT_VERSION = "contact-consent-2026-06-25.1";
 export const CONTACT_CONSENT_SOURCE_PAGE = "/contact";
 
 export const quickContactSchema = z.object({
