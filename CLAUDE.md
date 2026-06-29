@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - `SITE_CONSTRAINTS.md` — business/content guardrails (locked copy, navigation, Calendly URLs, pricing language, credential labels, the "no tax services" rule). Treat these as non-negotiable; stop and ask if a change might violate one.
 - `.env.example` — full environment variable reference.
-- `DEPLOYMENT.md` — how the frontend and API are actually shipped (Cloudflare Pages + standalone Express server), and the legacy `functions/api/` Pages Functions that duplicate `/api/chat` and `/api/contact` at the edge.
+- `DEPLOYMENT.md` — how the frontend and API are actually shipped (Cloudflare Pages + standalone Express server), and the `functions/api/` Pages Functions that duplicate a subset of Express routes at the edge (see Architecture below for the full list).
 
 ## Commands
 
@@ -29,7 +29,7 @@ pnpm run check:route-references         # fail if an Express route module isn't 
 pnpm run check:website-deploy           # merge-conflict check -> typecheck -> indexing guards -> website build (run before every deploy)
 
 pnpm --filter @workspace/db push        # push Drizzle schema to DATABASE_URL
-pnpm --filter @workspace/db generate    # generate a new Drizzle migration from schema changes
+pnpm --filter @workspace/db exec drizzle-kit generate --config ./drizzle.config.ts  # generate a new migration file under lib/db/drizzle/
 ```
 
 ### Tests
