@@ -1,0 +1,29 @@
+website:
+  - artifacts/website/**
+
+api-server:
+  - artifacts/api-server/**
+
+database:
+  - lib/db/**
+  - migrations/**
+
+api-contract:
+  - lib/api-spec/**
+  - lib/api-client-react/**
+  - lib/api-zod/**
+
+integrations:
+  - lib/integrations/**
+  - lib/integrations-openai-ai-react/**
+  - lib/integrations-openai-ai-server/**
+
+scripts:
+  - scripts/**
+
+ci:
+  - .github/**
+
+docs:
+  - "**/*.md"
+  - docs/**
