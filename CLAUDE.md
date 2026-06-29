@@ -44,7 +44,7 @@ pnpm --filter @workspace/website test                              # all website
 
 ## Architecture
 
-This is a pnpm monorepo (workspaces: `artifacts/*`, `lib/*`, `lib/integrations/*`, `scripts`). **The only production API runtime path is `artifacts/api-server/src/index.ts`**, bundled to `artifacts/api-server/dist/index.cjs`. `functions/api/[[path]].ts` is a Cloudflare Pages Functions edge shim that exists only to handle `/api/chat` and `/api/contact` at the edge per `DEPLOYMENT.md` — it is not where most route logic lives.
+This is a pnpm monorepo (workspaces: `artifacts/*`, `lib/*`, `lib/integrations/*`, `scripts`). **The only production API runtime path is `artifacts/api-server/src/index.ts`**, bundled to `artifacts/api-server/dist/index.cjs`. `functions/api/[[path]].ts` is a separate Cloudflare Pages Functions edge implementation with its own duplicate handlers for `/api/healthz`, `/api/contact`, `/api/newsletter/subscribe`, `/api/feedback`, `/api/assistant/feedback`, and the `/api/openai/conversations` chat flow (backed by D1/Workers AI, not Postgres/OpenAI) — `_routes.json` routes all of `/api/*` to it. If you change one of these endpoints in the Express server, check whether `functions/api/[[path]].ts` needs the same change to avoid edge/origin drift; see `DEPLOYMENT.md`.
 
 ### Contract-first API flow
 
