@@ -6,10 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type ContactFormInputFormType = typeof ContactFormInputFormType[keyof typeof ContactFormInputFormType];
-
+export type ContactFormInputFormType =
+  (typeof ContactFormInputFormType)[keyof typeof ContactFormInputFormType];
 
 export const ContactFormInputFormType = {
-  quick: 'quick',
-  detailed: 'detailed',
+  quick: "quick",
+  detailed: "detailed",
 } as const;
