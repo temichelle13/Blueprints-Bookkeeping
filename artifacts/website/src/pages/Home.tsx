@@ -66,7 +66,8 @@ export default function Home() {
             transition={{ delay: 0.2 }}
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed"
           >
-            Bookkeeping and business planning that actually makes sense. Learn your numbers, find your direction, and grow your business.
+            Bookkeeping and business planning that actually makes sense. Learn
+            your numbers, find your direction, and grow your business.
           </motion.p>
 
           <motion.div
@@ -94,7 +95,6 @@ export default function Home() {
               {secondaryCtaLabel}
             </Link>
           </motion.div>
-
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
@@ -109,10 +109,12 @@ export default function Home() {
           <div className="flex flex-col items-center text-center mb-16">
             <div className="accent-bar mb-6" />
             <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
-             Build Your Business Blueprint
+              Build Your Business Blueprint
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl">
-              You have to know where you are and where you've been to know where you can go. Understand your business past, clean up your present, and build the blueprint to meet your goals.
+              You have to know where you are and where you've been to know where
+              you can go. Understand your business past, clean up your present,
+              and build the blueprint to meet your goals.
             </p>
           </div>
 
@@ -196,16 +198,30 @@ export default function Home() {
               </h2>
               <div className="space-y-4 text-lg text-muted-foreground mb-10 leading-relaxed">
                 <p>
-                  Most modern bookkeepers hit a complexity ceiling and lack the capacity to provide services to niche industries. They refuse to touch books that dabble in cryptocurrency, and often try to solve everything with journal entries—without truly understanding the underlying issues.
+                  Most modern bookkeepers hit a complexity ceiling and lack the
+                  capacity to provide services to niche industries. They refuse
+                  to touch books that dabble in cryptocurrency, and often try to
+                  solve everything with journal entries—without truly
+                  understanding the underlying issues.
                 </p>
                 <p>
-                  Let's be honest: if you got audited, could your bookkeeper explain those entries? Probably not, because they just wanted the books to look good, not actually fix them. This is why they can't explain concepts to you or help you understand what's actually happening in your business.
+                  Let's be honest: if you got audited, could your bookkeeper
+                  explain those entries? Probably not, because they just wanted
+                  the books to look good, not actually fix them. This is why
+                  they can't explain concepts to you or help you understand
+                  what's actually happening in your business.
                 </p>
                 <p>
-                  Communication is often vague and rare. Bookkeepers who also provide tax preparation frequently deprioritize client books during tax season, causing miscommunication, inaccuracies, and backlogs.
+                  Communication is often vague and rare. Many providers treat
+                  bookkeeping as after-the-fact cleanup instead of the operating
+                  system your business relies on, causing miscommunication,
+                  inaccuracies, and backlogs.
                 </p>
                 <p>
-                  We designed a boutique model that stays available and technically unmatched. With advanced capability and hands-on experience, we know exactly what it takes to make a business survive.
+                  We designed a boutique model that stays available and
+                  technically unmatched. With advanced capability and hands-on
+                  experience, we know exactly what it takes to make a business
+                  survive.
                 </p>
               </div>
 
@@ -214,7 +230,7 @@ export default function Home() {
                   {
                     icon: <Clock className="w-5 h-5" />,
                     title: "12-Month Availability",
-                    desc: "No tax preparation means no seasonal blind spots. We are a year-round strategic resource.",
+                    desc: "A deliberately focused client roster means fewer blind spots and more consistent support throughout the year.",
                   },
                   {
                     icon: <ShieldCheck className="w-5 h-5" />,
@@ -293,7 +309,10 @@ export default function Home() {
               Built for Strategic Clarity and Financial Control
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl">
-A specialized partnership offering leadership-level advice, structured financial statements, and forward-thinking assistance as your business grows.            </p>
+              A specialized partnership offering leadership-level advice,
+              structured financial statements, and forward-thinking assistance
+              as your business grows.{" "}
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
@@ -353,7 +372,19 @@ A specialized partnership offering leadership-level advice, structured financial
                   From backlog to board-ready reporting.
                 </h2>
                 <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-8">
-                  A multi-entity service business came to us with a 2-year reconciliation backlog and cash flow blind spots. Millions in undeposited funds, negative asset and liability accounts, and no hope after being turned down by 3 accountants. We met with them, understood how their business had been operating, what caused them to fall behind, and took them on. Within 30 days, they had up-to-date books and could explain exactly where each number on their profit and loss or balance sheet came from. That is truly empowering. Now, they meet with us quarterly but maintain their books themselves monthly (and correctly), and they just expanded their business model and doubled their funding. Think about knowing you have reliable numbers every month. What is that worth to you?
+                  A multi-entity service business came to us with a 2-year
+                  reconciliation backlog and cash flow blind spots. Millions in
+                  undeposited funds, negative asset and liability accounts, and
+                  no hope after being turned down by 3 accountants. We met with
+                  them, understood how their business had been operating, what
+                  caused them to fall behind, and took them on. Within 30 days,
+                  they had up-to-date books and could explain exactly where each
+                  number on their profit and loss or balance sheet came from.
+                  That is truly empowering. Now, they meet with us quarterly but
+                  maintain their books themselves monthly (and correctly), and
+                  they just expanded their business model and doubled their
+                  funding. Think about knowing you have reliable numbers every
+                  month. What is that worth to you?
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {[
@@ -429,10 +460,12 @@ A specialized partnership offering leadership-level advice, structured financial
           <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-6">
             Stop Guessing.
             <br />
-            <span className="text-gradient">Start Building Your Blueprint.</span>
+            <span className="text-gradient">
+              Start Building Your Blueprint.
+            </span>
           </h2>
           <p className="text-xl text-muted-foreground mb-4">
-            Success Starts with Our First Meeting. Book Today. 
+            Success Starts with Our First Meeting. Book Today.
           </p>
           <Link
             href="/schedule"
