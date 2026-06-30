@@ -10,18 +10,21 @@ const healthLimiter = rateLimit({
 });
 
 router.get("/healthz", healthLimiter, async (_req, res) => {
-  let dbStatus: "ok" | "error" = "error";
-  try {
-    await pool.query("SELECT 1");
-    dbStatus = "ok";
-  } catch {
-    dbStatus = "error";
+  let dbStatus: "ok" | "missing" | "error" = pool ? "error" : "missing";
+  if (pool) {
+    try {
+      await pool.query("SELECT 1");
+      dbStatus = "ok";
+    } catch {
+      dbStatus = "error";
+    }
   }
 
-  const overallStatus = dbStatus === "ok" ? "ok" : "degraded";
+  const overallStatus = dbStatus === "error" ? "degraded" : "ok";
   const payload = {
     status: overallStatus,
     db: dbStatus,
+    mongodb: process.env["MONGODB_URI"] ? "configured" : "missing",
     timestamp: new Date().toISOString(),
   };
 

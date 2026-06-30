@@ -2,7 +2,13 @@ import fs from "node:fs";
 import path from "node:path";
 
 const repoRoot = path.resolve(import.meta.dirname, "../..");
-const routesDir = path.join(repoRoot, "artifacts", "api-server", "src", "routes");
+const routesDir = path.join(
+  repoRoot,
+  "artifacts",
+  "api-server",
+  "src",
+  "routes",
+);
 const routesIndexPath = path.join(routesDir, "index.ts");
 
 function collectRouteFiles(dir: string): string[] {

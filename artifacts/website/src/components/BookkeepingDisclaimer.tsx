@@ -49,10 +49,9 @@ export function BookkeepingDisclaimer({
               compact ? "text-xs sm:text-[13px]" : "text-sm sm:text-[14px]",
             )}
           >
-            Blueprints &amp; Bookkeeping LLC provides bookkeeping and
-            business-planning services only. Tax preparation, tax filing, legal
-            advice, and licensed investment advice stay with the appropriate
-            licensed professionals.
+            Blueprints &amp; Bookkeeping LLC provides bookkeeping and related
+            business-support services. We are not a CPA firm, law firm, auditor,
+            or investment adviser, and website content is general information.
           </p>
         </div>
       </div>

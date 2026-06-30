@@ -5,8 +5,8 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { ContactFormInputConsent } from './contactFormInputConsent';
-import type { ContactFormInputFormType } from './contactFormInputFormType';
+import type { ContactFormInputConsent } from "./contactFormInputConsent";
+import type { ContactFormInputFormType } from "./contactFormInputFormType";
 
 export interface ContactFormInput {
   formType: ContactFormInputFormType;
@@ -34,5 +34,5 @@ export interface ContactFormInput {
   /** Public page path where consent was captured (for example /contact) */
   consentSourcePage: string;
   website?: string;
-  'cf-turnstile-response': string;
+  "cf-turnstile-response": string;
 }
