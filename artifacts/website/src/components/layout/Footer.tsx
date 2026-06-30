@@ -223,11 +223,11 @@ export function Footer() {
         </div>
         <div className="glow-line mb-6" />
         <p className="text-xs text-muted-foreground/60 text-center mb-4 leading-relaxed max-w-3xl mx-auto">
-          Blueprints & Bookkeeping LLC is not a licensed CPA firm and does
-          not provide tax preparation, tax filing, legal advice, or licensed
-          investment counsel. References to tax forms describe bookkeeping
-          contexts only. For tax and legal matters, please consult a licensed
-          professional.{" "}
+          Blueprints & Bookkeeping LLC is not a CPA firm and does not provide
+          audit or attest services, legal advice, investment advice, personal
+          income tax preparation, or state tax return preparation. Business
+          tax-related support, when available, is limited to the scope stated in
+          the client engagement letter.{" "}
           <Link
             href="/faq"
             className="underline underline-offset-2 hover:text-muted-foreground transition-colors"

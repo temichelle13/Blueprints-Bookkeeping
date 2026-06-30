@@ -6,11 +6,11 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type NexusSummaryItemRiskLevel = typeof NexusSummaryItemRiskLevel[keyof typeof NexusSummaryItemRiskLevel];
-
+export type NexusSummaryItemRiskLevel =
+  (typeof NexusSummaryItemRiskLevel)[keyof typeof NexusSummaryItemRiskLevel];
 
 export const NexusSummaryItemRiskLevel = {
-  safe: 'safe',
-  warning: 'warning',
-  alert: 'alert',
+  safe: "safe",
+  warning: "warning",
+  alert: "alert",
 } as const;
