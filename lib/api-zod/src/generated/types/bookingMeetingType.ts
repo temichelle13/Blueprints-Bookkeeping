@@ -6,11 +6,11 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type BookingMeetingType = typeof BookingMeetingType[keyof typeof BookingMeetingType];
-
+export type BookingMeetingType =
+  (typeof BookingMeetingType)[keyof typeof BookingMeetingType];
 
 export const BookingMeetingType = {
-  video: 'video',
-  phone: 'phone',
-  async: 'async',
+  video: "video",
+  phone: "phone",
+  async: "async",
 } as const;

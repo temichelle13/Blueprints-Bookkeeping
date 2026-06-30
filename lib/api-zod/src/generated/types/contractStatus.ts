@@ -6,14 +6,14 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type ContractStatus = typeof ContractStatus[keyof typeof ContractStatus];
-
+export type ContractStatus =
+  (typeof ContractStatus)[keyof typeof ContractStatus];
 
 export const ContractStatus = {
-  draft: 'draft',
-  sent: 'sent',
-  viewed: 'viewed',
-  signed: 'signed',
-  expired: 'expired',
-  cancelled: 'cancelled',
+  draft: "draft",
+  sent: "sent",
+  viewed: "viewed",
+  signed: "signed",
+  expired: "expired",
+  cancelled: "cancelled",
 } as const;
