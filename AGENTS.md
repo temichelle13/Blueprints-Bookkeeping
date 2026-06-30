@@ -36,7 +36,7 @@
 
 - Do not change business positioning, navigation order, Calendly URLs, `/admin` token auth, or service claims without
   checking `SITE_CONSTRAINTS.md`.
-- Never add or imply tax services; this is an explicit business rule enforced in copy and in the Aria system prompt.
+- Keep professional-scope boundaries accurate: do not imply CPA/accountant/auditor/attorney/investment-adviser credentials, personal income tax preparation, state tax preparation, or unlimited tax representation. Handle these as concise disclaimers where relevant, not as a dominant marketing theme.
 - Sensitive website routes must stay noindexed in three places: page-level `<SEO noindex />`, `App.tsx` fallback
   prefixes, and `scripts/src/check-indexing-guards.ts` / `public/robots.txt` / sitemap generation.
 - Generated folders under `lib/api-client-react/src/generated` and `lib/api-zod/src/generated` are outputs; edit the
