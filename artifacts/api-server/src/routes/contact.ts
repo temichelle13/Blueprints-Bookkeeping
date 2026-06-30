@@ -24,7 +24,10 @@ export const ALLOWED_CONSENT_TEXT_VERSIONS = new Set([
   "legacy-unknown",
 ]);
 
-export const ALLOWED_CONSENT_SOURCE_PAGES = new Set(["/contact", "/onboarding"]);
+export const ALLOWED_CONSENT_SOURCE_PAGES = new Set([
+  "/contact",
+  "/onboarding",
+]);
 
 export function escapeHtml(str: string): string {
   return str

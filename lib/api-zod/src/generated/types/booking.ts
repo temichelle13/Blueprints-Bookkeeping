@@ -5,8 +5,8 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { BookingMeetingType } from './bookingMeetingType';
-import type { BookingStatus } from './bookingStatus';
+import type { BookingMeetingType } from "./bookingMeetingType";
+import type { BookingStatus } from "./bookingStatus";
 
 export interface Booking {
   id: number;
