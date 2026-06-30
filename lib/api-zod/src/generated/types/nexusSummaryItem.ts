@@ -5,7 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { NexusSummaryItemRiskLevel } from './nexusSummaryItemRiskLevel';
+import type { NexusSummaryItemRiskLevel } from "./nexusSummaryItemRiskLevel";
 
 export interface NexusSummaryItem {
   stateCode: string;

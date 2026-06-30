@@ -1,8 +1,6 @@
-name: Aria & API Live Health Monitor
+name: Aria & API Live Health Monitor (Manual)
 
 on:
-  schedule:
-    - cron: "0 */6 * * *"
   workflow_dispatch:
     inputs:
       api_base_url:
@@ -163,7 +161,6 @@ jobs:
               });
               console.log(`Closed health-alert issue #${issue.number}`);
             }
-          curl "${BASE_CURL_ARGS[@]}" -X DELETE "$API_BASE/openai/conversations/$CONV_ID" || true
 
       - name: Open GitHub Issue on failure
         if: failure() || steps.aria.outputs.aria_ok == 'false' || steps.degraded.outputs.overall == 'degraded'

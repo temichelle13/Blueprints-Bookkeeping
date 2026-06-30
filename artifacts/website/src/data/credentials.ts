@@ -301,7 +301,8 @@ export const leadershipCerts = [
     url: "https://coursera.org/share/e9d32ec91ee35b8ad28c00f99aa8dcd7",
   },
   {
-    title: "Strategic Innovation: Building and Sustaining Innovative Organizations",
+    title:
+      "Strategic Innovation: Building and Sustaining Innovative Organizations",
     school: "University of Illinois Urbana-Champaign",
     focus:
       "Innovation frameworks, entrepreneurial strategy, and growth-stage business planning.",

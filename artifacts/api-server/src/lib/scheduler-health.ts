@@ -26,6 +26,9 @@ export function recordSchedulerError(name: SchedulerName): void {
   state[name].errorCount += 1;
 }
 
-export function getSchedulerHealth(): Record<SchedulerName, SchedulerRunRecord> {
+export function getSchedulerHealth(): Record<
+  SchedulerName,
+  SchedulerRunRecord
+> {
   return { ...state };
 }

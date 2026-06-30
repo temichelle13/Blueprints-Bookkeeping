@@ -97,11 +97,9 @@ export default function About() {
               records, and a lack of strategic foresight.
             </p>
             <p className="text-muted-foreground border-l-2 border-accent/30 pl-4 italic">
-              Standard accounting firms are excellent for annual compliance, but
-              they vanish during the first-quarter tax season. Blueprints &amp;
-              Bookkeeping intentionally excludes in-house tax
-              preparation&mdash;eliminating the seasonal blind spot to remain a
-              proactive, dedicated operational resource 12 months a year.
+              Blueprints &amp; Bookkeeping is built to be a proactive, dedicated
+              operational resource throughout the year&mdash;not just a seasonal
+              checkpoint when deadlines are close.
             </p>
           </div>
 

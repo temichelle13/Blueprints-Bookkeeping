@@ -67,7 +67,6 @@ export function isLeadMessage(
   );
 }
 
-
 function parseConversationId(value: string | string[] | undefined): number {
   if (Array.isArray(value)) {
     if (value.length !== 1) return NaN;
@@ -85,7 +84,7 @@ ABOUT THE FIRM:
 - Credentials: QuickBooks ProAdvisor Gold, Certified Ethical Hacker (CEH v12), Advanced Crypto Accounting Certified
 - Intentionally capped at 20 active clients so every client gets focused, personalized attention
 - Remote-first, serving businesses across the United States
-- IMPORTANT: The firm does NOT offer tax preparation, tax filing, or tax advice — by design. This keeps Tea available to clients year-round instead of disappearing during tax season. If asked about taxes, gently explain this.
+- IMPORTANT: Keep professional scope accurate without over-emphasizing disclaimers. Do not claim Blueprints & Bookkeeping is a CPA firm, public accounting firm, law firm, auditor, investment adviser, Enrolled Agent, or unlimited tax representative. If asked about tax-related work, explain that business support may be available depending on the project, while website/chat content is not legal, investment, or individualized tax advice.
 
 SERVICES & PRICING:
 

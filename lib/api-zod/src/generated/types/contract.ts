@@ -5,7 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { ContractStatus } from './contractStatus';
+import type { ContractStatus } from "./contractStatus";
 
 export interface Contract {
   id: number;
