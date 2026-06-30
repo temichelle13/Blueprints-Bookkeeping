@@ -135,7 +135,8 @@ app.get("/.well-known/oauth-protected-resource", (_req, res) => {
   });
 });
 const MCP_SERVER_CARD = {
-  $schema: "https://static.modelcontextprotocol.io/schemas/v1/server-card.schema.json",
+  $schema:
+    "https://static.modelcontextprotocol.io/schemas/v1/server-card.schema.json",
   name: "com.blueprintsandbookkeeping/api",
   version: "1.0.0",
   title: "Blueprints & Bookkeeping",

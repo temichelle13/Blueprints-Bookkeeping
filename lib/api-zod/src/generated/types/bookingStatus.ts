@@ -6,11 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type BookingStatus = typeof BookingStatus[keyof typeof BookingStatus];
-
+export type BookingStatus = (typeof BookingStatus)[keyof typeof BookingStatus];
 
 export const BookingStatus = {
-  confirmed: 'confirmed',
-  cancelled: 'cancelled',
-  rescheduled: 'rescheduled',
+  confirmed: "confirmed",
+  cancelled: "cancelled",
+  rescheduled: "rescheduled",
 } as const;

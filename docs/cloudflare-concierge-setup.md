@@ -103,12 +103,12 @@ openssl rand -hex 32
 
 In **Cloudflare → Security → WAF → Custom rules**, create a skip rule:
 
-| Field | Value |
-|---|---|
-| Rule name | `Allow CI health checks` |
-| If… | `http.request.headers["x-health-check-token"] eq "<same-token-value>"` |
-| Then… | Skip → Bot Fight Mode |
-| Order | Place before any Bot Fight Mode / rate-limit rules |
+| Field     | Value                                                                  |
+| --------- | ---------------------------------------------------------------------- |
+| Rule name | `Allow CI health checks`                                               |
+| If…       | `http.request.headers["x-health-check-token"] eq "<same-token-value>"` |
+| Then…     | Skip → Bot Fight Mode                                                  |
+| Order     | Place before any Bot Fight Mode / rate-limit rules                     |
 
 > **Security note:** rotate `CF_HEALTH_BYPASS_TOKEN` quarterly and update the
 > Cloudflare WAF rule expression at the same time.

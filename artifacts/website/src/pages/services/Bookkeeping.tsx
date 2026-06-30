@@ -103,7 +103,7 @@ export default function Bookkeeping() {
             {
               icon: <Clock className="w-5 h-5" />,
               title: "Year-Round Availability",
-              desc: "No tax preparation means no seasonal blackouts. We're available 12 months a year as your dedicated financial infrastructure partner.",
+              desc: "A focused client roster keeps support consistent year-round, with bookkeeping systems maintained before deadlines become emergencies.",
             },
             {
               icon: <Calculator className="w-5 h-5" />,
