@@ -50,12 +50,13 @@ OWNER_EMAIL=tea@blueprintsandbookkeeping.com
 TURNSTILE_SECRET_KEY=<your-cloudflare-turnstile-secret-key>
 ```
 
-`wrangler.toml` at the repo root controls the Pages project configuration.
-`artifacts/website/public/_routes.json` controls function routing include/exclude.
+Cloudflare Pages can be configured through the dashboard variables/secrets UI. This repo may not have a committed `wrangler.toml`, so do not assume one exists. `artifacts/website/public/_routes.json` controls function routing include/exclude.
 
 ## Database Direction — MongoDB
 
-MongoDB is the owner-selected production database direction. The current repository still contains legacy PostgreSQL/Drizzle persistence that must be migrated before the API can be described as MongoDB-backed in production. Do not build new persistent features around PostgreSQL unless they are temporary compatibility work.
+MongoDB is the owner-selected production database direction. The current repository still contains legacy PostgreSQL/Drizzle persistence and a Cloudflare Pages Function path with a legacy D1 binding helper, so adding `MONGODB_URI` as a Cloudflare secret is necessary but not sufficient by itself. The application must still be migrated before the API can be described as MongoDB-backed in production. Do not build new persistent features around PostgreSQL unless they are temporary compatibility work.
+
+If the MongoDB URI and other secrets are already set in Cloudflare, do **not** share the secret values in chat or commit them to the repo. What is still needed is the non-secret deployment shape: which API routes should run on Cloudflare Pages Functions versus a Node host, and whether MongoDB access will use a Node runtime driver or an Atlas HTTPS/Data API-style integration.
 
 Recommended migration path:
 
@@ -143,9 +144,9 @@ Fix `CORS_ORIGIN` on API server and redeploy.
 
 ### `/api/chat` or `/api/contact` returns 404
 
-1. Confirm `wrangler.toml` exists at repo root.
+1. Confirm Cloudflare Pages deployed the repository root and included the `functions/` directory.
 2. Confirm `artifacts/website/public/_routes.json` includes those routes.
-3. Confirm Cloudflare deployment included the `functions/` directory.
+3. If using dashboard-only configuration, confirm Pages Functions are enabled there; a committed `wrangler.toml` is not currently required by this repo.
 
 ### Forms return 405
 
@@ -174,7 +175,7 @@ For `https://blueprintsandbookkeeping.com` in Search Console:
 ## Open Production Architecture Decisions
 
 - Choose a low-cost always-on API host for chat, forms, admin, and future tool integrations. Candidate categories: Cloudflare Workers/Pages Functions for lightweight endpoints, Render/Fly/Railway for Node services, or a serverless function platform if cold starts are acceptable.
-- Implement the MongoDB migration so `MONGODB_URI` replaces `DATABASE_URL` for production persistence.
+- Implement the MongoDB migration so `MONGODB_URI` replaces `DATABASE_URL` for production persistence; Cloudflare secrets being present is configuration, not the data-layer migration itself.
 - Confirm which email, payment/invoicing, contract-signing, and chatbot providers are actually production-active before advertising or relying on those workflows. QuickBooks Online is the likely primary invoicing path; Stripe and Adobe Sign should remain optional until explicitly enabled.
 
 ## Support
@@ -183,5 +184,5 @@ For deployment questions contact <tea@blueprintsandbookkeeping.com>.
 Also review:
 
 - `.env.example`
-- `wrangler.toml`
+- Cloudflare Pages project variables/secrets
 - `functions/api/`
