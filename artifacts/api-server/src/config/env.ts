@@ -12,7 +12,8 @@ const envSchema = z.object({
   PORT: z.string().regex(/^\d+$/).transform(Number).default(3001),
 
   // Database
-  DATABASE_URL: z.string().url().min(1, "DATABASE_URL is required"),
+  MONGODB_URI: z.string().min(1).optional(),
+  DATABASE_URL: z.string().url().optional(),
 
   // CORS Configuration
   CORS_ORIGIN: z.string().optional(),
@@ -39,8 +40,8 @@ const envSchema = z.object({
   ADOBE_SIGN_BASE_URL: z.string().url().optional(),
 
   // Stripe
-  STRIPE_SECRET_KEY: z.string().min(1, "STRIPE_SECRET_KEY is required"),
-  STRIPE_WEBHOOK_SECRET: z.string().min(1, "STRIPE_WEBHOOK_SECRET is required"),
+  STRIPE_SECRET_KEY: z.string().optional(),
+  STRIPE_WEBHOOK_SECRET: z.string().optional(),
   STRIPE_ESSENTIALS_MONTHLY_PRICE_ID: z.string().optional(),
   STRIPE_ESSENTIALS_ANNUAL_PRICE_ID: z.string().optional(),
   STRIPE_GROWTH_MONTHLY_PRICE_ID: z.string().optional(),

@@ -1,21 +1,22 @@
 import { Router, type IRouter } from "express";
-import { pool } from "@workspace/db";
 
 const router: IRouter = Router();
 
 router.get("/healthz", async (_req, res) => {
-  let dbStatus: "ok" | "error" = "error";
-  try {
-    await pool.query("SELECT 1");
-    dbStatus = "ok";
-  } catch {
-    dbStatus = "error";
-  }
+  const mongodbStatus = process.env.MONGODB_URI ? "configured" : "missing";
+  const legacyPostgresStatus = process.env.DATABASE_URL
+    ? "configured"
+    : "not_configured";
 
-  const overallStatus = dbStatus === "ok" ? "ok" : "degraded";
+  const overallStatus = mongodbStatus === "configured" ? "ok" : "degraded";
+
   const payload = {
     status: overallStatus,
-    db: dbStatus,
+    database: {
+      target: "mongodb",
+      mongodb: mongodbStatus,
+      legacyPostgres: legacyPostgresStatus,
+    },
     timestamp: new Date().toISOString(),
   };
 
