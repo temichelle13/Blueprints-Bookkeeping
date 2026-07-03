@@ -268,7 +268,7 @@ router.post(
           });
         }
       } catch (err) {
-        console.error(`Failed to upload ${file.originalname}:`, err);
+        console.error("Failed to upload %s:", file.originalname, err);
         errors.push(file.originalname);
       }
     }
