@@ -45,5 +45,12 @@ onlyBuiltDependencies:
 
 overrides:
   "@esbuild-kit/esm-loader": npm:tsx@^4.21.0
-  esbuild: 0.28.0
+  esbuild: 0.28.1
   yaml: 2.8.3
+minimumReleaseAgeExclude:
+  # Renovate security update: esbuild@0.28.1
+  - esbuild@0.28.1
+  # Renovate security update: multer@2.2.0
+  - multer@2.2.0
+  # Renovate security update: vite@8.0.16
+  - vite@8.0.16

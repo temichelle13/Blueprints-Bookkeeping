@@ -38,8 +38,10 @@ const EMERGENCY_CALENDLY_URL =
 const PHONE_DISPLAY = "(541) 319-8654";
 const PHONE_HREF = "tel:+15413198654";
 const EMAIL_ADDRESS = "tea@blueprintsandbookkeeping.com";
-const CONTACT_CONSENT_LANGUAGE =
-  "I agree to receive text messages and phone calls from Blueprints & Bookkeeping at my provided contact number. Message and data rates may apply. Reply STOP to opt out.";
+const CONTACT_SMS_CONSENT_LANGUAGE =
+  "I consent to optional SMS outreach at my provided number. Message and data rates may apply. Reply STOP to opt out.";
+const CONTACT_PHONE_CONSENT_LANGUAGE =
+  "I consent to phone call outreach regarding this intake request.";
 const INQUIRY_PROCESSING_DISCLOSURE =
   "By submitting this inquiry, you consent to Blueprints & Bookkeeping processing your contact and business details to respond to your request, provide service recommendations, maintain compliance records, and prevent abuse.";
 
@@ -389,24 +391,16 @@ function MessageForm({ defaultMessage = "" }: { defaultMessage?: string }) {
             htmlFor="contact-sms-consent"
             className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
           >
-            I consent to SMS outreach at my provided number. Message/data rates
-            may apply. Reply STOP to opt out.
+            {CONTACT_SMS_CONSENT_LANGUAGE}
           </label>
         </div>
-        <label
-          htmlFor="contact-sms-consent"
-          className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none min-h-[44px] flex items-center"
-        >
-          {CONTACT_CONSENT_LANGUAGE}
-        </label>
       </div>
       <p className="text-xs text-muted-foreground leading-relaxed -mt-1">
-        {INQUIRY_PROCESSING_DISCLOSURE} Consent language version:{" "}
-        {CONTACT_CONSENT_TEXT_VERSION}.
+        {INQUIRY_PROCESSING_DISCLOSURE}
       </p>
       {errors.smsConsent && (
         <p
-          id="contact-email-consent-error"
+          id="contact-sms-consent-error"
           role="alert"
           className="text-destructive text-xs -mt-2"
         >
@@ -865,8 +859,7 @@ function BookkeeperIntakeForm() {
             htmlFor="bookkeeper-sms-consent"
             className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
           >
-            I consent to SMS outreach. Message/data rates may apply. Reply STOP
-            to opt out.
+            {CONTACT_SMS_CONSENT_LANGUAGE}
           </label>
         </div>
 
@@ -881,7 +874,7 @@ function BookkeeperIntakeForm() {
             htmlFor="bookkeeper-phone-consent"
             className="text-xs text-muted-foreground leading-relaxed cursor-pointer select-none"
           >
-            I consent to phone call outreach regarding my intake.
+            {CONTACT_PHONE_CONSENT_LANGUAGE}
           </label>
         </div>
 
@@ -900,8 +893,7 @@ function BookkeeperIntakeForm() {
       )}
       <TurnstileWidget />
       <p className="text-xs text-muted-foreground leading-relaxed -mt-2">
-        {INQUIRY_PROCESSING_DISCLOSURE} Consent language version:{" "}
-        {CONTACT_CONSENT_TEXT_VERSION}.
+        {INQUIRY_PROCESSING_DISCLOSURE}
       </p>
 
       <button
@@ -1154,18 +1146,6 @@ export default function Contact() {
                   . You will get a clear next step after submission, whether you
                   are a new lead or an existing client.
                 </p>
-                <div className="rounded-xl border border-accent/20 bg-accent/[0.06] px-4 py-4">
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    <span className="font-semibold text-white">
-                      Lead routing:
-                    </span>{" "}
-                    Discovery requests are prioritized for onboarding and
-                    brand-growth planning. Client-only meeting requests are
-                    verified against active records before confirmation, while
-                    unmatched requests are still routed to a discovery follow-up
-                    so no opportunity is lost.
-                  </p>
-                </div>
               </div>
             )}
           </div>
