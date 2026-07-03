@@ -4,15 +4,14 @@ import {
   ArrowRight,
   BookOpen,
   Calculator,
-  ShieldCheck,
   Clock,
-  Users,
+  ShieldCheck,
   Sparkles,
+  Users,
 } from "lucide-react";
 import { usePageTitle } from "@/hooks/use-page-title";
 import {
   StatsProofBar,
-  CredentialBadgeStrip,
   GoogleReviewsCallout,
   FinalCtaTrustNote,
 } from "@/components/TrustSignals";
@@ -20,8 +19,38 @@ import { SEO } from "@/components/SEO";
 import { trackHomeCtaClick } from "@/hooks/usePageTracking";
 import { localBusinessSchema } from "@/lib/seo-schemas";
 
+const servicePreviews = [
+  {
+    icon: <Calculator className="w-6 h-6" />,
+    title: "Advanced Bookkeeping",
+    description:
+      "Ongoing QuickBooks Online bookkeeping for complex businesses that need clean records, reliable closes, and decision-ready reports.",
+    href: "/services/bookkeeping",
+    features: [
+      "Monthly reconciliation and close",
+      "Historical cleanup and catch-up support",
+      "Multi-entity and niche-industry workflows",
+      "Financial statements and management reporting",
+    ],
+  },
+  {
+    icon: <BookOpen className="w-6 h-6" />,
+    title: "Business Plans",
+    description:
+      "Professional planning packages that turn your financials, market assumptions, and growth strategy into a usable business blueprint.",
+    href: "/services/business-plans",
+    features: [
+      "3-to-5 year forecasting",
+      "Target market and opportunity analysis",
+      "Strategy, roadmap, and risk review",
+      "Polished PDF plan deliverables",
+    ],
+  },
+];
+
 export default function Home() {
   usePageTitle();
+
   const primaryCtaLabel = "Book a Meeting";
   const secondaryCtaLabel = "View Services";
 
@@ -34,6 +63,7 @@ export default function Home() {
         ogImage="https://blueprintsandbookkeeping.com/opengraph.jpg"
         jsonLd={localBusinessSchema()}
       />
+
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-accent/6 rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-primary/15 rounded-full blur-[90px] pointer-events-none" />
@@ -54,7 +84,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-5xl md:text-6xl lg:text-7xl font-display font-extrabold text-white tracking-tight max-w-4xl mb-6 leading-[1.05]"
+            className="text-5xl md:text-6xl lg:text-7xl font-display font-extrabold text-foreground tracking-tight max-w-4xl mb-6 leading-[1.05]"
           >
             Your Blueprint to{" "}
             <span className="text-gradient">Business Success</span>
@@ -87,10 +117,11 @@ export default function Home() {
                 className="group-hover:translate-x-1 transition-transform"
               />
             </Link>
+
             <Link
               href="/services"
               onClick={() => trackHomeCtaClick("secondary", "hero")}
-              className="px-8 py-4 rounded-xl bg-white/[0.04] text-white backdrop-blur-sm border border-white/10 font-semibold text-lg hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300 flex items-center justify-center"
+              className="px-8 py-4 rounded-xl bg-card/80 text-foreground backdrop-blur-sm border border-border font-semibold text-lg hover:border-accent/30 hover:text-accent transition-all duration-300 flex items-center justify-center"
             >
               {secondaryCtaLabel}
             </Link>
@@ -102,100 +133,70 @@ export default function Home() {
 
       <StatsProofBar />
 
-      <CredentialBadgeStrip compact />
-
-      <section className="py-28 relative">
+      <section className="py-20 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center text-center mb-16">
+          <div className="flex flex-col items-center text-center mb-12">
             <div className="accent-bar mb-6" />
-            <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
+            <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground mb-4">
               Build Your Business Blueprint
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl">
-              You have to know where you are and where you've been to know where
-              you can go. Understand your business past, clean up your present,
-              and build the blueprint to meet your goals.
+              A business plan built on guesswork is just a wish list. Start with
+              books that make sense, then turn the numbers into a practical path
+              forward.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[
-              {
-                icon: <Calculator className="w-6 h-6" />,
-                title: "Advanced Bookkeeping",
-                description:
-                  "Ongoing services provided via QuickBooks Online and tailored to fit each business perfectly.",
-                tag: "ONGOING, ONE-TIME, YEARLY, QUARTERLY",
-                features: [
-                  "Multi-entity consolidation",
-                  "Historical cleanup & reconciliation",
-                  "Monthly close & financial statements",
-                  "A/R & A/P",
-                  "Assets & Depreciation",
-                  "Payroll",
-                  "Information Filings (1099s, W2, etc)",
-                  "Training & Troubleshooting",
-                  "Management Meetings & Business Review on a Scheduled Basis",
-                ],
-              },
-              {
-                icon: <BookOpen className="w-6 h-6" />,
-                title: "Business Plans",
-                description:
-                  "Professional, modern business plans for any scenario and all businesses. Whether you're looking to gain funding, target new markets, or launch a business, we can build your blueprints and help you map your business success.",
-                tag: "PROJECT, ONE-TIME, EMERGENCY",
-                features: [
-                  "3-to-5 year forecasting",
-                  "Target Market Analysis",
-                  "Strategy & Roadmaps",
-                  "Risk & Mitigation Analysis",
-                  "Business Plan Summary Website Design with Shareable Link",
-                  "Market research & competitive analysis",
-                  "Full PDF Business Plans Ready for Binding",
-                  "Custom Documentation & Research Reports Based on Your Needs",
-                ],
-              },
-            ].map((pillar, i) => (
-              <div key={i} className="glass-card-hover rounded-2xl p-8 group">
+            {servicePreviews.map((service) => (
+              <Link
+                key={service.title}
+                href={service.href}
+                className="glass-card-hover rounded-2xl p-8 group block"
+              >
                 <div className="flex items-center gap-3 mb-6">
                   <div className="p-2.5 rounded-lg bg-accent/10 text-accent group-hover:bg-accent group-hover:text-white transition-all duration-500">
-                    {pillar.icon}
+                    {service.icon}
                   </div>
-                  <span className="text-[11px] font-mono font-medium tracking-widest text-muted-foreground">
-                    {pillar.tag}
-                  </span>
+                  <h3 className="text-xl font-bold text-foreground">
+                    {service.title}
+                  </h3>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3">
-                  {pillar.title}
-                </h3>
+
                 <p className="text-muted-foreground leading-relaxed text-[15px] mb-5">
-                  {pillar.description}
+                  {service.description}
                 </p>
-                <ul className="space-y-2">
-                  {pillar.features.map((f, j) => (
+
+                <ul className="space-y-2 mb-6">
+                  {service.features.map((feature) => (
                     <li
-                      key={j}
+                      key={feature}
                       className="flex items-center gap-2 text-[14px] text-muted-foreground"
                     >
                       <span className="w-1.5 h-1.5 rounded-full bg-accent/60 shrink-0" />
-                      {f}
+                      {feature}
                     </li>
                   ))}
                 </ul>
-              </div>
+
+                <span className="inline-flex items-center gap-2 text-sm font-semibold text-accent">
+                  Explore {service.title} <ArrowRight size={15} />
+                </span>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-24 md:py-28 relative">
+      <section className="py-20 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-[0.85fr_1.15fr] gap-12 items-start">
             <div>
               <div className="accent-bar mb-6" />
-              <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-6">
-                Why Choose Us?
+              <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground mb-4">
+                Built for clear numbers and careful execution
               </h2>
+
               <div className="space-y-4 text-lg text-muted-foreground mb-10 leading-relaxed">
                 <p>
                   Most modern bookkeepers hit a complexity ceiling and lack the
@@ -205,11 +206,12 @@ export default function Home() {
                   understanding the underlying issues.
                 </p>
                 <p>
-                  Let's be honest: if you got audited, could your bookkeeper
-                  explain those entries? Probably not, because they just wanted
-                  the books to look good, not actually fix them. This is why
-                  they can't explain concepts to you or help you understand
-                  what's actually happening in your business.
+                  Let&apos;s be honest: if you got audited, could your
+                  bookkeeper explain those entries? Probably not, because they
+                  just wanted the books to look good, not actually fix them.
+                  This is why they can&apos;t explain concepts to you or help
+                  you understand what&apos;s actually happening in your
+                  business.
                 </p>
                 <p>
                   Communication is often vague and rare. Many providers treat
@@ -269,6 +271,7 @@ export default function Home() {
                     Why Choose Blueprints & Bookkeeping?
                   </span>
                 </div>
+
                 <div className="space-y-4">
                   {[
                     { label: "Advanced Bookkeeping Expertise", value: true },
@@ -283,12 +286,20 @@ export default function Home() {
                   ].map((item, i) => (
                     <div key={i} className="flex items-center gap-3">
                       <div
-                        className={`w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold ${item.value ? "bg-green-500/20 text-green-400" : "bg-red-500/15 text-red-400"}`}
+                        className={`w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold ${
+                          item.value
+                            ? "bg-green-500/20 text-green-400"
+                            : "bg-red-500/15 text-red-400"
+                        }`}
                       >
                         {item.value ? "✓" : "✕"}
                       </div>
                       <span
-                        className={`text-[14px] ${item.value ? "text-foreground" : "text-muted-foreground line-through"}`}
+                        className={`text-[14px] ${
+                          item.value
+                            ? "text-foreground"
+                            : "text-muted-foreground line-through"
+                        }`}
                       >
                         {item.label}
                       </span>
@@ -311,7 +322,7 @@ export default function Home() {
             <p className="text-muted-foreground text-lg max-w-2xl">
               A specialized partnership offering leadership-level advice,
               structured financial statements, and forward-thinking assistance
-              as your business grows.{" "}
+              as your business grows.
             </p>
           </div>
 
@@ -321,7 +332,7 @@ export default function Home() {
                 stat: "Week 1",
                 label: "Books assessed & cleanup scoped",
                 detail:
-                  "You'll know exactly what needs to be fixed and how long it will take.",
+                  "You&apos;ll know exactly what needs to be fixed and how long it will take.",
               },
               {
                 stat: "Month 1",
@@ -381,14 +392,15 @@ export default function Home() {
                   they had up-to-date books and could explain exactly where each
                   number on their profit and loss or balance sheet came from.
                   That is truly empowering. Now, they meet with us quarterly but
-                  maintain their books themselves monthly (and correctly), and
+                  maintain their books themselves monthly and correctly, and
                   they just expanded their business model and doubled their
                   funding. Think about knowing you have reliable numbers every
                   month. What is that worth to you?
                 </p>
+
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {[
-                    { value: "5 months", label: "Backlog cleared" },
+                    { value: "2 months", label: "Backlog cleared" },
                     { value: "45 days", label: "To stable monthly close" },
                     { value: "100%", label: "US-based handling" },
                   ].map((stat, i) => (
@@ -426,7 +438,7 @@ export default function Home() {
                     {
                       phase: "Weeks 5–6",
                       detail:
-                        "Executive dashboard handoff and monthly close rhythm finalized.",
+                        "Executive dashboard handoff and monthly close finalized.",
                     },
                   ].map((item, i) => (
                     <div key={i} className="flex gap-4">
@@ -452,23 +464,22 @@ export default function Home() {
 
       <GoogleReviewsCallout />
 
-      <div className="glow-line max-w-5xl mx-auto" />
-
-      <section className="py-24 md:py-28 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-accent/5 via-accent/[0.02] to-transparent" />
-        <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-6">
-            Stop Guessing.
+      <section className="py-24 relative overflow-hidden">
+        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-96 bg-accent/5 blur-[120px] pointer-events-none" />
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="accent-bar mx-auto mb-8" />
+          <h2 className="text-4xl md:text-5xl font-display font-extrabold text-foreground mb-6">
+            Build From Real Numbers.
             <br />
-            <span className="text-gradient">
-              Start Building Your Blueprint.
-            </span>
+            <span className="text-gradient">Not Best Guesses.</span>
           </h2>
           <p className="text-xl text-muted-foreground mb-4">
-            Success Starts with Our First Meeting. Book Today.
+            Bring the books, the backlog, or the next big decision. The first
+            meeting turns what is unclear into a practical starting point.
           </p>
           <Link
             href="/schedule"
+            onClick={() => trackHomeCtaClick("primary", "final_cta")}
             className="inline-flex items-center gap-2 px-8 py-4 bg-accent text-white font-bold text-lg rounded-xl shadow-xl shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300"
           >
             Book Your Consultation

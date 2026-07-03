@@ -139,7 +139,6 @@ export const intuitCerts: CredentialWithBadge[] = [
     badge: `${base}images/badge-client-advisory.png`,
     color: "from-accent/10 to-primary/5",
     border: "border-accent/20",
-    verificationNote: "Public badge link still needs manual confirmation.",
   },
 ];
 
