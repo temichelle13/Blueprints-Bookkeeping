@@ -1,9 +1,15 @@
 import { Router, type IRouter } from "express";
 import { pool } from "@workspace/db";
+import rateLimit from "express-rate-limit";
 
 const router: IRouter = Router();
 
-router.get("/healthz", async (_req, res) => {
+const healthLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+});
+
+router.get("/healthz", healthLimiter, async (_req, res) => {
   let dbStatus: "ok" | "error" = "error";
   try {
     await pool.query("SELECT 1");
