@@ -139,7 +139,6 @@ export const intuitCerts: CredentialWithBadge[] = [
     badge: `${base}images/badge-client-advisory.png`,
     color: "from-accent/10 to-primary/5",
     border: "border-accent/20",
-    verificationNote: "Public badge link still needs manual confirmation.",
   },
 ];
 
@@ -301,7 +300,8 @@ export const leadershipCerts = [
     url: "https://coursera.org/share/e9d32ec91ee35b8ad28c00f99aa8dcd7",
   },
   {
-    title: "Strategic Innovation: Building and Sustaining Innovative Organizations",
+    title:
+      "Strategic Innovation: Building and Sustaining Innovative Organizations",
     school: "University of Illinois Urbana-Champaign",
     focus:
       "Innovation frameworks, entrepreneurial strategy, and growth-stage business planning.",
