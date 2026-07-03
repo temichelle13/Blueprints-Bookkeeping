@@ -209,7 +209,7 @@ export function Footer() {
                 )}
               </div>
             ))}
-            <div className="md:col-span-2 lg:col-span-4 pt-2">
+            <div className="md:col-span-2 lg:col-span-4 mt-2 border-t border-border/40 pt-6">
               <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-4">
                 Stay in the Loop
               </h3>

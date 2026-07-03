@@ -10,9 +10,9 @@ const TECHNOLOGY_SECURITY_SURCHARGE_COPY = `A mandatory Technology & Security Su
 
 function PaymentTrustMicrocopy() {
   return (
-    <p className="text-xs text-muted-foreground">
-      Secure checkout via Stripe. QBO invoice option available for approved
-      workflows.
+    <p className="text-sm text-muted-foreground">
+      Payment and invoicing options are confirmed during onboarding so the
+      workflow fits the approved engagement.
     </p>
   );
 }
@@ -199,7 +199,7 @@ function BookkeepingTierCard({
           </div>
         )}
         <div className="relative mt-4 mb-6">
-          <h3 className="text-xl font-display font-bold text-white mb-1">
+          <h3 className="text-xl font-display font-bold text-foreground mb-1">
             {tier.name}
           </h3>
           <div className="flex items-baseline gap-1.5 mb-3">
@@ -210,7 +210,7 @@ function BookkeepingTierCard({
             )}
             {showAnnual ? (
               <>
-                <span className="text-3xl font-extrabold text-white">
+                <span className="text-3xl font-extrabold text-foreground">
                   {tier.annualPrice}
                 </span>
                 <span className="text-muted-foreground text-sm">/yr</span>
@@ -222,7 +222,7 @@ function BookkeepingTierCard({
               </>
             ) : (
               <>
-                <span className="text-3xl font-extrabold text-white">
+                <span className="text-3xl font-extrabold text-foreground">
                   {tier.price}
                 </span>
                 {tier.period && (
@@ -257,7 +257,6 @@ function BookkeepingTierCard({
               {tier.cta} <ArrowRight size={15} />
             </Link>
           )}
-          <PaymentTrustMicrocopy />
         </div>
       </div>
     );
@@ -279,7 +278,7 @@ function BookkeepingTierCard({
         <span className="text-[11px] font-mono font-medium tracking-widest text-muted-foreground">
           {tier.tag === "ENTERPRISE" ? "ENTERPRISE" : ""}
         </span>
-        <h3 className="text-xl font-display font-bold text-white mt-1 mb-1">
+        <h3 className="text-xl font-display font-bold text-foreground mt-1 mb-1">
           {tier.name}
         </h3>
         <div className="flex items-baseline gap-1.5 mb-3">
@@ -288,7 +287,7 @@ function BookkeepingTierCard({
           )}
           {showAnnual ? (
             <>
-              <span className="text-3xl font-extrabold text-white">
+              <span className="text-3xl font-extrabold text-foreground">
                 {tier.annualPrice}
               </span>
               <span className="text-muted-foreground text-sm">/yr</span>
@@ -300,7 +299,7 @@ function BookkeepingTierCard({
             </>
           ) : (
             <>
-              <span className="text-3xl font-extrabold text-white">
+              <span className="text-3xl font-extrabold text-foreground">
                 {tier.price}
               </span>
               {tier.period && (
@@ -332,7 +331,6 @@ function BookkeepingTierCard({
             {tier.cta}
           </Link>
         )}
-        <PaymentTrustMicrocopy />
       </div>
     </div>
   );
@@ -359,7 +357,7 @@ function TierCard({
           </div>
         )}
         <div className="relative mt-4 mb-6">
-          <h3 className="text-xl font-display font-bold text-white mb-1">
+          <h3 className="text-xl font-display font-bold text-foreground mb-1">
             {tier.name}
           </h3>
           <div className="flex items-baseline gap-1.5 mb-3">
@@ -368,7 +366,7 @@ function TierCard({
                 {tier.prefix}
               </span>
             )}
-            <span className="text-3xl font-extrabold text-white">
+            <span className="text-3xl font-extrabold text-foreground">
               {tier.price}
             </span>
             {tier.period && (
@@ -397,7 +395,6 @@ function TierCard({
           >
             {tier.cta} <ArrowRight size={15} />
           </Link>
-          <PaymentTrustMicrocopy />
         </div>
       </div>
     );
@@ -419,14 +416,14 @@ function TierCard({
         <span className="text-[11px] font-mono font-medium tracking-widest text-muted-foreground">
           {tier.tag === "FULL PACKAGE" ? "FULL PACKAGE" : ""}
         </span>
-        <h3 className="text-xl font-display font-bold text-white mt-1 mb-1">
+        <h3 className="text-xl font-display font-bold text-foreground mt-1 mb-1">
           {tier.name}
         </h3>
         <div className="flex items-baseline gap-1.5 mb-3">
           {tier.prefix && (
             <span className="text-xs text-muted-foreground">{tier.prefix}</span>
           )}
-          <span className="text-3xl font-extrabold text-white">
+          <span className="text-3xl font-extrabold text-foreground">
             {tier.price}
           </span>
           {tier.period && (
@@ -453,7 +450,6 @@ function TierCard({
         >
           {tier.cta}
         </Link>
-        <PaymentTrustMicrocopy />
       </div>
     </div>
   );
@@ -476,7 +472,7 @@ export default function Pricing() {
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="accent-bar mx-auto mb-6" />
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-6">
+          <h1 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-6">
             Value-Based Investment
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -531,6 +527,10 @@ export default function Pricing() {
             />
           ))}
         </div>
+        <div className="glass-card rounded-xl p-5 flex items-start gap-3 max-w-3xl mt-6 mb-4">
+          <Shield className="w-4 h-4 text-accent/60 shrink-0 mt-0.5" />
+          <PaymentTrustMicrocopy />
+        </div>
         <div className="glass-card rounded-xl p-5 flex items-start gap-3 max-w-3xl">
           <HelpCircle className="w-4 h-4 text-accent/60 shrink-0 mt-0.5" />
           <p className="text-sm text-muted-foreground">
@@ -539,10 +539,9 @@ export default function Pricing() {
             </span>
             Final monthly rate is based on transaction volume, number of
             entities, and niche complexity (crypto, agriculture, multi-currency,
-            etc.). All quotes are flat-fee — no surprise hourly charges.{" "}
-            {TECHNOLOGY_SECURITY_SURCHARGE_COPY} This surcharge covers secure
-            cloud infrastructure, encrypted file handling, and software
-            licensing.
+            etc.). All quotes are flat-fee — no surprise hourly charges. The
+            technology and security surcharge covers secure cloud
+            infrastructure, encrypted file handling, and software licensing.
           </p>
         </div>
       </section>
@@ -582,7 +581,7 @@ export default function Pricing() {
             <span className="text-[10px] font-mono tracking-widest text-accent bg-accent/10 px-2 py-1 rounded-full">
               ADD-ON
             </span>
-            <h4 className="font-bold text-white text-[15px] mt-2">
+            <h4 className="font-bold text-foreground text-[15px] mt-2">
               The Digital Handshake
             </h4>
             <p className="text-sm text-muted-foreground mt-1">
@@ -605,7 +604,7 @@ export default function Pricing() {
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="glass-card rounded-2xl p-10 text-center max-w-3xl mx-auto">
-          <h3 className="text-2xl font-bold text-white mb-3">
+          <h3 className="text-2xl font-bold text-foreground mb-3">
             Not sure which plan fits?
           </h3>
           <p className="text-muted-foreground mb-8">
