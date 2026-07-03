@@ -11,6 +11,7 @@ import multer from "multer";
 import * as ccStorage from "../lib/adobe-cc-storage";
 import { Resend } from "resend";
 import { isEmailSuppressed } from "../lib/email-suppression";
+import { randomBytes } from "crypto";
 
 const router: IRouter = Router();
 
@@ -87,7 +88,7 @@ function buildDocumentPath(clientName: string, originalName: string): string {
     .replace(/\s+/g, "_");
   const date = new Date().toISOString().split("T")[0];
   const safeFileName = originalName.replace(/[^a-zA-Z0-9._-]/g, "_");
-  const uid = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  const uid = Date.now().toString(36) + randomBytes(4).toString("hex");
   return `Blueprints_Bookkeeping/ClientDocuments/${year}/${safeName}/${date}_${uid}_${safeFileName}`;
 }
 
