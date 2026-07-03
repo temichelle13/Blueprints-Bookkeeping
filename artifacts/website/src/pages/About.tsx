@@ -27,8 +27,8 @@ export default function About() {
         <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="accent-bar mx-auto mb-6" />
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">
-            Meet Your Architect
+          <h1 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-4">
+            Meet Tea Larson-Hetrick
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Where enterprise financial expertise meets cybersecurity rigor.
@@ -52,31 +52,7 @@ export default function About() {
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
-          <div className="glass-card rounded-2xl p-6 mb-10 border border-accent/15 bg-accent/[0.04]">
-            <p className="text-xs uppercase tracking-[0.24em] text-accent/80 mb-2">
-              About / Credentials
-            </p>
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div>
-                <h2 className="text-xl font-display font-bold text-white">
-                  Credentials now live under About
-                </h2>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Use the dedicated credentials subpage to review public badge
-                  verification links, issuer details, and the full credential
-                  inventory.
-                </p>
-              </div>
-              <Link
-                href="/about/credentials"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-white font-semibold hover:bg-white/[0.08] transition-colors"
-              >
-                Open credentials <ArrowRight size={15} />
-              </Link>
-            </div>
-          </div>
-
-          <h2 className="text-3xl font-display font-bold text-white mb-2">
+          <h2 className="text-3xl font-display font-bold text-foreground mb-2">
             Tea Larson-Hetrick
           </h2>
           <p className="text-accent font-semibold mb-8 text-lg">
@@ -108,7 +84,7 @@ export default function About() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
             <div className="glass-card rounded-xl p-6 group hover:border-accent/20 transition-all">
               <BrainCircuit className="w-7 h-7 text-accent mb-4" />
-              <h3 className="font-bold text-white mb-2 text-[15px]">
+              <h3 className="font-bold text-foreground mb-2 text-[15px]">
                 Technical Depth
               </h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
@@ -118,7 +94,7 @@ export default function About() {
             </div>
             <div className="glass-card rounded-xl p-6 group hover:border-accent/20 transition-all">
               <Fingerprint className="w-7 h-7 text-accent mb-4" />
-              <h3 className="font-bold text-white mb-2 text-[15px]">
+              <h3 className="font-bold text-foreground mb-2 text-[15px]">
                 Data Security First
               </h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
@@ -131,7 +107,7 @@ export default function About() {
           <div className="glass-card rounded-2xl p-8 mb-12">
             <div className="flex items-center gap-3 mb-4">
               <Shield className="w-7 h-7 text-accent" />
-              <h3 className="text-xl font-display font-bold text-white">
+              <h3 className="text-xl font-display font-bold text-foreground">
                 Security First
               </h3>
             </div>
@@ -219,7 +195,7 @@ export default function About() {
           <div className="glass-card rounded-2xl p-8 mb-12">
             <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
               <div>
-                <h3 className="font-bold text-white text-lg">
+                <h3 className="font-bold text-foreground text-lg">
                   Verified QuickBooks &amp; Intuit badges
                 </h3>
                 <p className="text-sm text-muted-foreground mt-1">
