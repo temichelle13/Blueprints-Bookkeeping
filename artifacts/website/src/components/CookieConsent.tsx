@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Cookie, X } from "lucide-react";
+import { Cookie } from "lucide-react";
 import { initAnalytics } from "@/lib/analytics";
 
 const CONSENT_KEY = "bb_cookie_consent";
@@ -63,7 +63,7 @@ export default function CookieConsent() {
 
   return (
     <>
-      <div aria-hidden="true" className="h-40 sm:h-32 lg:h-0" />
+      <div aria-hidden="true" className="h-28 sm:h-24 lg:h-0" />
       <div
         role="dialog"
         aria-label="Cookie consent"
@@ -71,8 +71,8 @@ export default function CookieConsent() {
         data-cookie-banner
         className="cookie-banner pointer-events-none fixed inset-x-0 bottom-0 z-[45] px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-4 md:px-6"
       >
-        <div className="mx-auto max-w-md lg:mx-6 lg:max-w-lg lg:ml-auto">
-          <div className="pointer-events-auto glass-card rounded-2xl border border-white/[0.08] p-4 shadow-2xl shadow-black/30 sm:p-5">
+        <div className="mx-auto max-w-md lg:mx-6 lg:max-w-md lg:ml-auto">
+          <div className="pointer-events-auto rounded-2xl border border-border bg-card px-4 py-4 shadow-2xl shadow-black/35 sm:px-5 sm:py-5">
             <div className="flex items-start gap-3">
               <div
                 className="mt-0.5 shrink-0 rounded-xl bg-accent/12 p-2 text-accent"
@@ -81,18 +81,20 @@ export default function CookieConsent() {
                 <Cookie size={18} />
               </div>
               <div className="min-w-0 flex-1">
-                <h2 className="mb-1 text-sm font-semibold text-white">
+                <h2 className="mb-1 text-sm font-semibold text-foreground">
                   Cookies, kept simple
                 </h2>
                 <p className="text-sm leading-6 text-muted-foreground">
                   Choose{" "}
-                  <span className="text-white font-medium">
+                  <span className="font-medium text-foreground">
                     Accept analytics
                   </span>{" "}
                   to enable optional analytics tools (Google Analytics, Google
                   Tag Manager, Apollo.io, and Plausible where configured), or
                   choose{" "}
-                  <span className="text-white font-medium">Essential only</span>{" "}
+                  <span className="font-medium text-foreground">
+                    Essential only
+                  </span>{" "}
                   to keep those optional tools disabled. You can update this
                   anytime in our{" "}
                   <a
@@ -115,7 +117,7 @@ export default function CookieConsent() {
               </button>
               <button
                 onClick={handleDecline}
-                className="min-h-11 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-medium text-muted-foreground transition-all hover:border-white/20 hover:bg-white/[0.08] hover:text-white"
+                className="min-h-11 rounded-xl border border-border bg-background px-4 py-3 text-sm font-medium text-foreground transition-all hover:border-accent/30 hover:bg-accent/5"
               >
                 Essential only
               </button>
