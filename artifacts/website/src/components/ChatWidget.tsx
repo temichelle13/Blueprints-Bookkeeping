@@ -667,9 +667,9 @@ export default function ChatWidget() {
                               background: "#6366F1",
                               marginLeft: 2,
                               verticalAlign: "text-bottom",
-                            animation: "blink 0.8s step-end infinite",
-                          }}
-                        />
+                              animation: "blink 0.8s step-end infinite",
+                            }}
+                          />
                         )}
                         {!msg.streaming && i === messages.length - 1 && (
                           <div

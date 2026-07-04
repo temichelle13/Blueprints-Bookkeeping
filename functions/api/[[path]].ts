@@ -43,8 +43,7 @@ const SITE_URL = "https://blueprintsandbookkeeping.com";
 const OWNER_EMAIL = "tea@blueprintsandbookkeeping.com";
 const FROM_EMAIL =
   "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
-const CALENDLY_URL =
-  "https://calendly.com/tea-blueprintsandbookkeeping/30min";
+const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
 const EMERGENCY_CALENDLY_URL =
   "https://calendly.com/tea-blueprintsandbookkeeping/emergency-or-other-expedited-request";
 const DEFAULT_AI_MODEL = "@cf/meta/llama-3.1-8b-instruct";
@@ -61,8 +60,8 @@ Core services:
 - Business plans: startup plans, management reports and financials, LivePlan-powered forecasting, target market analysis, opportunity analysis, and full business plan design.
 
 Business rules:
-- Never offer tax preparation, tax filing, tax advice, tax planning, or seasonal tax services.
-- If asked about taxes, explain that Blueprints & Bookkeeping does not provide tax services. It can provide clean books and financial reports for a client's CPA, EA, or chosen tax professional.
+- Keep professional scope accurate: do not claim CPA firm, accounting firm, attorney, auditor, investment adviser, Enrolled Agent, or unlimited tax representative status.
+- Do not offer personal income tax or state tax return preparation. Business tax-related support must stay limited to the engagement scope and must not be framed as legal, investment, or individualized tax advice.
 - Do not directly schedule appointments. Guide visitors to Calendly.
 - Use the 30-minute Calendly link for discovery calls: ${CALENDLY_URL}
 - Use the 15-minute emergency/expedited Calendly link only for urgent situations: ${EMERGENCY_CALENDLY_URL}
@@ -418,7 +417,10 @@ async function verifyTurnstileOrThrow(
     throw new ResponseError(403, "Verification action mismatch.");
   }
   const expectedHostname = getExpectedTurnstileHostname(env);
-  if (expectedHostname && payload.hostname?.toLowerCase() !== expectedHostname) {
+  if (
+    expectedHostname &&
+    payload.hostname?.toLowerCase() !== expectedHostname
+  ) {
     throw new ResponseError(403, "Verification origin mismatch.");
   }
 }
@@ -543,9 +545,13 @@ async function handleHealth(context: PagesContext): Promise<Response> {
     timestamp: new Date().toISOString(),
   };
 
-  return jsonResponse(payload, {
-    status: payload.status === "ok" ? 200 : 503,
-  }, context.request);
+  return jsonResponse(
+    payload,
+    {
+      status: payload.status === "ok" ? 200 : 503,
+    },
+    context.request,
+  );
 }
 
 async function handleContact(context: PagesContext): Promise<Response> {
@@ -669,7 +675,10 @@ async function handleNewsletter(context: PagesContext): Promise<Response> {
 
   if (textField(body, "website", 200)) {
     return jsonResponse(
-      { success: true, message: "You're subscribed! Thank you for signing up." },
+      {
+        success: true,
+        message: "You're subscribed! Thank you for signing up.",
+      },
       { status: 201 },
       context.request,
     );
@@ -750,9 +759,7 @@ async function handleFeedback(context: PagesContext): Promise<Response> {
   const page = textField(body, "page", 300);
   const source =
     textField(body, "source", 80) ||
-    (category.toLowerCase().includes("assistant")
-      ? "assistant"
-      : "website");
+    (category.toLowerCase().includes("assistant") ? "assistant" : "website");
 
   const result = await db
     .prepare(
@@ -824,7 +831,13 @@ async function createConversation(context: PagesContext): Promise<Response> {
     .prepare(
       "INSERT INTO chat_conversations (title, request_ip, user_agent, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
     )
-    .bind(title, getIp(context.request), getUserAgent(context.request), now, now)
+    .bind(
+      title,
+      getIp(context.request),
+      getUserAgent(context.request),
+      now,
+      now,
+    )
     .run();
   const id = result.meta?.last_row_id;
   if (typeof id !== "number") {
@@ -919,14 +932,16 @@ async function generateAssistantAnswer(
     "You are Aria, the website assistant for Blueprints & Bookkeeping.",
     "Answer in a warm, direct, concise way.",
     "Use only the company context below. If the answer is not in the context, say you are not sure and direct the visitor to Tea.",
-    "Never offer tax preparation, tax filing, tax advice, or tax planning.",
+    "Keep professional scope accurate. Do not offer personal income tax, state tax return preparation, legal advice, investment advice, audit/attest services, or unapproved credentialed representation.",
     "Do not claim to schedule appointments. Give the correct Calendly link instead.",
     "",
     "COMPANY CONTEXT:",
     COMPANY_CONTEXT,
     "",
     "RECENT CHAT:",
-    ...history.map((message) => `${message.role.toUpperCase()}: ${message.content}`),
+    ...history.map(
+      (message) => `${message.role.toUpperCase()}: ${message.content}`,
+    ),
     "",
     "ARIA:",
   ].join("\n");
@@ -962,7 +977,9 @@ function sseResponse(content: string, request: Request): Response {
       controller.enqueue(
         encoder.encode(`data: ${JSON.stringify({ content })}\n\n`),
       );
-      controller.enqueue(encoder.encode(`data: ${JSON.stringify({ done: true })}\n\n`));
+      controller.enqueue(
+        encoder.encode(`data: ${JSON.stringify({ done: true })}\n\n`),
+      );
       controller.close();
     },
   });
@@ -1027,7 +1044,11 @@ export async function onRequest(context: PagesContext): Promise<Response> {
     return jsonResponse({ error: "Not found" }, { status: 404 }, request);
   } catch (error) {
     if (error instanceof ResponseError) {
-      return jsonResponse({ error: error.message }, { status: error.status }, request);
+      return jsonResponse(
+        { error: error.message },
+        { status: error.status },
+        request,
+      );
     }
     console.error(
       JSON.stringify({

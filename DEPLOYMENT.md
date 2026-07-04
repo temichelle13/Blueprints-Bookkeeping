@@ -2,11 +2,11 @@
 
 ## Architecture Overview
 
-| Layer | Technology | Platform |
-| --- | --- | --- |
-| Frontend + Pages Functions | React + Vite, Cloudflare Pages Functions | Cloudflare Pages |
-| API server | Express 5, Node.js >= 20 | Railway / Render / Fly.io |
-| Database | PostgreSQL 16 | Neon / Supabase / Railway |
+| Layer                      | Technology                                                            | Platform                                                                                      |
+| -------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Frontend + Pages Functions | React + Vite, Cloudflare Pages Functions                              | Cloudflare Pages                                                                              |
+| API server                 | Express 5, Node.js >= 20                                              | Railway / Render / Fly.io                                                                     |
+| Database                   | PostgreSQL 16 in current code; MongoDB preferred for future migration | Neon / Supabase / Railway currently; MongoDB Atlas or another low-cost Mongo host to evaluate |
 
 ```text
 Browser
@@ -29,12 +29,12 @@ All remaining API routes are served by the standalone Express server.
 
 ### Build settings
 
-| Setting | Value |
-| --- | --- |
-| Build command | `pnpm install && pnpm --filter @workspace/website run build` |
-| Build output directory | `artifacts/website/dist/public` |
-| Root directory | repo root |
-| Node.js version | 20 |
+| Setting                | Value                                                        |
+| ---------------------- | ------------------------------------------------------------ |
+| Build command          | `pnpm install && pnpm --filter @workspace/website run build` |
+| Build output directory | `artifacts/website/dist/public`                              |
+| Root directory         | repo root                                                    |
+| Node.js version        | 20                                                           |
 
 ### API environment variables
 
@@ -58,7 +58,8 @@ TURNSTILE_SECRET_KEY=<your-cloudflare-turnstile-secret-key>
 ### Prerequisites
 
 - Node.js >= 20
-- PostgreSQL 16 database
+- PostgreSQL 16 database for the current Drizzle-backed runtime
+- Production architecture note: the owner has stated the current database/API setup is not working for the desired 24/7 chatbot/tools experience and prefers MongoDB for the next data-layer direction. Treat PostgreSQL requirements below as current-code requirements, not the final desired architecture.
 
 ### Environment variables
 
@@ -66,6 +67,8 @@ TURNSTILE_SECRET_KEY=<your-cloudflare-turnstile-secret-key>
 NODE_ENV=production
 PORT=3001
 DATABASE_URL=postgresql://user:password@host:5432/dbname
+# Future migration placeholder only; current runtime does not read this yet:
+MONGODB_URI=mongodb+srv://user:password@cluster.example.mongodb.net/blueprints
 CORS_ORIGIN=https://blueprintsandbookkeeping.com,https://www.blueprintsandbookkeeping.com
 ADMIN_TOKEN=<generate with: openssl rand -hex 32>
 TRUST_PROXY=1
@@ -154,6 +157,12 @@ For `https://blueprintsandbookkeeping.com` in Search Console:
 3. Fix robots/sitemap drift on any public marketing URL.
 4. Record date, URL count, and remediations.
 5. If anomalies increase, run `pnpm run check:website-deploy` before shipping.
+
+## Open Production Architecture Decisions
+
+- Choose a low-cost always-on API host for chat, forms, admin, and future tool integrations. Candidate categories: Cloudflare Workers/Pages Functions for lightweight endpoints, Render/Fly/Railway for Node services, or a serverless function platform if cold starts are acceptable.
+- Decide whether to migrate from PostgreSQL/Drizzle to MongoDB before adding more DB-backed features.
+- Confirm which email, payment/invoicing, contract-signing, and chatbot providers are actually production-active before advertising or relying on those workflows. QuickBooks Online is the likely primary invoicing path; Stripe and Adobe Sign should remain optional until explicitly enabled.
 
 ## Support
 

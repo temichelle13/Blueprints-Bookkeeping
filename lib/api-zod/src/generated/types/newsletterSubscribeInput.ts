@@ -5,11 +5,11 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { NewsletterSubscribeInputSignupSource } from './newsletterSubscribeInputSignupSource';
+import type { NewsletterSubscribeInputSignupSource } from "./newsletterSubscribeInputSignupSource";
 
 export interface NewsletterSubscribeInput {
   email: string;
   signupSource: NewsletterSubscribeInputSignupSource;
   website?: string;
-  'cf-turnstile-response': string;
+  "cf-turnstile-response": string;
 }

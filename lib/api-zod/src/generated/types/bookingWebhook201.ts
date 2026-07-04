@@ -5,7 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { BookingWebhook201ContractsItem } from './bookingWebhook201ContractsItem';
+import type { BookingWebhook201ContractsItem } from "./bookingWebhook201ContractsItem";
 
 export type BookingWebhook201 = {
   success?: boolean;

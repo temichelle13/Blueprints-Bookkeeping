@@ -5,7 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { OpenaiMessage } from './openaiMessage';
+import type { OpenaiMessage } from "./openaiMessage";
 
 export interface OpenaiConversationWithMessages {
   id: number;

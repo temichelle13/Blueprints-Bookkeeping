@@ -6,10 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type NewsletterSubscribeInputSignupSource = typeof NewsletterSubscribeInputSignupSource[keyof typeof NewsletterSubscribeInputSignupSource];
-
+export type NewsletterSubscribeInputSignupSource =
+  (typeof NewsletterSubscribeInputSignupSource)[keyof typeof NewsletterSubscribeInputSignupSource];
 
 export const NewsletterSubscribeInputSignupSource = {
-  footer: 'footer',
-  lead_magnet: 'lead_magnet',
+  footer: "footer",
+  lead_magnet: "lead_magnet",
 } as const;

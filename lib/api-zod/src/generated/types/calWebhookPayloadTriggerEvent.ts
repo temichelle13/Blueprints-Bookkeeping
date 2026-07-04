@@ -6,11 +6,11 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type CalWebhookPayloadTriggerEvent = typeof CalWebhookPayloadTriggerEvent[keyof typeof CalWebhookPayloadTriggerEvent];
-
+export type CalWebhookPayloadTriggerEvent =
+  (typeof CalWebhookPayloadTriggerEvent)[keyof typeof CalWebhookPayloadTriggerEvent];
 
 export const CalWebhookPayloadTriggerEvent = {
-  BOOKING_CREATED: 'BOOKING_CREATED',
-  BOOKING_RESCHEDULED: 'BOOKING_RESCHEDULED',
-  BOOKING_CANCELLED: 'BOOKING_CANCELLED',
+  BOOKING_CREATED: "BOOKING_CREATED",
+  BOOKING_RESCHEDULED: "BOOKING_RESCHEDULED",
+  BOOKING_CANCELLED: "BOOKING_CANCELLED",
 } as const;

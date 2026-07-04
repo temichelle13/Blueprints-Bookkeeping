@@ -163,7 +163,6 @@ jobs:
               });
               console.log(`Closed health-alert issue #${issue.number}`);
             }
-          curl "${BASE_CURL_ARGS[@]}" -X DELETE "$API_BASE/openai/conversations/$CONV_ID" || true
 
       - name: Open GitHub Issue on failure
         if: failure() || steps.aria.outputs.aria_ok == 'false' || steps.degraded.outputs.overall == 'degraded'

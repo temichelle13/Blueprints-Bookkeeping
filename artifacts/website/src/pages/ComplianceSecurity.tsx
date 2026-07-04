@@ -122,8 +122,10 @@ export default function ComplianceSecurity() {
 
           <p className="text-xs text-muted-foreground mt-6">
             Blueprints &amp; Bookkeeping LLC is not a CPA firm and does not
-            provide tax filing services. For tax filing and legal matters,
-            coordinate with licensed professionals.
+            provide audit or attest services, legal advice, investment advice,
+            personal income tax preparation, or state tax return preparation.
+            Business tax-related support, when available, is limited to the
+            scope stated in the client engagement letter.
           </p>
 
           <div className="mt-6 text-sm text-muted-foreground">
