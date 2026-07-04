@@ -64,10 +64,7 @@ export default function Terms() {
             </p>
             <ul className="list-disc list-inside space-y-1 pl-2">
               <li>Personal income tax return preparation</li>
-              <li>
-                State tax return preparation unless explicitly included in a
-                signed engagement
-              </li>
+              <li>State tax return preparation</li>
               <li>Legal advice or legal representation</li>
               <li>Licensed investment or securities advice</li>
               <li>Audit or attest services</li>
@@ -90,10 +87,9 @@ export default function Terms() {
               individualized tax advice.
             </p>
             <p className="mt-3">
-              We do not prepare personal income tax returns or state tax returns
-              unless a signed engagement explicitly states otherwise. Please
-              work with an appropriately licensed professional when legal,
-              investment, or regulated tax decisions are required.
+              We do not prepare or file personal income tax returns or state tax
+              returns. Please work with an appropriately licensed professional
+              when legal, investment, or regulated tax decisions are required.
             </p>
           </section>
 
