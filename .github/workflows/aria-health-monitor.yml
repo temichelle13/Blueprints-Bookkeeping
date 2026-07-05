@@ -119,7 +119,7 @@ jobs:
             -X POST "$API_BASE/openai/conversations/$CONV_ID/messages" \
             -H "Content-Type: application/json" \
             -H "Accept: text/event-stream" \
-            -H "X-Health-Check-Token: $CF_BYPASS_HEADER" \
+            -H "X-Health-Bypass-Token: $CF_HEALTH_BYPASS_TOKEN" \
             -d '{"content":"Hello, are you online?"}')
 
           echo "Send message status: $MSG_STATUS"
@@ -134,7 +134,7 @@ jobs:
           fi
 
           curl -s -X DELETE "$API_BASE/openai/conversations/$CONV_ID" \
-            -H "X-Health-Check-Token: $CF_BYPASS_HEADER" || true
+            -H "X-Health-Bypass-Token: $CF_HEALTH_BYPASS_TOKEN" || true
 
       - name: Close resolved health-alert issues on success
         if: success() && steps.aria.outputs.aria_ok != 'false' && steps.degraded.outputs.overall != 'degraded'
@@ -196,7 +196,7 @@ jobs:
               body += `### ⚠️ API Reports Degraded Status\nOne or more backend dependencies (DB, OpenAI, Resend, Adobe Sign) may be unhealthy. Check \`/api/healthz\` for details.\n\n`;
             }
 
-            body += `**Action:** Check the [workflow run](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}) for full logs and verify the deployment is healthy.`;
+            body += `**Action:** Check the [workflow run](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}) for full logs and verify the deployment is healthy.\n\n`;
 
             await github.rest.issues.create({
               owner: context.repo.owner,

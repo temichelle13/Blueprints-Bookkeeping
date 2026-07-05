@@ -71,8 +71,8 @@ Recommended migration path:
 ### Prerequisites
 
 - Node.js >= 20
-- MongoDB is the intended production database direction.
-- Legacy warning: the current Express runtime still imports Drizzle/PostgreSQL modules and may require `DATABASE_URL` until the migration above is complete. Treat that as migration debt, not the desired production architecture.
+- MongoDB is the owner-selected production database direction. The current Express runtime still requires `DATABASE_URL` until the MongoDB migration is complete.
+- Legacy: PostgreSQL 16 for the current Drizzle-backed runtime (treat as migration debt, not the desired production architecture).
 
 ### Environment variables
 

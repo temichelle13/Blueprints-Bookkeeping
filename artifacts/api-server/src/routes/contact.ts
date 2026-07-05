@@ -20,6 +20,7 @@ const CONSENT_FALLBACK_VERSION = "v2026-03-31";
 
 export const ALLOWED_CONSENT_TEXT_VERSIONS = new Set([
   "contact-consent-2026-03-31.1",
+  "contact-consent-2026-06-25.1",
   "self-service-onboarding-consent-2026-03-31.1",
   "legacy-unknown",
 ]);
