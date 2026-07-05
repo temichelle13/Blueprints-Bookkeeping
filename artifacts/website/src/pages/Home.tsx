@@ -332,7 +332,7 @@ export default function Home() {
                 stat: "Week 1",
                 label: "Books assessed & cleanup scoped",
                 detail:
-                  "You&apos;ll know exactly what needs to be fixed and how long it will take.",
+                  "You'll know exactly what needs to be fixed and how long it will take.",
               },
               {
                 stat: "Month 1",
@@ -479,7 +479,7 @@ export default function Home() {
           </p>
           <Link
             href="/schedule"
-            onClick={() => trackHomeCtaClick("primary", "final_cta")}
+            onClick={() => trackHomeCtaClick("primary", "closing")}
             className="inline-flex items-center gap-2 px-8 py-4 bg-accent text-white font-bold text-lg rounded-xl shadow-xl shadow-accent/20 hover:shadow-accent/30 hover:-translate-y-0.5 transition-all duration-300"
           >
             Book Your Consultation

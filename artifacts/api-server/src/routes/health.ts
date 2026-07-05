@@ -20,7 +20,7 @@ router.get("/healthz", healthLimiter, async (_req, res) => {
     }
   }
 
-  const overallStatus = dbStatus === "error" ? "degraded" : "ok";
+  const overallStatus = dbStatus === "ok" ? "ok" : "degraded";
   const payload = {
     status: overallStatus,
     db: dbStatus,
