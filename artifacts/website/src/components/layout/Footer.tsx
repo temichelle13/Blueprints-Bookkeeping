@@ -209,7 +209,7 @@ export function Footer() {
                 )}
               </div>
             ))}
-            <div className="md:col-span-2 lg:col-span-4 mt-2 border-t border-border/40 pt-6">
+            <div className="md:col-span-2 lg:col-span-4 pt-2">
               <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-4">
                 Stay in the Loop
               </h3>
@@ -223,25 +223,16 @@ export function Footer() {
         </div>
         <div className="glow-line mb-6" />
         <p className="text-xs text-muted-foreground/60 text-center mb-4 leading-relaxed max-w-3xl mx-auto">
-          Blueprints & Bookkeeping LLC is not a CPA firm and does not provide
-          audit or attest services, legal advice, investment advice, personal
-          income tax preparation, or state tax return preparation. Business
-          tax-related support, when available, is limited to the scope stated in
-          the client engagement letter.{" "}
-          <Link
-            href="/faq"
-            className="underline underline-offset-2 hover:text-muted-foreground transition-colors"
-          >
-            Learn more in our FAQ
-          </Link>{" "}
-          or review our{" "}
+          Blueprints & Bookkeeping LLC provides bookkeeping, business planning,
+          and related business-support services. Website content is general
+          information; review our{" "}
           <Link
             href="/terms"
             className="underline underline-offset-2 hover:text-muted-foreground transition-colors"
           >
             Terms of Service
-          </Link>
-          .
+          </Link>{" "}
+          for service and professional-scope limits.
         </p>
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground">
           <div className="flex flex-wrap justify-center md:justify-start items-center gap-4">

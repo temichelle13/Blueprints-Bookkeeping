@@ -58,13 +58,16 @@ export default function Terms() {
             <h2 className="text-white font-bold text-lg mb-3">2. Services</h2>
             <p className="mb-3">
               Blueprints & Bookkeeping LLC provides bookkeeping, business
-              planning, and related financial support services. Business
-              tax-related support, when offered, is limited to the scope stated
-              in a separate engagement letter. Our services do not include:
+              planning, and related financial support services. Tax-related
+              business support may be available when included in a client
+              agreement. Our services do not include:
             </p>
             <ul className="list-disc list-inside space-y-1 pl-2">
               <li>Personal income tax return preparation</li>
-              <li>State tax return preparation</li>
+              <li>
+                State tax return preparation unless explicitly included in a
+                signed engagement
+              </li>
               <li>Legal advice or legal representation</li>
               <li>Licensed investment or securities advice</li>
               <li>Audit or attest services</li>
@@ -87,9 +90,10 @@ export default function Terms() {
               individualized tax advice.
             </p>
             <p className="mt-3">
-              We do not prepare or file personal income tax returns or state tax
-              returns. Please work with an appropriately licensed professional
-              when legal, investment, or regulated tax decisions are required.
+              Personal income tax and state tax return preparation are not
+              advertised services. Please work with an appropriately licensed
+              professional when legal, investment, or regulated tax decisions
+              are required.
             </p>
           </section>
 

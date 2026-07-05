@@ -121,11 +121,10 @@ export default function ComplianceSecurity() {
           </div>
 
           <p className="text-xs text-muted-foreground mt-6">
-            Blueprints &amp; Bookkeeping LLC is not a CPA firm and does not
-            provide audit or attest services, legal advice, investment advice,
-            personal income tax preparation, or state tax return preparation.
-            Business tax-related support, when available, is limited to the
-            scope stated in the client engagement letter.
+            Blueprints &amp; Bookkeeping LLC is not a CPA firm, law firm,
+            auditor, or investment adviser. Website content is general
+            information and service details are governed by the applicable
+            client agreement.
           </p>
 
           <div className="mt-6 text-sm text-muted-foreground">

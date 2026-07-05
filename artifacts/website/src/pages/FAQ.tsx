@@ -34,7 +34,7 @@ const faqs: FAQSection[] = [
       {
         id: "taxes",
         q: "Do you offer tax-related support?",
-        a: "We may provide limited business tax-related support when it fits the engagement scope, but we do not prepare personal income tax returns or state tax returns, and we are not a CPA firm, law firm, auditor, or investment adviser. The main focus remains clean books, business planning, and practical financial organization.",
+        a: "Tax-related business support may be available when it fits the project, but the main focus remains clean books, business planning, and practical financial organization. We keep professional-scope limits in the Terms so the details stay clear without making tax disclaimers the center of the site.",
       },
       {
         q: "Can you clean up old or messy books?",

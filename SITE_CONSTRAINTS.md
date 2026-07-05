@@ -10,7 +10,7 @@
 Before changing website copy, UI, API prompts, forms, or integrations, verify that the change:
 
 - Keeps service claims accurate and avoids implying credentials Tea has not claimed.
-- Keeps required disclaimers visible where a visitor may rely on financial, business, tax-adjacent, legal, investment, or results-oriented content.
+- Keeps required disclaimers visible only where they materially help a visitor understand limits, consent, privacy, or results-oriented content.
 - Preserves the working scheduling path through Calendly unless the owner explicitly approves a replacement.
 - Uses current implementation reality rather than stale plans: the database/API platform is still being re-evaluated, and MongoDB plus a low-cost always-on host are preferred future directions.
 
@@ -38,7 +38,7 @@ The site should emphasize these as the main business lines:
    - Growth potential and opportunity analysis
    - Full business plan design
 
-Tax-related assistance may be mentioned only as scoped business support when accurate. Do not make tax the dominant brand promise unless the owner supplies exact approved scope, pricing, credentials, and engagement terms.
+Tax-related assistance may be mentioned naturally when it is accurate to the service being described. Do not turn tax into the dominant brand promise unless the owner later asks for that positioning.
 
 ### 1.2 Add-on only
 
@@ -59,7 +59,7 @@ Do **not** claim or imply that Blueprints & Bookkeeping LLC is any of the follow
 
 Do **not** claim personal income tax preparation, state tax return preparation, audit/attest services, legal advice, investment advice, or guaranteed compliance outcomes.
 
-Business tax-related support may be described only with careful scope language, engagement-letter dependency, and disclaimers. Keep it practical and low-drama; do not over-emphasize what is excluded unless needed for legal clarity.
+Do not make exclusions a major marketing theme. Use a short protective disclaimer in places where a visitor could reasonably mistake website content or tax-related business support for regulated professional services.
 
 ---
 
@@ -73,8 +73,8 @@ Use concise disclaimers where relevant:
 
 - Blueprints & Bookkeeping LLC is not a CPA firm and does not provide audit or attest services.
 - Website content is general information, not legal, investment, or individualized tax advice.
-- Business tax-related support, when offered, is limited to the scope stated in the client engagement letter.
-- The firm does not prepare personal income tax returns or state tax returns unless later approved in this file.
+- Tax-related business support, when offered, depends on the specific client agreement and should not be treated as legal, investment, or individualized tax advice.
+- Personal income tax and state tax return preparation are not current advertised services, but this should be handled as a concise disclaimer rather than a repeated marketing message.
 - Past results, case studies, forecasts, and financing outcomes are examples only and are not guarantees.
 
 ### 2.2 Consent and privacy requirements

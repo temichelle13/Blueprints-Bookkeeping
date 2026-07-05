@@ -49,11 +49,9 @@ export function BookkeepingDisclaimer({
               compact ? "text-xs sm:text-[13px]" : "text-sm sm:text-[14px]",
             )}
           >
-            Blueprints &amp; Bookkeeping LLC is not a CPA firm and does not
-            provide audit or attest services, legal advice, investment advice,
-            personal income tax preparation, or state tax return preparation.
-            Business tax-related support, when available, is limited to the
-            scope stated in the client engagement letter.
+            Blueprints &amp; Bookkeeping LLC provides bookkeeping and related
+            business-support services. We are not a CPA firm, law firm, auditor,
+            or investment adviser, and website content is general information.
           </p>
         </div>
       </div>
