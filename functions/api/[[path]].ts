@@ -21,6 +21,7 @@ type AiBinding = {
 
 type Env = {
   CONCIERGE_DB?: D1Database;
+  MONGODB_URI?: string;
   AI?: AiBinding;
   RESEND_API_KEY?: string;
   OWNER_EMAIL?: string;
@@ -540,6 +541,7 @@ async function handleHealth(context: PagesContext): Promise<Response> {
   const payload = {
     status: dbStatus === "ok" ? "ok" : "degraded",
     db: dbStatus === "ok" ? "ok" : "error",
+    mongodbUri: context.env.MONGODB_URI ? "configured" : "missing",
     assistant: context.env.AI ? "ok" : "missing",
     email: context.env.RESEND_API_KEY ? "ok" : "missing",
     timestamp: new Date().toISOString(),

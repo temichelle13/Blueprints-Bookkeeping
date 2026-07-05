@@ -12,6 +12,10 @@ const envSchema = z.object({
   PORT: z.string().regex(/^\d+$/).transform(Number).default(3001),
 
   // Database
+  // MONGODB_URI is the owner-selected production database direction. It is
+  // optional in the current runtime only because persistence still needs to be
+  // migrated off legacy Drizzle/Postgres imports.
+  MONGODB_URI: z.string().url().optional(),
   DATABASE_URL: z.string().url().min(1, "DATABASE_URL is required"),
 
   // CORS Configuration

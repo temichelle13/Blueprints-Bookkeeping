@@ -12,7 +12,7 @@ Before changing website copy, UI, API prompts, forms, or integrations, verify th
 - Keeps service claims accurate and avoids implying credentials Tea has not claimed.
 - Keeps required disclaimers visible only where they materially help a visitor understand limits, consent, privacy, or results-oriented content.
 - Preserves the working scheduling path through Calendly unless the owner explicitly approves a replacement.
-- Uses current implementation reality rather than stale plans: the database/API platform is still being re-evaluated, and MongoDB plus a low-cost always-on host are preferred future directions.
+- Uses current implementation reality rather than stale plans: the database/API platform is still being re-evaluated, and MongoDB plus a low-cost always-on host are the owner-selected production direction.
 
 If a change could create a regulated-service claim, weaken consent capture, or affect production deployment, make the limitation explicit in copy and document the unresolved production issue.
 
@@ -111,7 +111,7 @@ Remove or revise policy language that references inactive tools, stale providers
 | **QuickBooks Online (QBO)**          | YES                    | Likely primary invoicing and bookkeeping platform. Keep alternative payment/invoicing options open when client needs require them. |
 | **Resend**                           | LIKELY / CURRENT CODE  | Used by existing email code; verify production configuration before relying on it.                                                 |
 | **OpenAI / AI chat**                 | YES, if configured     | Chatbot needs a reliable low-cost API/server plan and graceful offline behavior.                                                   |
-| **MongoDB**                          | PREFERRED FUTURE DB    | Owner wants MongoDB; existing code may still use PostgreSQL/Drizzle until migrated.                                                |
+| **MongoDB**                          | OWNER-SELECTED DB      | Treat MongoDB as the intended production data store. PostgreSQL/Drizzle remains legacy current-code plumbing only until migrated.  |
 | **Stripe**                           | OPTIONAL / NOT PRIMARY | Do not push Stripe as the default payment path. Use only if explicitly enabled.                                                    |
 | **Adobe Sign / contract automation** | TBD                    | Do not imply a finalized signing vendor until selected.                                                                            |
 | **LivePlan**                         | YES                    | Business planning support.                                                                                                         |
@@ -182,14 +182,15 @@ Design tokens may evolve to fix accessibility, readability, or brand quality iss
 
 ## 7) Deployment and Production Reality
 
-The repo currently contains code and docs for a React/Vite website, Express API server, Cloudflare Pages Functions, and PostgreSQL/Drizzle. The owner has stated the current database/API setup is not working for production needs and wants a low-cost, reliable path with MongoDB preferred.
+The repo currently contains code for a React/Vite website, Express API server, Cloudflare Pages Functions, and legacy PostgreSQL/Drizzle persistence. The owner-selected production direction is MongoDB with a low-cost, reliable 24/7 API/chat platform. PostgreSQL/Drizzle should be treated as migration debt, not the desired production database.
 
-Until the migration is designed and implemented:
+Until the MongoDB migration is implemented:
 
 - Do not claim the database/API stack is production-ready.
 - Keep chat/contact forms graceful when server integrations are unavailable.
 - Document unresolved production issues in final reports.
 - Prefer simple, low-cost, always-on infrastructure recommendations.
+- Do not add new PostgreSQL-only features unless they are necessary to keep the existing app working during the MongoDB migration.
 
 ---
 
