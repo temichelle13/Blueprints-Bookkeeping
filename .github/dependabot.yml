@@ -14,7 +14,7 @@ updates:
       - "github_actions"
 
   # pnpm Dependencies
-  - package-ecosystem: "pnpm"
+  - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "daily"
