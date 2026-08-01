@@ -13,6 +13,7 @@ import { addToSuppressionList } from "../lib/email-suppression";
 import { getSchedulerHealth } from "../lib/scheduler-health";
 import { getOutboundEmailAdminCounts } from "../lib/outbound-email-events";
 import { adminAuth } from "../middleware/admin-auth";
+import { validateEmailStrict } from "../middleware/public-submissions";
 
 const router: IRouter = Router();
 
@@ -141,8 +142,8 @@ router.post("/admin/suppression", async (req, res): Promise<void> => {
     return;
   }
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email.trim())) {
+  const normalizedEmail = validateEmailStrict(email);
+  if (!normalizedEmail) {
     res.status(400).json({ error: "Please provide a valid email address" });
     return;
   }
@@ -151,12 +152,12 @@ router.post("/admin/suppression", async (req, res): Promise<void> => {
     ? reason
     : "manual";
 
-  await addToSuppressionList(email, finalReason);
+  await addToSuppressionList(normalizedEmail, finalReason);
 
   const [entry] = await db
     .select()
     .from(emailSuppressionListTable)
-    .where(eq(emailSuppressionListTable.email, email.trim().toLowerCase()))
+    .where(eq(emailSuppressionListTable.email, normalizedEmail))
     .limit(1);
 
   res.status(201).json(entry);
