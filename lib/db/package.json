@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@types/node": "catalog:",
-    "@types/pg": "^8.20.0",
+    "@types/pg": "^8.20.3",
     "drizzle-kit": "^0.31.10"
   }
 }
