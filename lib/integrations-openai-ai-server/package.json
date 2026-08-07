@@ -13,7 +13,7 @@
     "./audio": "./src/audio/index.ts"
   },
   "dependencies": {
-    "openai": "^7.3.0",
+    "openai": "^7.4.0",
     "p-limit": "^7.3.1",
     "p-retry": "^8.0.0"
   }
