@@ -1,5 +1,6 @@
 <div align="center">
-## Blueprints & Bookkeeping📈
+  
+  ## Blueprints & Bookkeeping📈
 
 ### _Premium Remote Financial Services — Built Different_
 
