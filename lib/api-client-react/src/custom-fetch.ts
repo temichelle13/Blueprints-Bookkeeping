@@ -6,7 +6,14 @@ let _apiBaseUrl = "";
 const API_PREFIX = "/api";
 
 export function normalizeApiBaseUrl(url?: string | null): string {
-  const trimmed = url?.trim().replace(/\/+$/, "") ?? "";
+  const base = url?.trim() ?? "";
+  let endIndex = base.length;
+
+  while (endIndex > 0 && base.charCodeAt(endIndex - 1) === 47) {
+    endIndex -= 1;
+  }
+
+  const trimmed = base.slice(0, endIndex);
 
   if (!trimmed || trimmed === API_PREFIX) {
     return "";
