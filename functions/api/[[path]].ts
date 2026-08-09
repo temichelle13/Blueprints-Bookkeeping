@@ -43,11 +43,23 @@ const SITE_URL = "https://blueprintsandbookkeeping.com";
 const OWNER_EMAIL = "tea@blueprintsandbookkeeping.com";
 const FROM_EMAIL =
   "Blueprints & Bookkeeping <noreply@blueprintsandbookkeeping.com>";
-const CALENDLY_URL =
-  "https://calendly.com/tea-blueprintsandbookkeeping/30min";
+const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
 const EMERGENCY_CALENDLY_URL =
   "https://calendly.com/tea-blueprintsandbookkeeping/emergency-or-other-expedited-request";
 const DEFAULT_AI_MODEL = "@cf/meta/llama-3.1-8b-instruct";
+
+function trimTrailingSlashes(value: string): string {
+  let end = value.length;
+  while (end > 0 && value.charCodeAt(end - 1) === 47) {
+    end -= 1;
+  }
+  return end === value.length ? value : value.slice(0, end);
+}
+
+function stripApiPrefix(pathname: string): string {
+  if (pathname === "/api") return "";
+  return pathname.startsWith("/api/") ? pathname.slice(5) : pathname;
+}
 const MAX_JSON_BYTES = 32_000;
 const TURNSTILE_RESPONSE_FIELD = "cf-turnstile-response";
 const TURNSTILE_ACTION = "lead_form";
@@ -132,9 +144,9 @@ function isAllowedOrigin(origin: string, request?: Request): boolean {
         .split(",")
         .map((value) => value.trim())
         .filter(Boolean),
-    ].map((value) => value.replace(/\/+$/, "")),
+    ].map(trimTrailingSlashes),
   );
-  return allowed.has(origin.replace(/\/+$/, ""));
+  return allowed.has(trimTrailingSlashes(origin));
 }
 
 function bindEnvToRequest(request: Request, env: Env): Request {
@@ -153,7 +165,7 @@ function assertAllowedOrigin(request: Request, env: Env): void {
 
 function getPath(request: Request): string {
   const pathname = new URL(request.url).pathname;
-  return pathname.replace(/^\/api\/?/, "").replace(/\/+$/, "");
+  return trimTrailingSlashes(stripApiPrefix(pathname));
 }
 
 function getIp(request: Request): string {
@@ -417,8 +429,7 @@ async function verifyTurnstileOrThrow(
   if (options.action && payload.action !== options.action) {
     throw new ResponseError(403, "Verification action mismatch.");
   }
-  const expectedHostname = getExpectedTurnstileHostname(env);
-  if (expectedHostname && payload.hostname?.toLowerCase() !== expectedHostname) {
+  if (!isExpectedTurnstileHostname(env, payload.hostname)) {
     throw new ResponseError(403, "Verification origin mismatch.");
   }
 }
@@ -524,16 +535,20 @@ function leadEmailHtml(payload: {
     </div>`;
 }
 
-async function handleHealth(context: PagesContext): Promise<Response> {
-  let dbStatus: "ok" | "missing" | "error" = "missing";
-  if (context.env.CONCIERGE_DB) {
-    try {
-      await context.env.CONCIERGE_DB.prepare("SELECT 1").first();
-      dbStatus = "ok";
-    } catch {
-      dbStatus = "error";
-    }
+async function getD1Status(
+  context: PagesContext,
+): Promise<"ok" | "missing" | "error"> {
+  if (!context.env.CONCIERGE_DB) return "missing";
+  try {
+    await context.env.CONCIERGE_DB.prepare("SELECT 1").first();
+    return "ok";
+  } catch {
+    return "error";
   }
+}
+
+async function handleHealth(context: PagesContext): Promise<Response> {
+  const dbStatus = await getD1Status(context);
 
   const payload = {
     status: dbStatus === "ok" ? "ok" : "degraded",
@@ -543,9 +558,34 @@ async function handleHealth(context: PagesContext): Promise<Response> {
     timestamp: new Date().toISOString(),
   };
 
-  return jsonResponse(payload, {
-    status: payload.status === "ok" ? 200 : 503,
-  }, context.request);
+  return jsonResponse(
+    payload,
+    {
+      status: payload.status === "ok" ? 200 : 503,
+    },
+    context.request,
+  );
+}
+
+async function handleOpenAiHealth(context: PagesContext): Promise<Response> {
+  const dbStatus = await getD1Status(context);
+  const aiStatus = context.env.AI ? "ok" : "missing";
+  const ready = dbStatus === "ok" && aiStatus === "ok";
+
+  return jsonResponse(
+    {
+      status: ready ? "ok" : "degraded",
+      ready,
+      dependencies: {
+        openai: aiStatus,
+        environment: aiStatus,
+        db: dbStatus,
+      },
+      timestamp: new Date().toISOString(),
+    },
+    { status: ready ? 200 : 503 },
+    context.request,
+  );
 }
 
 async function handleContact(context: PagesContext): Promise<Response> {
@@ -669,7 +709,10 @@ async function handleNewsletter(context: PagesContext): Promise<Response> {
 
   if (textField(body, "website", 200)) {
     return jsonResponse(
-      { success: true, message: "You're subscribed! Thank you for signing up." },
+      {
+        success: true,
+        message: "You're subscribed! Thank you for signing up.",
+      },
       { status: 201 },
       context.request,
     );
@@ -750,9 +793,7 @@ async function handleFeedback(context: PagesContext): Promise<Response> {
   const page = textField(body, "page", 300);
   const source =
     textField(body, "source", 80) ||
-    (category.toLowerCase().includes("assistant")
-      ? "assistant"
-      : "website");
+    (category.toLowerCase().includes("assistant") ? "assistant" : "website");
 
   const result = await db
     .prepare(
@@ -824,7 +865,13 @@ async function createConversation(context: PagesContext): Promise<Response> {
     .prepare(
       "INSERT INTO chat_conversations (title, request_ip, user_agent, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
     )
-    .bind(title, getIp(context.request), getUserAgent(context.request), now, now)
+    .bind(
+      title,
+      getIp(context.request),
+      getUserAgent(context.request),
+      now,
+      now,
+    )
     .run();
   const id = result.meta?.last_row_id;
   if (typeof id !== "number") {
@@ -926,7 +973,9 @@ async function generateAssistantAnswer(
     COMPANY_CONTEXT,
     "",
     "RECENT CHAT:",
-    ...history.map((message) => `${message.role.toUpperCase()}: ${message.content}`),
+    ...history.map(
+      (message) => `${message.role.toUpperCase()}: ${message.content}`,
+    ),
     "",
     "ARIA:",
   ].join("\n");
@@ -962,7 +1011,9 @@ function sseResponse(content: string, request: Request): Response {
       controller.enqueue(
         encoder.encode(`data: ${JSON.stringify({ content })}\n\n`),
       );
-      controller.enqueue(encoder.encode(`data: ${JSON.stringify({ done: true })}\n\n`));
+      controller.enqueue(
+        encoder.encode(`data: ${JSON.stringify({ done: true })}\n\n`),
+      );
       controller.close();
     },
   });
@@ -1003,6 +1054,9 @@ export async function onRequest(context: PagesContext): Promise<Response> {
     if (method === "GET" && path === "healthz") {
       return await handleHealth(context);
     }
+    if (method === "GET" && path === "openai/health") {
+      return await handleOpenAiHealth(context);
+    }
     if (method === "POST" && path === "contact") {
       return await handleContact(context);
     }
@@ -1027,7 +1081,11 @@ export async function onRequest(context: PagesContext): Promise<Response> {
     return jsonResponse({ error: "Not found" }, { status: 404 }, request);
   } catch (error) {
     if (error instanceof ResponseError) {
-      return jsonResponse({ error: error.message }, { status: error.status }, request);
+      return jsonResponse(
+        { error: error.message },
+        { status: error.status },
+        request,
+      );
     }
     console.error(
       JSON.stringify({

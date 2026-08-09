@@ -5,8 +5,16 @@ export type CustomFetchOptions = RequestInit & {
 let _apiBaseUrl = "";
 const API_PREFIX = "/api";
 
+function trimTrailingSlashes(value: string): string {
+  let end = value.length;
+  while (end > 0 && value.charCodeAt(end - 1) === 47) {
+    end -= 1;
+  }
+  return end === value.length ? value : value.slice(0, end);
+}
+
 export function normalizeApiBaseUrl(url?: string | null): string {
-  const trimmed = url?.trim().replace(/\/+$/, "") ?? "";
+  const trimmed = url ? trimTrailingSlashes(url.trim()) : "";
 
   if (!trimmed || trimmed === API_PREFIX) {
     return "";
