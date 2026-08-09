@@ -5,25 +5,26 @@
 | Layer                      | Technology                                                                                  | Platform                                                                 |
 | -------------------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | Frontend + Pages Functions | React + Vite, Cloudflare Pages Functions                                                    | Cloudflare Pages                                                         |
-| API server                 | Express 5, Node.js >= 20                                                                    | Railway / Render / Fly.io or a serverless/edge API after migration       |
+| API server                 | Express 5, Node.js >= 20                                                                    | Railway (`https://blueprints-bookkeeping-api.up.railway.app`)            |
 | Database                   | MongoDB is the owner-selected target; legacy code still uses PostgreSQL/Drizzle temporarily | MongoDB Atlas free/shared tier or another low-cost Mongo-compatible host |
 
 ```text
 Browser
   |
   +-> Cloudflare Pages (artifacts/website/dist/public)
-  |     +-> /api/chat     -> functions/api/chat.ts (Pages Function)
-  |     +-> /api/contact  -> functions/api/contact.ts (Pages Function)
+  |     +-> static marketing pages
+  |     +-> VITE_API_URL=https://blueprints-bookkeeping-api.up.railway.app/api
   |
-  +-> Standalone API server (artifacts/api-server)
+  +-> Railway API server (artifacts/api-server)
+        +-> /api/healthz
+        +-> /api/contact and /api/newsletter
+        +-> /api/openai/** for Aria chat
         +-> /api/admin/**
         +-> /api/webhooks/**
-        +-> /api/openai/**
-        +-> all other Express routes
+        +-> future scheduling/tool integrations
 ```
 
-Cloudflare Pages Functions handle `/api/chat` and `/api/contact` at the edge.
-All remaining API routes are served by the standalone Express server.
+The selected production direction is to keep Cloudflare Pages focused on the frontend and run the real API/chat backend on Railway. Avoid splitting important production form/chat behavior between Cloudflare Pages Functions and Railway unless there is a deliberate reason, because split runtimes make MongoDB persistence, monitoring, and debugging harder.
 
 ## Cloudflare Pages — Frontend
 
@@ -40,7 +41,7 @@ All remaining API routes are served by the standalone Express server.
 
 ```bash
 # Build-time
-VITE_API_URL=
+VITE_API_URL=https://blueprints-bookkeeping-api.up.railway.app/api
 
 # Runtime
 OPENAI_API_KEY=<your-openai-api-key>
@@ -56,7 +57,7 @@ Cloudflare Pages can be configured through the dashboard variables/secrets UI. T
 
 MongoDB is the owner-selected production database direction. The current repository still contains legacy PostgreSQL/Drizzle persistence and a Cloudflare Pages Function path with a legacy D1 binding helper, so adding `MONGODB_URI` as a Cloudflare secret is necessary but not sufficient by itself. The application must still be migrated before the API can be described as MongoDB-backed in production. Do not build new persistent features around PostgreSQL unless they are temporary compatibility work.
 
-If the MongoDB URI and other secrets are already set in Cloudflare, do **not** share the secret values in chat or commit them to the repo. What is still needed is the non-secret deployment shape: which API routes should run on Cloudflare Pages Functions versus a Node host, and whether MongoDB access will use a Node runtime driver or an Atlas HTTPS/Data API-style integration.
+If the MongoDB URI and other secrets are already set in Cloudflare, do **not** share the secret values in chat or commit them to the repo. The non-secret deployment shape is now selected: Cloudflare Pages frontend, Railway Node API, and MongoDB Atlas using the normal Node MongoDB driver after migration. Do not use the deprecated Atlas Data API as the primary design.
 
 Recommended migration path:
 
@@ -71,15 +72,15 @@ Recommended migration path:
 ### Prerequisites
 
 - Node.js >= 20
-- MongoDB is the owner-selected production database direction. The current Express runtime still requires `DATABASE_URL` until the MongoDB migration is complete.
-- Legacy: PostgreSQL 16 for the current Drizzle-backed runtime (treat as migration debt, not the desired production architecture).
+- MongoDB is the intended production database direction.
+- Legacy warning: routes that still touch Drizzle/PostgreSQL will fail without `DATABASE_URL` until the migration above is complete. The API can start without `DATABASE_URL` for health checks and non-legacy routes, but this is still migration debt, not the desired production architecture.
 
 ### Environment variables
 
 ```bash
 NODE_ENV=production
 PORT=3001
-MONGODB_URI=mongodb+srv://user:password@cluster.example.mongodb.net/blueprints
+MONGODB_URI=mongodb+srv://user:password@bpbk-cluster.example.mongodb.net/blueprints_bookkeeping
 # Legacy current-code compatibility only; remove after MongoDB migration:
 DATABASE_URL=postgresql://user:password@host:5432/dbname
 CORS_ORIGIN=https://blueprintsandbookkeeping.com,https://www.blueprintsandbookkeeping.com
@@ -90,7 +91,8 @@ OWNER_EMAIL=tea@blueprintsandbookkeeping.com
 OPENAI_API_KEY=<your-openai-api-key>
 OPENAI_CHAT_MODEL=gpt-4.1-mini
 TURNSTILE_SECRET_KEY=<your-cloudflare-turnstile-secret-key>
-CAL_WEBHOOK_SECRET=<your-cal-webhook-secret>
+BOOKING_WEBHOOK_SECRET=<your-booking-webhook-secret>
+# Optional unless Stripe checkout is enabled:
 STRIPE_SECRET_KEY=<your-stripe-secret-key>
 STRIPE_WEBHOOK_SECRET=<your-stripe-webhook-signing-secret>
 ```
@@ -105,7 +107,7 @@ pnpm --filter db push
 node artifacts/api-server/dist/index.cjs
 ```
 
-Set the start command on your host to `node artifacts/api-server/dist/index.cjs`.
+Set the Railway start command to `node artifacts/api-server/dist/index.cjs`. Set the Railway health check path to `/api/healthz`.
 
 ## Legacy Database Migrations
 
@@ -124,19 +126,34 @@ Note on legacy migration files:
 
 These files are not in `_journal.json` and are currently unapplied stale artifacts.
 
+## Aria Chatbot and Scheduling Direction
+
+Aria should be available whenever the API is healthy, answer accurately from the approved service constraints, and fail gracefully with email/scheduling fallbacks if OpenAI or persistence is unavailable. With the selected Railway + MongoDB architecture, the chatbot can eventually support scheduling workflows, but this must be implemented in phases:
+
+1. **Current safe behavior:** Aria can explain options, collect lead details, and send visitors to the active Calendly scheduling link.
+2. **Next production behavior:** Aria can create or update MongoDB lead/conversation records, preserve context, and notify Tea when a visitor asks for follow-up.
+3. **Scheduling integration:** Aria can offer Calendly links and, if Calendly API/webhook credentials are added later, check availability or create scheduling handoffs. Until that integration exists, Aria must not claim it has booked, moved, or conflict-checked an appointment.
+4. **Conflict checks:** Conflict checking requires a real calendar API connection with read access to the relevant calendar. Calendly embeds alone do not give the API enough information to guarantee conflict checks.
+
+Required production variables for Aria on Railway are `OPENAI_API_KEY`, `OPENAI_CHAT_MODEL`, `MONGODB_URI` after migration, `CORS_ORIGIN`, and `ADMIN_TOKEN`. Keep `BOOKING_WEBHOOK_SECRET` for booking webhook verification if webhook-driven booking records stay active.
+
 ## Verification Checklist
 
 - [ ] Homepage loads without errors
 - [ ] Contact form submission succeeds
 - [ ] Newsletter signup works
 - [ ] Intake / onboarding form works
-- [ ] Chat assistant responds (or fails gracefully)
-- [ ] `/api/healthz` returns 200
+- [ ] Chat assistant responds from the Railway API (or fails gracefully with email/scheduling fallback)
+- [ ] `https://blueprints-bookkeeping-api.up.railway.app/api/healthz` returns 200
 - [ ] Browser console has no CORS errors
 - [ ] No unexpected 404 / 405 API responses
 - [ ] `/admin/stats` works with `ADMIN_TOKEN`
 
 ## Troubleshooting
+
+### Railway URL returns `Application not found`
+
+If `https://blueprints-bookkeeping-api.up.railway.app` returns Railway fallback JSON with `Application not found`, the code is not currently reachable at that public Railway domain. Check the Railway service domain attachment, deployment status, root directory, build command, start command, and health check path before pointing Cloudflare `VITE_API_URL` at it in production.
 
 ### CORS blocked in browser
 
@@ -174,8 +191,7 @@ For `https://blueprintsandbookkeeping.com` in Search Console:
 
 ## Open Production Architecture Decisions
 
-- Choose a low-cost always-on API host for chat, forms, admin, and future tool integrations. Candidate categories: Cloudflare Workers/Pages Functions for lightweight endpoints, Render/Fly/Railway for Node services, or a serverless function platform if cold starts are acceptable.
-- Implement the MongoDB migration so `MONGODB_URI` replaces `DATABASE_URL` for production persistence; Cloudflare secrets being present is configuration, not the data-layer migration itself.
+- Implement the MongoDB migration for the existing MongoDB Atlas project `Blueprints-Bookkeeping` / cluster `bpbk-cluster` so `MONGODB_URI` replaces `DATABASE_URL` for production persistence; secrets being present is configuration, not the data-layer migration itself.
 - Confirm which email, payment/invoicing, contract-signing, and chatbot providers are actually production-active before advertising or relying on those workflows. QuickBooks Online is the likely primary invoicing path; Stripe and Adobe Sign should remain optional until explicitly enabled.
 
 ## Support

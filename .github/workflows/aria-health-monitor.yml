@@ -43,7 +43,7 @@ jobs:
           # Append the Cloudflare WAF bypass header only when the secret is set.
           # Configure a matching WAF rule in Cloudflare to allow these requests.
           if [ -n "$CF_HEALTH_BYPASS_TOKEN" ]; then
-            CURL_ARGS+=(-H "X-Health-Bypass-Token: $CF_HEALTH_BYPASS_TOKEN")
+            CURL_ARGS+=(-H "X-Health-Check-Token: $CF_HEALTH_BYPASS_TOKEN")
           fi
 
           STATUS=$(curl "${CURL_ARGS[@]}" "$API_BASE/healthz")
@@ -61,7 +61,7 @@ jobs:
               echo "⚠️  Cloudflare Bot Fight Mode is blocking this health check (HTTP 403 challenge page)."
               echo "   The CF_HEALTH_BYPASS_TOKEN secret is not set or the WAF bypass rule is missing."
               echo "   Fix: create a Cloudflare WAF rule that allows requests with the"
-              echo "   'X-Health-Bypass-Token' header, then add CF_HEALTH_BYPASS_TOKEN to this"
+              echo "   'X-Health-Check-Token' header, then add CF_HEALTH_BYPASS_TOKEN to this"
               echo "   repository's Actions secrets (Settings → Secrets and variables → Actions)."
               echo "cf_blocked=true" >> "$GITHUB_OUTPUT"
               # Exit 0 so downstream steps run; the Open GitHub Issue step is skipped
@@ -96,7 +96,7 @@ jobs:
             -H "User-Agent: Blueprints-Health-Monitor/1.0 (github-actions)"
           )
           if [ -n "$CF_HEALTH_BYPASS_TOKEN" ]; then
-            BASE_CURL_ARGS+=(-H "X-Health-Bypass-Token: $CF_HEALTH_BYPASS_TOKEN")
+            BASE_CURL_ARGS+=(-H "X-Health-Check-Token: $CF_HEALTH_BYPASS_TOKEN")
           fi
 
           CONV_STATUS=$(curl "${BASE_CURL_ARGS[@]}" \
@@ -152,7 +152,7 @@ jobs:
           steps.healthz.outputs.cf_blocked != 'true' &&
           steps.aria.outputs.aria_ok != 'false' &&
           steps.degraded.outputs.overall != 'degraded'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const { data: issues } = await github.rest.issues.listForRepo({
@@ -182,7 +182,7 @@ jobs:
         if: >
           (failure() || steps.aria.outputs.aria_ok == 'false' || steps.degraded.outputs.overall == 'degraded') &&
           steps.healthz.outputs.cf_blocked != 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const ariaOk = '${{ steps.aria.outputs.aria_ok }}';
