@@ -24,9 +24,9 @@
     "tsx": "catalog:",
     "typescript": "~7.0.2"
   },
-  "packageManager": "pnpm@10.34.5",
+  "packageManager": "pnpm@11.20.0",
   "engines": {
     "node": "^20.19.0 || ^22.0.0 || ^24.0.0",
-    "pnpm": "10.34.5"
+    "pnpm": "11.20.0"
   }
 }
