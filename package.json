@@ -20,9 +20,9 @@
   "private": true,
   "devDependencies": {
     "@types/node": "catalog:",
-    "prettier": "^3.9.6",
+    "prettier": "^3.8.3",
     "tsx": "catalog:",
-    "typescript": "~7.0.2"
+    "typescript": "~6.0.3"
   },
   "packageManager": "pnpm@10.33.4",
   "engines": {

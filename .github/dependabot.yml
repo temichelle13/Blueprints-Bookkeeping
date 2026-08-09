@@ -1,27 +1,22 @@
 version: 2
 
 updates:
-  # GitHub Actions Updates
+  # Keep GitHub Actions versions updated
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "daily"
     target-branch: "master"
-    open-pull-requests-limit: 15
-    rebase-strategy: "auto"
     labels:
       - "dependencies"
       - "github_actions"
 
-  # pnpm Dependencies
+  # Node/TypeScript dependencies
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "daily"
     target-branch: "master"
-    open-pull-requests-limit: 15
-    rebase-strategy: "auto"
-    versioning-strategy: "increase"
     labels:
       - "dependencies"
     groups:
@@ -29,14 +24,12 @@ updates:
         patterns:
           - "*"
 
-  # Python Dependencies
+  # Python dependencies (if you have requirements.txt/pyproject.toml/poetry.lock)
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "daily"
     target-branch: "master"
-    open-pull-requests-limit: 15
-    rebase-strategy: "auto"
     labels:
       - "dependencies"
       - "python"
