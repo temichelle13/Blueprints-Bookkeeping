@@ -28,7 +28,7 @@ function getPostConversationMessagesRouteSource() {
 
   assert.ok(
     routeStartMatch,
-    "Expected POST /openai/conversations/:id/messages route to be defined in index.ts"
+    "Expected POST /openai/conversations/:id/messages route to be defined in index.ts",
   );
 
   const routeStartIndex = routeStartMatch.index ?? 0;
@@ -68,15 +68,15 @@ test("POST /openai/conversations/:id/messages validates the conversation before 
 
   assert.ok(
     conversationLookupIndex >= 0,
-    "Expected the route to query for the conversation before creating a message"
+    "Expected the route to query for the conversation before creating a message",
   );
   assert.ok(
     insertMessageIndex >= 0,
-    "Expected the route to insert a message after validation"
+    "Expected the route to insert a message after validation",
   );
   assert.ok(
     conversationLookupIndex < insertMessageIndex,
-    "Conversation existence must be checked before attempting to insert the message"
+    "Conversation existence must be checked before attempting to insert the message",
   );
 });
 
@@ -96,14 +96,15 @@ test("POST /openai/conversations/:id/messages returns 404 for a non-existent con
 
   assert.ok(
     /\b404\b/.test(routeImplementation),
-    "Expected the route to explicitly return HTTP 404 when the conversation does not exist"
+    "Expected the route to explicitly return HTTP 404 when the conversation does not exist",
   );
   assert.ok(
     missingConversationBranchIndex >= 0,
-    "Expected a missing-conversation branch in the route implementation"
+    "Expected a missing-conversation branch in the route implementation",
   );
   assert.ok(
-    insertMessageIndex === -1 || missingConversationBranchIndex < insertMessageIndex,
-    "The 404 missing-conversation response must be handled before message insertion"
+    insertMessageIndex === -1 ||
+      missingConversationBranchIndex < insertMessageIndex,
+    "The 404 missing-conversation response must be handled before message insertion",
   );
 });

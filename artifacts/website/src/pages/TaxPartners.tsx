@@ -486,7 +486,7 @@ export default function TaxPartners() {
     <div className="pt-24 pb-20">
       <SEO
         title="CPA & Tax Referral Partners"
-        description="We don't do taxes — but we work closely with trusted CPAs and tax professionals nationwide."
+        description="Build a trusted referral network for client needs that fall outside Blueprints & Bookkeeping's bookkeeping, planning, and limited business-support scope."
         path="/tax-partners"
       />
       <section className="py-16 mb-8 relative">

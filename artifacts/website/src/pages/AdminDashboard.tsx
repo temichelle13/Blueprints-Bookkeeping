@@ -592,7 +592,7 @@ export default function AdminDashboard() {
               disabled={loading}
               className="border-white/10 text-gray-300 hover:text-white"
             >
-              {loading ? "Loading..." : "Refresh"}
+              {loading ? "Loading…" : "Refresh"}
             </Button>
           </div>
 

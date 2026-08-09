@@ -33,7 +33,7 @@ interface ContactLink {
 
 const contactLinks: ContactLink[] = [
   {
-    label: "Book a call",
+    label: "Book a meeting",
     href: SCHEDULE_PATH,
     description: "Choose a time that works for you.",
     icon: CalendarDays,
@@ -42,14 +42,14 @@ const contactLinks: ContactLink[] = [
   {
     label: "Start intake",
     href: GET_STARTED_PATH,
-    description: "Share your details and get started.",
+    description: "Share your details and let's build your business blueprint.",
     icon: ClipboardList,
     isExternal: false,
   },
   {
     label: BOOKKEEPER_EMAIL,
     href: `mailto:${BOOKKEEPER_EMAIL}`,
-    description: "Email for questions about services.",
+    description: "Email with questions regarding services or pricing.",
     icon: Mail,
     isExternal: true,
   },
@@ -68,7 +68,7 @@ const footerBuckets: FooterBucket[] = [
     links: [
       { label: "Advanced Bookkeeping", href: "/services/bookkeeping" },
       { label: "Business Plans", href: "/services/business-plans" },
-      { label: "Tax Partner Network", href: "/tax-partners" },
+      { label: "Tax Partners", href: "/tax-partners" },
       { label: "Pricing", href: "/pricing" },
     ],
   },
@@ -128,9 +128,9 @@ export function Footer() {
                 </span>
               </Link>
               <p className="text-muted-foreground text-sm mb-6 leading-relaxed max-w-md">
-                Advanced bookkeeping and business plans for founders who need
-                clean books and a clear path forward. Based in Roseburg, OR —
-                serving nationwide.
+                Advanced bookkeeping and business planning to build your
+                business blueprint for success. Based in Roseburg, OR —
+                Serving Nationwide.
               </p>
               <div className="flex flex-col gap-3 text-sm">
                 <a
@@ -161,7 +161,7 @@ export function Footer() {
                     className="text-accent/60 shrink-0"
                     aria-hidden="true"
                   />
-                  Roseburg, Oregon (Remote Nationwide)
+                  Based in Roseburg, Oregon, Serving Remote Nationwide
                 </div>
               </div>
             </div>
@@ -209,12 +209,12 @@ export function Footer() {
                 )}
               </div>
             ))}
-            <div className="md:col-span-2 lg:col-span-4 pt-2">
+            <div className="md:col-span-2 lg:col-span-4 mt-2 border-t border-border/40 pt-6">
               <h3 className="font-display font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-4">
                 Stay in the Loop
               </h3>
               <p className="text-muted-foreground text-sm mb-4 leading-relaxed max-w-2xl">
-                Founder-focused financial tips and updates — no spam,
+                 Tips and updates — no spam,
                 unsubscribe any time.
               </p>
               <FooterNewsletterSignup />
@@ -223,11 +223,10 @@ export function Footer() {
         </div>
         <div className="glow-line mb-6" />
         <p className="text-xs text-muted-foreground/60 text-center mb-4 leading-relaxed max-w-3xl mx-auto">
-          Blueprints & Bookkeeping LLC is not a licensed CPA firm and does
-          not provide tax preparation, tax filing, legal advice, or licensed
-          investment counsel. References to tax forms describe bookkeeping
-          contexts only. For tax and legal matters, please consult a licensed
-          professional.{" "}
+          Blueprints & Bookkeeping LLC is not a CPA or Lawyer and we do not
+          provide licensed investment counsel. Website content is for general
+          information only, consult the appropriate licensed professional for
+          legal counsel.{" "}
           <Link
             href="/faq"
             className="underline underline-offset-2 hover:text-muted-foreground transition-colors"
@@ -240,8 +239,8 @@ export function Footer() {
             className="underline underline-offset-2 hover:text-muted-foreground transition-colors"
           >
             Terms of Service
-          </Link>
-          .
+          </Link>{" "}
+          for service and professional-scope limits.
         </p>
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground">
           <div className="flex flex-wrap justify-center md:justify-start items-center gap-4">

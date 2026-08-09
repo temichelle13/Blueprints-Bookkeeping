@@ -7,8 +7,8 @@
  */
 
 export type UnsubscribeNewsletterByTokenParams = {
-/**
- * The unique unsubscribe token for the subscriber
- */
-token: string;
+  /**
+   * The unique unsubscribe token for the subscriber
+   */
+  token: string;
 };

@@ -5,7 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { BookingWebhookBodyPayload } from './bookingWebhookBodyPayload';
+import type { BookingWebhookBodyPayload } from "./bookingWebhookBodyPayload";
 
 export type BookingWebhookBody = {
   event?: string;

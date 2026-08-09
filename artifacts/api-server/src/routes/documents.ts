@@ -10,6 +10,7 @@ import { eq, desc } from "drizzle-orm";
 import multer from "multer";
 import * as ccStorage from "../lib/adobe-cc-storage";
 import { Resend } from "resend";
+import { randomUUID } from "node:crypto";
 import { isEmailSuppressed } from "../lib/email-suppression";
 
 const router: IRouter = Router();
@@ -87,7 +88,7 @@ function buildDocumentPath(clientName: string, originalName: string): string {
     .replace(/\s+/g, "_");
   const date = new Date().toISOString().split("T")[0];
   const safeFileName = originalName.replace(/[^a-zA-Z0-9._-]/g, "_");
-  const uid = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  const uid = `${Date.now().toString(36)}${randomUUID().replace(/-/g, "").slice(0, 12)}`;
   return `Blueprints_Bookkeeping/ClientDocuments/${year}/${safeName}/${date}_${uid}_${safeFileName}`;
 }
 
@@ -268,7 +269,7 @@ router.post(
           });
         }
       } catch (err) {
-        console.error(`Failed to upload ${file.originalname}:`, err);
+        console.error("Failed to upload %s:", file.originalname, err);
         errors.push(file.originalname);
       }
     }

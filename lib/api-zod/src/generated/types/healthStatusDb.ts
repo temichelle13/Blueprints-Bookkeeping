@@ -6,10 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type HealthStatusDb = typeof HealthStatusDb[keyof typeof HealthStatusDb];
-
+export type HealthStatusDb =
+  (typeof HealthStatusDb)[keyof typeof HealthStatusDb];
 
 export const HealthStatusDb = {
-  ok: 'ok',
-  error: 'error',
+  ok: "ok",
+  error: "error",
 } as const;

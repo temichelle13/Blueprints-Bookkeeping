@@ -21,6 +21,7 @@ type AiBinding = {
 
 type Env = {
   CONCIERGE_DB?: D1Database;
+  MONGODB_URI?: string;
   AI?: AiBinding;
   RESEND_API_KEY?: string;
   OWNER_EMAIL?: string;
@@ -73,8 +74,8 @@ Core services:
 - Business plans: startup plans, management reports and financials, LivePlan-powered forecasting, target market analysis, opportunity analysis, and full business plan design.
 
 Business rules:
-- Never offer tax preparation, tax filing, tax advice, tax planning, or seasonal tax services.
-- If asked about taxes, explain that Blueprints & Bookkeeping does not provide tax services. It can provide clean books and financial reports for a client's CPA, EA, or chosen tax professional.
+- Keep professional scope accurate without over-emphasizing disclaimers: do not claim CPA firm, accounting firm, attorney, auditor, investment adviser, Enrolled Agent, or unlimited tax representative status.
+- If asked about tax-related work, explain that business support may be available depending on the project, while website/chat content is not legal, investment, or individualized tax advice.
 - Do not directly schedule appointments. Guide visitors to Calendly.
 - Use the 30-minute Calendly link for discovery calls: ${CALENDLY_URL}
 - Use the 15-minute emergency/expedited Calendly link only for urgent situations: ${EMERGENCY_CALENDLY_URL}
@@ -434,6 +435,8 @@ async function verifyTurnstileOrThrow(
   }
 }
 
+
+
 async function sendOwnerEmail(
   env: Env,
   subject: string,
@@ -553,6 +556,7 @@ async function handleHealth(context: PagesContext): Promise<Response> {
   const payload = {
     status: dbStatus === "ok" ? "ok" : "degraded",
     db: dbStatus === "ok" ? "ok" : "error",
+    mongodbUri: context.env.MONGODB_URI ? "configured" : "missing",
     assistant: context.env.AI ? "ok" : "missing",
     email: context.env.RESEND_API_KEY ? "ok" : "missing",
     timestamp: new Date().toISOString(),
@@ -563,27 +567,6 @@ async function handleHealth(context: PagesContext): Promise<Response> {
     {
       status: payload.status === "ok" ? 200 : 503,
     },
-    context.request,
-  );
-}
-
-async function handleOpenAiHealth(context: PagesContext): Promise<Response> {
-  const dbStatus = await getD1Status(context);
-  const aiStatus = context.env.AI ? "ok" : "missing";
-  const ready = dbStatus === "ok" && aiStatus === "ok";
-
-  return jsonResponse(
-    {
-      status: ready ? "ok" : "degraded",
-      ready,
-      dependencies: {
-        openai: aiStatus,
-        environment: aiStatus,
-        db: dbStatus,
-      },
-      timestamp: new Date().toISOString(),
-    },
-    { status: ready ? 200 : 503 },
     context.request,
   );
 }
@@ -966,7 +949,7 @@ async function generateAssistantAnswer(
     "You are Aria, the website assistant for Blueprints & Bookkeeping.",
     "Answer in a warm, direct, concise way.",
     "Use only the company context below. If the answer is not in the context, say you are not sure and direct the visitor to Tea.",
-    "Never offer tax preparation, tax filing, tax advice, or tax planning.",
+    "Keep professional scope accurate without over-emphasizing disclaimers. Do not offer legal advice, investment advice, audit/attest services, or unapproved credentialed representation; tax-related business support depends on the project.",
     "Do not claim to schedule appointments. Give the correct Calendly link instead.",
     "",
     "COMPANY CONTEXT:",

@@ -5,20 +5,20 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-export type HealthStatusStatus = typeof HealthStatusStatus[keyof typeof HealthStatusStatus];
-
+export type HealthStatusStatus =
+  (typeof HealthStatusStatus)[keyof typeof HealthStatusStatus];
 
 export const HealthStatusStatus = {
-  ok: 'ok',
-  degraded: 'degraded',
+  ok: "ok",
+  degraded: "degraded",
 } as const;
 
-export type HealthStatusDb = typeof HealthStatusDb[keyof typeof HealthStatusDb];
-
+export type HealthStatusDb =
+  (typeof HealthStatusDb)[keyof typeof HealthStatusDb];
 
 export const HealthStatusDb = {
-  ok: 'ok',
-  error: 'error',
+  ok: "ok",
+  error: "error",
 } as const;
 
 export interface HealthStatus {
@@ -27,12 +27,12 @@ export interface HealthStatus {
   timestamp: string;
 }
 
-export type ContactFormInputFormType = typeof ContactFormInputFormType[keyof typeof ContactFormInputFormType];
-
+export type ContactFormInputFormType =
+  (typeof ContactFormInputFormType)[keyof typeof ContactFormInputFormType];
 
 export const ContactFormInputFormType = {
-  quick: 'quick',
-  detailed: 'detailed',
+  quick: "quick",
+  detailed: "detailed",
 } as const;
 
 export type ContactFormInputConsent = {
@@ -69,7 +69,7 @@ export interface ContactFormInput {
   /** Public page path where consent was captured (for example /contact) */
   consentSourcePage: string;
   website?: string;
-  'cf-turnstile-response': string;
+  "cf-turnstile-response": string;
 }
 
 export interface ContactFormResponse {
@@ -78,19 +78,19 @@ export interface ContactFormResponse {
   id: number;
 }
 
-export type NewsletterSubscribeInputSignupSource = typeof NewsletterSubscribeInputSignupSource[keyof typeof NewsletterSubscribeInputSignupSource];
-
+export type NewsletterSubscribeInputSignupSource =
+  (typeof NewsletterSubscribeInputSignupSource)[keyof typeof NewsletterSubscribeInputSignupSource];
 
 export const NewsletterSubscribeInputSignupSource = {
-  footer: 'footer',
-  lead_magnet: 'lead_magnet',
+  footer: "footer",
+  lead_magnet: "lead_magnet",
 } as const;
 
 export interface NewsletterSubscribeInput {
   email: string;
   signupSource: NewsletterSubscribeInputSignupSource;
   website?: string;
-  'cf-turnstile-response': string;
+  "cf-turnstile-response": string;
 }
 
 export interface NewsletterSubscribeResponse {
@@ -144,16 +144,16 @@ export interface OpenaiError {
   error: string;
 }
 
-export type ContractStatus = typeof ContractStatus[keyof typeof ContractStatus];
-
+export type ContractStatus =
+  (typeof ContractStatus)[keyof typeof ContractStatus];
 
 export const ContractStatus = {
-  draft: 'draft',
-  sent: 'sent',
-  viewed: 'viewed',
-  signed: 'signed',
-  expired: 'expired',
-  cancelled: 'cancelled',
+  draft: "draft",
+  sent: "sent",
+  viewed: "viewed",
+  signed: "signed",
+  expired: "expired",
+  cancelled: "cancelled",
 } as const;
 
 export interface Contract {
@@ -248,13 +248,13 @@ export interface AdobeSignStatus {
   message: string;
 }
 
-export type CalWebhookPayloadTriggerEvent = typeof CalWebhookPayloadTriggerEvent[keyof typeof CalWebhookPayloadTriggerEvent];
-
+export type CalWebhookPayloadTriggerEvent =
+  (typeof CalWebhookPayloadTriggerEvent)[keyof typeof CalWebhookPayloadTriggerEvent];
 
 export const CalWebhookPayloadTriggerEvent = {
-  BOOKING_CREATED: 'BOOKING_CREATED',
-  BOOKING_RESCHEDULED: 'BOOKING_RESCHEDULED',
-  BOOKING_CANCELLED: 'BOOKING_CANCELLED',
+  BOOKING_CREATED: "BOOKING_CREATED",
+  BOOKING_RESCHEDULED: "BOOKING_RESCHEDULED",
+  BOOKING_CANCELLED: "BOOKING_CANCELLED",
 } as const;
 
 export type CalWebhookPayloadPayload = { [key: string]: unknown };
@@ -269,22 +269,21 @@ export interface CalWebhookResponse {
   bookingId: number;
 }
 
-export type BookingMeetingType = typeof BookingMeetingType[keyof typeof BookingMeetingType];
-
+export type BookingMeetingType =
+  (typeof BookingMeetingType)[keyof typeof BookingMeetingType];
 
 export const BookingMeetingType = {
-  video: 'video',
-  phone: 'phone',
-  async: 'async',
+  video: "video",
+  phone: "phone",
+  async: "async",
 } as const;
 
-export type BookingStatus = typeof BookingStatus[keyof typeof BookingStatus];
-
+export type BookingStatus = (typeof BookingStatus)[keyof typeof BookingStatus];
 
 export const BookingStatus = {
-  confirmed: 'confirmed',
-  cancelled: 'cancelled',
-  rescheduled: 'rescheduled',
+  confirmed: "confirmed",
+  cancelled: "cancelled",
+  rescheduled: "rescheduled",
 } as const;
 
 export interface Booking {
@@ -304,13 +303,13 @@ export interface Booking {
   updatedAt: string;
 }
 
-export type NexusSummaryItemRiskLevel = typeof NexusSummaryItemRiskLevel[keyof typeof NexusSummaryItemRiskLevel];
-
+export type NexusSummaryItemRiskLevel =
+  (typeof NexusSummaryItemRiskLevel)[keyof typeof NexusSummaryItemRiskLevel];
 
 export const NexusSummaryItemRiskLevel = {
-  safe: 'safe',
-  warning: 'warning',
-  alert: 'alert',
+  safe: "safe",
+  warning: "warning",
+  alert: "alert",
 } as const;
 
 export interface NexusSummaryItem {
@@ -378,10 +377,10 @@ export interface NexusNotificationLog {
 }
 
 export type UnsubscribeNewsletterByTokenParams = {
-/**
- * The unique unsubscribe token for the subscriber
- */
-token: string;
+  /**
+   * The unique unsubscribe token for the subscriber
+   */
+  token: string;
 };
 
 export type BookingWebhookBodyPayload = { [key: string]: unknown };
@@ -401,4 +400,3 @@ export type BookingWebhook201 = {
   message?: string;
   contracts?: BookingWebhook201ContractsItem[];
 };
-

@@ -14,7 +14,7 @@
 - `artifacts/api-server`: Express 5 API, bundled by `build.ts` into `dist/index.cjs` for deployment.
 - `lib/api-spec/openapi.yaml`: source of truth for API contracts; Orval generates clients/schemas into
   `lib/api-client-react/src/generated` and `lib/api-zod/src/generated`.
-- `lib/db`: Drizzle/Postgres schema and DB connection used by the API server.
+- `lib/db`: legacy Drizzle/Postgres schema and DB connection currently used by the API server; MongoDB is the owner-selected production direction and new data work should plan for that migration.
 - `lib/integrations-openai-ai-*`: shared OpenAI integration wrappers.
 - `scripts/src/check-indexing-guards.ts`: deployment guard that validates `robots.txt` + `sitemap.xml` consistency.
 - `functions/api/*`: legacy placeholder files, not the main runtime path.
@@ -27,8 +27,7 @@
   `useSubmitContactForm`, `useSubscribeNewsletter`, etc.), not ad hoc fetches.
 - If an endpoint shape changes: update `lib/api-spec/openapi.yaml` first, run `pnpm run codegen`, then adapt both the
   Express route and frontend call sites.
-- Contact/newsletter/onboarding data persists through Drizzle tables in `lib/db/src/schema/*`; chat uses
-  `conversations` + `messages` tables and streams SSE from `artifacts/api-server/src/routes/openai/index.ts`.
+- Current contact/newsletter/onboarding/chat persistence is wired through legacy Drizzle/Postgres tables in `lib/db/src/schema/*`; this is not the desired final database architecture. MongoDB should be treated as the target data store for cleanup and future persistence work.
 - API startup also launches background schedulers in `artifacts/api-server/src/index.ts` (contracts, nexus checks,
   inquiry retention, outbound email retries), so changes there affect more than request handling.
 
@@ -36,7 +35,7 @@
 
 - Do not change business positioning, navigation order, Calendly URLs, `/admin` token auth, or service claims without
   checking `SITE_CONSTRAINTS.md`.
-- Never add or imply tax services; this is an explicit business rule enforced in copy and in the Aria system prompt.
+- Keep professional-scope boundaries accurate: do not imply CPA/accountant/auditor/attorney/investment-adviser credentials, personal income tax preparation, state tax preparation, or unlimited tax representation. Handle these as concise disclaimers where relevant, not as a dominant marketing theme.
 - Sensitive website routes must stay noindexed in three places: page-level `<SEO noindex />`, `App.tsx` fallback
   prefixes, and `scripts/src/check-indexing-guards.ts` / `public/robots.txt` / sitemap generation.
 - Generated folders under `lib/api-client-react/src/generated` and `lib/api-zod/src/generated` are outputs; edit the
@@ -59,7 +58,7 @@
 - Website deployment gate: `pnpm run check:website-deploy`
 - Frontend dev/build/test: `pnpm --filter @workspace/website run dev|build|test`
 - API build/test: `pnpm --filter @workspace/api-server run build|test`
-- DB schema push: `pnpm --filter @workspace/db run push`
+- Legacy Postgres schema push: `pnpm --filter @workspace/db run push` (only for maintaining current Drizzle code until MongoDB migration)
 
 ## Change guidance
 
