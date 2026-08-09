@@ -258,21 +258,21 @@ Create a `.env` file from `.env.example`. Key variables:
 
 <br>
 
-| Variable                | Required | Description                                                        |
-| :---------------------- | :------: | :----------------------------------------------------------------- |
-| `NODE_ENV`              |    ✅    | `development` or `production`                                      |
-| `PORT`                  |    ✅    | API server port (default: `3001`)                                  |
-| `MONGODB_URI`           |    ✅    | MongoDB connection string for the intended production data layer   |
-| `DATABASE_URL`          |  Legacy  | Current Drizzle/Postgres compatibility until migration is complete |
-| `CORS_ORIGIN`           |    ✅    | Allowed origins (comma-separated)                                  |
-| `ADMIN_TOKEN`           |    ✅    | 32+ character admin auth token                                     |
-| `VITE_API_URL`          |    ✅    | API base URL (compile-time)                                        |
-| `STRIPE_SECRET_KEY`     |    ✅    | Stripe secret key                                                  |
-| `STRIPE_WEBHOOK_SECRET` |    ✅    | Stripe webhook signing secret                                      |
-| `RESEND_API_KEY`        |    ✅    | Resend email service key                                           |
-| `OPENAI_API_KEY`        |    ✅    | OpenAI key required for server startup (used by the Aria chatbot)  |
-| `OPENAI_CHAT_MODEL`     |    ⬚     | Model name (default: `gpt-4.1-mini`)                               |
-| `TRUST_PROXY`           |    ⬚     | Set to `1` behind reverse proxy                                    |
+| Variable                | Required | Description                                                                                    |
+| :---------------------- | :------: | :--------------------------------------------------------------------------------------------- |
+| `NODE_ENV`              |    ✅    | `development` or `production`                                                                  |
+| `PORT`                  |    ✅    | API server port (default: `3001`)                                                              |
+| `MONGODB_URI`           |    ✅    | MongoDB connection string for the intended production data layer                               |
+| `DATABASE_URL`          |  Legacy  | Current Drizzle/Postgres compatibility until migration is complete                             |
+| `CORS_ORIGIN`           |    ✅    | Allowed origins (comma-separated)                                                              |
+| `ADMIN_TOKEN`           |    ✅    | 32+ character admin auth token                                                                 |
+| `VITE_API_URL`          |    ✅    | API base URL (compile-time), currently `https://blueprints-bookkeeping-api.up.railway.app/api` |
+| `STRIPE_SECRET_KEY`     | Optional | Stripe secret key; only needed if Stripe checkout is enabled                                   |
+| `STRIPE_WEBHOOK_SECRET` | Optional | Stripe webhook signing secret; only needed if Stripe checkout is enabled                       |
+| `RESEND_API_KEY`        |    ✅    | Resend email service key                                                                       |
+| `OPENAI_API_KEY`        |    ✅    | OpenAI key required for server startup (used by the Aria chatbot)                              |
+| `OPENAI_CHAT_MODEL`     |    ⬚     | Model name (default: `gpt-4.1-mini`)                                                           |
+| `TRUST_PROXY`           |    ⬚     | Set to `1` behind reverse proxy                                                                |
 
 > See `.env.example` for the complete list including Stripe price IDs and Adobe Sign configuration.
 
@@ -282,7 +282,7 @@ Create a `.env` file from `.env.example`. Key variables:
 
 ## 📦 Deployment
 
-The target production platform should use a low-cost always-on API/chat host with MongoDB persistence. The current Express app is served from `artifacts/api-server/src/index.ts` (compiled to `artifacts/api-server/dist/index.cjs`) and still contains legacy Drizzle/Postgres persistence that needs migration before MongoDB is fully wired end-to-end.
+The selected production platform is Cloudflare Pages for the website plus Railway for the always-on API/chat host at `https://blueprints-bookkeeping-api.up.railway.app`. MongoDB Atlas project `Blueprints-Bookkeeping` / cluster `bpbk-cluster` is the target persistence layer. The current Express app is served from `artifacts/api-server/src/index.ts` (compiled to `artifacts/api-server/dist/index.cjs`) and still contains legacy Drizzle/Postgres persistence that needs migration before MongoDB is fully wired end-to-end.
 
 ```bash
 # Full deployment check (recommended before every deploy)
