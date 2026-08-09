@@ -656,13 +656,17 @@ components:
           enum: [ok, degraded]
         db:
           type: string
-          enum: [ok, error]
+          enum: [ok, error, missing]
+        mongodb:
+          type: string
+          enum: [configured, missing]
         timestamp:
           type: string
           format: date-time
       required:
         - status
         - db
+        - mongodb
         - timestamp
     ContactFormInput:
       type: object
