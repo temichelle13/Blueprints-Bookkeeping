@@ -1,6 +1,8 @@
-name: Aria & API Live Health Monitor (Manual)
+name: Aria & API Live Health Monitor
 
 on:
+  schedule:
+    - cron: "0 */6 * * *"
   workflow_dispatch:
     inputs:
       api_base_url:
@@ -18,14 +20,12 @@ jobs:
     runs-on: ubuntu-latest
     env:
       API_BASE: ${{ inputs.api_base_url || secrets.PRODUCTION_API_URL || 'https://blueprintsandbookkeeping.com/api' }}
-      # Sent as a header so the Cloudflare WAF bypass rule can allowlist health-check
-      # traffic and prevent Bot Fight Mode from returning a 403 challenge page.
-      CF_BYPASS_HEADER: ${{ secrets.CF_HEALTH_BYPASS_TOKEN }}
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
       # Optional Cloudflare WAF bypass header value. Configure a matching WAF rule in
       # Cloudflare to allow requests that carry this token so that Bot Fight Mode does
       # not challenge automated health-check traffic from GitHub Actions.
+      # See: https://developers.cloudflare.com/waf/custom-rules/
       CF_HEALTH_BYPASS_TOKEN: ${{ secrets.CF_HEALTH_BYPASS_TOKEN }}
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Health check — /api/healthz
@@ -43,7 +43,7 @@ jobs:
           # Append the Cloudflare WAF bypass header only when the secret is set.
           # Configure a matching WAF rule in Cloudflare to allow these requests.
           if [ -n "$CF_HEALTH_BYPASS_TOKEN" ]; then
-            CURL_ARGS+=(-H "X-Health-Bypass-Token: $CF_HEALTH_BYPASS_TOKEN")
+            CURL_ARGS+=(-H "X-Health-Check-Token: $CF_HEALTH_BYPASS_TOKEN")
           fi
 
           STATUS=$(curl "${CURL_ARGS[@]}" "$API_BASE/healthz")
@@ -53,28 +53,42 @@ jobs:
           # 200 = healthy, 503 = degraded but reachable; anything else is unexpected.
           if [ "$STATUS" != "200" ] && [ "$STATUS" != "503" ]; then
             # Detect Cloudflare Bot Fight Mode challenge pages (403 with HTML body).
+            # When CF_HEALTH_BYPASS_TOKEN is not configured the WAF bypass rule cannot
+            # match, so Cloudflare returns a JS challenge page.  Treat this as a
+            # configuration warning rather than a production outage so the workflow
+            # does not open a spurious health-alert issue.
             if [ "$STATUS" = "403" ] && grep -q "challenges.cloudflare.com" /tmp/healthz.json 2>/dev/null; then
-              echo "❌ Cloudflare Bot Fight Mode is blocking this health check (HTTP 403 challenge page)."
-              echo "   Fix: create a Cloudflare WAF bypass rule keyed on the 'X-Health-Bypass-Token'"
-              echo "   header and set the CF_HEALTH_BYPASS_TOKEN secret in this repository's Actions settings."
+              echo "⚠️  Cloudflare Bot Fight Mode is blocking this health check (HTTP 403 challenge page)."
+              echo "   The CF_HEALTH_BYPASS_TOKEN secret is not set or the WAF bypass rule is missing."
+              echo "   Fix: create a Cloudflare WAF rule that allows requests with the"
+              echo "   'X-Health-Check-Token' header, then add CF_HEALTH_BYPASS_TOKEN to this"
+              echo "   repository's Actions secrets (Settings → Secrets and variables → Actions)."
+              echo "cf_blocked=true" >> "$GITHUB_OUTPUT"
+              # Exit 0 so downstream steps run; the Open GitHub Issue step is skipped
+              # when cf_blocked=true to avoid spurious health-alert noise.
+              exit 0
             else
               echo "❌ /healthz returned unexpected HTTP $STATUS (expected 200 or 503)"
+              echo "cf_blocked=false" >> "$GITHUB_OUTPUT"
+              exit 1
             fi
-            exit 1
           fi
+          echo "cf_blocked=false" >> "$GITHUB_OUTPUT"
 
       - name: Check for degraded dependencies
         id: degraded
+        if: steps.healthz.outputs.cf_blocked != 'true'
         run: |
           OVERALL=$(jq -r '.status // "unknown"' /tmp/healthz.json 2>/dev/null || echo "unknown")
           echo "overall=$OVERALL" >> "$GITHUB_OUTPUT"
           if [ "$OVERALL" = "degraded" ]; then
             echo "⚠️ API reports degraded status:"
-            cat /tmp/healthz.json | jq .
+            jq . /tmp/healthz.json
           fi
 
       - name: Aria smoke test — create conversation + send message
         id: aria
+        if: steps.healthz.outputs.cf_blocked != 'true'
         run: |
           # Build curl args as a bash array to avoid eval and shell-injection risks.
           BASE_CURL_ARGS=(
@@ -82,7 +96,7 @@ jobs:
             -H "User-Agent: Blueprints-Health-Monitor/1.0 (github-actions)"
           )
           if [ -n "$CF_HEALTH_BYPASS_TOKEN" ]; then
-            BASE_CURL_ARGS+=(-H "X-Health-Bypass-Token: $CF_HEALTH_BYPASS_TOKEN")
+            BASE_CURL_ARGS+=(-H "X-Health-Check-Token: $CF_HEALTH_BYPASS_TOKEN")
           fi
 
           CONV_STATUS=$(curl "${BASE_CURL_ARGS[@]}" \
@@ -117,7 +131,6 @@ jobs:
             -X POST "$API_BASE/openai/conversations/$CONV_ID/messages" \
             -H "Content-Type: application/json" \
             -H "Accept: text/event-stream" \
-            -H "X-Health-Check-Token: $CF_BYPASS_HEADER" \
             -d '{"content":"Hello, are you online?"}')
 
           echo "Send message status: $MSG_STATUS"
@@ -131,11 +144,14 @@ jobs:
             echo "❌ Aria message endpoint returned HTTP $MSG_STATUS"
           fi
 
-          curl -s -X DELETE "$API_BASE/openai/conversations/$CONV_ID" \
-            -H "X-Health-Check-Token: $CF_BYPASS_HEADER" || true
+          curl -s -X DELETE "$API_BASE/openai/conversations/$CONV_ID" || true
 
       - name: Close resolved health-alert issues on success
-        if: success() && steps.aria.outputs.aria_ok != 'false' && steps.degraded.outputs.overall != 'degraded'
+        if: >
+          success() &&
+          steps.healthz.outputs.cf_blocked != 'true' &&
+          steps.aria.outputs.aria_ok != 'false' &&
+          steps.degraded.outputs.overall != 'degraded'
         uses: actions/github-script@v9
         with:
           script: |
@@ -163,7 +179,9 @@ jobs:
             }
 
       - name: Open GitHub Issue on failure
-        if: failure() || steps.aria.outputs.aria_ok == 'false' || steps.degraded.outputs.overall == 'degraded'
+        if: >
+          (failure() || steps.aria.outputs.aria_ok == 'false' || steps.degraded.outputs.overall == 'degraded') &&
+          steps.healthz.outputs.cf_blocked != 'true'
         uses: actions/github-script@v9
         with:
           script: |
