@@ -1,6 +1,15 @@
 import { Router, type IRouter, type Request } from "express";
+import rateLimit from "express-rate-limit";
 import { Webhook } from "svix";
 import { addToSuppressionList } from "../lib/email-suppression";
+
+const resendWebhookLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // max 100 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests, please try again later." },
+});
 
 interface RawBodyRequest extends Request {
   rawBody?: Buffer;
@@ -10,6 +19,7 @@ const router: IRouter = Router();
 
 router.post(
   "/webhooks/resend",
+  resendWebhookLimiter,
   async (req: RawBodyRequest, res): Promise<void> => {
     const webhookSecret = process.env["RESEND_WEBHOOK_SECRET"];
 
