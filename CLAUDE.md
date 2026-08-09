@@ -11,7 +11,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-pnpm install --frozen-lockfile          # install (pnpm only — preinstall hook blocks npm/yarn)
 pnpm run dev                            # start API server (tsx watch on artifacts/api-server/src/index.ts)
 pnpm --filter @workspace/website dev    # start Vite dev server for the frontend
 
