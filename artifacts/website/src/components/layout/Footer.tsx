@@ -223,15 +223,17 @@ export function Footer() {
         </div>
         <div className="glow-line mb-6" />
         <p className="text-xs text-muted-foreground/60 text-center mb-4 leading-relaxed max-w-3xl mx-auto">
-Blueprints & Bookkeeping LLC is not a CPA or Lawyer and we do not provide licensed investment counsel. Website content 
-        is for general information only, consult the appropriate licensed professional for legal counsel.{" "}
-        <Link
-          href="/faq"
-          className="underline underline-offset-2 hover:text-muted-foreground transition-colors"
-        >
-          Learn more in our FAQ
-        </Link>{" "}
-        or review our{" "}
+          Blueprints & Bookkeeping LLC is not a CPA or Lawyer and we do not
+          provide licensed investment counsel. Website content is for general
+          information only, consult the appropriate licensed professional for
+          legal counsel.{" "}
+          <Link
+            href="/faq"
+            className="underline underline-offset-2 hover:text-muted-foreground transition-colors"
+          >
+            Learn more in our FAQ
+          </Link>{" "}
+          or review our{" "}
           <Link
             href="/terms"
             className="underline underline-offset-2 hover:text-muted-foreground transition-colors"
