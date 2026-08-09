@@ -77,6 +77,12 @@ function parseTrustProxy(value: string | undefined): number | boolean {
 }
 
 const app: Express = express();
+const DEFAULT_DEV_CORS_ORIGINS = [
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+];
 
 // Trust exactly one reverse-proxy hop so req.ip / req.ips reflect the real
 // client address rather than the proxy address.
@@ -102,7 +108,9 @@ if (isProduction && (!allowedOrigins || allowedOrigins.length === 0)) {
 
 app.use(
   cors({
-    origin: isProduction ? allowedOrigins : (allowedOrigins ?? true),
+    origin: isProduction
+      ? allowedOrigins
+      : (allowedOrigins ?? DEFAULT_DEV_CORS_ORIGINS),
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
   }),
