@@ -47,6 +47,19 @@ const CALENDLY_URL = "https://calendly.com/tea-blueprintsandbookkeeping/30min";
 const EMERGENCY_CALENDLY_URL =
   "https://calendly.com/tea-blueprintsandbookkeeping/emergency-or-other-expedited-request";
 const DEFAULT_AI_MODEL = "@cf/meta/llama-3.1-8b-instruct";
+
+function trimTrailingSlashes(value: string): string {
+  let end = value.length;
+  while (end > 0 && value.charCodeAt(end - 1) === 47) {
+    end -= 1;
+  }
+  return end === value.length ? value : value.slice(0, end);
+}
+
+function stripApiPrefix(pathname: string): string {
+  if (pathname === "/api") return "";
+  return pathname.startsWith("/api/") ? pathname.slice(5) : pathname;
+}
 const MAX_JSON_BYTES = 32_000;
 const TURNSTILE_RESPONSE_FIELD = "cf-turnstile-response";
 const TURNSTILE_ACTION = "lead_form";
@@ -131,9 +144,9 @@ function isAllowedOrigin(origin: string, request?: Request): boolean {
         .split(",")
         .map((value) => value.trim())
         .filter(Boolean),
-    ].map((value) => value.replace(/\/+$/, "")),
+    ].map(trimTrailingSlashes),
   );
-  return allowed.has(origin.replace(/\/+$/, ""));
+  return allowed.has(trimTrailingSlashes(origin));
 }
 
 function bindEnvToRequest(request: Request, env: Env): Request {
@@ -152,7 +165,7 @@ function assertAllowedOrigin(request: Request, env: Env): void {
 
 function getPath(request: Request): string {
   const pathname = new URL(request.url).pathname;
-  return pathname.replace(/^\/api\/?/, "").replace(/\/+$/, "");
+  return trimTrailingSlashes(stripApiPrefix(pathname));
 }
 
 function getIp(request: Request): string {
@@ -416,11 +429,7 @@ async function verifyTurnstileOrThrow(
   if (options.action && payload.action !== options.action) {
     throw new ResponseError(403, "Verification action mismatch.");
   }
-  const expectedHostname = getExpectedTurnstileHostname(env);
-  if (
-    expectedHostname &&
-    payload.hostname?.toLowerCase() !== expectedHostname
-  ) {
+  if (!isExpectedTurnstileHostname(env, payload.hostname)) {
     throw new ResponseError(403, "Verification origin mismatch.");
   }
 }
