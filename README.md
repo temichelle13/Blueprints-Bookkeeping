@@ -19,7 +19,7 @@ _This is our full-stack web platform: the front door, the engine room, and every
 
 <br>
 
-[✨ Explore the Site](https://blueprintsandbookkeeping.com) · [📋 Services](https://blueprintsandbookkeeping.com/services) · [💬 Meet Aria](https://blueprintsandbookkeeping.com) · [📞 Contact Us](https://blueprintsandbookkeeping.com/contact)
+[✨ Explore the Site](https://blueprintsandbookkeeping.com) · [📋 Services](https://blueprintsandbookkeeping.com/services) · [📞 Contact Us](https://blueprintsandbookkeeping.com/contact)
 
 </div>
 
@@ -40,15 +40,6 @@ This isn't a brochure site. It's a full-stack business platform designed to deli
 <table>
 <tr>
 <td width="50%">
-
-### 📬 Smart Contact System
-
-Dual-mode intake forms (quick inquiry + detailed onboarding) with **TCPA-compliant consent tracking**, honeypot spam protection, rate limiting, and automated email routing via **Resend**.
-
-### 💳 Integrated Payments
-
-Seamless **Stripe** checkout for bookkeeping subscriptions (monthly/annual) and one-time business plan deposits. Full webhook lifecycle management for real-time status updates.
-
 </td>
 <td width="50%">
 
