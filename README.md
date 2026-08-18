@@ -31,14 +31,6 @@ _This is our full-stack web platform: the front door, the engine room, and every
 
 Blueprints & Bookkeeping serves complex businesses — from multi-entity operations and agriculture to crypto and timber — with surgical financial precision. Our intentional client cap means you're never a ticket number; you're a strategy partner.
 
-| Service                          | Description                                                      | Starting At |
-| :------------------------------- | :--------------------------------------------------------------- | :---------- |
-| 📊 **Essentials Bookkeeping**    | Monthly reconciliation, QBO management, core financials          | $500/mo     |
-| 📈 **Growth Bookkeeping**        | Multi-entity support, niche reconciliation, proactive advisory   | $900/mo     |
-| 🏢 **Advanced Bookkeeping**      | Complex structures, consolidated reporting, dedicated strategist | Custom      |
-| 📝 **Startup Roadmap**           | Executive summary, market analysis, 3-year projections           | $2,500      |
-| 💼 **SBA / Investor Ready Plan** | Full lender package, pitch deck, LivePlan financial modeling     | $4,000      |
-
 ---
 
 ## ⚡ Platform Features
@@ -48,10 +40,6 @@ This isn't a brochure site. It's a full-stack business platform designed to deli
 <table>
 <tr>
 <td width="50%">
-
-### 🤖 Aria — AI Assistant
-
-An intelligent chatbot powered by **GPT-4.1-mini** that knows the business inside-out. Aria answers questions about services, pricing, process, and guides prospects to the right next step — with real-time streaming responses.
 
 ### 📬 Smart Contact System
 
@@ -63,10 +51,6 @@ Seamless **Stripe** checkout for bookkeeping subscriptions (monthly/annual) and 
 
 </td>
 <td width="50%">
-
-### 📄 Contract Management
-
-End-to-end contract workflow with **Adobe Sign** integration — template management, signature routing, status syncing, and signed document retrieval. All from a unified admin dashboard.
 
 ### 🔒 Admin Dashboard
 
@@ -86,7 +70,7 @@ Dark-first, glass-morphism aesthetic with **Framer Motion** animations, optimize
 <br>
 
 - **📰 Blog Engine** — Markdown-powered content system with slug-based routing
-- **📅 Calendar Integration** — Cal.com / Calendly scheduling with webhook-driven booking records
+- **📅 Calendar Integration** — Calendly scheduling with webhook-driven booking records
 - **📧 Newsletter System** — Subscribe/unsubscribe management with email event tracking
 - **🔍 SEO Infrastructure** — JSON-LD schema markup (LocalBusiness, ProfessionalService, FAQ, Breadcrumb), dynamic sitemap generation, meta tag management
 - **🍪 Cookie Consent** — Compliant consent banner with user preference storage
@@ -273,6 +257,7 @@ Create a `.env` file from `.env.example`. Key variables:
 | `OPENAI_API_KEY`        |    ✅    | OpenAI key required for server startup (used by the Aria chatbot)                              |
 | `OPENAI_CHAT_MODEL`     |    ⬚     | Model name (default: `gpt-4.1-mini`)                                                           |
 | `TRUST_PROXY`           |    ⬚     | Set to `1` behind reverse proxy                                                                |
+| 'RAILWAY_TOKEN' | 
 
 > See `.env.example` for the complete list including Stripe price IDs and Adobe Sign configuration.
 
