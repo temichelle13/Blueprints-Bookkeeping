@@ -3,18 +3,19 @@ import rateLimit from "express-rate-limit";
 import { Webhook } from "svix";
 import { addToSuppressionList } from "../lib/email-suppression";
 
+const resendWebhookLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // max 100 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests, please try again later." },
+});
+
 interface RawBodyRequest extends Request {
   rawBody?: Buffer;
 }
 
 const router: IRouter = Router();
-
-const resendWebhookLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  standardHeaders: true,
-  legacyHeaders: false,
-});
 
 router.post(
   "/webhooks/resend",

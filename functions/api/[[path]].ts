@@ -21,6 +21,7 @@ type AiBinding = {
 
 type Env = {
   CONCIERGE_DB?: D1Database;
+  MONGODB_URI?: string;
   AI?: AiBinding;
   RESEND_API_KEY?: string;
   OWNER_EMAIL?: string;
@@ -535,20 +536,25 @@ function leadEmailHtml(payload: {
     </div>`;
 }
 
-async function handleHealth(context: PagesContext): Promise<Response> {
-  let dbStatus: "ok" | "missing" | "error" = "missing";
-  if (context.env.CONCIERGE_DB) {
-    try {
-      await context.env.CONCIERGE_DB.prepare("SELECT 1").first();
-      dbStatus = "ok";
-    } catch {
-      dbStatus = "error";
-    }
+async function getD1Status(
+  context: PagesContext,
+): Promise<"ok" | "missing" | "error"> {
+  if (!context.env.CONCIERGE_DB) return "missing";
+  try {
+    await context.env.CONCIERGE_DB.prepare("SELECT 1").first();
+    return "ok";
+  } catch {
+    return "error";
   }
+}
+
+async function handleHealth(context: PagesContext): Promise<Response> {
+  const dbStatus = await getD1Status(context);
 
   const payload = {
     status: dbStatus === "ok" ? "ok" : "degraded",
     db: dbStatus === "ok" ? "ok" : "error",
+    mongodbUri: context.env.MONGODB_URI ? "configured" : "missing",
     assistant: context.env.AI ? "ok" : "missing",
     email: context.env.RESEND_API_KEY ? "ok" : "missing",
     timestamp: new Date().toISOString(),
@@ -1028,6 +1034,9 @@ export async function onRequest(context: PagesContext): Promise<Response> {
 
     if (method === "GET" && path === "healthz") {
       return await handleHealth(context);
+    }
+    if (method === "GET" && path === "openai/health") {
+      return await handleOpenAiHealth(context);
     }
     if (method === "POST" && path === "contact") {
       return await handleContact(context);

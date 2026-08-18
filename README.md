@@ -1,6 +1,6 @@
 <div align="center">
-
-# 🏗️ Blueprints & Bookkeeping
+  
+  ## Blueprints & Bookkeeping📈
 
 ### _Premium Remote Financial Services — Built Different_
 
@@ -9,7 +9,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-6.x-3178c6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Vite](https://img.shields.io/badge/Vite-8-646cff?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev)
 [![Tailwind](https://img.shields.io/badge/Tailwind_CSS-4-06b6d4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169e1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org)
+[![MongoDB](https://img.shields.io/badge/MongoDB-target-47a248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com)
 
 ---
 
@@ -27,17 +27,9 @@ _This is our full-stack web platform: the front door, the engine room, and every
 
 ## 🎯 What We Do
 
-> **We don't do taxes. We don't chase volume. We build blueprints for financial clarity.**
+> **We build clean books, practical business plans, and financial systems that make decisions clearer.**
 
 Blueprints & Bookkeeping serves complex businesses — from multi-entity operations and agriculture to crypto and timber — with surgical financial precision. Our intentional client cap means you're never a ticket number; you're a strategy partner.
-
-| Service                          | Description                                                      | Starting At |
-| :------------------------------- | :--------------------------------------------------------------- | :---------- |
-| 📊 **Essentials Bookkeeping**    | Monthly reconciliation, QBO management, core financials          | $500/mo     |
-| 📈 **Growth Bookkeeping**        | Multi-entity support, niche reconciliation, proactive advisory   | $900/mo     |
-| 🏢 **Advanced Bookkeeping**      | Complex structures, consolidated reporting, dedicated strategist | Custom      |
-| 📝 **Startup Roadmap**           | Executive summary, market analysis, 3-year projections           | $2,500      |
-| 💼 **SBA / Investor Ready Plan** | Full lender package, pitch deck, LivePlan financial modeling     | $4,000      |
 
 ---
 
@@ -49,10 +41,6 @@ This isn't a brochure site. It's a full-stack business platform designed to deli
 <tr>
 <td width="50%">
 
-### 🤖 Aria — AI Assistant
-
-An intelligent chatbot powered by **GPT-4.1-mini** that knows the business inside-out. Aria answers questions about services, pricing, process, and guides prospects to the right next step — with real-time streaming responses.
-
 ### 📬 Smart Contact System
 
 Dual-mode intake forms (quick inquiry + detailed onboarding) with **TCPA-compliant consent tracking**, honeypot spam protection, rate limiting, and automated email routing via **Resend**.
@@ -63,10 +51,6 @@ Seamless **Stripe** checkout for bookkeeping subscriptions (monthly/annual) and 
 
 </td>
 <td width="50%">
-
-### 📄 Contract Management
-
-End-to-end contract workflow with **Adobe Sign** integration — template management, signature routing, status syncing, and signed document retrieval. All from a unified admin dashboard.
 
 ### 🔒 Admin Dashboard
 
@@ -86,7 +70,7 @@ Dark-first, glass-morphism aesthetic with **Framer Motion** animations, optimize
 <br>
 
 - **📰 Blog Engine** — Markdown-powered content system with slug-based routing
-- **📅 Calendar Integration** — Cal.com / Calendly scheduling with webhook-driven booking records
+- **📅 Calendar Integration** — Calendly scheduling with webhook-driven booking records
 - **📧 Newsletter System** — Subscribe/unsubscribe management with email event tracking
 - **🔍 SEO Infrastructure** — JSON-LD schema markup (LocalBusiness, ProfessionalService, FAQ, Breadcrumb), dynamic sitemap generation, meta tag management
 - **🍪 Cookie Consent** — Compliant consent banner with user preference storage
@@ -123,7 +107,7 @@ Blueprints-Bookkeeping/
 │           └── services/         # Business logic (Stripe, Resend, Adobe Sign)
 │
 ├── 📁 lib/
-│   ├── db/                       # Drizzle ORM schema & database layer
+│   ├── db/                       # Legacy Drizzle/Postgres layer pending MongoDB migration
 │   ├── api-zod/                  # Shared Zod validation schemas
 │   ├── api-client-react/         # React hooks for API consumption
 │   ├── api-spec/                 # API specification definitions
@@ -166,8 +150,8 @@ Recharts
 
 Express v5<br>
 TypeScript<br>
-Drizzle ORM<br>
 Zod Validation<br>
+Legacy Drizzle ORM pending MongoDB migration<br>
 Helmet.js<br>
 Rate Limiting<br>
 Multer (uploads)<br>
@@ -176,8 +160,8 @@ Structured Logging
 </td>
 <td>
 
-PostgreSQL 16<br>
-Drizzle Migrations<br>
+MongoDB target<br>
+Legacy Drizzle/Postgres pending migration<br>
 Token Auth (Admin)<br>
 TCPA Consent DB<br>
 Email Suppression<br>
@@ -204,11 +188,11 @@ QuickBooks Online
 
 ### Prerequisites
 
-| Tool           | Version                            |
-| :------------- | :--------------------------------- |
-| **Node.js**    | `^20.19.0` · `^22.0.0` · `^24.0.0` |
-| **pnpm**       | `10.33.2`                          |
-| **PostgreSQL** | `16+`                              |
+| Tool        | Version                                |
+| :---------- | :------------------------------------- |
+| **Node.js** | `^20.19.0` · `^22.0.0` · `^24.0.0`     |
+| **pnpm**    | `10.33.2`                              |
+| **MongoDB** | Atlas/shared cluster or compatible URI |
 
 ### Installation
 
@@ -224,8 +208,8 @@ pnpm install
 cp .env.example .env
 # Edit .env with your values (see Environment Variables below)
 
-# Push database schema
-pnpm --filter @workspace/db push
+# Set MONGODB_URI for the intended data layer.
+# Legacy note: the current API may still require DATABASE_URL until Drizzle/Postgres is removed.
 
 # Start development
 pnpm run dev
@@ -258,20 +242,22 @@ Create a `.env` file from `.env.example`. Key variables:
 
 <br>
 
-| Variable                | Required | Description                                                       |
-| :---------------------- | :------: | :---------------------------------------------------------------- |
-| `NODE_ENV`              |    ✅    | `development` or `production`                                     |
-| `PORT`                  |    ✅    | API server port (default: `3001`)                                 |
-| `DATABASE_URL`          |    ✅    | PostgreSQL connection string                                      |
-| `CORS_ORIGIN`           |    ✅    | Allowed origins (comma-separated)                                 |
-| `ADMIN_TOKEN`           |    ✅    | 32+ character admin auth token                                    |
-| `VITE_API_URL`          |    ✅    | API base URL (compile-time)                                       |
-| `STRIPE_SECRET_KEY`     |    ✅    | Stripe secret key                                                 |
-| `STRIPE_WEBHOOK_SECRET` |    ✅    | Stripe webhook signing secret                                     |
-| `RESEND_API_KEY`        |    ✅    | Resend email service key                                          |
-| `OPENAI_API_KEY`        |    ✅    | OpenAI key required for server startup (used by the Aria chatbot) |
-| `OPENAI_CHAT_MODEL`     |    ⬚     | Model name (default: `gpt-4.1-mini`)                              |
-| `TRUST_PROXY`           |    ⬚     | Set to `1` behind reverse proxy                                   |
+| Variable                | Required | Description                                                                                    |
+| :---------------------- | :------: | :--------------------------------------------------------------------------------------------- |
+| `NODE_ENV`              |    ✅    | `development` or `production`                                                                  |
+| `PORT`                  |    ✅    | API server port (default: `3001`)                                                              |
+| `MONGODB_URI`           |    ✅    | MongoDB connection string for the intended production data layer                               |
+| `DATABASE_URL`          |  Legacy  | Current Drizzle/Postgres compatibility until migration is complete                             |
+| `CORS_ORIGIN`           |    ✅    | Allowed origins (comma-separated)                                                              |
+| `ADMIN_TOKEN`           |    ✅    | 32+ character admin auth token                                                                 |
+| `VITE_API_URL`          |    ✅    | API base URL (compile-time), currently `https://blueprints-bookkeeping-api.up.railway.app/api` |
+| `STRIPE_SECRET_KEY`     | Optional | Stripe secret key; only needed if Stripe checkout is enabled                                   |
+| `STRIPE_WEBHOOK_SECRET` | Optional | Stripe webhook signing secret; only needed if Stripe checkout is enabled                       |
+| `RESEND_API_KEY`        |    ✅    | Resend email service key                                                                       |
+| `OPENAI_API_KEY`        |    ✅    | OpenAI key required for server startup (used by the Aria chatbot)                              |
+| `OPENAI_CHAT_MODEL`     |    ⬚     | Model name (default: `gpt-4.1-mini`)                                                           |
+| `TRUST_PROXY`           |    ⬚     | Set to `1` behind reverse proxy                                                                |
+| 'RAILWAY_TOKEN' | 
 
 > See `.env.example` for the complete list including Stripe price IDs and Adobe Sign configuration.
 
@@ -281,7 +267,7 @@ Create a `.env` file from `.env.example`. Key variables:
 
 ## 📦 Deployment
 
-The platform is deployed on **Replit** with a pre-deployment validation pipeline. API requests are served by the Express app at `artifacts/api-server/src/index.ts` (compiled to `artifacts/api-server/dist/index.cjs`).
+The selected production platform is Cloudflare Pages for the website plus Railway for the always-on API/chat host at `https://blueprints-bookkeeping-api.up.railway.app`. MongoDB Atlas project `Blueprints-Bookkeeping` / cluster `bpbk-cluster` is the target persistence layer. The current Express app is served from `artifacts/api-server/src/index.ts` (compiled to `artifacts/api-server/dist/index.cjs`) and still contains legacy Drizzle/Postgres persistence that needs migration before MongoDB is fully wired end-to-end.
 
 ```bash
 # Full deployment check (recommended before every deploy)
