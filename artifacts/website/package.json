@@ -62,7 +62,7 @@
     "react-icons": "^5.7.0",
     "react-is": "^19.2.8",
     "react-markdown": "^10.1.0",
-    "react-resizable-panels": "^4.12.2",
+    "react-resizable-panels": "^4.12.3",
     "recharts": "^3.10.1",
     "sonner": "^2.0.8",
     "tailwind-merge": "catalog:",
