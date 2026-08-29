@@ -1,28 +1,40 @@
 website:
-  - artifacts/website/**
+  - changed-files:
+      - any-glob-to-any-file: artifacts/website/**
 
 api-server:
-  - artifacts/api-server/**
+  - changed-files:
+      - any-glob-to-any-file: artifacts/api-server/**
 
 database:
-  - lib/db/**
-  - migrations/**
+  - changed-files:
+      - any-glob-to-any-file:
+          - lib/db/**
+          - migrations/**
 
 api-contract:
-  - lib/api-spec/**
-  - lib/api-client-react/**
-  - lib/api-zod/**
+  - changed-files:
+      - any-glob-to-any-file:
+          - lib/api-spec/**
+          - lib/api-client-react/**
+          - lib/api-zod/**
 
 integrations:
-  - lib/integrations-openai-ai-react/**
-  - lib/integrations-openai-ai-server/**
+  - changed-files:
+      - any-glob-to-any-file:
+          - lib/integrations-openai-ai-react/**
+          - lib/integrations-openai-ai-server/**
 
 scripts:
-  - scripts/**
+  - changed-files:
+      - any-glob-to-any-file: scripts/**
 
 ci:
-  - .github/**
+  - changed-files:
+      - any-glob-to-any-file: .github/**
 
 docs:
-  - "**/*.md"
-  - docs/**
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+          - docs/**
