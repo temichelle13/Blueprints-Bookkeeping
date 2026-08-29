@@ -1,12 +1,12 @@
 <div align="center">
-  
-  ## Blueprints & Bookkeeping📈
+
+## Blueprints & Bookkeeping📈
 
 ### _Premium Remote Financial Services — Built Different_
 
 [![Live Site](https://img.shields.io/badge/🌐_Live_Site-blueprintsandbookkeeping.com-2563eb?style=for-the-badge)](https://blueprintsandbookkeeping.com)
 [![React](https://img.shields.io/badge/React-19-61dafb?style=for-the-badge&logo=react&logoColor=white)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-6.x-3178c6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-7.x-3178c6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Vite](https://img.shields.io/badge/Vite-8-646cff?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev)
 [![Tailwind](https://img.shields.io/badge/Tailwind_CSS-4-06b6d4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![MongoDB](https://img.shields.io/badge/MongoDB-target-47a248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com)
@@ -77,7 +77,7 @@ Dark-first, glass-morphism aesthetic with **Framer Motion** animations, optimize
 ## 🏗️ Architecture
 
 This is a **pnpm monorepo** designed for separation of concerns, type safety across boundaries, and shared code through internal packages.
-The production API runtime path is **only** `artifacts/api-server/src/index.ts` (built to `artifacts/api-server/dist/index.cjs`).
+The repository contains a low-cost Cloudflare Pages Function for same-origin API routes and a fuller Express API that can be deployed to a separate Node host.
 
 ```
 Blueprints-Bookkeeping/
@@ -95,7 +95,7 @@ Blueprints-Bookkeeping/
 │       └── src/
 │           ├── routes/           # Endpoint handlers (contact, payments, admin…)
 │           ├── middleware/        # Auth, rate limiting, logging
-│           └── services/         # Business logic (Stripe, Resend, Adobe Sign)
+│           └── services/         # Business logic (payments, email, contracts)
 │
 ├── 📁 lib/
 │   ├── db/                       # Legacy Drizzle/Postgres layer pending MongoDB migration
@@ -126,15 +126,14 @@ Blueprints-Bookkeeping/
 <td>
 
 React 19<br>
-TypeScript 6<br>
+TypeScript 7<br>
 Vite 8<br>
 Tailwind CSS 4<br>
 Framer Motion<br>
 Radix UI<br>
 React Hook Form<br>
 TanStack Query<br>
-Wouter<br>
-Recharts
+Wouter
 
 </td>
 <td>
@@ -166,8 +165,8 @@ OpenAI (Chat AI)<br>
 Resend (Email)<br>
 Calendly (Scheduling)<br>
 Svix (Webhooks)<br>
-QuickBooks Online / Intuit Accountant Suite
-Cloudlare Pages
+QuickBooks Online / Intuit Accountant Suite<br>
+Cloudflare Pages
 
 </td>
 </tr>
@@ -182,7 +181,7 @@ Cloudlare Pages
 | Tool        | Version                                |
 | :---------- | :------------------------------------- |
 | **Node.js** | `^20.19.0` · `^22.0.0` · `^24.0.0`     |
-| **pnpm**    | `10.33.2`                              |
+| **pnpm**    | `11.20.0`                              |
 | **MongoDB** | Atlas/shared cluster or compatible URI |
 
 ### Installation
@@ -233,24 +232,23 @@ Create a `.env` file from `.env.example`. Key variables:
 
 <br>
 
-| Variable                | Required | Description                                                                                    |
-| :---------------------- | :------: | :--------------------------------------------------------------------------------------------- |
-| `NODE_ENV`              |    ✅    | `development` or `production`                                                                  |
-| `PORT`                  |    ✅    | API server port (default: `3001`)                                                              |
-| `MONGODB_URI`           |    ✅    | MongoDB connection string for the intended production data layer                               |
-| `DATABASE_URL`          |  Legacy  | Current Drizzle/Postgres compatibility until migration is complete                             |
-| `CORS_ORIGIN`           |    ✅    | Allowed origins (comma-separated)                                                              |
-| `ADMIN_TOKEN`           |    ✅    | 32+ character admin auth token                                                                 |
-| `VITE_API_URL`          |    ✅    | API base URL (compile-time), currently `https://blueprints-bookkeeping-api.up.railway.app/api` |
-| `STRIPE_SECRET_KEY`     | Optional | Stripe secret key; only needed if Stripe checkout is enabled                                   |
-| `STRIPE_WEBHOOK_SECRET` | Optional | Stripe webhook signing secret; only needed if Stripe checkout is enabled                       |
-| `RESEND_API_KEY`        |    ✅    | Resend email service key                                                                       |
-| `OPENAI_API_KEY`        |    ✅    | OpenAI key required for server startup (used by the Aria chatbot)                              |
-| `OPENAI_CHAT_MODEL`     |    ⬚     | Model name (default: `gpt-4.1-mini`)                                                           |
-| `TRUST_PROXY`           |    ⬚     | Set to `1` behind reverse proxy                                                                |
-| 'RAILWAY_TOKEN' | 
+| Variable                | Required | Description                                                                     |
+| :---------------------- | :------: | :------------------------------------------------------------------------------ |
+| `NODE_ENV`              |    ✅    | `development` or `production`                                                   |
+| `PORT`                  |    ✅    | API server port (default: `3001`)                                               |
+| `MONGODB_URI`           |    ✅    | MongoDB connection string for the intended production data layer                |
+| `DATABASE_URL`          |  Legacy  | Current Drizzle/Postgres compatibility until migration is complete              |
+| `CORS_ORIGIN`           |    ✅    | Allowed origins (comma-separated)                                               |
+| `ADMIN_TOKEN`           |    ✅    | 32+ character admin auth token                                                  |
+| `VITE_API_URL`          | Optional | API base URL at build time; leave empty for the same-origin Cloudflare Function |
+| `STRIPE_SECRET_KEY`     | Optional | Stripe secret key; only needed if Stripe checkout is enabled                    |
+| `STRIPE_WEBHOOK_SECRET` | Optional | Stripe webhook signing secret; only needed if Stripe checkout is enabled        |
+| `RESEND_API_KEY`        |    ✅    | Resend email service key                                                        |
+| `OPENAI_API_KEY`        |    ✅    | OpenAI key required for server startup (used by the Aria chatbot)               |
+| `OPENAI_CHAT_MODEL`     |    ⬚     | Model name (default: `gpt-4.1-mini`)                                            |
+| `TRUST_PROXY`           |    ⬚     | Set to `1` behind reverse proxy                                                 |
 
-> See `.env.example` for the complete list including Stripe price IDs and Adobe Sign configuration.
+> See `.env.example` for the complete variable reference.
 
 </details>
 
@@ -258,7 +256,7 @@ Create a `.env` file from `.env.example`. Key variables:
 
 ## 📦 Deployment
 
-The selected production platform is Cloudflare Pages for the website plus Railway for the always-on API/chat host at `https://blueprints-bookkeeping-api.up.railway.app`. MongoDB Atlas project `Blueprints-Bookkeeping` / cluster `bpbk-cluster` is the target persistence layer. The current Express app is served from `artifacts/api-server/src/index.ts` (compiled to `artifacts/api-server/dist/index.cjs`) and still contains legacy Drizzle/Postgres persistence that needs migration before MongoDB is fully wired end-to-end.
+Cloudflare Pages hosts the website and can serve the implemented same-origin routes through `functions/api/[[path]].ts`. Railway is not required. The fuller Express API builds from `artifacts/api-server/src/index.ts`, but an always-on host has not been selected. MongoDB remains the intended Express persistence layer; legacy Drizzle/Postgres access must be migrated before that path is production-ready.
 
 ```bash
 # Full deployment check (recommended before every deploy)
@@ -290,9 +288,9 @@ This runs, in order:
 
 ## 🤝 Contributing
 
-This is a private business platform. Contributions are managed internally. If you've been granted access:
+This is a business platform maintained by its owner. Before contributing:
 
-1. **Branch** from the latest `main`
+1. **Branch** from the latest `master`
 2. **Follow** existing code conventions (TypeScript strict, Prettier formatting)
 3. **Test** your changes: `pnpm run typecheck`
 4. **Build** before pushing: `pnpm run check:website-deploy`

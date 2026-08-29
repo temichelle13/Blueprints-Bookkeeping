@@ -129,8 +129,8 @@ export function Footer() {
               </Link>
               <p className="text-muted-foreground text-sm mb-6 leading-relaxed max-w-md">
                 Advanced bookkeeping and business planning to build your
-                business blueprint for success. Based in Roseburg, OR —
-                Serving Nationwide.
+                business blueprint for success. Based in Roseburg, OR — Serving
+                Nationwide.
               </p>
               <div className="flex flex-col gap-3 text-sm">
                 <a
@@ -214,8 +214,7 @@ export function Footer() {
                 Stay in the Loop
               </h3>
               <p className="text-muted-foreground text-sm mb-4 leading-relaxed max-w-2xl">
-                 Tips and updates — no spam,
-                unsubscribe any time.
+                Tips and updates — no spam, unsubscribe any time.
               </p>
               <FooterNewsletterSignup />
             </div>

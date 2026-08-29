@@ -14,7 +14,6 @@ api-contract:
   - lib/api-zod/**
 
 integrations:
-  - lib/integrations/**
   - lib/integrations-openai-ai-react/**
   - lib/integrations-openai-ai-server/**
 

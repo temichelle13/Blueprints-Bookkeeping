@@ -17,8 +17,6 @@ tags:
     description: OpenAI AI chat operations
   - name: contracts
     description: Contract management and Adobe Acrobat Sign operations
-  - name: scheduling
-    description: Cal.com scheduling and booking operations
   - name: admin
     description: Admin dashboard and state nexus monitoring operations
 paths:
@@ -513,31 +511,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AdobeSignStatus"
-  /webhooks/cal:
-    post:
-      operationId: calWebhook
-      tags: [scheduling]
-      summary: Cal.com booking webhook
-      description: Receives booking events from Cal.com (created, rescheduled, cancelled). Verifies HMAC signature, upserts booking record, and triggers notifications.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CalWebhookPayload"
-      responses:
-        "200":
-          description: Webhook processed
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CalWebhookResponse"
-        "401":
-          description: Invalid signature
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
   /admin/nexus/summary:
     get:
       operationId: getNexusSummary
@@ -1054,27 +1027,6 @@ components:
       required:
         - configured
         - message
-    CalWebhookPayload:
-      type: object
-      properties:
-        triggerEvent:
-          type: string
-          enum: [BOOKING_CREATED, BOOKING_RESCHEDULED, BOOKING_CANCELLED]
-        payload:
-          type: object
-      required:
-        - triggerEvent
-        - payload
-    CalWebhookResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        bookingId:
-          type: integer
-      required:
-        - success
-        - bookingId
     Booking:
       type: object
       properties:

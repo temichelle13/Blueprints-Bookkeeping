@@ -20,7 +20,8 @@ test("fetchWithTimeout aborts stalled chat requests with a timeout error", async
 
   try {
     await assert.rejects(
-      () => fetchWithTimeout("/api/openai/conversations", { method: "POST" }, 1),
+      () =>
+        fetchWithTimeout("/api/openai/conversations", { method: "POST" }, 1),
       ChatTimeoutError,
     );
   } finally {

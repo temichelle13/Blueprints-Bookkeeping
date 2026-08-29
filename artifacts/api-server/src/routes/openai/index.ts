@@ -40,8 +40,10 @@ function hasOpenAiApiKey(): boolean {
 async function getAriaReadiness() {
   let dbStatus: "ok" | "error" = "error";
   try {
-    await pool.query("SELECT 1");
-    dbStatus = "ok";
+    if (pool) {
+      await pool.query("SELECT 1");
+      dbStatus = "ok";
+    }
   } catch {
     dbStatus = "error";
   }

@@ -17,12 +17,13 @@
 - `lib/db`: legacy Drizzle/Postgres schema and DB connection currently used by the API server; MongoDB is the owner-selected production direction and new data work should plan for that migration.
 - `lib/integrations-openai-ai-*`: shared OpenAI integration wrappers.
 - `scripts/src/check-indexing-guards.ts`: deployment guard that validates `robots.txt` + `sitemap.xml` consistency.
-- `functions/api/*`: legacy placeholder files, not the main runtime path.
+- `functions/api/[[path]].ts`: Cloudflare Pages same-origin API implementation backed by D1/Workers AI. It is narrower
+  than the Express API but remains a viable low-cost deployment path while the long-term API host is being selected.
 
 ## Big-picture flow
 
-- Browser code sets API base in `artifacts/website/src/App.tsx`; same-origin defaults to `/api`, cross-origin comes from
-  build-time `VITE_API_URL`.
+- Browser code sets API base in `artifacts/website/src/App.tsx`; same-origin defaults to `/api` and reaches Pages
+  Functions on Cloudflare, while a future cross-origin Express host comes from build-time `VITE_API_URL`.
 - Most frontend mutations should use the generated React Query hooks from `@workspace/api-client-react` (
   `useSubmitContactForm`, `useSubscribeNewsletter`, etc.), not ad hoc fetches.
 - If an endpoint shape changes: update `lib/api-spec/openapi.yaml` first, run `pnpm run codegen`, then adapt both the

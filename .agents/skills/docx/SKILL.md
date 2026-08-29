@@ -99,9 +99,7 @@ const {
 const doc = new Document({
   sections: [
     {
-      children: [
-        /* content */
-      ],
+      children: [/* content */],
     },
   ],
 });
@@ -132,9 +130,7 @@ sections: [
         margin: { top: 1440, right: 1440, bottom: 1440, left: 1440 }, // 1 inch margins
       },
     },
-    children: [
-      /* content */
-    ],
+    children: [/* content */],
   },
 ];
 ```
@@ -430,9 +426,7 @@ sections: [
         separate: true, // vertical line between columns
       },
     },
-    children: [
-      /* content flows naturally across columns */
-    ],
+    children: [/* content flows naturally across columns */],
   },
 ];
 
@@ -448,9 +442,7 @@ sections: [
         ],
       },
     },
-    children: [
-      /* content */
-    ],
+    children: [/* content */],
   },
 ];
 ```
@@ -492,9 +484,7 @@ sections: [
         ],
       }),
     },
-    children: [
-      /* content */
-    ],
+    children: [/* content */],
   },
 ];
 ```

@@ -1,15 +1,11 @@
 packages:
   - artifacts/*
   - lib/*
-  - lib/integrations/*
   - scripts
 
 autoInstallPeers: false
 
 catalog:
-  "@replit/vite-plugin-cartographer": ^0.6.1
-  "@replit/vite-plugin-dev-banner": ^0.1.2
-  "@replit/vite-plugin-runtime-error-modal": ^0.0.6
   "@tailwindcss/vite": ^4.3.3
   "@tanstack/react-query": ^5.102.3
   "@types/node": ^26.3.0
@@ -45,7 +41,9 @@ onlyBuiltDependencies:
 
 overrides:
   "@esbuild-kit/esm-loader": npm:tsx@^4.21.0
+  body-parser: 2.3.0
   esbuild: 0.28.1
+  qs: 6.15.2
   yaml: 2.9.0
 minimumReleaseAgeExclude:
   # Renovate security update: esbuild@0.28.1

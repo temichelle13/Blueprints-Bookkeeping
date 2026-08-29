@@ -23,13 +23,3 @@ updates:
       all-dependencies:
         patterns:
           - "*"
-
-  # Python dependencies (if you have requirements.txt/pyproject.toml/poetry.lock)
-  - package-ecosystem: "pip"
-    directory: "/"
-    schedule:
-      interval: "daily"
-    target-branch: "master"
-    labels:
-      - "dependencies"
-      - "python"

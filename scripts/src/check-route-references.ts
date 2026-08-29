@@ -38,20 +38,60 @@ function collectRouteFiles(dir: string): string[] {
 }
 
 const routeFiles = collectRouteFiles(routesDir);
-const routesIndexContent = fs.readFileSync(routesIndexPath, "utf8");
+const routeFileSet = new Set([routesIndexPath, ...routeFiles]);
+
+function resolveRouteImport(
+  importerPath: string,
+  importSpecifier: string,
+): string | null {
+  if (!importSpecifier.startsWith(".")) return null;
+
+  const unresolvedPath = path.resolve(
+    path.dirname(importerPath),
+    importSpecifier,
+  );
+  const candidates = importSpecifier.endsWith(".ts")
+    ? [unresolvedPath]
+    : [
+        `${unresolvedPath}.ts`,
+        unresolvedPath.replace(/\.js$/, ".ts"),
+        path.join(unresolvedPath, "index.ts"),
+      ];
+
+  return candidates.find((candidate) => routeFileSet.has(candidate)) ?? null;
+}
+
+function collectRouteImports(filePath: string): string[] {
+  const content = fs.readFileSync(filePath, "utf8");
+  const importPattern =
+    /(?:import|export)\s+(?:type\s+)?(?:[^"'`;]*?\s+from\s+)?["']([^"']+)["']/g;
+  const imports: string[] = [];
+
+  for (const match of content.matchAll(importPattern)) {
+    const specifier = match[1];
+    if (!specifier) continue;
+
+    const resolvedPath = resolveRouteImport(filePath, specifier);
+    if (resolvedPath) imports.push(resolvedPath);
+  }
+
+  return imports;
+}
+
+const reachableModules = new Set<string>();
+const pendingModules = [routesIndexPath];
+
+while (pendingModules.length > 0) {
+  const currentPath = pendingModules.pop();
+  if (!currentPath || reachableModules.has(currentPath)) continue;
+
+  reachableModules.add(currentPath);
+  pendingModules.push(...collectRouteImports(currentPath));
+}
 
 const unreferencedModules = routeFiles
-  .map((filePath) => path.relative(routesDir, filePath).replace(/\\/g, "/"))
-  .filter((relativePath) => {
-    const importBase = `./${relativePath.replace(/\.ts$/, "")}`;
-
-    return !(
-      routesIndexContent.includes(`from \"${importBase}\"`) ||
-      routesIndexContent.includes(`from '${importBase}'`) ||
-      routesIndexContent.includes(`from \"${importBase}.ts\"`) ||
-      routesIndexContent.includes(`from '${importBase}.ts'`)
-    );
-  });
+  .filter((filePath) => !reachableModules.has(filePath))
+  .map((filePath) => path.relative(routesDir, filePath).replace(/\\/g, "/"));
 
 if (unreferencedModules.length > 0) {
   console.error(
@@ -59,7 +99,7 @@ if (unreferencedModules.length > 0) {
       "[check:route-references] Unreferenced route modules found in artifacts/api-server/src/routes:",
       ...unreferencedModules.map((modulePath) => `  - ${modulePath}`),
       "",
-      "Import every route module in artifacts/api-server/src/routes/index.ts or remove it if unused.",
+      "Import every route module from the route graph rooted at artifacts/api-server/src/routes/index.ts, or remove it if unused.",
     ].join("\n"),
   );
   process.exit(1);

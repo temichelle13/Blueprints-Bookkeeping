@@ -2,8 +2,7 @@ import type { Metric } from "web-vitals";
 import { onCLS, onFCP, onINP, onLCP, onTTFB } from "web-vitals";
 
 const PLAUSIBLE_DOMAIN = import.meta.env.VITE_ANALYTICS_ID as
-  | string
-  | undefined;
+  string | undefined;
 const GA_MEASUREMENT_ID =
   (import.meta.env.VITE_GA_MEASUREMENT_ID as string | undefined) ||
   "G-XYLJ9XZ2SL";
