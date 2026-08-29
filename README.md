@@ -164,10 +164,10 @@ Session Tracking
 Stripe (Payments)<br>
 OpenAI (Chat AI)<br>
 Resend (Email)<br>
-Adobe Sign (Contracts)<br>
-Cal.com (Scheduling)<br>
+Calendly (Scheduling)<br>
 Svix (Webhooks)<br>
-QuickBooks Online
+QuickBooks Online / Intuit Accountant Suite
+Cloudlare Pages
 
 </td>
 </tr>
