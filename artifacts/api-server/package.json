@@ -19,9 +19,9 @@
     "express-rate-limit": "^8.6.2",
     "helmet": "^8.3.0",
     "multer": "^2.1.1",
-    "resend": "^6.22.1",
+    "resend": "^6.24.0",
     "stripe": "^22.5.0",
-    "svix": "^2.0.0",
+    "svix": "^2.1.0",
     "zod": "catalog:"
   },
   "devDependencies": {
