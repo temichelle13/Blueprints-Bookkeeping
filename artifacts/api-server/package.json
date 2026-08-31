@@ -20,7 +20,7 @@
     "helmet": "^8.3.0",
     "multer": "^2.1.1",
     "resend": "^6.24.0",
-    "stripe": "^22.5.0",
+    "stripe": "^22.6.0",
     "svix": "^2.1.0",
     "zod": "catalog:"
   },
