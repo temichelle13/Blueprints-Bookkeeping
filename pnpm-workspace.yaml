@@ -16,14 +16,14 @@ catalog:
   clsx: 2.1.1
   drizzle-orm: ^0.45.2
   framer-motion: 13.1.1
-  lucide-react: ^1.35.0
+  lucide-react: ^1.37.0
   react: 19.2.8
   react-dom: 19.2.8
   tailwind-merge: 3.6.0
   tailwindcss: ^4.3.3
   tsx: 4.23.12
   vite: ^8.2.2
-  zod: 4.4.3
+  zod: 4.5.2
 ignoredBuiltDependencies:
   - "@swc/core"
   - esbuild
