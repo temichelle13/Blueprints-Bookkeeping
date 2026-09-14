@@ -8,22 +8,22 @@ autoInstallPeers: false
 catalog:
   "@tailwindcss/vite": ^4.3.3
   "@tanstack/react-query": ^5.102.8
-  "@types/node": ^26.5.0
-  "@types/react": ^19.2.18
-  "@types/react-dom": ^19.2.7
+  "@types/node": ^26.5.1
+  "@types/react": ^19.3.0
+  "@types/react-dom": ^19.3.0
   "@vitejs/plugin-react": ^6.1.1
   class-variance-authority: ^0.7.1
   clsx: 2.1.1
   drizzle-orm: ^0.45.2
   framer-motion: 13.2.0
-  lucide-react: ^1.42.0
-  react: 19.2.8
-  react-dom: 19.2.8
+  lucide-react: ^1.44.0
+  react: 19.3.0
+  react-dom: 19.3.0
   tailwind-merge: 3.6.0
   tailwindcss: ^4.3.3
   tsx: 4.23.13
-  vite: ^8.2.2
-  zod: 4.5.4
+  vite: ^8.3.0
+  zod: 4.6.2
 ignoredBuiltDependencies:
   - "@swc/core"
   - esbuild
