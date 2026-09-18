@@ -18,7 +18,7 @@
     "express": "^5.2.1",
     "express-rate-limit": "^8.7.0",
     "helmet": "^8.3.0",
-    "multer": "^2.3.0",
+    "multer": "^2.4.0",
     "resend": "^6.28.0",
     "stripe": "^22.6.2",
     "svix": "^2.5.0",
