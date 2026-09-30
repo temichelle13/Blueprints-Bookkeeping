@@ -2,6 +2,7 @@ import {
   motion,
   useInView,
   useMotionValue,
+  useReducedMotion,
   useTransform,
   animate,
 } from "framer-motion";
@@ -31,16 +32,26 @@ function AnimatedCounter({
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-50px" });
-  const motionVal = useMotionValue(0);
+  const shouldReduceMotion = useReducedMotion();
+  const formattedValue = `${prefix}${value.toLocaleString()}${suffix}`;
+  const motionVal = useMotionValue(value);
   const rounded = useTransform(motionVal, (currentValue) =>
     Math.round(currentValue),
   );
 
   useEffect(() => {
-    if (inView) {
-      animate(motionVal, value, { duration: 2, ease: "easeOut" });
+    if (!inView || shouldReduceMotion) {
+      return;
     }
-  }, [inView, value, motionVal]);
+
+    motionVal.set(0);
+    const controls = animate(motionVal, value, {
+      duration: 2,
+      ease: "easeOut",
+    });
+
+    return controls.stop;
+  }, [inView, shouldReduceMotion, value, motionVal]);
 
   useEffect(() => {
     const unsubscribe = rounded.on("change", (currentValue) => {
@@ -52,11 +63,7 @@ function AnimatedCounter({
     return unsubscribe;
   }, [rounded, prefix, suffix]);
 
-  return (
-    <span ref={ref}>
-      {prefix}0{suffix}
-    </span>
-  );
+  return <span ref={ref}>{formattedValue}</span>;
 }
 
 export function StatsProofBar() {
