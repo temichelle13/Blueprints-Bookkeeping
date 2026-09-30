@@ -133,7 +133,9 @@ export async function processBooking(data: {
       results.push({ ...result, contractType });
     } catch (err) {
       console.error(
-        `Failed to send ${contractType} on booking for ${data.clientEmail}:`,
+        "Failed to send %s on booking for %s:",
+        contractType,
+        data.clientEmail,
         err,
       );
     }

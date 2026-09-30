@@ -1,21 +1,13 @@
 # Security Policy
 
-## Supported Versions
+## Supported code
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Security fixes are applied to the current `master` branch and the production deployment built from it. This project does not publish separately supported version lines.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+## Reporting a vulnerability
 
-## Reporting a Vulnerability
+Please report suspected vulnerabilities privately to [tea@blueprintsandbookkeeping.com](mailto:tea@blueprintsandbookkeeping.com). Do not open a public issue for an undisclosed vulnerability or include secrets, personal data, or exploit details in public discussions.
 
-Use this section to tell people how to report a vulnerability.
+Include the affected URL or component, reproduction steps, impact, and any safe supporting evidence. You should receive an acknowledgement within five business days. The maintainer will assess the report, coordinate remediation and disclosure when appropriate, and explain if the report is not accepted as a security issue.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+Do not access data that is not yours, disrupt service, or perform destructive testing while investigating.

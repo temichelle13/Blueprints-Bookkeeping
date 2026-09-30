@@ -205,7 +205,9 @@ test("turnstileProtection allows valid token and uses env secret", async () => {
   let postedSecret = "";
   globalThis.fetch = (async (_url, init) => {
     postedSecret =
-      init?.body instanceof URLSearchParams ? init.body.get("secret") ?? "" : "";
+      init?.body instanceof URLSearchParams
+        ? (init.body.get("secret") ?? "")
+        : "";
     return {
       ok: true,
       json: async () => ({

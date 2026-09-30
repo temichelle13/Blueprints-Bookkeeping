@@ -10,6 +10,11 @@ import {
 } from "lucide-react";
 import { getApiRoot } from "@/lib/api";
 import ReactMarkdown from "react-markdown";
+import {
+  fetchWithTimeout,
+  isTimeoutOrAbortError,
+  readStreamChunkWithTimeout,
+} from "./chat-timeouts";
 
 interface Message {
   role: "user" | "assistant";
@@ -30,6 +35,10 @@ const OFFLINE_NOTICE =
   "Aria is temporarily offline right now. Please use the contact form, email tea@blueprintsandbookkeeping.com, or book a discovery call and Tea will follow up personally.";
 
 const AVAILABILITY_CHECK_TIMEOUT_MS = 8000;
+const CONVERSATION_REQUEST_TIMEOUT_MS = 10000;
+const MESSAGE_REQUEST_TIMEOUT_MS = 15000;
+const STREAM_READ_TIMEOUT_MS = 30000;
+const GENERIC_CHAT_ERROR = "Sorry, something went wrong. Please try again.";
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -60,7 +69,7 @@ export default function ChatWidget() {
     );
 
     try {
-      const response = await fetch(`${apiBase}/healthz`, {
+      const response = await fetch(`${apiBase}/openai/health`, {
         method: "GET",
         signal: controller.signal,
       });
@@ -132,11 +141,15 @@ export default function ChatWidget() {
   const getOrCreateConversation = useCallback(async (): Promise<number> => {
     if (conversationId) return conversationId;
 
-    const res = await fetch(`${apiBase}/openai/conversations`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title: "Website Chat" }),
-    });
+    const res = await fetchWithTimeout(
+      `${apiBase}/openai/conversations`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: "Website Chat" }),
+      },
+      CONVERSATION_REQUEST_TIMEOUT_MS,
+    );
 
     if (!res.ok) {
       const payload = await parseApiErrorPayload(res);
@@ -152,7 +165,7 @@ export default function ChatWidget() {
     const data = await res.json();
     setConversationId(data.id);
     return data.id;
-  }, [conversationId, apiBase]);
+  }, [conversationId, apiBase, parseApiErrorPayload]);
 
   const sendMessage = useCallback(async () => {
     const text = input.trim();
@@ -178,13 +191,14 @@ export default function ChatWidget() {
         { role: "assistant", content: "", streaming: true },
       ]);
 
-      const res = await fetch(
+      const res = await fetchWithTimeout(
         `${apiBase}/openai/conversations/${convId}/messages`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ content: text }),
         },
+        MESSAGE_REQUEST_TIMEOUT_MS,
       );
 
       if (!res.ok || !res.body) {
@@ -210,7 +224,10 @@ export default function ChatWidget() {
       let buffer = "";
 
       while (true) {
-        const { done, value } = await reader.read();
+        const { done, value } = await readStreamChunkWithTimeout(
+          reader,
+          STREAM_READ_TIMEOUT_MS,
+        );
         if (done) break;
 
         buffer += decoder.decode(value, { stream: true });
@@ -264,24 +281,27 @@ export default function ChatWidget() {
           } catch {}
         }
       }
-    } catch {
-      setStatusMessage(
-        (current) =>
-          current ?? "Sorry, something went wrong. Please try again.",
-      );
+    } catch (error) {
+      const outageLikely = isTimeoutOrAbortError(error);
+      if (outageLikely) {
+        setAvailability("unavailable");
+        setStatusMessage(OFFLINE_NOTICE);
+      } else {
+        setStatusMessage((current) => current ?? GENERIC_CHAT_ERROR);
+      }
       setMessages((prev) => {
         const updated = [...prev];
         const last = updated[updated.length - 1];
         if (last?.role === "assistant" && last.streaming) {
           updated[updated.length - 1] = {
             ...last,
-            content: "Sorry, something went wrong. Please try again.",
+            content: outageLikely ? OFFLINE_NOTICE : GENERIC_CHAT_ERROR,
             streaming: false,
           };
         } else {
           updated.push({
             role: "assistant",
-            content: "Sorry, something went wrong. Please try again.",
+            content: outageLikely ? OFFLINE_NOTICE : GENERIC_CHAT_ERROR,
           });
         }
         return updated;
@@ -667,9 +687,9 @@ export default function ChatWidget() {
                               background: "#6366F1",
                               marginLeft: 2,
                               verticalAlign: "text-bottom",
-                            animation: "blink 0.8s step-end infinite",
-                          }}
-                        />
+                              animation: "blink 0.8s step-end infinite",
+                            }}
+                          />
                         )}
                         {!msg.streaming && i === messages.length - 1 && (
                           <div

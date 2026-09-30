@@ -8,10 +8,6 @@ export type {
   BookingWebhook201ContractsItem,
   BookingWebhookBody,
   BookingWebhookBodyPayload,
-  CalWebhookPayload,
-  CalWebhookPayloadPayload,
-  CalWebhookPayloadTriggerEvent,
-  CalWebhookResponse,
   ContactFormInput,
   ContactFormInputFormType,
   ContactFormResponse,
@@ -46,3 +42,4 @@ export type {
   UnsubscribeNewsletterByTokenParams,
   UpdateNexusRuleInput,
 } from "./generated/types";
+export * from "./generated/types";

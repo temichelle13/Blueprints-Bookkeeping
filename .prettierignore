@@ -1,4 +1,5 @@
-artifacts/website/public/_headers
+pnpm-lock.yaml
+.agents/
 artifacts/website/public/_redirects
 wrangler.toml
 scripts/cloudflare-pages-build.sh

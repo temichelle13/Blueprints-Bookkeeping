@@ -58,11 +58,16 @@ export default function Terms() {
             <h2 className="text-white font-bold text-lg mb-3">2. Services</h2>
             <p className="mb-3">
               Blueprints & Bookkeeping LLC provides bookkeeping, business
-              planning, and related financial consulting services. Our services
-              do not include:
+              planning, and related financial support services. Tax-related
+              business support may be available when included in a client
+              agreement. Our services do not include:
             </p>
             <ul className="list-disc list-inside space-y-1 pl-2">
-              <li>Tax preparation or tax filing</li>
+              <li>Personal income tax return preparation</li>
+              <li>
+                State tax return preparation unless explicitly included in a
+                signed engagement
+              </li>
               <li>Legal advice or legal representation</li>
               <li>Licensed investment or securities advice</li>
               <li>Audit or attest services</li>
@@ -75,19 +80,20 @@ export default function Terms() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">
-              3. No Tax Services
+              3. Professional Scope Limits
             </h2>
             <p>
-              Blueprints & Bookkeeping LLC is not a licensed CPA firm and does
-              not provide tax preparation, tax planning, tax filing, or
-              IRS-related advisory services. Our bookkeeping and financial
-              planning services are designed to complement your tax
-              professional's work, not replace it.
+              Blueprints & Bookkeeping LLC is not a CPA firm, public accounting
+              firm, law firm, auditor, investment adviser, Enrolled Agent, or
+              unlimited tax representative. Website content is general
+              information and should not be treated as legal, investment, or
+              individualized tax advice.
             </p>
             <p className="mt-3">
-              We also do not provide legal advice or legal representation.
-              Please work with a licensed tax professional or attorney when
-              legal or tax decisions are required.
+              Personal income tax and state tax return preparation are not
+              advertised services. Please work with an appropriately licensed
+              professional when legal, investment, or regulated tax decisions
+              are required.
             </p>
           </section>
 

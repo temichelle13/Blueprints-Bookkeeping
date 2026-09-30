@@ -1,165 +1,93 @@
-# Deployment Guide — Blueprints & Bookkeeping
+# Deployment Guide
 
-## Architecture Overview
+## Current deployment shape
 
-| Layer | Technology | Platform |
-| --- | --- | --- |
-| Frontend + Pages Functions | React + Vite, Cloudflare Pages Functions | Cloudflare Pages |
-| API server | Express 5, Node.js >= 20 | Railway / Render / Fly.io |
-| Database | PostgreSQL 16 | Neon / Supabase / Railway |
+| Layer           | Current direction                                               | Status                                                       |
+| --------------- | --------------------------------------------------------------- | ------------------------------------------------------------ |
+| Website         | Cloudflare Pages builds `artifacts/website`                     | Active deployment path                                       |
+| Same-origin API | Cloudflare Pages Function in `functions/api/[[path]].ts`        | Viable low-cost path for the routes it implements            |
+| Full API        | Express app in `artifacts/api-server`                           | Builds successfully; an always-on host has not been selected |
+| Data            | D1 for the Pages Function; legacy PostgreSQL/Drizzle in Express | MongoDB is the intended replacement for Express persistence  |
 
-```text
-Browser
-  |
-  +-> Cloudflare Pages (artifacts/website/dist/public)
-  |     +-> /api/chat     -> functions/api/chat.ts (Pages Function)
-  |     +-> /api/contact  -> functions/api/contact.ts (Pages Function)
-  |
-  +-> Standalone API server (artifacts/api-server)
-        +-> /api/admin/**
-        +-> /api/webhooks/**
-        +-> /api/openai/**
-        +-> all other Express routes
-```
+Railway is not part of the selected deployment plan. Do not point the website at a retired Railway domain. Until another full-API host is selected, keep `VITE_API_URL` empty so browser requests use the same-origin Cloudflare Function.
 
-Cloudflare Pages Functions handle `/api/chat` and `/api/contact` at the edge.
-All remaining API routes are served by the standalone Express server.
+## Cloudflare Pages
 
-## Cloudflare Pages — Frontend
+Configure the Pages project from the repository root:
 
-### Build settings
+| Setting                | Value                                                                          |
+| ---------------------- | ------------------------------------------------------------------------------ |
+| Build command          | `pnpm install --frozen-lockfile && pnpm --filter @workspace/website run build` |
+| Build output directory | `artifacts/website/dist/public`                                                |
+| Node.js                | A version allowed by the root `package.json` engines field                     |
 
-| Setting | Value |
-| --- | --- |
-| Build command | `pnpm install && pnpm --filter @workspace/website run build` |
-| Build output directory | `artifacts/website/dist/public` |
-| Root directory | repo root |
-| Node.js version | 20 |
+The website's `public/_routes.json` sends `/api/*` requests to `functions/api/[[path]].ts`. The Function currently implements health, contact, newsletter, feedback, and Aria conversation routes. When an endpoint exists in both the Function and Express, keep their public contract aligned.
 
-### API environment variables
+### Pages variables and bindings
 
-```bash
-# Build-time
-VITE_API_URL=
+Use the Cloudflare dashboard for secrets. Never commit values.
 
-# Runtime
-OPENAI_API_KEY=<your-openai-api-key>
-OPENAI_CHAT_MODEL=gpt-4.1-mini
-RESEND_API_KEY=<your-resend-api-key>
-OWNER_EMAIL=tea@blueprintsandbookkeeping.com
-TURNSTILE_SECRET_KEY=<your-cloudflare-turnstile-secret-key>
-```
+- Leave `VITE_API_URL` unset or empty for the same-origin Function.
+- Bind a D1 database as `DB` for routes that persist data.
+- Bind Workers AI as `AI` for the Cloudflare Aria path.
+- Set `RESEND_API_KEY`, `OWNER_EMAIL`, and `TURNSTILE_SECRET_KEY` when the corresponding feature is enabled.
+- Set any admin or webhook secrets required by the routes you deploy.
 
-`wrangler.toml` at the repo root controls the Pages project configuration.
-`artifacts/website/public/_routes.json` controls function routing include/exclude.
+If a separate API host is selected later, set `VITE_API_URL` to its public `/api` base URL and verify CORS before deploying the website.
 
-## Standalone API Server — Express
+## Standalone Express API
 
-### Prerequisites
-
-- Node.js >= 20
-- PostgreSQL 16 database
-
-### Environment variables
-
-```bash
-NODE_ENV=production
-PORT=3001
-DATABASE_URL=postgresql://user:password@host:5432/dbname
-CORS_ORIGIN=https://blueprintsandbookkeeping.com,https://www.blueprintsandbookkeeping.com
-ADMIN_TOKEN=<generate with: openssl rand -hex 32>
-TRUST_PROXY=1
-RESEND_API_KEY=<your-resend-api-key>
-OWNER_EMAIL=tea@blueprintsandbookkeeping.com
-OPENAI_API_KEY=<your-openai-api-key>
-OPENAI_CHAT_MODEL=gpt-4.1-mini
-TURNSTILE_SECRET_KEY=<your-cloudflare-turnstile-secret-key>
-CAL_WEBHOOK_SECRET=<your-cal-webhook-secret>
-STRIPE_SECRET_KEY=<your-stripe-secret-key>
-STRIPE_WEBHOOK_SECRET=<your-stripe-webhook-signing-secret>
-```
-
-### Deploy steps
+The full Node API is built from `artifacts/api-server/src/index.ts`:
 
 ```bash
 pnpm install --frozen-lockfile
 pnpm --filter @workspace/api-server run build
-pnpm --filter db push
 node artifacts/api-server/dist/index.cjs
 ```
 
-Set the start command on your host to `node artifacts/api-server/dist/index.cjs`.
+Any chosen host must support an always-on Node process, HTTPS, environment secrets, and a health check at `/api/healthz`. Required variables are documented in `.env.example`.
 
-## Database Migrations
+The Express app still imports the legacy Drizzle/PostgreSQL data package. `MONGODB_URI` documents the intended destination, but setting that variable alone does not migrate the app. Before calling the Express API MongoDB-backed:
 
-Drizzle migration files are under `lib/db/drizzle/`.
-The applied migration journal is `lib/db/drizzle/meta/_journal.json`.
+1. Implement the MongoDB connection and typed collections.
+2. Move persistent route and scheduler access away from `@workspace/db`.
+3. Migrate and reconcile production records separately from application startup.
+4. Validate IDs, relationships, consent history, tokens, and duplicate handling.
+5. Remove the production dependency on `DATABASE_URL` only after reconciliation passes.
+
+Do not run legacy schema pushes against production as part of an application deploy.
+
+## Required validation
+
+Run these checks from a clean checkout before publishing:
 
 ```bash
-pnpm --filter db push
-pnpm --filter db generate
+pnpm install --frozen-lockfile
+pnpm run check:merge-conflicts
+pnpm run lint
+pnpm run typecheck
+pnpm --filter @workspace/website run test
+pnpm --filter @workspace/api-server run test
+pnpm run build
+pnpm run check:website-deploy
+pnpm run check:route-references
 ```
 
-Note on legacy migration files:
+After deployment, verify the public website and every enabled flow:
 
-- `0004_add_contact_consent_audit_fields.sql`
-- `0004_add_outbound_email_events.sql`
+- Homepage and public navigation load without console errors.
+- Contact and newsletter submissions succeed.
+- Aria either responds or presents the approved fallback.
+- The active `/api/healthz` returns HTTP 200.
+- Browser requests have no CORS, 404, or 405 errors.
+- Admin access still requires the configured `x-admin-token` value.
 
-These files are not in `_journal.json` and are currently unapplied stale artifacts.
+Passing local checks proves the repository can build; it does not prove dashboard bindings, secrets, DNS, or production data are correct.
 
-## Verification Checklist
+## Related files
 
-- [ ] Homepage loads without errors
-- [ ] Contact form submission succeeds
-- [ ] Newsletter signup works
-- [ ] Intake / onboarding form works
-- [ ] Chat assistant responds (or fails gracefully)
-- [ ] `/api/healthz` returns 200
-- [ ] Browser console has no CORS errors
-- [ ] No unexpected 404 / 405 API responses
-- [ ] `/admin/stats` works with `ADMIN_TOKEN`
-
-## Troubleshooting
-
-### CORS blocked in browser
-
-Fix `CORS_ORIGIN` on API server and redeploy.
-
-### `/api/chat` or `/api/contact` returns 404
-
-1. Confirm `wrangler.toml` exists at repo root.
-2. Confirm `artifacts/website/public/_routes.json` includes those routes.
-3. Confirm Cloudflare deployment included the `functions/` directory.
-
-### Forms return 405
-
-Verify the client is sending `POST` and not `GET`.
-
-### Chat shows offline
-
-1. Verify `OPENAI_API_KEY` is set in Cloudflare env.
-2. Verify key validity in OpenAI dashboard.
-3. Check Cloudflare Pages Function logs.
-
-### Rate-limit false positives behind proxy
-
-Set `TRUST_PROXY=1` so `req.ip` resolves to real client IP.
-
-## Monthly SEO Monitoring
-
-For `https://blueprintsandbookkeeping.com` in Search Console:
-
-1. Open Pages report and filter `Indexed, though blocked by robots.txt`.
-2. Keep admin/transactional routes blocked.
-3. Fix robots/sitemap drift on any public marketing URL.
-4. Record date, URL count, and remediations.
-5. If anomalies increase, run `pnpm run check:website-deploy` before shipping.
-
-## Support
-
-For deployment questions contact <tea@blueprintsandbookkeeping.com>.
-Also review:
-
-- `.env.example`
-- `wrangler.toml`
-- `functions/api/`
+- `.env.example` — variable names and runtime ownership
+- `SITE_CONSTRAINTS.md` — business and content guardrails
+- `artifacts/website/public/_routes.json` — Cloudflare Function routing
+- `functions/api/[[path]].ts` — low-cost same-origin API implementation
+- `artifacts/api-server/src/index.ts` — full Express API entry point

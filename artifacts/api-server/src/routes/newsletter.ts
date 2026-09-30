@@ -96,7 +96,7 @@ function buildWelcomeEmail(unsubscribeToken: string): {
         <ul style="line-height:1.8;">
           <li>Practical financial insights for founders and small business owners</li>
           <li>Real talk on bookkeeping systems, cash flow, and business planning</li>
-          <li>No fluff. No tax advice. Just actionable guidance.</li>
+          <li>No fluff. Practical bookkeeping and business-finance guidance only.</li>
         </ul>
         <p>If you have a question or want to talk about your business, you can <a href="https://blueprintsandbookkeeping.com/schedule" style="color:#6366f1;">book a free discovery call</a> anytime.</p>
         <p>Talk soon,</p>

@@ -214,7 +214,8 @@ export function turnstileProtection(config: {
           routeId: config.routeId,
         });
         res.status(503).json({
-          error: "Verification is temporarily unavailable. Please try again soon.",
+          error:
+            "Verification is temporarily unavailable. Please try again soon.",
         });
         return;
       }
@@ -285,7 +286,11 @@ export function turnstileProtection(config: {
       };
 
       if (!verification.ok) {
-        recordFailedSubmission(config.routeId, req, "turnstile_siteverify_http");
+        recordFailedSubmission(
+          config.routeId,
+          req,
+          "turnstile_siteverify_http",
+        );
         res.status(503).json({
           error: "Verification is temporarily unavailable. Please try again.",
         });
@@ -297,7 +302,9 @@ export function turnstileProtection(config: {
           ? payload["error-codes"]
           : [];
         const hasInvalidInput = errorCodes.includes("invalid-input-response");
-        const hasTimeoutOrDuplicate = errorCodes.includes("timeout-or-duplicate");
+        const hasTimeoutOrDuplicate = errorCodes.includes(
+          "timeout-or-duplicate",
+        );
         recordFailedSubmission(
           config.routeId,
           req,
@@ -320,7 +327,9 @@ export function turnstileProtection(config: {
           });
           return;
         }
-        res.status(403).json({ error: "Verification failed. Please try again." });
+        res
+          .status(403)
+          .json({ error: "Verification failed. Please try again." });
         return;
       }
 
@@ -335,7 +344,11 @@ export function turnstileProtection(config: {
       }
 
       if (expectedHostnameFromSiteUrl && !payload.hostname) {
-        recordFailedSubmission(config.routeId, req, "turnstile_hostname_missing");
+        recordFailedSubmission(
+          config.routeId,
+          req,
+          "turnstile_hostname_missing",
+        );
         res.status(403).json({ error: "Verification origin mismatch." });
         return;
       }

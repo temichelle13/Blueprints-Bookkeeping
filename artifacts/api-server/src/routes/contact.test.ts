@@ -14,9 +14,14 @@ test("escapeHtml escapes special characters", () => {
 });
 
 test("ALLOWED_CONSENT_TEXT_VERSIONS accepts known values", () => {
-  assert.equal(ALLOWED_CONSENT_TEXT_VERSIONS.has("contact-consent-2026-03-31.1"), true);
   assert.equal(
-    ALLOWED_CONSENT_TEXT_VERSIONS.has("self-service-onboarding-consent-2026-03-31.1"),
+    ALLOWED_CONSENT_TEXT_VERSIONS.has("contact-consent-2026-03-31.1"),
+    true,
+  );
+  assert.equal(
+    ALLOWED_CONSENT_TEXT_VERSIONS.has(
+      "self-service-onboarding-consent-2026-03-31.1",
+    ),
     true,
   );
   assert.equal(ALLOWED_CONSENT_TEXT_VERSIONS.has("legacy-unknown"), true);

@@ -40,7 +40,7 @@ The repository currently has **three backend surfaces**:
 ### Approach B — Dedicated Node API server + Pages frontend (recommended)
 
 - Keep frontend on Cloudflare Pages.
-- Run API server on Railway/Render/Fly/Cloud Run.
+- Run the API server on a low-cost Node host such as Render or Cloud Run.
 - Expose API via `api.<domain>` and set `VITE_API_URL`.
 - Keep secrets in server runtime, not browser.
 - Pros: minimal risk, fastest migration from current code, strongest compatibility with Stripe/Adobe/Resend/Twilio stack.

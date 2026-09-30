@@ -5,10 +5,7 @@ export interface SchedulerRunRecord {
 }
 
 export type SchedulerName =
-  | "outboundEmailRetry"
-  | "contract"
-  | "nexus"
-  | "inquiryRetention";
+  "outboundEmailRetry" | "contract" | "nexus" | "inquiryRetention";
 
 const state: Record<SchedulerName, SchedulerRunRecord> = {
   outboundEmailRetry: { lastRunAt: null, processedCount: 0, errorCount: 0 },
@@ -26,6 +23,9 @@ export function recordSchedulerError(name: SchedulerName): void {
   state[name].errorCount += 1;
 }
 
-export function getSchedulerHealth(): Record<SchedulerName, SchedulerRunRecord> {
+export function getSchedulerHealth(): Record<
+  SchedulerName,
+  SchedulerRunRecord
+> {
   return { ...state };
 }

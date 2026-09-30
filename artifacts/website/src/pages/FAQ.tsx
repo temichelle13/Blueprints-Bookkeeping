@@ -33,8 +33,8 @@ const faqs: FAQSection[] = [
       },
       {
         id: "taxes",
-        q: "Do you do taxes or tax preparation?",
-        a: "No — and that's intentional. We focus exclusively on bookkeeping and financial planning year-round, which means we're always available and never disappear during tax season. Your CPA handles taxes; we make sure your books are clean and accurate so that handoff is seamless.",
+        q: "Do you offer tax-related support?",
+        a: "Tax-related business support may be available when it fits the project, but the main focus remains clean books, business planning, and practical financial organization. We keep professional-scope limits in the Terms so the details stay clear without making tax disclaimers the center of the site.",
       },
       {
         q: "Can you clean up old or messy books?",
