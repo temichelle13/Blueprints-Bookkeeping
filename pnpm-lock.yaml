@@ -10,8 +10,8 @@ catalogs:
       specifier: ^4.3.3
       version: 4.3.3
     '@tanstack/react-query':
-      specifier: ^5.104.5
-      version: 5.104.5
+      specifier: ^5.105.0
+      version: 5.105.0
     '@types/node':
       specifier: ^26.6.5
       version: 26.6.5
@@ -37,8 +37,8 @@ catalogs:
       specifier: 14.6.0
       version: 14.6.0
     lucide-react:
-      specifier: ^1.61.0
-      version: 1.61.0
+      specifier: ^1.62.0
+      version: 1.62.0
     react:
       specifier: 19.3.1
       version: 19.3.1
@@ -121,8 +121,8 @@ importers:
         specifier: ^23.0.1
         version: 23.0.1(@types/node@26.6.5)
       svix:
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.1
+        version: 2.9.1
       zod:
         specifier: 'catalog:'
         version: 4.6.7
@@ -174,7 +174,7 @@ importers:
         version: 1.4.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@tanstack/react-query':
         specifier: 'catalog:'
-        version: 5.104.5(@types/react@19.3.0)(react@19.3.1)
+        version: 5.105.0(@types/react@19.3.0)(react@19.3.1)
       '@workspace/api-client-react':
         specifier: workspace:*
         version: link:../../lib/api-client-react
@@ -189,7 +189,7 @@ importers:
         version: 14.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       lucide-react:
         specifier: 'catalog:'
-        version: 1.61.0(@types/react@19.3.0)(react@19.3.1)
+        version: 1.62.0(@types/react@19.3.0)(react@19.3.1)
       react:
         specifier: 'catalog:'
         version: 19.3.1
@@ -250,13 +250,13 @@ importers:
     dependencies:
       '@tanstack/react-query':
         specifier: 'catalog:'
-        version: 5.104.5(@types/react@19.3.0)(react@19.3.1)
+        version: 5.105.0(@types/react@19.3.0)(react@19.3.1)
 
   lib/api-spec:
     devDependencies:
       orval:
         specifier: ^8.45.0
-        version: 8.45.0(@tanstack/react-query@5.104.5(@types/react@19.3.0)(react@19.3.1))(prettier@3.9.10)(typescript@7.0.2)(zod@4.6.7)
+        version: 8.45.0(@tanstack/react-query@5.105.0(@types/react@19.3.0)(react@19.3.1))(prettier@3.9.10)(typescript@7.0.2)(zod@4.6.7)
 
   lib/api-zod:
     dependencies:
@@ -302,8 +302,8 @@ importers:
   lib/integrations-openai-ai-server:
     dependencies:
       openai:
-        specifier: ^7.43.0
-        version: 7.43.0(undici@8.12.3)(zod@4.6.7)
+        specifier: ^7.45.0
+        version: 7.45.0(undici@8.12.3)(zod@4.6.7)
       p-limit:
         specifier: ^7.3.3
         version: 7.3.3
@@ -1441,11 +1441,11 @@ packages:
     peerDependencies:
       vite: ^5.2.0 || ^6 || ^7 || ^8
 
-  '@tanstack/query-core@5.104.5':
-    resolution: {integrity: sha512-Q94gI8Opd+CbdVNOdj8ZCyV8WqLYitrDq1t96Xc8WZT6lY0r5iRnJLXYDxMex7EEf2v+mXvn4FcjaBKSxXZQ9A==}
+  '@tanstack/query-core@5.105.0':
+    resolution: {integrity: sha512-7p56vRmT/z4UJ6sctGIdl5WRUQyUv53IUpUwEKi2g97zMbO7zh8ZsCLffGAvCPBR4xD72e3VXsDyLwXHhoNTMQ==}
 
-  '@tanstack/react-query@5.104.5':
-    resolution: {integrity: sha512-RORgFe052U+93weaNuqg7qHq7vNVNzXN/VrXqD4bbAuQCWUqOl2lV5Ui9flWk5CVvMyL/Bh27QWhzwH0aaOx9g==}
+  '@tanstack/react-query@5.105.0':
+    resolution: {integrity: sha512-y+hMuDERvgg6ay1da0V1a6ZC0ZONt7dELxSFkqRZuwm7p1TTZs0MoXrPlBRflIpRoYjvzQVYxycnLImpFLhWrw==}
     peerDependencies:
       '@types/react': ^18 || ^19
       react: ^18 || ^19
@@ -2317,8 +2317,8 @@ packages:
   longest-streak@3.1.0:
     resolution: {integrity: sha512-9Ri+o0JYgehTaVBBDoMqIl8GXtbWg711O3srftcHhZ0dqnETqLaoIK0x17fUw9rFSlK/0NlsKe0Ahhyl5pXE2g==}
 
-  lucide-react@1.61.0:
-    resolution: {integrity: sha512-v2SQPPPNjnr+BlhL9Spuzmo5yR+hLkftfuE4E3jaxdNPgSH0hJKPcLJBP7yAta87jQNPsSERS59PJjCJ/CorBA==}
+  lucide-react@1.62.0:
+    resolution: {integrity: sha512-2i8QZZhkgYMA3oJvKYpCltHh54VnT/3rIPkDLHbzr3IJQBaCz8+7j7V2k2rczYd2aCqcBaMmNlWQ2KKeDfcxmw==}
     peerDependencies:
       '@types/react': '*'
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -2494,8 +2494,8 @@ packages:
   once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
 
-  openai@7.43.0:
-    resolution: {integrity: sha512-fBjKaDFG8AVfkGYoIo/E+xNRlNk7nx2nQ9GoQtXfePzPjg4QcT6nejkhXayJnEwSpFGfthOrAPI2KXj5yAqg9A==}
+  openai@7.45.0:
+    resolution: {integrity: sha512-krAWw8RRzV5OGGjD9JR3QKDEB+DU5k4YIOyHfdJaNAU9qkV2W1OvGszk9+bxQo9kZ8+//1gEDflgXVFpMH7Lrg==}
     engines: {node: '>=22.0.0'}
     peerDependencies:
       '@aws-sdk/credential-provider-node': '>=3.972.0 <4'
@@ -2872,8 +2872,8 @@ packages:
   style-to-object@1.0.14:
     resolution: {integrity: sha512-LIN7rULI0jBscWQYaSswptyderlarFkjQ+t79nzty8tcIAceVomEVlLzH5VP4Cmsv6MtKhs7qaAiwlcp+Mgaxw==}
 
-  svix@2.9.0:
-    resolution: {integrity: sha512-nAHGMr8fqGMeX+La2isqASxSFn3I8UB9QpswF/0lzIgO28yVvLPKgO8tWrx0+47BYueGacRKh7MUe8jYNl5eGg==}
+  svix@2.9.1:
+    resolution: {integrity: sha512-qeIouYbC4b2nnMAG9hKxglGh1hYlLyMt6HIg+pNqdNkj5T99a9tnhw4pV/mROPSCVGXv1rCBTUVdym3Y5R+UDA==}
     engines: {node: '>=22'}
 
   tagged-tag@1.0.0:
@@ -3403,12 +3403,12 @@ snapshots:
       - '@faker-js/faker'
       - '@modelcontextprotocol/server'
 
-  '@orval/query@8.45.0(@tanstack/react-query@5.104.5(@types/react@19.3.0)(react@19.3.1))':
+  '@orval/query@8.45.0(@tanstack/react-query@5.105.0(@types/react@19.3.0)(react@19.3.1))':
     dependencies:
       '@orval/core': 8.45.0
       '@orval/fetch': 8.45.0
     optionalDependencies:
-      '@tanstack/react-query': 5.104.5(@types/react@19.3.0)(react@19.3.1)
+      '@tanstack/react-query': 5.105.0(@types/react@19.3.0)(react@19.3.1)
     transitivePeerDependencies:
       - '@faker-js/faker'
       - '@modelcontextprotocol/server'
@@ -3953,11 +3953,11 @@ snapshots:
       tailwindcss: 4.3.3
       vite: 8.3.5(@types/node@26.6.5)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.0)
 
-  '@tanstack/query-core@5.104.5': {}
+  '@tanstack/query-core@5.105.0': {}
 
-  '@tanstack/react-query@5.104.5(@types/react@19.3.0)(react@19.3.1)':
+  '@tanstack/react-query@5.105.0(@types/react@19.3.0)(react@19.3.1)':
     dependencies:
-      '@tanstack/query-core': 5.104.5
+      '@tanstack/query-core': 5.105.0
       react: 19.3.1
     optionalDependencies:
       '@types/react': 19.3.0
@@ -4649,7 +4649,7 @@ snapshots:
 
   longest-streak@3.1.0: {}
 
-  lucide-react@1.61.0(@types/react@19.3.0)(react@19.3.1):
+  lucide-react@1.62.0(@types/react@19.3.0)(react@19.3.1):
     dependencies:
       react: 19.3.1
     optionalDependencies:
@@ -4940,12 +4940,12 @@ snapshots:
     dependencies:
       wrappy: 1.0.2
 
-  openai@7.43.0(undici@8.12.3)(zod@4.6.7):
+  openai@7.45.0(undici@8.12.3)(zod@4.6.7):
     optionalDependencies:
       undici: 8.12.3
       zod: 4.6.7
 
-  orval@8.45.0(@tanstack/react-query@5.104.5(@types/react@19.3.0)(react@19.3.1))(prettier@3.9.10)(typescript@7.0.2)(zod@4.6.7):
+  orval@8.45.0(@tanstack/react-query@5.105.0(@types/react@19.3.0)(react@19.3.1))(prettier@3.9.10)(typescript@7.0.2)(zod@4.6.7):
     dependencies:
       '@commander-js/extra-typings': 15.0.0(commander@15.0.0)
       '@orval/angular': 8.45.0
@@ -4957,7 +4957,7 @@ snapshots:
       '@orval/mcp': 8.45.0(zod@4.6.7)
       '@orval/mock': 8.45.0
       '@orval/pinia-colada': 8.45.0
-      '@orval/query': 8.45.0(@tanstack/react-query@5.104.5(@types/react@19.3.0)(react@19.3.1))
+      '@orval/query': 8.45.0(@tanstack/react-query@5.105.0(@types/react@19.3.0)(react@19.3.1))
       '@orval/solid-start': 8.45.0
       '@orval/swr': 8.45.0
       '@orval/zod': 8.45.0(zod@4.6.7)
@@ -5366,7 +5366,7 @@ snapshots:
     dependencies:
       inline-style-parser: 0.2.7
 
-  svix@2.9.0:
+  svix@2.9.1:
     dependencies:
       standardwebhooks: 1.1.1
 
