@@ -1,0 +1,5 @@
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://www.googletagmanager.com https://chimpstatic.com https://challenges.cloudflare.com https://*.mailchimp.com https://*.list-manage.com 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:; frame-src https://challenges.cloudflare.com https://www.googletagmanager.com https://calendly.com https://*.calendly.com; object-src 'none'; base-uri 'self'; form-action 'self' https://*.list-manage.com
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
