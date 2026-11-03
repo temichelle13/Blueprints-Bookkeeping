@@ -69,3 +69,25 @@
   `SITE_CONSTRAINTS.md` before finishing.
 - For deployment-affecting website changes, run `pnpm run check:website-deploy`; for API contract changes, always run
   codegen plus the affected package tests.
+
+## Parallel-task coordination
+
+Use parallel agents only for work that can be divided into independent, bounded file sets. Before delegating or editing:
+
+1. Record the current `git status --short` as the shared baseline and treat existing changes as owned by another task
+   unless ownership is explicit.
+2. Give each task a concrete outcome, an exclusive file or directory scope, and the checks it must run. Do not assign
+   the same file to multiple active tasks.
+3. Keep cross-cutting contract work sequential. In particular, one task owns an OpenAPI change and generated outputs;
+   dependent API and website work starts only after that contract is stable.
+4. Tell parallel tasks not to reset, stash, clean, reformat, or amend files outside their assigned scope. Agents share a
+   working tree, so those commands can destroy or absorb another task's work.
+5. Before integration, compare each task's changed-file list with its assignment. Resolve any unexpected overlap before
+   staging, and stage explicit paths rather than using `git add .` or `git add -A`.
+6. Integrate the smallest dependency-producing change first, then run focused checks after each task and the full
+   deployment-relevant checks once all changes are combined.
+
+Do not parallelize tightly coupled edits merely to increase concurrency. Safe examples include separate read-only audits
+or tests of different packages. Unsafe examples include simultaneous edits to `pnpm-lock.yaml`, generated API clients,
+shared route configuration, global CSS, or deployment configuration. The coordinating task owns the final diff review,
+merge-conflict scan, typecheck, build, deployment gate, and report of unresolved production risks.
