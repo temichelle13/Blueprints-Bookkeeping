@@ -103,7 +103,7 @@ router.post(
     try {
       const session = await stripe.checkout.sessions.create({
         mode: "subscription",
-        payment_method_types: ["card"],
+        allowed_payment_method_types: ["card"],
         line_items: [{ price: priceId, quantity: 1 }],
         success_url: `${SITE_URL}/welcome?session_id={CHECKOUT_SESSION_ID}&plan=${plan}`,
         cancel_url: `${SITE_URL}/pricing`,
@@ -145,7 +145,7 @@ router.post(
     try {
       const session = await stripe.checkout.sessions.create({
         mode: "payment",
-        payment_method_types: ["card"],
+        allowed_payment_method_types: ["card"],
         line_items: [
           {
             price_data: {
