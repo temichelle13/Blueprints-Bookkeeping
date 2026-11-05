@@ -10,8 +10,8 @@ catalogs:
       specifier: ^4.3.3
       version: 4.3.3
     '@tanstack/react-query':
-      specifier: ^5.105.0
-      version: 5.105.0
+      specifier: ^5.105.1
+      version: 5.105.1
     '@types/node':
       specifier: ^26.6.6
       version: 26.6.6
@@ -174,7 +174,7 @@ importers:
         version: 1.4.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@tanstack/react-query':
         specifier: 'catalog:'
-        version: 5.105.0(@types/react@19.3.0)(react@19.3.1)
+        version: 5.105.1(@types/react@19.3.0)(react@19.3.1)
       '@workspace/api-client-react':
         specifier: workspace:*
         version: link:../../lib/api-client-react
@@ -250,13 +250,13 @@ importers:
     dependencies:
       '@tanstack/react-query':
         specifier: 'catalog:'
-        version: 5.105.0(@types/react@19.3.0)(react@19.3.1)
+        version: 5.105.1(@types/react@19.3.0)(react@19.3.1)
 
   lib/api-spec:
     devDependencies:
       orval:
         specifier: ^8.46.0
-        version: 8.46.0(@tanstack/react-query@5.105.0(@types/react@19.3.0)(react@19.3.1))(prettier@3.9.10)(zod@4.6.7)
+        version: 8.46.0(@tanstack/react-query@5.105.1(@types/react@19.3.0)(react@19.3.1))(prettier@3.9.10)(zod@4.6.7)
 
   lib/api-zod:
     dependencies:
@@ -1433,11 +1433,11 @@ packages:
     peerDependencies:
       vite: ^5.2.0 || ^6 || ^7 || ^8
 
-  '@tanstack/query-core@5.105.0':
-    resolution: {integrity: sha512-7p56vRmT/z4UJ6sctGIdl5WRUQyUv53IUpUwEKi2g97zMbO7zh8ZsCLffGAvCPBR4xD72e3VXsDyLwXHhoNTMQ==}
+  '@tanstack/query-core@5.105.1':
+    resolution: {integrity: sha512-B/rNlZoZ54w1dlddiUt9oEe1SLM+37c00SKLJEg9YH+7as3Y54P81o9Fh+2ujZ36tXPnQJ5oVe7AcyEWkyFhPg==}
 
-  '@tanstack/react-query@5.105.0':
-    resolution: {integrity: sha512-y+hMuDERvgg6ay1da0V1a6ZC0ZONt7dELxSFkqRZuwm7p1TTZs0MoXrPlBRflIpRoYjvzQVYxycnLImpFLhWrw==}
+  '@tanstack/react-query@5.105.1':
+    resolution: {integrity: sha512-qcu+/+PtBOjW8qU4/0l47QVmNG7hPOWsCLzP0bTRhE1X7HYa757C4732wXTUH0QhCjTV1yedX8onsCiEwlNYrA==}
     peerDependencies:
       '@types/react': ^18 || ^19
       react: ^18 || ^19
@@ -3397,12 +3397,12 @@ snapshots:
       - '@faker-js/faker'
       - '@modelcontextprotocol/server'
 
-  '@orval/query@8.46.0(@tanstack/react-query@5.105.0(@types/react@19.3.0)(react@19.3.1))':
+  '@orval/query@8.46.0(@tanstack/react-query@5.105.1(@types/react@19.3.0)(react@19.3.1))':
     dependencies:
       '@orval/core': 8.46.0
       '@orval/fetch': 8.46.0
     optionalDependencies:
-      '@tanstack/react-query': 5.105.0(@types/react@19.3.0)(react@19.3.1)
+      '@tanstack/react-query': 5.105.1(@types/react@19.3.0)(react@19.3.1)
     transitivePeerDependencies:
       - '@faker-js/faker'
       - '@modelcontextprotocol/server'
@@ -3947,11 +3947,11 @@ snapshots:
       tailwindcss: 4.3.3
       vite: 8.3.5(@types/node@26.6.6)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.0)
 
-  '@tanstack/query-core@5.105.0': {}
+  '@tanstack/query-core@5.105.1': {}
 
-  '@tanstack/react-query@5.105.0(@types/react@19.3.0)(react@19.3.1)':
+  '@tanstack/react-query@5.105.1(@types/react@19.3.0)(react@19.3.1)':
     dependencies:
-      '@tanstack/query-core': 5.105.0
+      '@tanstack/query-core': 5.105.1
       react: 19.3.1
     optionalDependencies:
       '@types/react': 19.3.0
@@ -4939,7 +4939,7 @@ snapshots:
       undici: 8.12.3
       zod: 4.6.7
 
-  orval@8.46.0(@tanstack/react-query@5.105.0(@types/react@19.3.0)(react@19.3.1))(prettier@3.9.10)(zod@4.6.7):
+  orval@8.46.0(@tanstack/react-query@5.105.1(@types/react@19.3.0)(react@19.3.1))(prettier@3.9.10)(zod@4.6.7):
     dependencies:
       '@commander-js/extra-typings': 15.0.0(commander@15.0.0)
       '@orval/angular': 8.46.0
@@ -4951,7 +4951,7 @@ snapshots:
       '@orval/mcp': 8.46.0(zod@4.6.7)
       '@orval/mock': 8.46.0
       '@orval/pinia-colada': 8.46.0
-      '@orval/query': 8.46.0(@tanstack/react-query@5.105.0(@types/react@19.3.0)(react@19.3.1))
+      '@orval/query': 8.46.0(@tanstack/react-query@5.105.1(@types/react@19.3.0)(react@19.3.1))
       '@orval/solid-start': 8.46.0
       '@orval/swr': 8.46.0
       '@orval/zod': 8.46.0(zod@4.6.7)
