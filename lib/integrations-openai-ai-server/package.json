@@ -15,6 +15,6 @@
   "dependencies": {
     "openai": "^7.47.0",
     "p-limit": "^7.3.3",
-    "p-retry": "^8.0.1"
+    "p-retry": "^9.0.0"
   }
 }
