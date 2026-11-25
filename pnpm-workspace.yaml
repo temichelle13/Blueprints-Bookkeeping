@@ -41,7 +41,7 @@ onlyBuiltDependencies:
 
 overrides:
   "@esbuild-kit/esm-loader": npm:tsx@^4.21.0
-  body-parser: 2.3.0
+  body-parser: 2.4.0
   esbuild: 0.28.1
   qs: 6.16.0
   yaml: 2.9.0
@@ -56,6 +56,8 @@ minimumReleaseAgeExclude:
   - sharp@0.35.0
   # Renovate security update: qs@6.16.0
   - qs@6.16.0
+  # Renovate security update: body-parser@2.4.0
+  - body-parser@2.4.0
 
 allowBuilds:
   esbuild: true
