@@ -21,7 +21,7 @@
     "multer": "^2.5.0",
     "resend": "^6.39.0",
     "stripe": "^23.2.0",
-    "svix": "^2.11.0",
+    "svix": "^2.11.1",
     "zod": "catalog:"
   },
   "devDependencies": {
